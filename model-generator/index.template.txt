@@ -1,0 +1,7 @@
+export * from './metadata';
+{{#modules}}
+export * from './{{moduleName}}';
+{{/modules}}
+export * from './{{ctxName}}-entity.module';
+export * from './regHelper';
+

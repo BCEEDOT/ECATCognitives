@@ -1,0 +1,10 @@
+import { NgModule } from '@angular/core';
+import { {{ctxNameUpper}}RegistrationHelper } from './regHelper';
+{{#modules}}import { {{path}} } from './{{moduleName}}';
+{{/modules}}
+
+@NgModule({
+  declarations: [],
+  providers: [{{ctxNameUpper}}RegistrationHelper]
+})
+export class Entity{{ctxNameUpper}}Module { }
