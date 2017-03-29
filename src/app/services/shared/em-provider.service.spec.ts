@@ -5,7 +5,7 @@ import { EmProviderService } from './em-provider.service';
 describe('EmProviderService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EmProviderService]
+      providers: []
     });
   });
 

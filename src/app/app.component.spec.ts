@@ -1,32 +1,88 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, tick, fakeAsync, ComponentFixture} from '@angular/core/testing';
+import { By }           from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { FakeProductService, PRODUCTS } from './services/testing/fake-product.service';
+import { addMatchers, newEvent, Router, RouterStub} from '../testing';
+import { ProductService } from './services/product.service';
+import {  } from './services';
+import { ServicesModule } from './services/services.module';
 
 import { AppComponent } from './app.component';
 
+let comp: AppComponent;
+let fixture: ComponentFixture<AppComponent>;
+let page: Page;
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
+    addMatchers();
     TestBed.configureTestingModule({
+      imports: [ServicesModule],
       declarations: [
         AppComponent
       ],
-    }).compileComponents();
+      providers: [
+        
+      ]
+    }).overrideComponent(AppComponent, {
+      set: {
+        providers: [
+          {provide: ProductService, useClass: FakeProductService}
+        ]
+      }
+    })
+    
+    .compileComponents()
+    .then(createComponent);
   }));
 
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
+  it ('should display correct title', () => {
+    const title = page.title.textContent;
+    expect(title).toEqual(comp.title);
+  });
 
-  it(`should have as title 'app works!'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app works!');
-  }));
+  it ('should display products', () => {
+    expect(page.productRows.length).toBeGreaterThan(0);
+  });
 
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('app works!');
-  }));
+  it ('1st hero should match 1st test hero', () => {
+    const expectedProduct = PRODUCTS[0];
+    const actualProduct = page.productRows[0].textContent;
+    expect(actualProduct).toContain(expectedProduct.productId, 'product.productId');
+    expect(actualProduct).toContain(expectedProduct.description, 'product.description');
+  })
+
 });
+
+/////////// Helpers /////
+
+/** Create the component and set the `page` test variables */
+function createComponent() {
+  fixture = TestBed.createComponent(AppComponent);
+  comp = fixture.componentInstance;
+
+  // change detection triggers ngOnInit which gets a hero
+  fixture.detectChanges();
+  
+  return fixture.whenStable().then(() => {
+    // got the products and updated component
+    // change detection updates the view
+    fixture.detectChanges();
+    page = new Page();
+  });
+}
+
+
+class Page {
+  /**
+   * Product line Elements
+   */
+  productRows: HTMLLIElement[];
+  title: HTMLElement;
+
+  constructor() {
+    this.title = fixture.debugElement.query(By.css('h1')).nativeElement;
+    this.productRows = fixture.debugElement.queryAll(By.css('li')).map(de => de.nativeElement);
+  }
+
+}
