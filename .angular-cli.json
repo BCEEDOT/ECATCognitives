@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "ecat-client"
+    "name": "covalent-quickstart"
   },
   "apps": [
     {
@@ -9,6 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "data",
         "favicon.ico"
       ],
       "index": "index.html",
@@ -21,10 +22,11 @@
       "styles": [
         "styles.scss",
         "theme.scss",
-        "../node_modules/@covalent/core/common/platform.scss"
+        "../node_modules/@covalent/core/common/platform.css"
       ],
       "scripts": [
-        "../node_modules/hammerjs/hammer.min.js"
+        "../node_modules/hammerjs/hammer.min.js",
+        "../node_modules/showdown/dist/showdown.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -56,6 +58,9 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {}
+    "serve": {
+        "port": 4200,
+        "host": "localhost"
+    }
   }
 }

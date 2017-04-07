@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/deploy
 /tmp
 
 # dependencies
@@ -31,6 +32,7 @@
 npm-debug.log
 testem.log
 /typings
+/.vagrant
 
 # e2e
 /e2e/*.js
