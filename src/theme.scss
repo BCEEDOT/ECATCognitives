@@ -11,8 +11,75 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$primary: mat-palette($mat-blue, 700);
-$accent:  mat-palette($mat-orange, 800, A100, A400);
+
+$ecat-primary: (
+  50: #85accb,
+        100: #73a0c3,
+        200: #6194bc,
+        300: #4f88b4,
+        400: #467aa4,
+        500: #3e6d92,
+        600: #366080,
+        700: #2f526e,
+        800: #27455c,
+        900: #20384a,
+        A100: #96b8d3,
+        A200: #a8c4da,
+        A400: #bad0e2,
+        A700: #182a38,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$ecat-accent: (
+  50: #45565e,
+        100: #50636d,
+        200: #5a717c,
+        300: #657e8a,
+        400: #728b97,
+        500: #8097a2,
+        600: #9eafb8,
+        700: #acbbc3,
+        800: #bbc7cd,
+        900: #cad3d8,
+        A100: #9eafb8,
+        A200: #8fa3ad,
+        A400: #8097a2,
+        A700: #d9dfe3,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$primary: mat-palette($ecat-primary, 500, 700);
+$accent:  mat-palette($ecat-accent, A200, 700, A400);
 
 // The warn palette is optional (defaults to red).
 $warn:    mat-palette($mat-red, 600);
