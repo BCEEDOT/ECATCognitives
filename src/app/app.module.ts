@@ -7,6 +7,7 @@ import { CovalentCoreModule } from '@covalent/core';
 import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 
 import { SharedModule } from "./shared/shared.module";
+import { CoreModule } from "./core/core.module";
 
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
@@ -30,6 +31,7 @@ const httpInterceptorProviders: Type<any>[] = [
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     SharedModule,
+    CoreModule,
     BrowserModule,
     UsersModule,
     BrowserAnimationsModule,

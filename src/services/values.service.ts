@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from 'breeze-client';
-import { EmProviderService } from './shared/em-provider.service';
+import { EmProviderService } from '../app/core/em-provider.service';
 import { ValueItem } from '../entities/value/valueitem';
 import { ModelsRegistrationHelper } from '../entities/value/regHelper';
 
