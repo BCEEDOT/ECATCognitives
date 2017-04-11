@@ -1,12 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { MainComponent } from './main/main.component';
+import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: 'home', component: MainComponent},
+  {path: 'home', component: AppComponent},
   {path: '', redirectTo: '', pathMatch: 'full'}
   //{ path: '**', component: PageNotFoundComponent }
 ];

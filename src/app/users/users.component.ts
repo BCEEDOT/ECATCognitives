@@ -8,6 +8,7 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 import { UsersService, IUser } from '../../services';
 
 @Component({
+  //Selector only needed if another template is going to refernece
   selector: 'qs-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
