@@ -3,30 +3,29 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { HttpInterceptorService, RESTService } from '@covalent/http';
-import { MOCK_API } from '../config/api.config';
+import { MOCK_API } from '../../../config/api.config';
 
-export interface IFeature {
-  title: string;
+export interface IUser {
+  displayName: string;
   id: string;
-  user: string;
-  modified: Date;
+  email: string;
   created: Date;
-  icon: string;
-  enabled: number;
+  lastAccess: Date;
+  siteAdmin: number;
 }
 
 @Injectable()
-export class FeaturesService extends RESTService<IFeature> {
+export class UsersService extends RESTService<IUser> {
 
   constructor(private _http: HttpInterceptorService) {
     super(_http, {
       baseUrl: MOCK_API,
-      path: '/features',
+      path: '/users',
     });
   }
 
-  staticQuery(): Observable<IFeature[]> {
-    return this._http.get('data/features.json')
+  staticQuery(): Observable<IUser[]> {
+    return this._http.get('data/users.json')
     .map((res: Response) => {
       return res.json();
     });

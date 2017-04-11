@@ -5,7 +5,7 @@ import { MdSnackBar } from '@angular/material';
 
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
-import { UsersService, IUser } from '../../services';
+import { UsersService, IUser } from './services/users.service';
 
 @Component({
   //Selector only needed if another template is going to refernece
