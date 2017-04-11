@@ -13,9 +13,9 @@ import 'breeze-client/breeze.modelLibrary.backingStore';
 import 'breeze-client/breeze.uriBuilder.json';
 import 'breeze-client/breeze.uriBuilder.odata';
 
-import { EntityTypeAnnotation } from './../../entities/entity-type-annotation';
-import { IRegistrationHelper } from './../../entities/IRegistrationHelper';
-import { DEV_API } from './../../config/api.config';
+import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
+import { IRegistrationHelper } from './../entities/IRegistrationHelper';
+import { DEV_API } from './../../../config/api.config';
 
 
 @Injectable()

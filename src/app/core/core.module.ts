@@ -3,7 +3,7 @@ import {
     Optional, SkipSelf
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EmProviderService } from "./em-provider.service";
+import { EmProviderService } from "./services/em-provider.service";
 
 // ATTENTION: Never import this module into a lazy loaded module. Only import into app module.
 @NgModule({
