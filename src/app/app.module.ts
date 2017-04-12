@@ -8,11 +8,12 @@ import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
+import { UsersModule } from "./users/users.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
 
 import { AppComponent } from './app.component';
-import { MainComponent } from './main/main.component';
 import { LoginComponent } from './login/login.component';
-import { UsersModule } from "./users/users.module";
+
 
 import { AppRoutingModule } from "./app-routing.module";
 
@@ -26,16 +27,16 @@ const httpInterceptorProviders: Type<any>[] = [
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
     LoginComponent
   ], // directives, components, and pipes owned by this NgModule
   imports: [
-    SharedModule,
-    CoreModule,
+    SharedModule, 
+    CoreModule, 
     BrowserModule,
     UsersModule,
+    DashboardModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
+    AppRoutingModule, //Add feature modules/routes before main routing module
     CovalentHttpModule.forRoot({
             interceptors: [{
                 interceptor: RequestInterceptor, paths: ['**'],

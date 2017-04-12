@@ -1,9 +1,8 @@
 <td-layout #layout>
-  <td-navigation-drawer logo="assets:covalent" sidenavTitle="Quickstart" name="Firstname Lastname" email="firstname.lastname@company.com">
+  <td-navigation-drawer logo="assets:covalent" sidenavTitle="" name="Firstname Lastname" email="firstname.lastname@company.com">
     <md-nav-list>
-      <ng-template let-item let-last="last" ngFor [ngForOf]="routes">
-        <a md-list-item [routerLink]="[item.route]" (click)="layout.close()"><md-icon>{{item.icon}}</md-icon>{{item.title}}</a>
-      </ng-template>
+        <a md-list-item routerLink="/dashboard" (click)="layout.close()"><md-icon>dashboard</md-icon>Home</a>
+        <a md-list-item routerLink="/users" (click)="layout.close()"><md-icon>people</md-icon>Users</a>
     </md-nav-list>
     <md-nav-list td-navigation-drawer-menu>
       <a md-list-item (click)="logout()"><md-icon>exit_to_app</md-icon>Sign out</a>
