@@ -3,7 +3,8 @@ import { Title }     from '@angular/platform-browser';
 import { single, multi, multi2 } from './data';
 import { TdLoadingService, TdDigitsPipe } from '@covalent/core';
 
-import { ItemsService, UsersService } from '../../services';
+import { ItemsService } from '../../services';
+import { UsersService } from "../../users/services/users.service";
 
 @Component({
   selector: 'qs-product-overview',
