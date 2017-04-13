@@ -8,10 +8,11 @@ import {
   CanLoad, Route
 } from '@angular/router';
 import { AuthService } from './auth.service';
+import { AuthUtilityService } from "./auth-utility.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private authUtility: AuthUtilityService) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
@@ -29,7 +30,10 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   checkLogin(url: string): boolean {
-    if (localStorage.getItem('ecatUserToken')) {
+    let ecatUserToken = localStorage.getItem('ecatUserToken')
+    
+    //check if user has a stored token
+    if (this.authUtility.validateToken(ecatUserToken)) {
       return true;
     }
 

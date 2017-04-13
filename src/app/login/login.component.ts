@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { JwtHelper } from "angular2-jwt";
+import { MdSnackBar } from "@angular/material";
 
 import { TdLoadingService } from '@covalent/core';
 import { AuthService } from "../core/services/auth.service";
+import { AuthUtilityService } from "../core/services/auth-utility.service";
 
 @Component({
   selector: 'qs-login',
@@ -15,25 +16,18 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
-  jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(private router: Router,
-    private loadingService: TdLoadingService, private authService: AuthService) { }
+    private loadingService: TdLoadingService, private authService: AuthService, private snackBar: MdSnackBar, private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
     var ecatUserToken = localStorage.getItem('ecatUserToken');
 
     //check if user has a stored token
-    if (ecatUserToken) {
-      //make sure token is not expired
-      if (this.jwtHelper.isTokenExpired(ecatUserToken)) {
-
-        this.router.navigate(['/dashboard']);
-        console.log(
-          this.jwtHelper.decodeToken(ecatUserToken)
-        )
-      }
+    if (this.authUtility.validateToken(ecatUserToken)) {
+      this.router.navigate(['/dashboard']);
     }
+    
   }
 
   login(): void {
@@ -53,7 +47,8 @@ export class LoginComponent implements OnInit {
         this.loadingService.resolve();
       }
     }, (error: any) => {
-      this.loadingService.resolve();
+      this.loadingService.resolve();       
+      this.snackBar.open(error, 'Close', {duration: 3000});
       console.log(error);
     });
   }

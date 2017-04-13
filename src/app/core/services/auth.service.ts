@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response, RequestOptions, URLSearchParams } from '@angular/http';
 import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
-import { JwtHelper } from "angular2-jwt";
 import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/map'
@@ -16,11 +15,8 @@ import 'rxjs/add/observable/throw';
 export class AuthService implements IHttpInterceptor {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
-
   public token: string;
-  jwtHelper: JwtHelper = new JwtHelper();
-
-
+  
   constructor(private http: Http, private router: Router) {}
 
   login(username: string, password: string): Observable<boolean> {
@@ -39,6 +35,7 @@ export class AuthService implements IHttpInterceptor {
           localStorage.setItem('ecatUserToken', token);
           return true;
         } else {
+
           return false;
         }
       }).catch(this.handleError)
@@ -49,12 +46,16 @@ export class AuthService implements IHttpInterceptor {
   }
 
   private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
+    
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
       const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+      if (err === 'invalid_grant') {
+        return Observable.throw('Invalid username and password');
+      }
+      //errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+      errMsg = 'An error occured. Please try again';
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
