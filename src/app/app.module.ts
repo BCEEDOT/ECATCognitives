@@ -41,7 +41,7 @@ const httpInterceptorProviders: Type<any>[] = [
             interceptors: [{
                 interceptor: RequestInterceptor, paths: ['**'],
             }],
-        }),
+        })
 
   ], // modules needed to run this module
   providers: [
