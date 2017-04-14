@@ -1,33 +1,32 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { EmProviderService } from "../../core/services/em-provider.service";
+import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
 
-import { HttpInterceptorService, RESTService } from '@covalent/http';
-import { MOCK_API } from '../../../config/api.config';
+import { Person, UserRegistrationHelper } from "../../core/entities/ecat";
 
-export interface IUser {
-  displayName: string;
-  id: string;
-  email: string;
-  created: Date;
-  lastAccess: Date;
-  siteAdmin: number;
-}
 
 @Injectable()
-export class UsersService extends RESTService<IUser> {
+export class UsersService {
 
-  constructor(private _http: HttpInterceptorService) {
-    super(_http, {
-      baseUrl: MOCK_API,
-      path: '/users',
-    });
+  em: EntityManager;
+  person: Person[] = [];
+
+  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
+    this.em = this.emProvider.getManager();
+    console.log(this.getUsers());
   }
 
-  staticQuery(): Observable<IUser[]> {
-    return this._http.get('data/users.json')
-    .map((res: Response) => {
-      return res.json();
-    });
+  getUsers(): Promise<Person[]> {
+    
+    let query = EntityQuery.from('getusers');
+
+    return <Promise<Person[]>>this.em.executeQuery(query)
+      .then(res => this.person = res.results as Person[])
+      .catch(e => {
+        console.log('Did not retrieve users' + e);
+        return Promise.reject(e);
+      });
   }
 }

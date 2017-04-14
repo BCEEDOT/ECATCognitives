@@ -33,15 +33,8 @@ gulp.task('generate-metadata', generateMetadata);
 function generateEntities() {
   var webServicesCtx = [
     {
-      inputFileName: './EF.Contexts.ProductContext.json',
-      outputFolder: '../src/entities/product',
-      camelCase: true,
-      baseClassName: 'EntityBase',
-      kebabCaseFileNames: false
-    },
-    {
-      inputFileName: './EF.Contexts.ValueContext.json',
-      outputFolder: '../src/entities/value',
+      inputFileName: './Ecat.Data.Contexts.EcatContext.json',
+      outputFolder: '../src/app/core/entities/ecat',
       camelCase: true,
       baseClassName: 'EntityBase',
       kebabCaseFileNames: false
@@ -55,7 +48,7 @@ function generateMetadata() {
   // assumes that the 'breeze.tooling' github repo exists on disk at the same level as the breeze.server.net repo
   // TODO: add a check that the 'breeze.tooling' dir exists and that the metadataGenerator.dll has been created.
   var projectPath = path.resolve(__dirname, '../../')
-  var webServicesProject = path.join(projectPath, 'TestWebServices', 'EF', 'bin', 'Debug', 'EF');
+  var webServicesProject = path.join(projectPath, 'ECATWebServices', 'ECATDataLib', 'bin', 'Debug', 'Ecat.Data');
   var generatorProject = path.join(projectPath, 'BreezeTooling', 'MetadataGenerator', 'MetadataGenerator', 'bin', 'Debug', 'metadatagenerator')
   var spawnInfo = spawnExt(generatorProject,
     ['-i', webServicesProject]);

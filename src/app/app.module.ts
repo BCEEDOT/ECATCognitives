@@ -30,6 +30,7 @@ const httpInterceptorProviders: Type<any>[] = [
     LoginComponent
   ], // directives, components, and pipes owned by this NgModule
   imports: [
+    BreezeBridgeAngularModule,
     SharedModule, 
     CoreModule, 
     BrowserModule,

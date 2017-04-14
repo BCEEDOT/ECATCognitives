@@ -14,7 +14,7 @@ import 'breeze-client/breeze.uriBuilder.json';
 import 'breeze-client/breeze.uriBuilder.odata';
 
 import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
-import { IRegistrationHelper } from './../entities/IRegistrationHelper';
+import { UserRegistrationHelper } from './../entities/ecat';
 import { DEV_API } from './../../../config/api.config';
 
 
@@ -26,11 +26,10 @@ export class EmProviderService {
 
   constructor() { }
 
-  prepare(serviceEndPoint: string, regHelper: IRegistrationHelper): Promise<any> {
+  prepare(serviceEndPoint: string, regHelper: UserRegistrationHelper): Promise<any> {
     
     //Pulled from Environments file
     serviceEndPoint = DEV_API + serviceEndPoint;
-    console.log(serviceEndPoint);
 
     if (!EmProviderService._preparePromise) {
     config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
@@ -63,8 +62,8 @@ export class EmProviderService {
     return EmProviderService._preparePromise;
 }
 
-newManager(): EntityManager {
-  let manager = EmProviderService._manager.createEmptyCopy();
+getManager(): EntityManager {
+  let manager = EmProviderService._manager;
   return manager;
 }
 

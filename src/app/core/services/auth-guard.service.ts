@@ -9,10 +9,14 @@ import {
 } from '@angular/router';
 import { AuthService } from './auth.service';
 import { AuthUtilityService } from "./auth-utility.service";
+import { EmProviderService } from "./em-provider.service";
+import { UserRegistrationHelper } from "../entities/ecat";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-  constructor(private authService: AuthService, private router: Router, private authUtility: AuthUtilityService) { }
+  constructor(private authService: AuthService, 
+  private router: Router, private authUtility: AuthUtilityService, 
+  private emProvider: EmProviderService, private regHelper: UserRegistrationHelper) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
@@ -34,7 +38,16 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     
     //check if user has a stored token
     if (this.authUtility.validateToken(ecatUserToken)) {
-      return true;
+      return <any>this.emProvider.prepare("user", this.regHelper)
+              .then(() => true)
+              .catch(e => {
+                console.log('Error creating user em');
+                if (e.status == 401) {  
+                  this.router.navigate(['/login'], navigationExtras);
+                  return false;
+                }
+              })
+              
     }
 
     // Store the attempted URL for redirecting
