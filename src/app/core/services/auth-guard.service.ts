@@ -10,13 +10,13 @@ import {
 import { AuthService } from './auth.service';
 import { AuthUtilityService } from "./auth-utility.service";
 import { EmProviderService } from "./em-provider.service";
-import { UserRegistrationHelper } from "../entities/ecat";
+import { CognitiveRegistrationHelper } from "../entities/user";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(private authService: AuthService, 
   private router: Router, private authUtility: AuthUtilityService, 
-  private emProvider: EmProviderService, private regHelper: UserRegistrationHelper) { }
+  private emProvider: EmProviderService, private regHelper: CognitiveRegistrationHelper) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;

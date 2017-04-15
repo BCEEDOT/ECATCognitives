@@ -1,11 +1,11 @@
 import { MetadataStore } from 'breeze-client';
 import { Injectable } from '@angular/core';
-import { RegistrationHelper } from '../regHelper';
+import { IRegistrationHelper } from '../IRegistrationHelper';
 {{#modules}}import { {{path}} } from './{{moduleName}}';
 {{/modules}}
 
 @Injectable()
-export class {{ctxNameUpper}}RegistrationHelper implements RegistrationHelper {
+export class {{ctxNameUpper}}RegistrationHelper implements IRegistrationHelper {
     register(metadataStore: MetadataStore) {
         {{#modules}}metadataStore.registerEntityTypeCtor('{{entityType.shortName}}', {{entityType.shortName}}{{#entityType.initializerFn}}, {{../entityType.shortName}}.{{.}}{{/entityType.initializerFn}});
     {{/modules}}    

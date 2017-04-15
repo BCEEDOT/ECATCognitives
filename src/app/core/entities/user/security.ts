@@ -1,13 +1,18 @@
 import { EntityBase } from '../EntityBase';
+import { Person } from './Person';
 
 /// <code-import> Place custom imports between <code-import> tags
 
 /// </code-import>
 
-export class ValueItem extends EntityBase {
+export class Security extends EntityBase {
    // Generated code. Do not place code below this line.
-   key: number;
-   value: string;
+   personId: number;
+   badPasswordCount: number;
+   passwordHash: string;
+   modifiedById: number;
+   modifiedDate: Date;
+   person: Person;
 
    /// <code> Place custom code between <code> tags
    

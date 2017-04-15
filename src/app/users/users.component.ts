@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
@@ -6,7 +6,7 @@ import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
 import { UsersService} from './services/users.service';
-import { Person } from "../core/entities/ecat";
+import { Person } from "../core/entities/user";
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -15,9 +15,9 @@ import { Person } from "../core/entities/ecat";
   styleUrls: ['./users.component.scss'],
   viewProviders: [ UsersService ],
 })
-export class UsersComponent implements AfterViewInit {
+export class UsersComponent implements OnInit {
 
-  person: Person[];
+  person: Person[] = [];
 
   constructor(private titleService: Title,
               private router: Router,
@@ -25,14 +25,13 @@ export class UsersComponent implements AfterViewInit {
               private dialogService: TdDialogService,
               private snackBarService: MdSnackBar,
               private usersService: UsersService,
-              public media: TdMediaService) {
-  }
+              public media: TdMediaService) {}
 
   goBack(route: string): void {
     this.router.navigate(['/']);
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     // broadcast to all listener observables when loading the page
     this.media.broadcast();
     this.titleService.setTitle( 'Covalent Users' );
@@ -42,11 +41,16 @@ export class UsersComponent implements AfterViewInit {
   loadUsers(): void {
     //maps to ng-template tag
     this.loadingService.register('users.list');
-    this.usersService.getUsers().then(person => this.person = person);
-    console.log(this.person);
-    this.loadingService.resolve('users.list');
+    //this.person = <any> ['me'];
+    this.usersService.getUsers()
+    .then(person => { 
+      console.log(`this is being returned from the servuce${person}`)
+      this.person = person
+      console.log(this.person)
+      this.loadingService.resolve('users.list');
+  });
+    
   }
-
   
 
   // loadUsers(): void {

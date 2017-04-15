@@ -14,7 +14,7 @@ import 'breeze-client/breeze.uriBuilder.json';
 import 'breeze-client/breeze.uriBuilder.odata';
 
 import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
-import { UserRegistrationHelper } from './../entities/ecat';
+import { CognitiveRegistrationHelper } from './../entities/user';
 import { DEV_API } from './../../../config/api.config';
 
 
@@ -26,7 +26,7 @@ export class EmProviderService {
 
   constructor() { }
 
-  prepare(serviceEndPoint: string, regHelper: UserRegistrationHelper): Promise<any> {
+  prepare(serviceEndPoint: string, regHelper: CognitiveRegistrationHelper): Promise<any> {
     
     //Pulled from Environments file
     serviceEndPoint = DEV_API + serviceEndPoint;

@@ -22,16 +22,16 @@
           <div class="md-padding" *ngIf="!person || person.length === 0" layout="row" layout-align="center center">
             <h3>No users to display.</h3>
           </div>
-          <ng-template let-user let-last="last" ngFor [ngForOf]="person">
+          <ng-template let-person let-last="last" ngFor [ngForOf]="person">
             <md-list-item>
               <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{person.firstname}} </h3>
-              <p md-line> {{person.lastname}} </p>
-              <p md-line hide-gt-md class="md-caption"> last login: {{ person.modifiedDate | timeAgo }} </p>
+              <h3 md-line> {{person.firstName}} </h3>
+              <p md-line> {{person.lastName}} </p>
+              <p md-line hide-gt-md class="md-caption"> last login: {{ person.mpPaygrade }} </p>
               <span flex></span>
               <span hide-xs hide-sm hide-md flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
-                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ person.modifiedDate | date }} </div>
-                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ user.modifiedDate | timeAgo }} </div>
+                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ person.mpComponent }} </div>
+                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ person.mpPaygrade }} </div>
               </span>
               <span>
                   <button md-icon-button [md-menu-trigger-for]="menu">

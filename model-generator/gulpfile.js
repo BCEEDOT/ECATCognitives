@@ -38,6 +38,13 @@ function generateEntities() {
       camelCase: true,
       baseClassName: 'EntityBase',
       kebabCaseFileNames: false
+    },
+    {
+      inputFileName: './Ecat.Data.Contexts.UserMetadata.json',
+      outputFolder: '../src/app/core/entities/user',
+      camelCase: true,
+      baseClassName: 'EntityBase',
+      kebabCaseFileNames: false
     }
   ];
 

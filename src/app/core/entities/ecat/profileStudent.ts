@@ -1,5 +1,7 @@
 import { EntityBase } from '../EntityBase';
 import { Person } from './Person';
+import { CrseStudentInGroup } from './CrseStudentInGroup';
+import { StudentInCourse } from './StudentInCourse';
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -15,6 +17,8 @@ export class ProfileStudent extends EntityBase {
    shirt: string;
    commanderEmail: string;
    shirtEmail: string;
+   courseGroupMemberships: CrseStudentInGroup[];
+   courses: StudentInCourse[];
    person: Person;
 
    /// <code> Place custom code between <code> tags

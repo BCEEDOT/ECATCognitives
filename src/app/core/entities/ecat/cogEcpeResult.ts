@@ -1,20 +1,18 @@
 import { EntityBase } from '../EntityBase';
+import { CogInstrument } from './CogInstrument';
 import { Person } from './Person';
-import { FacultyInCourse } from './FacultyInCourse';
 
 /// <code-import> Place custom imports between <code-import> tags
 
 /// </code-import>
 
-export class ProfileFaculty extends EntityBase {
+export class CogEcpeResult extends EntityBase {
    // Generated code. Do not place code below this line.
    personId: number;
-   bio: string;
-   homeStation: string;
-   isCourseAdmin: boolean;
-   isReportViewer: boolean;
-   academyId: string;
-   courses: FacultyInCourse[];
+   instrumentId: number;
+   attempt: number;
+   outcome: number;
+   instrument: CogInstrument;
    person: Person;
 
    /// <code> Place custom code between <code> tags
