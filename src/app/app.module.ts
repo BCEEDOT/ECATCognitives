@@ -10,6 +10,7 @@ import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
 import { UsersModule } from "./users/users.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
+import { ProfileModule } from "./profile/profile.module";
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -35,6 +36,7 @@ const httpInterceptorProviders: Type<any>[] = [
     CoreModule, 
     BrowserModule,
     UsersModule,
+    ProfileModule,
     DashboardModule,
     BrowserAnimationsModule,
     AppRoutingModule, //Add feature modules/routes before main routing module
