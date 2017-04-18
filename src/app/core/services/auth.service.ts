@@ -31,8 +31,10 @@ export class AuthService implements IHttpInterceptor {
     return this.http.post('http://localhost:62187/connect/token',
       data).map((response: Response) => {
         let token = response.json().access_token;
+        let idToken = response.json().id_token;
         if (token) {
           localStorage.setItem('ecatUserToken', token);
+          localStorage.setItem('ecatUserIdToken', idToken);
           return true;
         } else {
 

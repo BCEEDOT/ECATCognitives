@@ -23,21 +23,17 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     var ecatUserToken = localStorage.getItem('ecatUserToken');
 
-    //check if user has a stored token
+    //check if user has a stored token and it is still valid
     if (this.authUtility.validateToken(ecatUserToken)) {
       this.router.navigate(['/dashboard']);
     }
-    
+
   }
 
   login(): void {
 
-    //TODO: Add code if username and password are bad.
-
     this.loadingService.register();
     this.authService.login(this.username, this.password).subscribe(result => {
-
-      console.log(result);
       if (result === true) {
         this.loadingService.resolve();
         this.router.navigate(['/dashboard']);
@@ -47,8 +43,8 @@ export class LoginComponent implements OnInit {
         this.loadingService.resolve();
       }
     }, (error: any) => {
-      this.loadingService.resolve();       
-      this.snackBar.open(error, 'Close', {duration: 3000});
+      this.loadingService.resolve();
+      this.snackBar.open(error, 'Close', { duration: 3000 });
       console.log(error);
     });
   }

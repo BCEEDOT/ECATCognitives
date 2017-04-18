@@ -8,13 +8,14 @@ import { AuthGuard } from './services/auth-guard.service';
 import { AuthService } from './services/auth.service';
 import { AuthUtilityService } from './services/auth-utility.service';
 import { JwtHelper } from "angular2-jwt";
-import { EntityCognitiveModule } from "./entities/user/cognitive-entity.module";
+import { EntityUserModule } from "./entities/user/user-entity.module";
+import { GlobalService } from "./services/global.service";
 
 // ATTENTION: Never import this module into a lazy loaded module. Only import into app module.
 @NgModule({
     imports: [
         CommonModule,
-        EntityCognitiveModule
+        EntityUserModule
     ],
     declarations: [],
     exports: [],
@@ -23,7 +24,8 @@ import { EntityCognitiveModule } from "./entities/user/cognitive-entity.module";
         AuthGuard,
         AuthService,
         AuthUtilityService,
-        JwtHelper
+        JwtHelper,
+        GlobalService
     ]
 })
 

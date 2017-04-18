@@ -15,7 +15,7 @@ import { CogEtmpreResult } from './cogEtmpreResult';
 import { CogResponse } from './cogResponse';
 
 @Injectable()
-export class CognitiveRegistrationHelper implements IRegistrationHelper {
+export class UserRegistrationHelper implements IRegistrationHelper {
     register(metadataStore: MetadataStore) {
         metadataStore.registerEntityTypeCtor('CogEcmspeResult', CogEcmspeResult);
 metadataStore.registerEntityTypeCtor('CogInstrument', CogInstrument);

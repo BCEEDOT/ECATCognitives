@@ -11,6 +11,6 @@ export * from './cogEcpeResult';
 export * from './cogEsalbResult';
 export * from './cogEtmpreResult';
 export * from './cogResponse';
-export * from './cognitive-entity.module';
+export * from './user-entity.module';
 export * from './regHelper';
 

@@ -13,10 +13,10 @@ export class Person extends EntityBase {
    personId: number;
    isActive: boolean;
    bbUserId: string;
-   bbUserName: string;
+   bbUserName?: string;
    lastName: string;
    firstName: string;
-   avatarLocation: string;
+   avatarLocation?: string;
    goByName: string;
    mpGender: string;
    mpAffiliation: string;
@@ -28,7 +28,7 @@ export class Person extends EntityBase {
    modifiedById: number;
    modifiedDate: Date;
    faculty: ProfileFaculty;
-   roadRunnerAddresses: RoadRunner[];
+   roadRunnerAddresses?: RoadRunner[];
    security: Security;
    student: ProfileStudent;
 

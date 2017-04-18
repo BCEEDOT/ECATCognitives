@@ -75,8 +75,6 @@ function generate(configs) {
 
     processRawMetadata(metadataStore, config);
 
-    console.log('it is getting passed generating raw metadata');
-
     if (config.useEnumTypes) {
       // until breeze adds the enumTypes to the metadataStore
       var metajson = JSON.parse(metadata);
@@ -86,8 +84,7 @@ function generate(configs) {
 
     // Generate typescript classes for each entity
     metadataStore.getEntityTypes().forEach(function (entityType) {
-      console.log('It is generating the first entity'); 
-      console.log(entityType);
+
       var ts = compiledTemplate(entityType);
 
       // Don't overwrite file if nothing has changed.
@@ -102,12 +99,24 @@ function generate(configs) {
 
     metadataStore.namespace = metadataStore.getEntityTypes()[0].namespace;
 
+
+    
     const regex = /\.(\w*)$/g;
     var match = regex.exec(metadataStore.namespace);
     config.ctxName = match[1];
 
+    console.log(config.outputFolder);
+    //config.ctxName = _.split(config.inputFileName)
+    var moduleName = _.split(config.outputFolder, '/');
+    console.log(moduleName);
+    console.log(_.last(moduleName));
+
+    moduleName = _.last(moduleName);
+    moduleName = _.capitalize(moduleName);
+    config.ctxName = moduleName
+
     metadataStore.ctxName = camelCase(config.ctxName);
-    metadataStore.ctxNameUpper = config.ctxName,
+    metadataStore.ctxNameUpper = config.ctxName;
 
       // Generate entity model
       compiledTemplate = compileTemplate('index.template.txt');
@@ -154,7 +163,7 @@ function generate(configs) {
  */
 function processRawMetadata(metadataStore, config) {
   var entityTypes = metadataStore.getEntityTypes();
-  console.log(entityTypes);
+  //console.log(entityTypes);
   metadataStore.modules = entityTypes.map(function (entityType) {
     return { entityType: entityType, path: entityType.shortName, moduleName: fileNameCase(entityType.shortName, config) };
   });
@@ -216,16 +225,8 @@ function processRawMetadata(metadataStore, config) {
     // Extract custom code from existing file
     entityType.sourceFilename = path.resolve(config.sourceFilesFolder, fileNameCase(entityType.shortName, config) + '.ts');
 
-    console.log('Output filename' + entityType.filename);
-    console.log('source file name' + entityType.sourceFileName);
-    console.log('source file folder' + config.sourceFilesFolder);
-    console.log('entity short name' + entityType.shortName);
-    //console.log('shortname with config' + fileNamesCase(entityType.shortName, config));
-    console.log('it went passed');
-
     if (fs.existsSync(entityType.sourceFilename)) {
 
-      console.log('Source file name exists');
       var ts = fs.readFileSync(entityType.sourceFilename, 'utf8');
       entityType.originalFileContent = ts;
 
@@ -250,7 +251,6 @@ function processRawMetadata(metadataStore, config) {
     } else {
       console.log('File does not exist: ' + entityType.sourceFileName);
     }
-    console.log("It is getting to the end of process metadata");
   });
 }
 

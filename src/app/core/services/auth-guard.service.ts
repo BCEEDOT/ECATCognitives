@@ -10,13 +10,13 @@ import {
 import { AuthService } from './auth.service';
 import { AuthUtilityService } from "./auth-utility.service";
 import { EmProviderService } from "./em-provider.service";
-import { CognitiveRegistrationHelper } from "../entities/user";
+import { UserRegistrationHelper } from "../entities/user";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(private authService: AuthService, 
   private router: Router, private authUtility: AuthUtilityService, 
-  private emProvider: EmProviderService, private regHelper: CognitiveRegistrationHelper) { }
+  private emProvider: EmProviderService, private regHelper: UserRegistrationHelper) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
@@ -35,13 +35,15 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
   checkLogin(url: string): boolean {
     let ecatUserToken = localStorage.getItem('ecatUserToken')
+    let ecatUserIdToken = localStorage.getItem('ecatUserIdToken');
     
+    //TODO: Rewrite this to handle errors better
     //check if user has a stored token
     if (this.authUtility.validateToken(ecatUserToken)) {
       return <any>this.emProvider.prepare("user", this.regHelper)
-              .then(() => true)
+              .then(() => this.authUtility.loginUser(ecatUserIdToken, ecatUserToken))
               .catch(e => {
-                console.log('Error creating user em');
+                console.log('Error creating user em' + e);
                 if (e.status == 401) {  
                   this.router.navigate(['/login'], navigationExtras);
                   return false;
@@ -56,8 +58,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     // Create a dummy session id
     let sessionId = 123456789;
 
-
-
     // Set our navigation extras object
     // that contains our global query params and fragment
     let navigationExtras: NavigationExtras = {
@@ -69,4 +69,5 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     this.router.navigate(['/login'], navigationExtras);
     return false;
   }
+
 }

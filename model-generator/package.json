@@ -18,7 +18,7 @@
     "gulp-task-listing": "^1.0.1",
     "gulp-util": "^3.0.7",
     "handlebars": "^4.0.5",
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.4",
     "q": "^1.4.1",
     "yargs": "^3.31.0"
   },

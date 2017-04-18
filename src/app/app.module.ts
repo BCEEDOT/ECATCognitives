@@ -42,7 +42,7 @@ const httpInterceptorProviders: Type<any>[] = [
     AppRoutingModule, //Add feature modules/routes before main routing module
     CovalentHttpModule.forRoot({
             interceptors: [{
-                interceptor: RequestInterceptor, paths: ['**'],
+                interceptor: RequestInterceptor, paths: ['breeze/**'],
             }],
         })
 

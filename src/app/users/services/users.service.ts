@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { EmProviderService } from "../../core/services/em-provider.service";
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
 
-import { Person, CognitiveRegistrationHelper } from "../../core/entities/user";
+import { Person, UserRegistrationHelper } from "../../core/entities/user";
 
 
 @Injectable()
@@ -13,11 +13,9 @@ export class UsersService {
   em: EntityManager;
   person: Person[] = [];
 
-  constructor(private regHelper: CognitiveRegistrationHelper, private emProvider: EmProviderService) {
+  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
     this.em = this.emProvider.getManager();
     console.log(this.getUsers());
-
-    //this.getUsers().then(res => console.log(res));
   }
 
   getUsers(): Promise<Person[]> {
