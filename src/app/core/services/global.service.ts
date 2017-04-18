@@ -6,8 +6,7 @@ export class GlobalService {
 
   constructor() { }
 
-  persona: Person;
-  accessToken: any;
+  private persona: Person;
 
   set loggedInUser(persona: Person) {
       this.persona = persona;
@@ -15,14 +14,6 @@ export class GlobalService {
 
   get loggedInUser(): Person {
     return this.persona;
-  }
-
-  set userAccessToken(accessToken: any) {
-    this.accessToken = accessToken;
-  }
-
-  get userAccessToken(): any {
-    return this.accessToken
   }
 
 }

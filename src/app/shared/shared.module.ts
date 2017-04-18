@@ -6,10 +6,7 @@ import { CovalentCoreModule } from '@covalent/core';
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
 
-
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
-
 
 @NgModule({
     imports: [

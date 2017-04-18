@@ -7,7 +7,6 @@ import { EmProviderService } from './services/em-provider.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { AuthService } from './services/auth.service';
 import { AuthUtilityService } from './services/auth-utility.service';
-import { JwtHelper } from "angular2-jwt";
 import { EntityUserModule } from "./entities/user/user-entity.module";
 import { GlobalService } from "./services/global.service";
 
@@ -24,8 +23,7 @@ import { GlobalService } from "./services/global.service";
         AuthGuard,
         AuthService,
         AuthUtilityService,
-        JwtHelper,
-        GlobalService
+        GlobalService,
     ]
 })
 

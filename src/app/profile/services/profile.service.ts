@@ -5,6 +5,7 @@ import { EmProviderService } from "../../core/services/em-provider.service";
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
 
 import { ProfileStudent, UserRegistrationHelper } from "../../core/entities/user";
+import { GlobalService } from "../../core/services/global.service";
 
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ProfileService {
   em: EntityManager;
   profile: ProfileStudent;
 
-  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
+  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService) {
 
     this.em = this.emProvider.getManager();
     //var profileType = this.em.metadataStore.getEntityType('ProfileStudent');
@@ -21,6 +22,8 @@ export class ProfileService {
     //console.log(this.getProfile());
 
     //this.getUsers().then(res => console.log(res));
+
+    console.log(this.global.loggedInUser);
   }
 
   getProfile(): Promise<ProfileStudent> {

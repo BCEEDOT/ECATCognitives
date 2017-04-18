@@ -1,10 +1,10 @@
 import { NgModule, Type } from '@angular/core';
+import { Http, RequestOptions } from "@angular/http";
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 
 import { CovalentCoreModule } from '@covalent/core';
-import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
@@ -15,15 +15,18 @@ import { ProfileModule } from "./profile/profile.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 
-
 import { AppRoutingModule } from "./app-routing.module";
 
+import { JwtHelper , AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth} from "angular2-jwt";
 import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 import { RequestInterceptor } from '../config/interceptors/request.interceptor';
 
-const httpInterceptorProviders: Type<any>[] = [
-    RequestInterceptor,
-];
+export function authHttpServiceFactory(http: Http, options: RequestOptions) {
+  return new AuthHttp(new AuthConfig({
+    tokenName: 'ecatAccessToken',
+		tokenGetter: (() => localStorage.getItem('ecatAccessToken'))
+	}), http, options);
+}
 
 @NgModule({
   declarations: [
@@ -40,16 +43,19 @@ const httpInterceptorProviders: Type<any>[] = [
     DashboardModule,
     BrowserAnimationsModule,
     AppRoutingModule, //Add feature modules/routes before main routing module
-    CovalentHttpModule.forRoot({
-            interceptors: [{
-                interceptor: RequestInterceptor, paths: ['breeze/**'],
-            }],
-        })
-
   ], // modules needed to run this module
   providers: [
-    httpInterceptorProviders,
+    AUTH_PROVIDERS,
+    provideAuth({
+      noJwtError: true
+    }),
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [Http, RequestOptions]
+    },
     Title,
+    JwtHelper
   ], // additional providers needed for this module
   entryComponents: [],
   bootstrap: [AppComponent],

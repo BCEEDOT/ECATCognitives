@@ -21,10 +21,10 @@ export class LoginComponent implements OnInit {
     private loadingService: TdLoadingService, private authService: AuthService, private snackBar: MdSnackBar, private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
-    var ecatUserToken = localStorage.getItem('ecatUserToken');
+    var ecatAccessToken = localStorage.getItem('ecatAccessToken');
 
     //check if user has a stored token and it is still valid
-    if (this.authUtility.validateToken(ecatUserToken)) {
+    if (this.authUtility.validateToken(ecatAccessToken)) {
       this.router.navigate(['/dashboard']);
     }
 

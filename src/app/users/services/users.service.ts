@@ -15,7 +15,6 @@ export class UsersService {
 
   constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
     this.em = this.emProvider.getManager();
-    console.log(this.getUsers());
   }
 
   getUsers(): Promise<Person[]> {

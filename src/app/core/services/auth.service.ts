@@ -15,7 +15,7 @@ import 'rxjs/add/observable/throw';
 export class AuthService implements IHttpInterceptor {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
-  public token: string;
+  //public token: string;
   
   constructor(private http: Http, private router: Router) {}
 
@@ -30,10 +30,10 @@ export class AuthService implements IHttpInterceptor {
 
     return this.http.post('http://localhost:62187/connect/token',
       data).map((response: Response) => {
-        let token = response.json().access_token;
+        let accessToken = response.json().access_token;
         let idToken = response.json().id_token;
-        if (token) {
-          localStorage.setItem('ecatUserToken', token);
+        if (accessToken && idToken) {
+          localStorage.setItem('ecatAccessToken', accessToken);
           localStorage.setItem('ecatUserIdToken', idToken);
           return true;
         } else {

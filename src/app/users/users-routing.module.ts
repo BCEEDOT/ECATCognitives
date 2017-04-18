@@ -9,7 +9,7 @@ const usersRoutes: Routes = [
     path: 'users',  
     component: UsersComponent,
     canActivate: [AuthGuard] 
-  }
+  } 
 ];
 @NgModule({
   imports: [

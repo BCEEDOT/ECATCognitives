@@ -41,12 +41,9 @@ export class UsersComponent implements OnInit {
   loadUsers(): void {
     //maps to ng-template tag
     this.loadingService.register('users.list');
-    //this.person = <any> ['me'];
     this.usersService.getUsers()
     .then(person => { 
-      console.log(`this is being returned from the servuce${person}`)
       this.person = person
-      console.log(this.person)
       this.loadingService.resolve('users.list');
   });
     

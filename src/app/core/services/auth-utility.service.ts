@@ -11,32 +11,33 @@ import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntitySta
 export class AuthUtilityService {
 
     ecatUserIdToken: any;
-    ecatUserToken: any;
+    ecatAccessToken: any;
     em: EntityManager;
 
     constructor(private jwtHelper: JwtHelper, private global: GlobalService, private emProviderService: EmProviderService) { }
 
-    public validateToken(ecatUserToken: any): boolean {
+    public validateToken(ecatAccessToken: any): boolean {
 
-        if (!ecatUserToken) { console.log('Token does not exist'); return false };
+        if (!ecatAccessToken) { console.log('Token does not exist'); return false };
 
-        if (this.jwtHelper.isTokenExpired(ecatUserToken)) { console.log('Token has expired'); return false; }
+        if (this.jwtHelper.isTokenExpired(ecatAccessToken)) { console.log('Token has expired'); return false; }
 
         return true;
     }
 
-    public loginUser(ecatUserIdToken: any, ecatUserToken: any): boolean {
+    public loginUser(ecatUserIdToken: any, ecatAccessToken: any): boolean {
 
-        if (!ecatUserIdToken && !ecatUserToken) { return false; }
+        if (!ecatUserIdToken && !ecatAccessToken) { return false; }
 
         this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken) as IdToken;
-        this.ecatUserToken = this.jwtHelper.decodeToken(ecatUserToken);
+        this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
-        this.global.accessToken = ecatUserToken;
+        //this.global.accessToken = ecatAccessToken;
 
         var em = this.emProviderService.getManager();
 
         var loggedInUser = {
+            //Todo: Remove hardcoded personId
             personId: 2,
             lastName: this.ecatUserIdToken.lastName,
             firstName: this.ecatUserIdToken.firstName,
@@ -50,6 +51,7 @@ export class AuthUtilityService {
             mpInstituteRole: this.ecatUserIdToken.mpInstituteRole
         } as Person;
 
+        this.global.loggedInUser = loggedInUser;
         em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges);
 
         return true;
