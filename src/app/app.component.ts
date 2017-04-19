@@ -1,16 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
+import { GlobalService } from "./core/services/global.service";
+import { Person } from "./core/entities/user/person";
+import { IPerson } from "./core/entities/client-entities";
+import { AuthUtilityService } from "./core/services/auth-utility.service";
 
 @Component({
   selector: 'ecat-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  persona: IPerson = <IPerson>{};
 
   constructor(private _iconRegistry: MdIconRegistry,
-              private _domSanitizer: DomSanitizer) {
+              private _domSanitizer: DomSanitizer,
+              private global: GlobalService, 
+              private authUtils: AuthUtilityService) {
     this._iconRegistry.addSvgIconInNamespace('assets', 'teradata',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/teradata.svg'));
     this._iconRegistry.addSvgIconInNamespace('assets', 'github',
@@ -27,6 +35,19 @@ export class AppComponent {
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/listener.svg'));
     this._iconRegistry.addSvgIconInNamespace('assets', 'querygrid',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/querygrid.svg'));
+
   }
+
+  ngOnInit() {
+    this.global.user$.subscribe((user) => {
+      this.persona = user;
+    });
+
+
+  }
+
+    logout() {
+      this.authUtils.logout();
+    }
 
 }

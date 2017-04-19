@@ -2,9 +2,14 @@ import { Injectable } from '@angular/core';
 import { JwtHelper } from "angular2-jwt";
 import { GlobalService } from "./global.service";
 import { Person } from "../entities/user";
-import { IdToken } from "../entities/client-entities";
+import { IdToken, IPerson } from "../entities/client-entities";
 import { EmProviderService } from "./em-provider.service";
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntityState, MergeStrategy } from "breeze-client";
+import {
+    Router,
+    Route
+} from '@angular/router';
+
 
 
 @Injectable()
@@ -14,7 +19,7 @@ export class AuthUtilityService {
     ecatAccessToken: any;
     em: EntityManager;
 
-    constructor(private jwtHelper: JwtHelper, private global: GlobalService, private emProviderService: EmProviderService) { }
+    constructor(private jwtHelper: JwtHelper, private global: GlobalService, private emProviderService: EmProviderService, private router: Router) { }
 
     public validateToken(ecatAccessToken: any): boolean {
 
@@ -25,37 +30,40 @@ export class AuthUtilityService {
         return true;
     }
 
-    public loginUser(ecatUserIdToken: any, ecatAccessToken: any): boolean {
+    public login(ecatUserIdToken: any, ecatAccessToken: any): boolean {
 
         if (!ecatUserIdToken && !ecatAccessToken) { return false; }
 
         this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken) as IdToken;
         this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
-        //this.global.accessToken = ecatAccessToken;
-
         var em = this.emProviderService.getManager();
 
         var loggedInUser = {
-            //Todo: Remove hardcoded personId
-            personId: 2,
-            lastName: this.ecatUserIdToken.lastName,
-            firstName: this.ecatUserIdToken.firstName,
+            personId: this.ecatAccessToken.sub,
+            lastName: this.ecatUserIdToken.LastName,
+            firstName: this.ecatUserIdToken.FirstName,
             isActive: true,
-            mpGender: this.ecatUserIdToken.mpGender,
-            mpAffiliation: this.ecatUserIdToken.mpAffiliation,
-            mpPaygrade: this.ecatUserIdToken.mpPaygrade,
-            mpComponent: this.ecatUserIdToken.mpComponent,
-            email: this.ecatUserIdToken.email,
+            mpGender: this.ecatUserIdToken.MpGender,
+            mpAffiliation: this.ecatUserIdToken.MpAffiliation,
+            mpPaygrade: this.ecatUserIdToken.MpPaygrade,
+            mpComponent: this.ecatUserIdToken.MpComponent,
+            email: this.ecatUserIdToken.Email,
             registrationComplete: true,
-            mpInstituteRole: this.ecatUserIdToken.mpInstituteRole
+            mpInstituteRole: this.ecatUserIdToken.MpInstituteRole
         } as Person;
 
-        this.global.loggedInUser = loggedInUser;
-        em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges);
-
+        
+        var user = em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges) as IPerson;
+        this.global.user(user);
         return true;
 
+    }
+
+    public logout() {
+        localStorage.removeItem('ecatAccessToken');
+        localStorage.removeItem('ecatUserIdToken');
+        this.router.navigate(['/login']);
     }
 
 

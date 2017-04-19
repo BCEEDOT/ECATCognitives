@@ -1,8 +1,13 @@
 import { EntityBase } from '../EntityBase';
 import { Course } from './Course';
+import { SpResponse } from './SpResponse';
+import { StratResponse } from './StratResponse';
+import { StudSpComment } from './StudSpComment';
+import { WorkGroup } from './WorkGroup';
+import { SpResult } from './SpResult';
+import { StratResult } from './StratResult';
 import { StudentInCourse } from './StudentInCourse';
 import { ProfileStudent } from './ProfileStudent';
-import { WorkGroup } from './WorkGroup';
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -21,7 +26,15 @@ export class CrseStudentInGroup extends EntityBase {
    deletedDate: Date;
    modifiedById: number;
    modifiedDate: Date;
+   assesseeSpResponses: SpResponse[];
+   assesseeStratResponse: StratResponse[];
+   assessorSpResponses: SpResponse[];
+   assessorStratResponse: StratResponse[];
+   authorOfComments: StudSpComment[];
    course: Course;
+   recipientOfComments: StudSpComment[];
+   spResult: SpResult;
+   stratResult: StratResult;
    studentInCourse: StudentInCourse;
    studentProfile: ProfileStudent;
    workGroup: WorkGroup;

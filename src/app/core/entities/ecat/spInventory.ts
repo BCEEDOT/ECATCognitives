@@ -1,4 +1,5 @@
 import { EntityBase } from '../EntityBase';
+import { SpResponse } from './SpResponse';
 import { SpInstrument } from './SpInstrument';
 
 /// <code-import> Place custom imports between <code-import> tags
@@ -16,6 +17,7 @@ export class SpInventory extends EntityBase {
    modifiedById: number;
    modifiedDate: Date;
    instrument: SpInstrument;
+   itemResponses: SpResponse[];
 
    /// <code> Place custom code between <code> tags
    

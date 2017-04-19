@@ -16,25 +16,18 @@ export class ProfileService {
 
   constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService) {
 
+    //Need to point to the right repo
     this.em = this.emProvider.getManager();
-    //var profileType = this.em.metadataStore.getEntityType('ProfileStudent');
-    //console.log(profileType);
-    //console.log(this.getProfile());
 
-    //this.getUsers().then(res => console.log(res));
-
-    console.log(this.global.loggedInUser);
   }
 
   getProfile(): Promise<ProfileStudent> {
 
-    //var profileType = this.em.metadataStore.getEntityType('ProfileStudent');
-
+    //TODO: No Magic strings
     let query = EntityQuery.from('profiles');
 
     return <Promise<ProfileStudent>>this.em.executeQuery(query)
       .then(res => {
-        console.log(`results of profile query ${res}`);
         return res.results[0] as ProfileStudent
       })
       .catch(e => {

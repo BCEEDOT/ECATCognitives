@@ -7,13 +7,15 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 
 import { UsersService} from './services/users.service';
 import { Person } from "../core/entities/user";
+import { GlobalService } from "../core/services/global.service";
 
 @Component({
   //Selector only needed if another template is going to refernece
   selector: 'qs-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss'],
-  viewProviders: [ UsersService ],
+  styleUrls: ['./users.component.scss']
+  //Limits only to current view and not children
+  //viewProviders: [ UsersService ],
 })
 export class UsersComponent implements OnInit {
 
@@ -25,7 +27,8 @@ export class UsersComponent implements OnInit {
               private dialogService: TdDialogService,
               private snackBarService: MdSnackBar,
               private usersService: UsersService,
-              public media: TdMediaService) {}
+              public media: TdMediaService,
+              private global: GlobalService) {}
 
   goBack(route: string): void {
     this.router.navigate(['/']);
@@ -34,7 +37,7 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     // broadcast to all listener observables when loading the page
     this.media.broadcast();
-    this.titleService.setTitle( 'Covalent Users' );
+    this.titleService.setTitle( 'ECAT Users' );
     this.loadUsers();
   }
 

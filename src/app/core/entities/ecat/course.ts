@@ -1,8 +1,11 @@
 import { EntityBase } from '../EntityBase';
 import { FacultyInCourse } from './FacultyInCourse';
+import { SpResponse } from './SpResponse';
 import { CrseStudentInGroup } from './CrseStudentInGroup';
-import { StudentInCourse } from './StudentInCourse';
 import { WorkGroup } from './WorkGroup';
+import { SpResult } from './SpResult';
+import { StratResult } from './StratResult';
+import { StudentInCourse } from './StudentInCourse';
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -21,6 +24,9 @@ export class Course extends EntityBase {
    gradDate: Date;
    reconResultId: string;
    faculty: FacultyInCourse[];
+   spResponses: SpResponse[];
+   spResults: SpResult[];
+   stratResults: StratResult[];
    studentInCrseGroups: CrseStudentInGroup[];
    students: StudentInCourse[];
    workGroups: WorkGroup[];

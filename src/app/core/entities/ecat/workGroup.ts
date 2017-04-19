@@ -1,7 +1,12 @@
 import { EntityBase } from '../EntityBase';
 import { Course } from './Course';
+import { SpResponse } from './SpResponse';
 import { CrseStudentInGroup } from './CrseStudentInGroup';
+import { StratResponse } from './StratResponse';
+import { StudSpComment } from './StudSpComment';
 import { SpInstrument } from './SpInstrument';
+import { SpResult } from './SpResult';
+import { StratResult } from './StratResult';
 import { WorkGroupModel } from './WorkGroupModel';
 
 /// <code-import> Place custom imports between <code-import> tags
@@ -28,6 +33,11 @@ export class WorkGroup extends EntityBase {
    assignedSpInstr: SpInstrument;
    course: Course;
    groupMembers: CrseStudentInGroup[];
+   spComments: StudSpComment[];
+   spResponses: SpResponse[];
+   spResults: SpResult[];
+   spStratResponses: StratResponse[];
+   spStratResults: StratResult[];
    wgModel: WorkGroupModel;
 
    /// <code> Place custom code between <code> tags

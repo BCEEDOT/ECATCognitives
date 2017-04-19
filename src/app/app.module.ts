@@ -19,7 +19,6 @@ import { AppRoutingModule } from "./app-routing.module";
 
 import { JwtHelper , AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth} from "angular2-jwt";
 import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
-import { RequestInterceptor } from '../config/interceptors/request.interceptor';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({

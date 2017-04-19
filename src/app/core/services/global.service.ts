@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Person } from "../entities/user";
+import { IPerson } from "../entities/client-entities";
+import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
 export class GlobalService {
 
-  constructor() { }
 
-  private persona: Person;
+  private loggedInUser = new Subject<IPerson>();
 
-  set loggedInUser(persona: Person) {
-      this.persona = persona;
-  }
+  user$ = this.loggedInUser.asObservable();
 
-  get loggedInUser(): Person {
-    return this.persona;
+  user(loggedInUser: IPerson) {
+    this.loggedInUser.next(loggedInUser);
   }
 
 }

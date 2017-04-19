@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     //check if user has a stored token
     if (this.authUtility.validateToken(ecatAccessToken)) {
       return <any>this.emProvider.prepare("user", this.regHelper)
-              .then(() => this.authUtility.loginUser(ecatUserIdToken, ecatAccessToken))
+              .then(() => this.authUtility.login(ecatUserIdToken, ecatAccessToken))
               .catch(e => {
                 console.log('Error creating user em' + e);
                 if (e.status == 401) {  
