@@ -1,10 +1,8 @@
 import { Entity, EntityAspect, EntityType } from 'breeze-client';
+
 import { Person, ProfileStudent, ProfileFaculty } from "./user";
 
-
-
-export interface IdToken {
-
+export interface IIdToken {
     email: string;
     lastName: string;
     firstName: string;
@@ -13,10 +11,9 @@ export interface IdToken {
     mpPaygrade: string;
     mpComponent: string;
     mpInstituteRole: string;
-
 }
 
-export interface IPerson extends Person, PersonClientExtensions {
+export interface IPerson extends Person, IPersonClientExtensions {
     student: ProfileStudent;
     faculty: ProfileFaculty;
     //external: IExternal;
@@ -29,7 +26,7 @@ export interface IProfile {
     person: IPerson;
 }
 
-export interface PersonClientExtensions {
+export interface IPersonClientExtensions {
     //verifyPassword: string;
     //defaultAvatarLocation: string;
     //prettyInstituteRole: string;

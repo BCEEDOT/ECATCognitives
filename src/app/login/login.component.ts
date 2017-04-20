@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdSnackBar } from "@angular/material";
-
 import { TdLoadingService } from '@covalent/core';
+
 import { AuthService } from "../core/services/auth.service";
 import { AuthUtilityService } from "../core/services/auth-utility.service";
 
@@ -18,7 +18,10 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(private router: Router,
-    private loadingService: TdLoadingService, private authService: AuthService, private snackBar: MdSnackBar, private authUtility: AuthUtilityService) { }
+              private loadingService: TdLoadingService, 
+              private authService: AuthService, 
+              private snackBar: MdSnackBar, 
+              private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
     var ecatAccessToken = localStorage.getItem('ecatAccessToken');

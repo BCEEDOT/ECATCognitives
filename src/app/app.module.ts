@@ -23,7 +23,8 @@ import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
     tokenName: 'ecatAccessToken',
-		tokenGetter: (() => localStorage.getItem('ecatAccessToken'))
+		tokenGetter: (() => localStorage.getItem('ecatAccessToken')),
+    noJwtError: true
 	}), http, options);
 }
 
@@ -44,10 +45,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     AppRoutingModule, //Add feature modules/routes before main routing module
   ], // modules needed to run this module
   providers: [
-    AUTH_PROVIDERS,
-    provideAuth({
-      noJwtError: true
-    }),
     {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

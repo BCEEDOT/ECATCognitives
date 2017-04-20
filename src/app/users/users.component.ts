@@ -2,7 +2,6 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
-
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
 import { UsersService} from './services/users.service';

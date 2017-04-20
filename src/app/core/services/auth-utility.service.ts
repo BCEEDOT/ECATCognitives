@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 import { JwtHelper } from "angular2-jwt";
+import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntityState, MergeStrategy } from "breeze-client";
+import { Router, Route } from '@angular/router';
+
+import { EmProviderService } from "./em-provider.service";
+import { IIdToken, IPerson } from "../entities/client-entities";
 import { GlobalService } from "./global.service";
 import { Person } from "../entities/user";
-import { IdToken, IPerson } from "../entities/client-entities";
-import { EmProviderService } from "./em-provider.service";
-import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntityState, MergeStrategy } from "breeze-client";
-import {
-    Router,
-    Route
-} from '@angular/router';
-
-
 
 @Injectable()
 export class AuthUtilityService {
@@ -34,7 +30,7 @@ export class AuthUtilityService {
 
         if (!ecatUserIdToken && !ecatAccessToken) { return false; }
 
-        this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken) as IdToken;
+        this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken) as IIdToken;
         this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
         var em = this.emProviderService.getManager();
@@ -53,7 +49,6 @@ export class AuthUtilityService {
             mpInstituteRole: this.ecatUserIdToken.MpInstituteRole
         } as Person;
 
-        
         var user = em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges) as IPerson;
         this.global.user(user);
         return true;
@@ -65,7 +60,5 @@ export class AuthUtilityService {
         localStorage.removeItem('ecatUserIdToken');
         this.router.navigate(['/login']);
     }
-
-
 
 }

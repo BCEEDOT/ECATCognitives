@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+
 import { Person } from "../entities/user";
 import { IPerson } from "../entities/client-entities";
 import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
 export class GlobalService {
-
 
   private loggedInUser = new Subject<IPerson>();
 

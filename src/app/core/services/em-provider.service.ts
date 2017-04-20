@@ -5,6 +5,8 @@ import {
 } from 'breeze-client';
 import remove from 'lodash/remove';
 import includes from 'lodash/includes';
+import { AuthHttp } from 'angular2-jwt';
+import { AjaxAngularAdapter } from "breeze-bridge-angular";
 
 // Import required breeze adapters. Rollup.js requires the use of breeze.base.debug.js, which doesn't include
 // the breeze adapters. 
@@ -17,9 +19,9 @@ import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
 import { UserRegistrationHelper } from './../entities/user';
 import { DEV_API } from './../../../config/api.config';
 
-import { AjaxAngularAdapter } from "breeze-bridge-angular";
 
-import { AuthHttp } from 'angular2-jwt';
+
+
 
 
 
