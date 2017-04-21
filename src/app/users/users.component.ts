@@ -4,9 +4,10 @@ import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 
-import { UsersService} from './services/users.service';
+//import { UsersService } from './services/users.service';
 import { Person } from "../core/entities/user";
 import { GlobalService } from "../core/services/global.service";
+import { UserUow } from "../core/services/data/user-uow.service";
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -18,16 +19,17 @@ import { GlobalService } from "../core/services/global.service";
 })
 export class UsersComponent implements OnInit {
 
-  person: Person[] = [];
+  people: Person[] = [];
 
   constructor(private titleService: Title,
-              private router: Router,
-              private loadingService: TdLoadingService,
-              private dialogService: TdDialogService,
-              private snackBarService: MdSnackBar,
-              private usersService: UsersService,
-              public media: TdMediaService,
-              private global: GlobalService) {}
+    private router: Router,
+    private loadingService: TdLoadingService,
+    private dialogService: TdDialogService,
+    private snackBarService: MdSnackBar,
+    private userUow: UserUow,
+    //private usersService: UsersService,
+    public media: TdMediaService,
+    private global: GlobalService) { }
 
   goBack(route: string): void {
     this.router.navigate(['/']);
@@ -36,21 +38,25 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     // broadcast to all listener observables when loading the page
     this.media.broadcast();
-    this.titleService.setTitle( 'ECAT Users' );
+    this.titleService.setTitle('ECAT Users');
     this.loadUsers();
   }
 
   loadUsers(): void {
     //maps to ng-template tag
     this.loadingService.register('users.list');
-    this.usersService.getUsers()
-    .then(person => { 
-      this.person = person
-      this.loadingService.resolve('users.list');
-  });
-    
+    this.userUow.person.all()
+        .then((people) => {
+          this.people = people;
+          console.log(this.people);
+        })
+        .catch(e => {
+          console.log('error getting users');
+          console.log(e);
+        })
+
   }
-  
+
 
   // loadUsers(): void {
   //   this._loadingService.register('users.list');

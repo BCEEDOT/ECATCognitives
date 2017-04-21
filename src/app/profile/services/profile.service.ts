@@ -16,7 +16,7 @@ export class ProfileService {
   constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService) {
 
     //Need to point to the right repo
-    this.em = this.emProvider.getManager();
+    //this.em = this.emProvider.getManager();
 
   }
 

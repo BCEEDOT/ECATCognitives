@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 
 import { SharedModule } from "../shared/shared.module";
 import { UsersComponent } from "./users.component";
-import { UsersService} from "./services/users.service";
+//import { UsersService} from "./services/users.service";
 import { UsersRoutingModule } from "./users-routing.module";
 
 @NgModule({
@@ -14,7 +14,7 @@ import { UsersRoutingModule } from "./users-routing.module";
         UsersComponent
     ],
     exports: [],
-    providers: [UsersService]
+    providers: []
 })
 
 export class UsersModule { }

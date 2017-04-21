@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service';
 import { AuthUtilityService } from './services/auth-utility.service';
 import { EntityUserModule } from "./entities/user/user-entity.module";
 import { GlobalService } from "./services/global.service";
+import { UserUow } from './services/data/user-uow.service'
 
 // ATTENTION: Never import this module into a lazy loaded module. Only import into app module.
 @NgModule({
@@ -20,6 +21,7 @@ import { GlobalService } from "./services/global.service";
     declarations: [],
     exports: [],
     providers: [
+        UserUow,
         EmProviderService,
         AuthGuard,
         AuthService,

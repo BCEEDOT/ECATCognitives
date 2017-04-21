@@ -7,6 +7,7 @@ import { EmProviderService } from "./em-provider.service";
 import { IPerson } from "../entities/client-entities";
 import { GlobalService } from "./global.service";
 import { Person } from "../entities/user";
+import { DataContext } from '../../app-constants';
 
 @Injectable()
 export class AuthUtilityService {
@@ -33,7 +34,7 @@ export class AuthUtilityService {
         this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken);
         this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
-        var em = this.emProviderService.getManager();
+        var em = this.emProviderService.newManager(DataContext.User);
 
         var loggedInUser = {
             personId: this.ecatAccessToken.sub,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   EntityManager, NamingConvention, DataService, DataType, MetadataStore,
-  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config
+  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises
 } from 'breeze-client';
 import remove from 'lodash/remove';
 import includes from 'lodash/includes';
@@ -18,29 +18,54 @@ import 'breeze-client/breeze.uriBuilder.odata';
 import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
 import { UserRegistrationHelper } from './../entities/user';
 import { DEV_API } from './../../../config/api.config';
+import { DataContext, ResourceEndPoint } from '../../app-constants';
+
+export interface IManager {
+  dataContext: DataContext;
+  manager: EntityManager;
+  promise: Promise<any>,
+  [index: number]: IManager;
+}
+
 
 @Injectable()
 export class EmProviderService {
 
-  private static manager: EntityManager;
+  private static manager: Array<IManager> = [];
   private static preparePromise: Promise<any>;
 
   constructor(private authHttp: AuthHttp) {
 
   }
 
-  prepare(serviceEndPoint: string, regHelper: UserRegistrationHelper): Promise<any> {
+  prepare(dataContext: DataContext, regHelper: UserRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
 
     //Pulled from Environments file
-    serviceEndPoint = DEV_API + serviceEndPoint;
+    
 
-    if (!EmProviderService.preparePromise) {
-
-      config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
+    config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
       NamingConvention.camelCase.setAsDefault();
       //configure breeze to use authHTTP instead of default angular http class. Used to add access token to header
       config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
       config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
+
+      let emStatus = EmProviderService.manager[dataContext];
+
+      if (!emStatus) {
+        emStatus = EmProviderService.manager[dataContext] = {
+          dataContext: dataContext,
+          manager: null,
+          promise: null,
+        };
+      }
+
+    if (!emStatus.promise) {
+
+      
+      let serviceEndPoint = DEV_API + resourceEndPoint;
+
+      console.log(serviceEndPoint);
+
 
       let dsconfig: DataServiceOptions = {
         serviceName: serviceEndPoint
@@ -48,50 +73,32 @@ export class EmProviderService {
 
       let dataService = new DataService(dsconfig);
 
-      let manager = EmProviderService.manager = new
+      let currentManager = emStatus.manager = new
         EntityManager({
           dataService: dataService
         });
 
       return EmProviderService.preparePromise =
-        manager.fetchMetadata()
+        emStatus.manager.fetchMetadata()
           .then(() => {
-            regHelper.register(manager.metadataStore);
-            this.registerAnnotations(manager.metadataStore);
+            regHelper.register(emStatus.manager.metadataStore);
+            this.registerAnnotations(emStatus.manager.metadataStore);
           })
           .catch(e => {
             //If there is an error reset
-            EmProviderService.preparePromise = null;
+            emStatus.promise = null;
             console.log("Error retrieving metadata");
             console.log(`error from prepare em----- ${e}`)
             throw e;
 
           });
     }
-    return EmProviderService.preparePromise;
+    return emStatus.promise;
   }
 
-  getManager(): EntityManager {
-    let manager = EmProviderService.manager;
-    return manager;
+  newManager(ecatContext: DataContext): EntityManager {
+    return EmProviderService.manager[ecatContext].manager;
   }
-
-  reset(manager: EntityManager): void {
-        if (manager) {
-            manager.clear();
-            this.seedManager(manager);
-        }
-    }
-
-    newManager(): EntityManager {
-        let manager = EmProviderService.manager.createEmptyCopy();
-        this.seedManager(manager);
-        return manager;
-    }
-
-    private seedManager(manager: EntityManager) {
-        manager.importEntities(EmProviderService.manager.exportEntities(null, { asString: false, includeMetadata: false }));
-    }
 
   //What does this do?
   private registerAnnotations(metadataStore: MetadataStore) {

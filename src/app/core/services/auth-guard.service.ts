@@ -11,9 +11,11 @@ import { AuthService } from './auth.service';
 import { AuthUtilityService } from "./auth-utility.service";
 import { EmProviderService } from "./em-provider.service";
 import { UserRegistrationHelper } from "../entities/user";
+import { DataContext, ResourceEndPoint } from "../../app-constants";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
+
   constructor(private authService: AuthService, 
   private router: Router, private authUtility: AuthUtilityService, 
   private emProvider: EmProviderService, private regHelper: UserRegistrationHelper) { }
@@ -40,7 +42,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     //TODO: Rewrite this to handle errors better
     //check if user has a stored token
     if (this.authUtility.validateToken(ecatAccessToken)) {
-      return <any>this.emProvider.prepare("user", this.regHelper)
+      return <any>this.emProvider.prepare(DataContext.User, this.regHelper, ResourceEndPoint.User)
               .then(() => this.authUtility.login(ecatUserIdToken, ecatAccessToken))
               .catch(e => {
                 console.log('Error creating user em' + e);

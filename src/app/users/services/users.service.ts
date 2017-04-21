@@ -1,31 +1,31 @@
-import { Injectable, OnInit } from '@angular/core';
-import { Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
+// import { Injectable, OnInit } from '@angular/core';
+// import { Response } from '@angular/http';
+// import { Observable } from 'rxjs/Observable';
+// import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
 
-import { EmProviderService } from "../../core/services/em-provider.service";
-import { Person, UserRegistrationHelper } from "../../core/entities/user";
+// import { EmProviderService } from "../../core/services/em-provider.service";
+// import { Person, UserRegistrationHelper } from "../../core/entities/user";
 
 
-@Injectable()
-export class UsersService {
+// @Injectable()
+// export class UsersService {
 
-  em: EntityManager;
-  person: Person[] = [];
+//   em: EntityManager;
+//   person: Person[] = [];
 
-  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
-    this.em = this.emProvider.getManager();
-  }
+//   constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService) {
+//     this.em = this.emProvider.getManager();
+//   }
 
-  getUsers(): Promise<Person[]> {
+//   getUsers(): Promise<Person[]> {
     
-    let query = EntityQuery.from('getusers');
+//     let query = EntityQuery.from('getusers');
 
-    return <Promise<Person[]>>this.em.executeQuery(query)
-      .then(res => res.results as Person[])
-      .catch(e => {
-        console.log('Did not retrieve users' + e);
-        return Promise.reject(e);
-      });
-  }
-}
+//     return <Promise<Person[]>>this.em.executeQuery(query)
+//       .then(res => res.results as Person[])
+//       .catch(e => {
+//         console.log('Did not retrieve users' + e);
+//         return Promise.reject(e);
+//       });
+//   }
+// }
