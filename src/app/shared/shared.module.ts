@@ -8,6 +8,9 @@ import { CovalentMarkdownModule } from '@covalent/markdown';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
+
+
+
 @NgModule({
     imports: [
         CovalentCoreModule,    

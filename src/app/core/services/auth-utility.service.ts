@@ -4,14 +4,14 @@ import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntitySta
 import { Router, Route } from '@angular/router';
 
 import { EmProviderService } from "./em-provider.service";
-import { IIdToken, IPerson } from "../entities/client-entities";
+import { IPerson } from "../entities/client-entities";
 import { GlobalService } from "./global.service";
 import { Person } from "../entities/user";
 
 @Injectable()
 export class AuthUtilityService {
 
-    ecatUserIdToken: any;
+    ecatUserIdToken: Person;
     ecatAccessToken: any;
     em: EntityManager;
 
@@ -30,23 +30,23 @@ export class AuthUtilityService {
 
         if (!ecatUserIdToken && !ecatAccessToken) { return false; }
 
-        this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken) as IIdToken;
+        this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken);
         this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
         var em = this.emProviderService.getManager();
 
         var loggedInUser = {
             personId: this.ecatAccessToken.sub,
-            lastName: this.ecatUserIdToken.LastName,
-            firstName: this.ecatUserIdToken.FirstName,
+            lastName: this.ecatUserIdToken.lastName,
+            firstName: this.ecatUserIdToken.firstName,
             isActive: true,
-            mpGender: this.ecatUserIdToken.MpGender,
-            mpAffiliation: this.ecatUserIdToken.MpAffiliation,
-            mpPaygrade: this.ecatUserIdToken.MpPaygrade,
-            mpComponent: this.ecatUserIdToken.MpComponent,
-            email: this.ecatUserIdToken.Email,
+            mpGender: this.ecatUserIdToken.mpGender,
+            mpAffiliation: this.ecatUserIdToken.mpAffiliation,
+            mpPaygrade: this.ecatUserIdToken.mpPaygrade,
+            mpComponent: this.ecatUserIdToken.mpComponent,
+            email: this.ecatUserIdToken.email,
             registrationComplete: true,
-            mpInstituteRole: this.ecatUserIdToken.MpInstituteRole
+            mpInstituteRole: this.ecatUserIdToken.mpInstituteRole
         } as Person;
 
         var user = em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges) as IPerson;

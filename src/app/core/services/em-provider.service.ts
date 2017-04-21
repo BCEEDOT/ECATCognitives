@@ -19,17 +19,11 @@ import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
 import { UserRegistrationHelper } from './../entities/user';
 import { DEV_API } from './../../../config/api.config';
 
-
-
-
-
-
-
 @Injectable()
 export class EmProviderService {
 
-  private static _manager: EntityManager;
-  private static _preparePromise: Promise<any>;
+  private static manager: EntityManager;
+  private static preparePromise: Promise<any>;
 
   constructor(private authHttp: AuthHttp) {
 
@@ -40,7 +34,7 @@ export class EmProviderService {
     //Pulled from Environments file
     serviceEndPoint = DEV_API + serviceEndPoint;
 
-    if (!EmProviderService._preparePromise) {
+    if (!EmProviderService.preparePromise) {
 
       config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
       NamingConvention.camelCase.setAsDefault();
@@ -54,12 +48,12 @@ export class EmProviderService {
 
       let dataService = new DataService(dsconfig);
 
-      let manager = EmProviderService._manager = new
+      let manager = EmProviderService.manager = new
         EntityManager({
           dataService: dataService
         });
 
-      return EmProviderService._preparePromise =
+      return EmProviderService.preparePromise =
         manager.fetchMetadata()
           .then(() => {
             regHelper.register(manager.metadataStore);
@@ -67,20 +61,37 @@ export class EmProviderService {
           })
           .catch(e => {
             //If there is an error reset
-            EmProviderService._preparePromise = null;
+            EmProviderService.preparePromise = null;
             console.log("Error retrieving metadata");
             console.log(`error from prepare em----- ${e}`)
             throw e;
 
           });
     }
-    return EmProviderService._preparePromise;
+    return EmProviderService.preparePromise;
   }
 
   getManager(): EntityManager {
-    let manager = EmProviderService._manager;
+    let manager = EmProviderService.manager;
     return manager;
   }
+
+  reset(manager: EntityManager): void {
+        if (manager) {
+            manager.clear();
+            this.seedManager(manager);
+        }
+    }
+
+    newManager(): EntityManager {
+        let manager = EmProviderService.manager.createEmptyCopy();
+        this.seedManager(manager);
+        return manager;
+    }
+
+    private seedManager(manager: EntityManager) {
+        manager.importEntities(EmProviderService.manager.exportEntities(null, { asString: false, includeMetadata: false }));
+    }
 
   //What does this do?
   private registerAnnotations(metadataStore: MetadataStore) {

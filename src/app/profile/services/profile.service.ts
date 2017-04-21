@@ -12,7 +12,6 @@ import { GlobalService } from "../../core/services/global.service";
 export class ProfileService {
 
   em: EntityManager;
-  profile: ProfileStudent;
 
   constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService) {
 

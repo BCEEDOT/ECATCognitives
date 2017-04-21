@@ -17,15 +17,15 @@ import { LoginComponent } from './login/login.component';
 
 import { AppRoutingModule } from "./app-routing.module";
 
-import { JwtHelper , AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth} from "angular2-jwt";
+import { JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from "angular2-jwt";
 import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
     tokenName: 'ecatAccessToken',
-		tokenGetter: (() => localStorage.getItem('ecatAccessToken')),
+    tokenGetter: (() => localStorage.getItem('ecatAccessToken')),
     noJwtError: true
-	}), http, options);
+  }), http, options);
 }
 
 @NgModule({
@@ -35,8 +35,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     BreezeBridgeAngularModule,
-    SharedModule, 
-    CoreModule, 
+    SharedModule,
+    CoreModule,
     BrowserModule,
     UsersModule,
     ProfileModule,
