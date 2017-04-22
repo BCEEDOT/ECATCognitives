@@ -12,24 +12,37 @@ export class UserDataContext extends BaseDataContext {
 
     user: IDataContext;
 
-    private studentApiResources: IStudentApiResources = {
-        initCourses: {
-            returnedEntityType: _mp.MpEntityType.course,
-            resource: 'GetCourses'
+    private userApiResources: IUserApiResources = {
+        checkEmail: {
+            returnedEntityType: _mp.MpEntityType.unk,
+            resource: 'CheckUserEmail'
         },
-        course: {
-            returnedEntityType: _mp.MpEntityType.course,
-            resource: 'ActiveCourse'
+        login: {
+            returnedEntityType: _mp.MpEntityType.person,
+            resource: 'Login'
         },
-        workGroup: {
-            returnedEntityType: _mp.MpEntityType.workGroup,
-            resource: 'ActiveWorkGroup'
+        profile: {
+            returnedEntityType: _mp.MpEntityType.unk,
+            resource:  'Profiles'
         },
-        wgResult: {
-            returnedEntityType: _mp.MpEntityType.spResult,
-            resource: 'GetMyWgResult'
+        userToken: {
+            resource: 'Token',
+            returnedEntityType: _mp.MpEntityType.unk
+        },
+        cogInst: {
+            resource: 'GetCogInst',
+            returnedEntityType: _mp.MpEntityType.cogInstrument
+        },
+        cogResults: {
+            resource: 'GetCogResults',
+	    returnedEntityType: _mp.MpEntityType.unk
+        },
+        roadRunner: {
+            resource: 'RoadRunnerInfos',
+            returnedEntityType: _mp.MpEntityType.unk
         }
-    } 
+
+    };
 
 
     /**
@@ -42,14 +55,12 @@ export class UserDataContext extends BaseDataContext {
         this.manager = emProviderSerive.getManager[user];
     }
 
-    activate() {};
+    getProfile(){
+        let query = EntityQuery.from(userApiResources.profile.resource);
 
-    fetchActiveCourse(){
-        let query = EntityQuery.from(studentApiResources.course.resource);
-
-        return <Promise<Course>>this.em.executeQuery(query)
+        return <Promise<Profile>>this.em.executeQuery(query)
         .then(res => {
-            return res.results[0] as course
+            return res.results[0] as profile
         })
         .catch(e => {
             console.log('Did not retrieve profile' + e);
@@ -57,7 +68,5 @@ export class UserDataContext extends BaseDataContext {
         });
 
     }
-
-    fetchActiveWorkGroup(){};
 
 }
