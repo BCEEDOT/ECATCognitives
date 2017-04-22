@@ -45,7 +45,7 @@ export class UsersComponent implements OnInit {
   loadUsers(): void {
     //maps to ng-template tag
     this.loadingService.register('users.list');
-    this.userUow.person.all()
+    this.userSerice.loadUsers()
         .then((people) => {
           this.people = people;
           console.log(this.people);

@@ -38,6 +38,7 @@ export class EmProviderService {
 
   }
 
+  //Need to account for client entity extensions.
   prepare(dataContext: DataContext, regHelper: UserRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
 
     //Pulled from Environments file
@@ -96,7 +97,12 @@ export class EmProviderService {
     return emStatus.promise;
   }
 
-  newManager(ecatContext: DataContext): EntityManager {
+  //add Method to extend metadata to include client entity extensions
+  private registerClientEntityExtensions(metadataStore: MetadataStore) {
+
+  }
+
+  getManager(ecatContext: DataContext): EntityManager {
     return EmProviderService.manager[ecatContext].manager;
   }
 

@@ -7,7 +7,7 @@ import { DataContext } from '../../app-constants';
 import { IRepository, Repository } from './base-repository.service';
 
 @Injectable()
-export class UnitOfWork {
+export class BaseDataContext {
 
     private static shelveSets = {};
     //private static savedOrRejectedSubject = new Subject<SavedOrRejectedArgs>();
@@ -49,10 +49,13 @@ export class UnitOfWork {
         return this.manager.hasChanges();
     }
 
+    
+
     getChanges(): Entity[] {
         return this.manager.getChanges();
     }
 
+    //This is save changes
     commit(): Promise<any> {
         let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
 
