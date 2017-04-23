@@ -3,6 +3,7 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { EmProviderService } from "../../core/services/em-provider.service";
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp } from "breeze-client";
+import { UserDataContext } from "../../core/services/data/user-data-context.service";
 
 import { ProfileStudent, UserRegistrationHelper } from "../../core/entities/user";
 import { GlobalService } from "../../core/services/global.service";
@@ -13,7 +14,7 @@ export class ProfileService {
 
   em: EntityManager;
 
-  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService) {
+  constructor(private regHelper: UserRegistrationHelper, private emProvider: EmProviderService, private global: GlobalService, private userDataContext: UserDataContext) {
 
     //Need to point to the right repo
     //this.em = this.emProvider.getManager();
@@ -33,5 +34,9 @@ export class ProfileService {
         console.log('Did not retrieve profile' + e);
         return Promise.reject(e);
       });
+  }
+
+  saveProfile(formName: string): void {
+    this.userDataContext.commit()
   }
 }

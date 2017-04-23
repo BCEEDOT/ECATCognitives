@@ -16,7 +16,7 @@ import 'breeze-client/breeze.uriBuilder.json';
 import 'breeze-client/breeze.uriBuilder.odata';
 
 import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
-import { UserRegistrationHelper } from './../entities/user';
+import { IRegistrationHelper } from './../entities/IRegistrationHelper';
 import { DEV_API } from './../../../config/api.config';
 import { DataContext, ResourceEndPoint } from '../../app-constants';
 
@@ -39,11 +39,10 @@ export class EmProviderService {
   }
 
   //Need to account for client entity extensions.
-  prepare(dataContext: DataContext, regHelper: UserRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
+  prepare(dataContext: DataContext, regHelper: IRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
 
     //Pulled from Environments file
-    
-
+  
     config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
       NamingConvention.camelCase.setAsDefault();
       //configure breeze to use authHTTP instead of default angular http class. Used to add access token to header

@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { DataContext } from '../../app-constants';
-import { IRepository, Repository } from './base-repository.service';
+
 
 @Injectable()
 export class BaseDataContext {
@@ -26,7 +26,7 @@ export class BaseDataContext {
 
     protected get manager(): EntityManager {
         if (!this._manager) {
-            this._manager = this._emProvider.newManager(this.dataContext);
+            this._manager = this._emProvider.getManager(this.dataContext);
 
             this._manager.entityChanged.subscribe(args => {
                 this.entityChangedSubject.next(args);
@@ -44,9 +44,15 @@ export class BaseDataContext {
         return null;
     }
 
-    
+    //modify has changes so that it checks against all managers?
     hasChanges(): boolean {
         return this.manager.hasChanges();
+    }
+
+    hasChangesChanged(): Observable<any> {
+        return this.manager.hasChangesChanged.subscribe(eventArgs => {
+            var data = {hasChanges: eventArgs.hasChanges}
+        })
     }
 
     

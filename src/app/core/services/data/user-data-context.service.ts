@@ -10,7 +10,8 @@ export class UserDataContext extends BaseDataContext {
 
     //person: IRepository<Person>;
 
-    user: IDataContext;
+    user: DataContext;
+    manager: EntityManager;
 
     private userApiResources: IUserApiResources = {
         checkEmail: {
@@ -49,16 +50,16 @@ export class UserDataContext extends BaseDataContext {
      *
      */
     constructor(emProvider: EmProviderService) {
-        super(DataContext.User); //This sets the current entitymanager to user
+        super(DataContext.User, emProvider); 
         //this.user = this.createRepository('user', userClientExtensions); //this returns the correct entityManager
-        console.log(this.user);
-        this.manager = emProviderSerive.getManager[user];
+        //console.log(this.user);
+        this.manager = emProviderService.getManager[user];
     }
 
     getProfile(){
         let query = EntityQuery.from(userApiResources.profile.resource);
 
-        return <Promise<Profile>>this.em.executeQuery(query)
+        return <Promise<Profile>>this.manager.executeQuery(query)
         .then(res => {
             return res.results[0] as profile
         })
@@ -68,5 +69,7 @@ export class UserDataContext extends BaseDataContext {
         });
 
     }
+
+
 
 }
