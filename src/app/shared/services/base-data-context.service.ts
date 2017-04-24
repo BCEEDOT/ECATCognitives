@@ -20,9 +20,9 @@ export class BaseDataContext {
         this.entityChangedSubject = new Subject<EntityChangedEventArgs>();
     }
 
-    static deleteShelveSet(key: string): void {
-        delete UnitOfWork.shelveSets[key];
-    }
+    // static deleteShelveSet(key: string): void {
+    //     delete UnitOfWork.shelveSets[key];
+    // }
 
     protected get manager(): EntityManager {
         if (!this._manager) {
@@ -49,13 +49,11 @@ export class BaseDataContext {
         return this.manager.hasChanges();
     }
 
-    hasChangesChanged(): Observable<any> {
-        return this.manager.hasChangesChanged.subscribe(eventArgs => {
-            var data = {hasChanges: eventArgs.hasChanges}
-        })
-    }
-
-    
+    // hasChangesChanged(): Observable<any> {
+    //     return this.manager.hasChangesChanged.subscribe(eventArgs => {
+    //         var data = {hasChanges: eventArgs.hasChanges}
+    //     })
+    // }
 
     getChanges(): Entity[] {
         return this.manager.getChanges();
@@ -97,29 +95,29 @@ export class BaseDataContext {
     //     }
     // }
 
-    unshelve(key: string, clear: boolean = true): boolean {
-        let data = UnitOfWork.shelveSets[key];
-        if (!data) {
-            return false;
-        }
+    // unshelve(key: string, clear: boolean = true): boolean {
+    //     let data = UnitOfWork.shelveSets[key];
+    //     if (!data) {
+    //         return false;
+    //     }
 
-        if (clear) {
-            // Clear the entity manager and don't bother importing lookup data from masterManager.
-            this.manager.clear();
-        }
-        this.manager.importEntities(data);
+    //     if (clear) {
+    //         // Clear the entity manager and don't bother importing lookup data from masterManager.
+    //         this.manager.clear();
+    //     }
+    //     this.manager.importEntities(data);
 
-        // Delete the shelveSet
-        delete UnitOfWork.shelveSets[key];
-        return true;
-    }
+    //     // Delete the shelveSet
+    //     delete UnitOfWork.shelveSets[key];
+    //     return true;
+    // }
 
-    protected createRepository<T>(entityTypeName: string, resourceName: string, isCached: boolean = false) {
-        return new Repository<T>(this.manager, entityTypeName, resourceName, isCached);
-    }
+    // protected createRepository<T>(entityTypeName: string, resourceName: string, isCached: boolean = false) {
+    //     return new Repository<T>(this.manager, entityTypeName, resourceName, isCached);
+    // }
 
-    protected createFactory<T extends Entity>(type: { new (): T; }) {
-        //return new EntityFactory<T>(type, this.manager);
-        return null;
-    }
+    // protected createFactory<T extends Entity>(type: { new (): T; }) {
+    //     //return new EntityFactory<T>(type, this.manager);
+    //     return null;
+    // }
 }

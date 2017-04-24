@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Person } from "../entities/user";
-import { IPerson } from "../entities/client-entities";
+import { IPerson } from "../entities/client-models";
 import { Subject }    from 'rxjs/Subject';
 
 @Injectable()

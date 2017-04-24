@@ -31,7 +31,7 @@ export interface IManager {
 @Injectable()
 export class EmProviderService {
 
-  private static manager: Array<IManager> = [];
+  private static masterManagers: Array<IManager> = [];
   private static preparePromise: Promise<any>;
 
   constructor(private authHttp: AuthHttp) {
@@ -49,10 +49,10 @@ export class EmProviderService {
       config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
       config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
 
-      let emStatus = EmProviderService.manager[dataContext];
+      let emStatus = EmProviderService.masterManagers[dataContext];
 
       if (!emStatus) {
-        emStatus = EmProviderService.manager[dataContext] = {
+        emStatus = EmProviderService.masterManagers[dataContext] = {
           dataContext: dataContext,
           manager: null,
           promise: null,
@@ -78,7 +78,7 @@ export class EmProviderService {
           dataService: dataService
         });
 
-      return EmProviderService.preparePromise =
+      return emStatus.promise =
         emStatus.manager.fetchMetadata()
           .then(() => {
             regHelper.register(emStatus.manager.metadataStore);
@@ -102,7 +102,7 @@ export class EmProviderService {
   }
 
   getManager(ecatContext: DataContext): EntityManager {
-    return EmProviderService.manager[ecatContext].manager;
+    return EmProviderService.masterManagers[ecatContext].manager;
   }
 
   //What does this do?

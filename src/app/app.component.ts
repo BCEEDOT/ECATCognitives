@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
 import { GlobalService } from "./core/services/global.service";
 import { Person } from "./core/entities/user/person";
-import { IPerson } from "./core/entities/client-entities";
+import { IPerson } from "./core/entities/client-models";
 import { AuthUtilityService } from "./core/services/auth-utility.service";
 
 @Component({

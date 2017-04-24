@@ -4,7 +4,7 @@ import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntitySta
 import { Router, Route } from '@angular/router';
 
 import { EmProviderService } from "./em-provider.service";
-import { IPerson } from "../entities/client-entities";
+import { IPerson } from "../entities/client-models";
 import { GlobalService } from "./global.service";
 import { Person } from "../entities/user";
 import { DataContext } from '../../app-constants';
@@ -34,7 +34,7 @@ export class AuthUtilityService {
         this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken);
         this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
-        var em = this.emProviderService.newManager(DataContext.User);
+        var em = this.emProviderService.getManager(DataContext.User);
 
         var loggedInUser = {
             personId: this.ecatAccessToken.sub,

@@ -7,7 +7,7 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 //import { UsersService } from './services/users.service';
 import { Person } from "../core/entities/user";
 import { GlobalService } from "../core/services/global.service";
-import { UserUow } from "../core/services/data/user-uow.service";
+import { UserDataContext } from "../core/services/data/user-data-context.service";
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -26,7 +26,7 @@ export class UsersComponent implements OnInit {
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private snackBarService: MdSnackBar,
-    private userUow: UserUow,
+    private userDataContext: UserDataContext,
     //private usersService: UsersService,
     public media: TdMediaService,
     private global: GlobalService) { }
@@ -45,12 +45,14 @@ export class UsersComponent implements OnInit {
   loadUsers(): void {
     //maps to ng-template tag
     this.loadingService.register('users.list');
-    this.userSerice.loadUsers()
+    this.userDataContext.getUsers()
         .then((people) => {
           this.people = people;
+          this.loadingService.resolve('users.list');
           console.log(this.people);
         })
         .catch(e => {
+          this.loadingService.resolve('users.list');
           console.log('error getting users');
           console.log(e);
         })

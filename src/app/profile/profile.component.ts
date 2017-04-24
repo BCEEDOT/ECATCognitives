@@ -38,14 +38,8 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   loadProfile(): void {
-    //maps to ng-template tag
-    //this.loadingService.register('users.list');
-    this.profileService.getProfile()
-      .then(profile => {
-        this.profile = profile
-        //this.loadingService.resolve('users.list');
-      });
 
   }
+
 
 }

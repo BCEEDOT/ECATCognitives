@@ -6,7 +6,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "lib": ["es2016", "dom"],
+    "lib": [
+      "es2016",
+      "dom"
+    ],
     "module": "es2015",
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
