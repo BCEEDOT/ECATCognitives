@@ -3,15 +3,17 @@ import { Http, Headers, Response, RequestOptions, URLSearchParams } from '@angul
 import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { JwtHelper } from "angular2-jwt";
 
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/throw';
+import 'rxjs/add/operator/catch';
 
 import { AuthUtilityService } from "./auth-utility.service";
-import { IPerson } from "../entities/client-models";
+import { Person } from "../entities/user";
 import { GlobalService } from "./global.service";
 
 @Injectable()
@@ -19,8 +21,8 @@ export class AuthService implements IHttpInterceptor {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
   //public token: string;
-  
-  constructor(private http: Http, private router: Router, private global: GlobalService) {}
+
+  constructor(private http: Http, private router: Router, private global: GlobalService, private jwtHelper: JwtHelper) { }
 
   login(username: string, password: string): Observable<boolean> {
 
@@ -38,6 +40,7 @@ export class AuthService implements IHttpInterceptor {
         if (accessToken && idToken) {
           localStorage.setItem('ecatAccessToken', accessToken);
           localStorage.setItem('ecatUserIdToken', idToken);
+
           this.activateUser(idToken, accessToken);
           return true;
         } else {
@@ -48,7 +51,7 @@ export class AuthService implements IHttpInterceptor {
   }
 
   private handleError(error: Response | any) {
-    
+
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -65,31 +68,36 @@ export class AuthService implements IHttpInterceptor {
     return Observable.throw(errMsg);
   }
 
-  private activateUser(ecatUserIdToken, ecatAccessToken) {
+  private activateUser(ecatUserIdToken: any, ecatAccessToken: any) {
 
-        var loggedInUser = {
-            personId: ecatAccessToken.sub,
-            lastName: ecatUserIdToken.lastName,
-            firstName: ecatUserIdToken.firstName,
-            isActive: true,
-            mpGender: ecatUserIdToken.mpGender,
-            mpAffiliation: ecatUserIdToken.mpAffiliation,
-            mpPaygrade: ecatUserIdToken.mpPaygrade,
-            mpComponent: ecatUserIdToken.mpComponent,
-            email: ecatUserIdToken.email,
-            registrationComplete: true,
-            mpInstituteRole: ecatUserIdToken.mpInstituteRole
-        } as IPerson;
+    let accessToken = this.jwtHelper.decodeToken(ecatAccessToken);
+    let idToken = this.jwtHelper.decodeToken(ecatUserIdToken);
 
-        this.global.user(loggedInUser);
-        this.global.isLoggedIn(true);
-        this.global.isFaculty(false);
+    var loggedInUser = {
+      personId: accessToken.sub,
+      lastName: idToken.lastName,
+      firstName: idToken.firstName,
+      isActive: true,
+      mpGender: idToken.mpGender,
+      mpAffiliation: idToken.mpAffiliation,
+      mpPaygrade: idToken.mpPaygrade,
+      mpComponent: idToken.mpComponent,
+      email: idToken.email,
+      registrationComplete: true,
+      mpInstituteRole: idToken.mpInstituteRole
+    } as Person;
+
+    this.global.user(loggedInUser);
+    this.global.isLoggedIn(true);
+    this.global.isFaculty(false);
+    this.global.isStudent(true);
+    this.global.isLmsAdmin(false);
   }
 
-  public logout() {
-        localStorage.removeItem('ecatAccessToken');
-        localStorage.removeItem('ecatUserIdToken');
-        this.router.navigate(['/login']);
-    }
+  logout() {
+    localStorage.removeItem('ecatAccessToken');
+    localStorage.removeItem('ecatUserIdToken');
+    this.router.navigate(['/login']);
+  }
 }
 

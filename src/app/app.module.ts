@@ -9,6 +9,7 @@ import { CovalentCoreModule } from '@covalent/core';
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
 import { UsersModule } from "./users/users.module";
+import { StudentModule } from "./student/student.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { ProfileModule } from "./profile/profile.module";
 
@@ -39,6 +40,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     CoreModule,
     BrowserModule,
     UsersModule,
+    StudentModule,
     ProfileModule,
     DashboardModule,
     BrowserAnimationsModule,
@@ -58,6 +60,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 })
 export class AppModule {
   constructor(router: Router) {
+   
     console.log('Routes', JSON.stringify(router.config, undefined, 2));
   }
 

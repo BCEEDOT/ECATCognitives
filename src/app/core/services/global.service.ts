@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 
 import { Person } from "../entities/user";
-import { IPerson } from "../entities/client-models";
 import { Subject }    from 'rxjs/Subject';
 
 @Injectable()
 export class GlobalService {
 
-  private loggedInUser = new Subject<IPerson>();
+  private loggedInUser = new Subject<Person>();
   private loggedIn = new Subject<Boolean>();
   private student = new Subject<Boolean>();
   private faculty = new Subject<Boolean>();
   private lmsAdmin = new Subject<Boolean>();
   private profileComplete = new Subject<Boolean>();
-
 
   user$ = this.loggedInUser.asObservable();
   isStudent$ = this.student.asObservable();
@@ -22,7 +20,7 @@ export class GlobalService {
   isLoggedIn$ = this.loggedIn.asObservable();
   isProfileComplete$ = this.profileComplete.asObservable();
 
-  user(loggedInUser: IPerson) {
+  user(loggedInUser: Person) {
     this.loggedInUser.next(loggedInUser);
   }
 

@@ -31,10 +31,15 @@ import { UserDataContext } from './services/data/user-data-context.service'
 })
 
 export class CoreModule {
-    constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
+    constructor( @Optional() @SkipSelf() parentModule: CoreModule, global: GlobalService) {
         if (parentModule) {
             throw new Error(
                 'CoreModule is already loaded. Import it in the AppModule only');
         }
+
+        if (!global) {
+            console.log('Global user variables are not set');
+        }
+
     }
 }

@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
               private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
-    var ecatAccessToken = localStorage.getItem('ecatAccessToken');
 
     //check if user has a stored token and it is still valid
     if (tokenNotExpired('ecatAccessToken')) {

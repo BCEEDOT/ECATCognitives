@@ -13,8 +13,3 @@ export enum DataContext {
 export class UserEntityType {
     static Person = 'Person';
 }
-
-export class UserResources {
-    static getUsers = 'getUsers';
-}
-

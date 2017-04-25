@@ -7,9 +7,9 @@ import {
 import { BaseDataContext } from '../../../shared/services';
 import { EmProviderService } from '../em-provider.service';
 import { Person, ProfileStudent, ProfileFaculty, CogInstrument } from '../../entities/user';
-import { IApiResources, IProfile } from "../../entities/client-models";
+import { IUserApiResources } from "../../entities/client-models";
 import { MpEntityType } from "../../common/mapStrings";
-import { DataContext, UserResources } from '../../../app-constants';
+import { DataContext } from '../../../app-constants';
 
 @Injectable()
 export class UserDataContext extends BaseDataContext {
@@ -18,7 +18,7 @@ export class UserDataContext extends BaseDataContext {
 
     user: DataContext;
 
-    private userApiResources: IApiResources = {
+    private userApiResources: IUserApiResources = {
         checkEmail: {
             returnedEntityType: MpEntityType.unk,
             resource: 'CheckUserEmail'

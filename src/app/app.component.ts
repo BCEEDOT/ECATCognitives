@@ -3,7 +3,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
 import { GlobalService } from "./core/services/global.service";
 import { Person } from "./core/entities/user/person";
-import { IPerson } from "./core/entities/client-models";
 import { AuthService } from "./core/services/auth.service";
 
 @Component({
@@ -13,7 +12,7 @@ import { AuthService } from "./core/services/auth.service";
 })
 export class AppComponent implements OnInit {
 
-  persona: IPerson = <IPerson>{};
+  persona: Person = <Person>{};
   isFaculty: Boolean = false;
 
   constructor(private _iconRegistry: MdIconRegistry,
@@ -40,6 +39,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.global.user$.subscribe((user) => {
       this.persona = user;
     });
