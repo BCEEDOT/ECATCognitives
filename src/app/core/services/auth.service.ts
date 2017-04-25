@@ -10,13 +10,17 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/throw';
 
+import { AuthUtilityService } from "./auth-utility.service";
+import { IPerson } from "../entities/client-models";
+import { GlobalService } from "./global.service";
+
 @Injectable()
 export class AuthService implements IHttpInterceptor {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
   //public token: string;
   
-  constructor(private http: Http, private router: Router) {}
+  constructor(private http: Http, private router: Router, private global: GlobalService) {}
 
   login(username: string, password: string): Observable<boolean> {
 
@@ -34,16 +38,13 @@ export class AuthService implements IHttpInterceptor {
         if (accessToken && idToken) {
           localStorage.setItem('ecatAccessToken', accessToken);
           localStorage.setItem('ecatUserIdToken', idToken);
+          this.activateUser(idToken, accessToken);
           return true;
         } else {
 
           return false;
         }
       }).catch(this.handleError)
-  }
-
-  logout(): void {
-    
   }
 
   private handleError(error: Response | any) {
@@ -63,5 +64,32 @@ export class AuthService implements IHttpInterceptor {
 
     return Observable.throw(errMsg);
   }
+
+  private activateUser(ecatUserIdToken, ecatAccessToken) {
+
+        var loggedInUser = {
+            personId: ecatAccessToken.sub,
+            lastName: ecatUserIdToken.lastName,
+            firstName: ecatUserIdToken.firstName,
+            isActive: true,
+            mpGender: ecatUserIdToken.mpGender,
+            mpAffiliation: ecatUserIdToken.mpAffiliation,
+            mpPaygrade: ecatUserIdToken.mpPaygrade,
+            mpComponent: ecatUserIdToken.mpComponent,
+            email: ecatUserIdToken.email,
+            registrationComplete: true,
+            mpInstituteRole: ecatUserIdToken.mpInstituteRole
+        } as IPerson;
+
+        this.global.user(loggedInUser);
+        this.global.isLoggedIn(true);
+        this.global.isFaculty(false);
+  }
+
+  public logout() {
+        localStorage.removeItem('ecatAccessToken');
+        localStorage.removeItem('ecatUserIdToken');
+        this.router.navigate(['/login']);
+    }
 }
 

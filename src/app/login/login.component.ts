@@ -5,6 +5,7 @@ import { TdLoadingService } from '@covalent/core';
 
 import { AuthService } from "../core/services/auth.service";
 import { AuthUtilityService } from "../core/services/auth-utility.service";
+import { tokenNotExpired } from "angular2-jwt";
 
 @Component({
   selector: 'qs-login',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
     var ecatAccessToken = localStorage.getItem('ecatAccessToken');
 
     //check if user has a stored token and it is still valid
-    if (this.authUtility.validateToken(ecatAccessToken)) {
+    if (tokenNotExpired('ecatAccessToken')) {
       this.router.navigate(['/dashboard']);
     }
 

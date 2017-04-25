@@ -33,19 +33,33 @@ gulp.task('generate-metadata', generateMetadata);
 function generateEntities() {
   var webServicesCtx = [
     {
-      inputFileName: './Ecat.Data.Contexts.EcatContext.json',
-      outputFolder: '../src/app/core/entities/ecat',
-      camelCase: true,
-      baseClassName: 'EntityBase',
-      kebabCaseFileNames: false
-    },
-    {
       inputFileName: './Ecat.Data.Contexts.UserMetadata.json',
       outputFolder: '../src/app/core/entities/user',
       camelCase: true,
       baseClassName: 'EntityBase',
       kebabCaseFileNames: false
-    }
+    },
+    {
+      inputFileName: './Ecat.Data.Contexts.FacultyMetadata.json',
+      outputFolder: '../src/app/core/entities/faculty',
+      camelCase: true,
+      baseClassName: 'EntityBase',
+      kebabCaseFileNames: false
+    },
+    {
+      inputFileName: './Ecat.Data.Contexts.LmsAdminMetadata.json',
+      outputFolder: '../src/app/core/entities/lmsadmin',
+      camelCase: true,
+      baseClassName: 'EntityBase',
+      kebabCaseFileNames: false
+    },
+    {
+      inputFileName: './Ecat.Data.Contexts.StudentMetadata.json',
+      outputFolder: '../src/app/core/entities/student',
+      camelCase: true,
+      baseClassName: 'EntityBase',
+      kebabCaseFileNames: false
+    },
   ];
 
   tsGen.generate(webServicesCtx)

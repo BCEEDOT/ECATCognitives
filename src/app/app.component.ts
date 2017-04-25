@@ -4,7 +4,7 @@ import { MdIconRegistry } from '@angular/material';
 import { GlobalService } from "./core/services/global.service";
 import { Person } from "./core/entities/user/person";
 import { IPerson } from "./core/entities/client-models";
-import { AuthUtilityService } from "./core/services/auth-utility.service";
+import { AuthService } from "./core/services/auth.service";
 
 @Component({
   selector: 'ecat-app',
@@ -14,11 +14,12 @@ import { AuthUtilityService } from "./core/services/auth-utility.service";
 export class AppComponent implements OnInit {
 
   persona: IPerson = <IPerson>{};
+  isFaculty: Boolean = false;
 
   constructor(private _iconRegistry: MdIconRegistry,
               private _domSanitizer: DomSanitizer,
               private global: GlobalService, 
-              private authUtils: AuthUtilityService) {
+              private authService: AuthService) {
     this._iconRegistry.addSvgIconInNamespace('assets', 'teradata',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/teradata.svg'));
     this._iconRegistry.addSvgIconInNamespace('assets', 'github',
@@ -43,11 +44,15 @@ export class AppComponent implements OnInit {
       this.persona = user;
     });
 
+    this.global.isFaculty$.subscribe((role) => {
+      this.isFaculty = role;
+    });
+
 
   }
 
     logout() {
-      this.authUtils.logout();
+      this.authService.logout();
     }
 
 }

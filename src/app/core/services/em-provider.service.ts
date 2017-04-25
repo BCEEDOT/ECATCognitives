@@ -96,11 +96,6 @@ export class EmProviderService {
     return emStatus.promise;
   }
 
-  //add Method to extend metadata to include client entity extensions
-  private registerClientEntityExtensions(metadataStore: MetadataStore) {
-
-  }
-
   getManager(ecatContext: DataContext): EntityManager {
     return EmProviderService.masterManagers[ecatContext].manager;
   }

@@ -16,50 +16,52 @@ export class AuthUtilityService {
     ecatAccessToken: any;
     em: EntityManager;
 
-    constructor(private jwtHelper: JwtHelper, private global: GlobalService, private emProviderService: EmProviderService, private router: Router) { }
+    constructor(private jwtHelper: JwtHelper,  private global: GlobalService, private emProviderService: EmProviderService, private router: Router) { }
 
-    public validateToken(ecatAccessToken: any): boolean {
+    // public validateToken(ecatAccessToken: any) {
 
-        if (!ecatAccessToken) { console.log('Token does not exist'); return false };
+    //     if (!ecatAccessToken) { console.log('Token does not exist'); return false };
 
-        if (this.jwtHelper.isTokenExpired(ecatAccessToken)) { console.log('Token has expired'); return false; }
+    //     if (this.jwtHelper.isTokenExpired(ecatAccessToken)) { console.log('Token has expired'); return false; }
 
-        return true;
-    }
+    //     return true;
+    // }
 
-    public login(ecatUserIdToken: any, ecatAccessToken: any): boolean {
+    // public login(ecatUserIdToken: any, ecatAccessToken: any) {
 
-        if (!ecatUserIdToken && !ecatAccessToken) { return false; }
+    //     if (!ecatUserIdToken && !ecatAccessToken) { return false; }
 
-        this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken);
-        this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
+    //     this.ecatUserIdToken = this.jwtHelper.decodeToken(ecatUserIdToken);
+    //     this.ecatAccessToken = this.jwtHelper.decodeToken(ecatAccessToken);
 
-        var em = this.emProviderService.getManager(DataContext.User);
+    //     var loggedInUser = {
+    //         personId: this.ecatAccessToken.sub,
+    //         lastName: this.ecatUserIdToken.lastName,
+    //         firstName: this.ecatUserIdToken.firstName,
+    //         isActive: true,
+    //         mpGender: this.ecatUserIdToken.mpGender,
+    //         mpAffiliation: this.ecatUserIdToken.mpAffiliation,
+    //         mpPaygrade: this.ecatUserIdToken.mpPaygrade,
+    //         mpComponent: this.ecatUserIdToken.mpComponent,
+    //         email: this.ecatUserIdToken.email,
+    //         registrationComplete: true,
+    //         mpInstituteRole: this.ecatUserIdToken.mpInstituteRole
+    //     } as IPerson;
 
-        var loggedInUser = {
-            personId: this.ecatAccessToken.sub,
-            lastName: this.ecatUserIdToken.lastName,
-            firstName: this.ecatUserIdToken.firstName,
-            isActive: true,
-            mpGender: this.ecatUserIdToken.mpGender,
-            mpAffiliation: this.ecatUserIdToken.mpAffiliation,
-            mpPaygrade: this.ecatUserIdToken.mpPaygrade,
-            mpComponent: this.ecatUserIdToken.mpComponent,
-            email: this.ecatUserIdToken.email,
-            registrationComplete: true,
-            mpInstituteRole: this.ecatUserIdToken.mpInstituteRole
-        } as Person;
+    //     this.global.user(loggedInUser);
+    //     this.global.isLoggedIn(true);
+    //     this.global.isFaculty(false);
 
-        var user = em.createEntity("Person", loggedInUser, EntityState.Unchanged, MergeStrategy.PreserveChanges) as IPerson;
-        this.global.user(user);
-        return true;
+    // }
 
-    }
+    // public logout() {
+    //     localStorage.removeItem('ecatAccessToken');
+    //     localStorage.removeItem('ecatUserIdToken');
+    //     this.router.navigate(['/login']);
+    // }
 
-    public logout() {
-        localStorage.removeItem('ecatAccessToken');
-        localStorage.removeItem('ecatUserIdToken');
-        this.router.navigate(['/login']);
-    }
+    // public isAuthorized() {
+
+    // }
 
 }

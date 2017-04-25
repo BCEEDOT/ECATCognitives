@@ -5,7 +5,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { EmProviderService } from './services/em-provider.service';
 
-import { AuthGuard } from './services/auth-guard.service';
+import { UserAuthGuard } from './services/user-auth-guard.service';
 import { AuthService } from './services/auth.service';
 import { AuthUtilityService } from './services/auth-utility.service';
 import { EntityUserModule } from "./entities/user/user-entity.module";
@@ -23,7 +23,7 @@ import { UserDataContext } from './services/data/user-data-context.service'
     providers: [
         UserDataContext,
         EmProviderService,
-        AuthGuard,
+        UserAuthGuard,
         AuthService,
         AuthUtilityService,
         GlobalService,
