@@ -8,35 +8,44 @@ import {
   CanLoad, Route
 } from '@angular/router';
 import { tokenNotExpired } from "angular2-jwt";
+import { Subscription } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
 import { AuthUtilityService } from "../../core/services/auth-utility.service";
 import { EmProviderService } from "../../core/services/em-provider.service";
 import { StudentRegistrationHelper } from "../../core/entities/student";
 import { DataContext, ResourceEndPoint } from "../../app-constants";
-import { GlobalService } from "../../core/services/global.service";
+import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
 @Injectable()
 export class StudentAuthGuard implements CanActivate {
 
   studentContextActivated = false;
+  persona: ILoggedInUser;
 
   constructor(private authService: AuthService,
     private router: Router, private authUtility: AuthUtilityService,
     private emProvider: EmProviderService, private regHelper: StudentRegistrationHelper,
-    private global: GlobalService) { }
+    private global: GlobalService) {
+
+    //this.persona = this.global.persona.value;
+    this.global.persona.subscribe((data) => {
+      this.persona = data;
+    });
+
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
+    
 
-    console.log(this.global.isStudent);
     //First check if a user has a token and if it is expired
-    if (tokenNotExpired('ecatAccessToken') && this.studentContextActivated && this.global.isStudent) {
+    if (tokenNotExpired('ecatAccessToken') && this.studentContextActivated && this.persona.isStudent) {
 
       return true;
 
-    } else if(this.global.isStudent) {
-      
+    } else if (this.persona.isStudent) {
+
       return this.activate(url);
 
     } else {

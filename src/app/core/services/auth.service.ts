@@ -4,6 +4,7 @@ import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { JwtHelper } from "angular2-jwt";
+import { EntityState } from 'breeze-client';
 
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/of';
@@ -14,7 +15,10 @@ import 'rxjs/add/operator/catch';
 
 import { AuthUtilityService } from "./auth-utility.service";
 import { Person } from "../entities/user";
-import { GlobalService } from "./global.service";
+import { GlobalService, ILoggedInUser } from "./global.service";
+import { EmProviderService } from "./em-provider.service";
+import { DataContext } from "../../app-constants";
+import { MpEntityType } from "../common/mapStrings";
 
 @Injectable()
 export class AuthService implements IHttpInterceptor {
@@ -22,7 +26,8 @@ export class AuthService implements IHttpInterceptor {
   redirectUrl: string;
   //public token: string;
 
-  constructor(private http: Http, private router: Router, private global: GlobalService, private jwtHelper: JwtHelper) { }
+  constructor(private http: Http, private router: Router, private global: GlobalService, 
+  private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
 
   login(username: string, password: string): Observable<boolean> {
 
@@ -40,8 +45,6 @@ export class AuthService implements IHttpInterceptor {
         if (accessToken && idToken) {
           localStorage.setItem('ecatAccessToken', accessToken);
           localStorage.setItem('ecatUserIdToken', idToken);
-
-          this.activateUser(idToken, accessToken);
           return true;
         } else {
 
@@ -68,10 +71,14 @@ export class AuthService implements IHttpInterceptor {
     return Observable.throw(errMsg);
   }
 
-  private activateUser(ecatUserIdToken: any, ecatAccessToken: any) {
+  public activateUser() {
 
-    let accessToken = this.jwtHelper.decodeToken(ecatAccessToken);
-    let idToken = this.jwtHelper.decodeToken(ecatUserIdToken);
+    let accessTokenSigned = localStorage.getItem('ecatAccessToken');
+    let idTokenSigned = localStorage.getItem('ecatUserIdToken');
+
+    let accessToken = this.jwtHelper.decodeToken(accessTokenSigned);
+    let idToken = this.jwtHelper.decodeToken(idTokenSigned);
+    var user: ILoggedInUser = <ILoggedInUser>{};
 
     var loggedInUser = {
       personId: accessToken.sub,
@@ -87,11 +94,13 @@ export class AuthService implements IHttpInterceptor {
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
-    this.global.user(loggedInUser);
-    this.global.isLoggedIn(true);
-    this.global.isFaculty(false);
-    this.global.isStudent(true);
-    this.global.isLmsAdmin(false);
+    user.person = loggedInUser;
+    user.isFaculty = false;
+    user.isStudent = true;
+    user.isLmsAdmin = false;
+    user.isProfileComplete = true;
+    this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    this.global.user(user);
   }
 
   logout() {

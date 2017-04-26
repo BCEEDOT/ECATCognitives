@@ -59,7 +59,6 @@ export class StudentDataContext extends BaseDataContext {
 
         return <Promise<Course[]>>this.manager.executeQuery(query)
             .then(res => {
-                console.log(res.results);
                 return res.results as Array<Course>;
                 
             })

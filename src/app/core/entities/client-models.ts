@@ -2,7 +2,6 @@ import * as user from "./user";
 import * as student from "./student";
 import * as faculty from "./faculty";
 
-
 export interface IApiResource {
     resource: string;
     returnedEntityType: string;

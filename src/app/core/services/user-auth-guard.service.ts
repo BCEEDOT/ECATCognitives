@@ -8,6 +8,7 @@ import {
   CanLoad, Route
 } from '@angular/router';
 import { tokenNotExpired } from "angular2-jwt";
+import { EntityState } from 'breeze-client';
 
 import { AuthService } from './auth.service';
 import { AuthUtilityService } from "./auth-utility.service";
@@ -56,6 +57,7 @@ export class UserAuthGuard implements CanActivate {
         .then(() => {
           console.log('User Context Activated');
           this.userContextActivated = true;
+          this.authService.activateUser();
           return true;
         })
         .catch(e => {

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
-import { GlobalService } from "./core/services/global.service";
+
+import { GlobalService, ILoggedInUser } from "./core/services/global.service";
 import { Person } from "./core/entities/user/person";
 import { AuthService } from "./core/services/auth.service";
 
@@ -12,13 +13,12 @@ import { AuthService } from "./core/services/auth.service";
 })
 export class AppComponent implements OnInit {
 
-  persona: Person = <Person>{};
-  isFaculty: Boolean = false;
+  persona: ILoggedInUser = <ILoggedInUser>{};
 
   constructor(private _iconRegistry: MdIconRegistry,
-              private _domSanitizer: DomSanitizer,
-              private global: GlobalService, 
-              private authService: AuthService) {
+    private _domSanitizer: DomSanitizer,
+    private global: GlobalService,
+    private authService: AuthService) {
     this._iconRegistry.addSvgIconInNamespace('assets', 'teradata',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/teradata.svg'));
     this._iconRegistry.addSvgIconInNamespace('assets', 'github',
@@ -40,19 +40,28 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.global.user$.subscribe((user) => {
+    console.log("App on init is firing");
+    this.global.persona.subscribe((user) => {
+     console.log("User has been updated in app Component")
       this.persona = user;
     });
 
-    this.global.isFaculty$.subscribe((role) => {
-      this.isFaculty = role;
-    });
+
+
+
+    // this.global.user$.subscribe((user) => {
+    //   this.persona = user;
+    // });
+
+    // this.global.isFaculty$.subscribe((role) => {
+    //   this.isFaculty = role;
+    // });
 
 
   }
 
-    logout() {
-      this.authService.logout();
-    }
+  logout() {
+    this.authService.logout();
+  }
 
 }
