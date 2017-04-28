@@ -94,9 +94,9 @@ export class AuthService implements IHttpInterceptor {
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
-    user.person = loggedInUser;
-    //let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
-    //user.person = entityUser as Person;
+    //user.person = loggedInUser;
+    let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    user.person = entityUser as Person;
     user.isFaculty = false;
     user.isStudent = true;
     user.isLmsAdmin = false;

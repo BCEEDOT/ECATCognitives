@@ -39,6 +39,11 @@ export class BaseDataContext {
         return this.entityChangedSubject.asObservable();
     }
 
+    protected queryFailed(error: any) {
+        const msg = `Error querying data: ${error ? (error.message || error.status): 'Uknown Reason'}`;
+        return Promise.reject(msg);
+    }
+
     static get savedOrRejected() {
         //return UnitOfWork.savedOrRejectedSubject.asObservable();
         return null;
