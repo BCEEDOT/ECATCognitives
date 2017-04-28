@@ -95,12 +95,16 @@ export class AuthService implements IHttpInterceptor {
     } as Person;
 
     user.person = loggedInUser;
+    //let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    //user.person = entityUser as Person;
     user.isFaculty = false;
     user.isStudent = true;
     user.isLmsAdmin = false;
     user.isProfileComplete = true;
-    this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    
     this.global.user(user);
+    console.log('Global person');
+    console.log(user);
   }
 
   logout() {

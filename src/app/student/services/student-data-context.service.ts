@@ -59,7 +59,20 @@ export class StudentDataContext extends BaseDataContext {
 
         return <Promise<Course[]>>this.manager.executeQuery(query)
             .then(res => {
+                console.log(res.results);
+                var store = this.manager.metadataStore;
+                var courseType = store.getEntityType('Course');
+                courseType.dataProperties.forEach((dp) => {
+                    console.log(dp.name);
+                });
+
+                console.log(store);
+                console.log(courseType);
+                var course = res.results[0];
+                course.entityAspect;
+                course.entityType;
                 return res.results as Array<Course>;
+                
                 
             })
             .catch(e => {

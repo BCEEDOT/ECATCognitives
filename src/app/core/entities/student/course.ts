@@ -13,6 +13,7 @@ import { StudentInCourse } from './StudentInCourse';
 export class Course extends EntityBase {
    // Generated code. Do not place code below this line.
    id: number;
+   //bbCourseId: string;
    academyId: string;
    name: string;
    classNumber: string;
@@ -28,7 +29,16 @@ export class Course extends EntityBase {
    workGroups: WorkGroup[];
 
    /// <code> Place custom code between <code> tags
-   
+   test: string;
+
+   constructor() {
+       super();
+       this.test = 'Hello';
+
+   }
+
+     /// [Initializer]
+   // static initializer(entity: Course) { }
    /// </code>
 
 }

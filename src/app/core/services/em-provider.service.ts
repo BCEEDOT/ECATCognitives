@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   EntityManager, NamingConvention, DataService, DataType, MetadataStore,
-  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises
+  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, ValidationOptionsConfiguration, ValidationOptions
 } from 'breeze-client';
 import remove from 'lodash/remove';
 import includes from 'lodash/includes';
@@ -40,14 +40,15 @@ export class EmProviderService {
 
   //Need to account for client entity extensions.
   prepare(dataContext: DataContext, regHelper: IRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
-
-    //Pulled from Environments file
-  
-    config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
+    
       NamingConvention.camelCase.setAsDefault();
+      //new ValidationOptions({ validateOnAttach: false }).setAsDefault();
+     
       //configure breeze to use authHTTP instead of default angular http class. Used to add access token to header
       config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
       config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
+
+      config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'json' });
 
       let emStatus = EmProviderService.masterManagers[dataContext];
 
@@ -73,9 +74,15 @@ export class EmProviderService {
 
       let dataService = new DataService(dsconfig);
 
+      //  let validationConfig: ValidationOptionsConfiguration = {
+      //   validateOnAttach: true
+      // };
+
+      // let validationOptions = new ValidationOptions(validationConfig);
+
       let currentManager = emStatus.manager = new
         EntityManager({
-          dataService: dataService
+          dataService: dataService,
         });
 
       return emStatus.promise =

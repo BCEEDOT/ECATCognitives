@@ -27,6 +27,7 @@ export class StudentRegistrationHelper implements IRegistrationHelper {
         metadataStore.registerEntityTypeCtor('SpResultBreakOut', SpResultBreakOut);
 metadataStore.registerEntityTypeCtor('FacSpCommentFlag', FacSpCommentFlag);
 metadataStore.registerEntityTypeCtor('Course', Course);
+//metadataStore.setEntityTypeForResourceName('GetCourses', 'Course')
 metadataStore.registerEntityTypeCtor('SpResponse', SpResponse);
 metadataStore.registerEntityTypeCtor('CrseStudentInGroup', CrseStudentInGroup);
 metadataStore.registerEntityTypeCtor('StratResponse', StratResponse);

@@ -6,7 +6,7 @@ import {
 
 import { BaseDataContext } from '../../../shared/services';
 import { EmProviderService } from '../em-provider.service';
-import { Person, ProfileStudent, ProfileFaculty, CogInstrument } from '../../entities/user';
+import { Person, ProfileStudent, ProfileFaculty, CogInstrument, RoadRunner } from '../../entities/user';
 import { IUserApiResources } from "../../entities/client-models";
 import { MpEntityType } from "../../common/mapStrings";
 import { DataContext } from '../../../app-constants';
@@ -46,8 +46,9 @@ export class UserDataContext extends BaseDataContext {
         super(DataContext.User, emProvider);
     }
 
-    getProfile() {
 
+    getProfile() {
+        
     }
 
     getUsers(): Promise<Person[]> {
@@ -55,7 +56,22 @@ export class UserDataContext extends BaseDataContext {
         let query = EntityQuery.from('getusers');
 
         return <Promise<Person[]>>this.manager.executeQuery(query)
-            .then(res => res.results as Person[])
+            .then(res => {
+                console.log(res.results);
+                var store = this.manager.metadataStore;
+                var personType = store.getEntityType('Person');
+                personType.dataProperties.forEach((dp) => {
+                console.log(dp.name);
+                });
+
+                console.log(store);
+                console.log(personType);
+                var person = res.results[0];
+                person.entityAspect;
+                person.entityType;
+                return res.results as Person[]
+
+            })
             .catch(e => {
                 console.log('Did not retrieve users' + e);
                 return Promise.reject(e);

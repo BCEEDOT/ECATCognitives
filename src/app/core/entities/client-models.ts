@@ -28,3 +28,32 @@ export interface IStudentApiResources extends IApiResources {
     wgResult: IApiResource;
 }
 
+export interface IMilPayGrade {
+    civ: { designator: string };
+    fn: { designator: string };
+    e1: IMilRank;
+    e2: IMilRank;
+    e3: IMilRank;
+    e4: IMilRank;
+    e5: IMilRank;
+    e6: IMilRank;
+    e7: IMilRank;
+    e8: IMilRank;
+    e9: IMilRank;
+
+}
+
+export interface IMilRank {
+    designator: string,
+    usaf: IMilServiceRank,
+    usa: IMilServiceRank,
+    usn: IMilServiceRank,
+    usmc: IMilServiceRank,
+
+}
+
+export interface IMilServiceRank {
+    rankShortName: string;
+    rankLongName: string;
+}
+

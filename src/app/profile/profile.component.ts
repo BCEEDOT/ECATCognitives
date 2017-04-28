@@ -10,8 +10,7 @@ import { ProfileStudent } from "../core/entities/user";
 
 @Component({
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
-  viewProviders: [ProfileService],
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements AfterViewInit {
 
