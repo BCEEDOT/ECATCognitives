@@ -38,23 +38,22 @@ export class UsersComponent implements OnInit {
     // broadcast to all listener observables when loading the page
     this.media.broadcast();
     this.titleService.setTitle('ECAT Users');
-    this.loadUsers();
+    this.loadUsers()
   }
 
   loadUsers(): void {
     //maps to ng-template tag
-    this.loadingService.register('person.list');
+    this.loadingService.register('userIsLoaded');
     this.userDataContext.getUsers()
         .then((people) => {
           this.people = people;
-          this.loadingService.resolve('person.list');
-          console.log(this.people);
+          this.loadingService.resolve('userIsLoaded');
         })
         .catch(e => {
-          this.loadingService.resolve('person.list');
+          this.loadingService.resolve('userIsLoaded');
           console.log('error getting users');
           console.log(e);
-        })
+        });
 
   }
 

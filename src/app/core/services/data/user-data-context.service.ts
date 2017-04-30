@@ -50,26 +50,36 @@ export class UserDataContext extends BaseDataContext {
     }
 
 
-    getProfile() {
+    getProfile(): Promise<ProfileStudent> {
         const self = this;
         //add flag for when the profile is loaded
 
+
         let query = EntityQuery.from(this.userApiResources.profile.resource);
 
-        return <Promise<ProfileFaculty | ProfileStudent>>this.manager.executeQuery(query)
-            .then(res => getUserProfileResponse)
+        return <Promise<any>>this.manager.executeQuery(query)
+            .then(res => getUserProfileResponse(res))
             .catch(this.queryFailed);
 
         function getUserProfileResponse(userProfileResult: QueryResult) {
-            const userProfiles = userProfileResult.results as Array<ProfileFaculty | ProfileStudent>
-            let profileEntity: ProfileStudent | ProfileFaculty;
-            const userRole = self.global.persona.value.person.mpInstituteRole;
-            const roles = MpInstituteRole;
+            const userProfiles = userProfileResult.results as Array<ProfileStudent>
+        //     const profile = { personId: self.global.persona.value.person.personId }
+        //     let profileEntity: ProfileStudent;
+        //     const userRole = self.global.persona.value.person.mpInstituteRole;
+        //     const roles = MpInstituteRole;
 
-            switch (userRole) {
-                case roles.student:
-                if (!self.global.persona.value.person.)
-            }
+        //     // switch (userRole) {
+        //     //     case roles.student:
+        //     //     if (!self.global.persona.value.person.personId)
+        //     // }
+
+        //    // profileEntity = self.manager.createEntity(MpEntityType.studProfile, profile) as ProfileStudent;
+
+        //     if (profileEntity) {
+        //         userProfiles.push(profileEntity);
+        //     }
+
+            return userProfiles;
 
         }
 
@@ -93,6 +103,7 @@ export class UserDataContext extends BaseDataContext {
                 //var person = res.results[0];
                 //person.entityAspect;
                 //person.entityType;
+                console.log('users is querying the server');
                 return res.results as Person[]
 
             })
@@ -102,6 +113,6 @@ export class UserDataContext extends BaseDataContext {
             });
     }
 
-    
+
 
 }

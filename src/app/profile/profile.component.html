@@ -8,7 +8,7 @@
       <md-icon svgIcon="assets:github"></md-icon>
     </a>
   </div>
-  <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+  <md-card *tdLoading="'profileIsLoaded';" tdMediaToggle="gt-xs" [mediaClasses]="['push']">
     <md-tab-group md-stretch-tabs>
       <md-tab>
         <ng-template md-tab-label>Main</ng-template>
@@ -18,7 +18,7 @@
           <h3 md-subheader>Basic Information</h3>
           <md-list-item>
             <md-icon md-list-avatar>account_box</md-icon>
-            <h4 md-line>{{profile.person.lastName}}</h4>
+            <h4 md-line>{{profile[0]?.person?.lastName}}</h4>
             <p md-line>Name</p>
           </md-list-item>
           <md-divider md-inset></md-divider>
