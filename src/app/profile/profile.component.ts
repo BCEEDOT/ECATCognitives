@@ -16,7 +16,10 @@ import { UserDataContext } from "../core/services/data/user-data-context.service
 export class ProfileComponent implements OnInit {
 
   profile: ProfileStudent = <ProfileStudent>{};
-
+  prettyName: string;
+  isEditing: Boolean = false;
+  //affiliationList = this.dCtx.static.milAffil;
+  //componentList = this.dCtx.static.milComponent;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -39,21 +42,52 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
     console.log("It is loading profile object from the ngoninit");
     console.log(this.profile);
+  };
+
+  setPrettyName() {
+    this.prettyName = `${this.profile.person.firstName} ${this.profile.person.lastName}`;
+  };
+
+  editProfile() {
+    this.isEditing = !this.isEditing;
+    console.log(this.isEditing);
+    console.log("You clicked edit");
+  };
+
+  saveProfile() {
+
+    console.log(this.profile);
+    this.userDataContext.commit()
+      .then((res) => {
+        console.log(res);
+        console.log('Your changes were successfully saved!');
+        this.isEditing = false;
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('Unable to save changes, Please try again later!');
+      });
   }
 
+  cancelSave() {
+    this.isEditing = false;
+    this.profile.person.entityAspect.rejectChanges();
+  };
+
   loadProfile(): void {
-    
+
     this.userDataContext.getProfile()
-        .then((profile) => {
-          this.profile = profile
-          console.log(this.profile);
-          this.loadingService.resolve('profileIsLoaded');
-        })
-        .catch(e => {
-          this.loadingService.resolve('profileIsLoaded');
-          console.log('error getting user profile');
-          console.log(e);
-        });
+      .then((profile) => {
+        this.profile = profile
+        console.log(this.profile);
+        this.setPrettyName();
+        this.loadingService.resolve('profileIsLoaded');
+      })
+      .catch(e => {
+        this.loadingService.resolve('profileIsLoaded');
+        console.log('error getting user profile');
+        console.log(e);
+      });
   }
 
 

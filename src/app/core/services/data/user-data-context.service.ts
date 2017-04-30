@@ -62,7 +62,7 @@ export class UserDataContext extends BaseDataContext {
             .catch(this.queryFailed);
 
         function getUserProfileResponse(userProfileResult: QueryResult) {
-            const userProfiles = userProfileResult.results as Array<ProfileStudent>
+            const userProfiles = userProfileResult.results[0] as ProfileStudent
         //     const profile = { personId: self.global.persona.value.person.personId }
         //     let profileEntity: ProfileStudent;
         //     const userRole = self.global.persona.value.person.mpInstituteRole;

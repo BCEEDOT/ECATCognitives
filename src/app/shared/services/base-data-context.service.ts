@@ -66,9 +66,10 @@ export class BaseDataContext {
 
     //This is save changes
     commit(): Promise<any> {
-        let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
-
-        return <any>this.manager.saveChanges(null, saveOptions)
+        //let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
+        console.log(this.getChanges());
+        //return <any>this.manager.saveChanges(null, saveOptions)
+        return <any>this.manager.saveChanges()
             .then((saveResult) => {
                 // UnitOfWork.savedOrRejectedSubject.next({
                 //     entities: saveResult.entities,
@@ -76,6 +77,9 @@ export class BaseDataContext {
                 // });
 
                 return saveResult.entities;
+            }).catch((errors) => {
+                console.log("errors from the commit");
+                console.log(errors);
             });
     }
 

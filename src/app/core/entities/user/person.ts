@@ -50,6 +50,10 @@ export class Person extends EntityBase {
        return EcLocalDataService.prettyInstituteRole(this.mpInstituteRole);
    }
 
+   get prettyName(): string {
+       return `${this.salutation} ${this.firstName} ${this.lastName}`
+   }
+
      /// [Initializer]
     static initializer(entity: Person) { }
    /// </code>
