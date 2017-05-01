@@ -50,7 +50,7 @@ export class UserDataContext extends BaseDataContext {
     }
 
 
-    getProfile(): Promise<ProfileStudent> {
+    getProfile(): Promise<ProfileStudent & ProfileFaculty> {
         const self = this;
         //add flag for when the profile is loaded
 
@@ -62,22 +62,30 @@ export class UserDataContext extends BaseDataContext {
             .catch(this.queryFailed);
 
         function getUserProfileResponse(userProfileResult: QueryResult) {
-            const userProfiles = userProfileResult.results[0] as ProfileStudent
-        //     const profile = { personId: self.global.persona.value.person.personId }
-        //     let profileEntity: ProfileStudent;
-        //     const userRole = self.global.persona.value.person.mpInstituteRole;
-        //     const roles = MpInstituteRole;
+            const userProfiles = userProfileResult.results as Array<ProfileStudent | ProfileFaculty>
+            const profile = { personId: self.global.persona.value.person.personId };
+            const userRole = self.global.persona.value.person.mpInstituteRole;
+            let profileEntity: ProfileStudent | ProfileFaculty;
+            const roles = MpInstituteRole;
 
-        //     // switch (userRole) {
-        //     //     case roles.student:
-        //     //     if (!self.global.persona.value.person.personId)
-        //     // }
+            switch (userRole) {
+                case roles.student:
+                    if (!self.global.persona.value.isStudent) {
+                        profileEntity = self.manager.createEntity(MpEntityType.studProfile, profile) as ProfileStudent
+                    }
+                    break;
+                case roles.faculty:
+                    if (!self.global.persona.value.isFaculty) {
+                        profileEntity = self.manager.createEntity(MpEntityType.facProfile, profile) as ProfileFaculty
+                    }
+                    break;
+                default:
+                    profileEntity = null;
+            }
 
-        //    // profileEntity = self.manager.createEntity(MpEntityType.studProfile, profile) as ProfileStudent;
-
-        //     if (profileEntity) {
-        //         userProfiles.push(profileEntity);
-        //     }
+            if (profileEntity) {
+                userProfiles.push(profileEntity);
+            }
 
             return userProfiles;
 
