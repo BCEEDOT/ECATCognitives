@@ -80,6 +80,7 @@ export class BaseDataContext {
             }).catch((errors) => {
                 console.log("errors from the commit");
                 console.log(errors);
+                throw errors;
             });
     }
 
