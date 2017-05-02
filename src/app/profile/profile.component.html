@@ -56,19 +56,64 @@
             <div *ngIf="isEditing">
               <form #profileForm="ngForm">
                 <div layout-gt-xs="row" layout-margin>
-                  <md-select flex="50" placeholder="Gender" [(ngModel)]="user.mpGender" name="gender" required>
-                    <md-option [value]="gender.unk">[Select Your Gender]</md-option>
+                  <md-select flex="50" #genderForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Gender" [(ngModel)]="user.mpGender" name="gender"
+                    required>
                     <md-option [value]="gender.female">Female</md-option>
                     <md-option [value]="gender.male">Male</md-option>
                     <md-option [value]="gender.other">Other</md-option>
+                    <md-option [value]="gender.unk">[Select Your Gender]</md-option>
                   </md-select>
+                  <md-hint>
+                    <span class="tc-red-600">
+                      <span [hidden]="!genderForm.errors?.required">Required</span>
+                    <span [hidden]="!genderForm.errors?.pattern">Required</span>
+                    </span>
+                  </md-hint>
                 </div>
                 <div layout-gt-xs="row" layout-margin>
-                  <md-select flex="50" placeholder="Pay Grade" [(ngModel)]="user.mpPaygrade" name="paygrade" required>
+                  <md-select flex="50" #affiliationForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Affiliation" [(ngModel)]="user.mpAffiliation"
+                    (ngModelChange)="updatePayGradeList()" invalidAffiliation="Unknown" name="affiliation" required>
+                    <md-option *ngFor="let affiliation of affiliationList | filterUnknownPipe" [value]="affiliation.value">
+                      {{affiliation.value}}
+                    </md-option>
+                    <md-option value="Unknown">[Select Your Military Affiliation]</md-option>
+                  </md-select>
+                  <md-hint>
+                    <span class="tc-red-600">
+                      <span [hidden]="!affiliationForm.errors?.required">Required</span>
+                    <span [hidden]="!affiliationForm.errors?.pattern">Required</span>
+                    </span>
+                  </md-hint>
+                </div>
+                <div layout-gt-xs="row" layout-margin>
+                  <md-select flex="50" #componentForm="ngModel" placeholder="Military Component" [(ngModel)]="user.mpComponent" pattern="^((?!Unknown).)*$"
+                    name="militaryComponent" required>           
+                    <md-option *ngFor="let component of componentList | filterUnknownPipe" [value]="component.value">
+                      {{component.value}}
+                    </md-option>
+                    <md-option value="Unknown">[Select Your Military Component]</md-option>
+                  </md-select>
+                  <md-hint>
+                    <span class="tc-red-600">
+                      <span [hidden]="!componentForm.errors?.required">Required</span>
+                    <span [hidden]="!componentForm.errors?.pattern">Required</span>
+                    </span>
+                  </md-hint>
+                </div>
+                <div layout-gt-xs="row" layout-margin>
+                  <md-select flex="50" #paygradeForm="ngModel" placeholder="Paygrade"
+                  [(ngModel)]="user.mpPaygrade" pattern="^((?!Unknown).)*$" name="paygrade" required>
                     <md-option *ngFor="let grade of payGradeList" [value]="grade.pg">
                       {{grade.displayName}}
                     </md-option>
+                    <md-option value="Unknown">[Select Your Paygrade]</md-option>
                   </md-select>
+                  <md-hint>
+                    <span class="tc-red-600">
+                      <span [hidden]="!paygradeForm.errors?.required">Required</span>
+                      <span [hidden]="!paygradeForm.errors?.pattern">Required</span>
+                    </span>
+                  </md-hint>
                 </div>
                 <div layout-gt-xs="row" layout-margin>
                   <md-divider></md-divider>

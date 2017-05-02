@@ -3,8 +3,9 @@ import { Http, RequestOptions } from "@angular/http";
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-
 import { CovalentCoreModule } from '@covalent/core';
+import { JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from "angular2-jwt";
+import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
@@ -12,14 +13,9 @@ import { UsersModule } from "./users/users.module";
 import { StudentModule } from "./student/student.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { ProfileModule } from "./profile/profile.module";
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-
 import { AppRoutingModule } from "./app-routing.module";
-
-import { JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from "angular2-jwt";
-import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -32,7 +28,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     BreezeBridgeAngularModule,

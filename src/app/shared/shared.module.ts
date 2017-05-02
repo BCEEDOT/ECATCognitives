@@ -5,11 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { CovalentCoreModule } from '@covalent/core';
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
-
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-
-
-
 
 @NgModule({
     imports: [
@@ -17,7 +13,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         CovalentHighlightModule,
         CovalentMarkdownModule,
         NgxChartsModule,
-        CommonModule
+        CommonModule,
     ],
     declarations: [
     ],

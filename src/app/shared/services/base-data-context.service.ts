@@ -40,7 +40,7 @@ export class BaseDataContext {
     }
 
     protected queryFailed(error: any) {
-        const msg = `Error querying data: ${error ? (error.message || error.status): 'Uknown Reason'}`;
+        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Uknown Reason'}`;
         return Promise.reject(msg);
     }
 
@@ -80,6 +80,9 @@ export class BaseDataContext {
             }).catch((errors) => {
                 console.log("errors from the commit");
                 console.log(errors);
+                if (errors.status == 401) {
+                    console.log('You have been logged out due to time. Please go in again');
+                }
                 throw errors;
             });
     }

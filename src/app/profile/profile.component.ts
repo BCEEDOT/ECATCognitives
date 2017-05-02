@@ -25,6 +25,8 @@ export class ProfileComponent implements OnInit {
   gender = MpGender;
   profileLoading = 'profileLoading';
   payGradeList;
+  affiliationList;
+  componentList;
   //affiliationList = this.dCtx.static.milAffil;
   //componentList = this.dCtx.static.milComponent;
 
@@ -49,16 +51,37 @@ export class ProfileComponent implements OnInit {
     this.loadingService.register(this.profileLoading);
     this.loadProfile();
     this.payGradeList = this.ecLocal.milPaygradeList;
+    this.affiliationList = this.ecLocal.milAffil;
+    this.componentList = this.ecLocal.milComponent;
+    console.log(this.payGradeList);
 
   };
 
-  setPrettyName() {
-    this.prettyName = `${this.user.firstName} ${this.user.lastName}`;
+  cancelSave() {
+    this.isEditing = false;
+    this.user.entityAspect.rejectChanges();
   };
 
   editProfile() {
     this.isEditing = !this.isEditing;
   };
+
+  loadProfile(): void {
+
+    this.userDataContext.getProfile()
+      .then(() => {
+        //No processing of results. The getProfile method attaches the profiles to the global person object.
+        this.user = this.global.persona.value.person;
+        this.userRoles = this.global.persona.value;
+        this.setPrettyName();
+        this.loadingService.resolve(this.profileLoading);
+      })
+      .catch(e => {
+        this.loadingService.resolve(this.profileLoading);
+        console.log('error getting user profile');
+        console.log(e);
+      });
+  }
 
   saveProfile() {
     this.loadingService.register(this.profileLoading);
@@ -79,26 +102,16 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  cancelSave() {
-    this.isEditing = false;
-    this.user.entityAspect.rejectChanges();
+  setPrettyName() {
+    this.prettyName = `${this.user.firstName} ${this.user.lastName}`;
   };
 
-  loadProfile(): void {
+  updatePayGradeList(): void {
+    const userWPaygrade = this.ecLocal.updatePayGradeList(this.user);
 
-    this.userDataContext.getProfile()
-      .then(() => {
-        this.user = this.global.persona.value.person;
-        this.userRoles = this.global.persona.value;
-        this.setPrettyName();
-        this.loadingService.resolve(this.profileLoading);
-      })
-      .catch(e => {
-        this.loadingService.resolve(this.profileLoading);
-        console.log('error getting user profile');
-        console.log(e);
-      });
+    if (userWPaygrade) {
+      this.user = userWPaygrade.user;
+      this.payGradeList = userWPaygrade.paygradelist;
+    }
   }
-
-
 }

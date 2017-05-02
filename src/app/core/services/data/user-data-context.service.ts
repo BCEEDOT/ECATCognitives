@@ -93,6 +93,7 @@ export class UserDataContext extends BaseDataContext {
 
     }
 
+    //TODO: Delete before going to production. Test method only
     getUsers(): Promise<Person[]> {
 
         let query = EntityQuery.from('getusers');
