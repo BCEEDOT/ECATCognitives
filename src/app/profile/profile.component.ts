@@ -16,7 +16,7 @@ import { EcLocalDataService } from "../core/common/static";
   styleUrls: ['./profile.component.scss'],
   viewProviders: [EcLocalDataService]
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
 
   userRoles: ILoggedInUser;
   user: Person;
@@ -27,8 +27,6 @@ export class ProfileComponent implements OnInit {
   payGradeList;
   affiliationList;
   componentList;
-  //affiliationList = this.dCtx.static.milAffil;
-  //componentList = this.dCtx.static.milComponent;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -53,9 +51,18 @@ export class ProfileComponent implements OnInit {
     this.payGradeList = this.ecLocal.milPaygradeList;
     this.affiliationList = this.ecLocal.milAffil;
     this.componentList = this.ecLocal.milComponent;
-    console.log(this.payGradeList);
-
   };
+
+  ngAfterViewInit() {
+    if (!this.global.persona.value.isProfileComplete) {
+      this.isEditing = true;
+      this.dialogService.openAlert({
+        message: 'You must complete your profile before using the app.',
+        title: 'Profile is not Complete',
+        closeButton: 'Dismiss'
+      });
+    };
+  }
 
   cancelSave() {
     this.isEditing = false;
@@ -78,8 +85,6 @@ export class ProfileComponent implements OnInit {
       })
       .catch(e => {
         this.loadingService.resolve(this.profileLoading);
-        console.log('error getting user profile');
-        console.log(e);
       });
   }
 

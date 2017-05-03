@@ -18,7 +18,7 @@ import { Person } from "../entities/user";
 import { GlobalService, ILoggedInUser } from "./global.service";
 import { EmProviderService } from "./em-provider.service";
 import { DataContext } from "../../app-constants";
-import { MpEntityType } from "../common/mapStrings";
+import { MpEntityType, MpInstituteRole } from "../common/mapStrings";
 
 @Injectable()
 export class AuthService implements IHttpInterceptor {
@@ -26,8 +26,8 @@ export class AuthService implements IHttpInterceptor {
   redirectUrl: string;
   //public token: string;
 
-  constructor(private http: Http, private router: Router, private global: GlobalService, 
-  private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
+  constructor(private http: Http, private router: Router, private global: GlobalService,
+    private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
 
   login(username: string, password: string): Observable<boolean> {
 
@@ -97,14 +97,26 @@ export class AuthService implements IHttpInterceptor {
     //user.person = loggedInUser;
     let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
     user.person = entityUser as Person;
-    user.isFaculty = false;
-    user.isStudent = true;
-    user.isLmsAdmin = false;
+
+    if (loggedInUser.mpInstituteRole === MpInstituteRole.student) {
+      user.isFaculty = false;
+      user.isStudent = true;
+      user.isLmsAdmin = false;
+    }
+
+    if (loggedInUser.mpInstituteRole === MpInstituteRole.faculty) {
+      user.isFaculty = true;
+      user.isStudent = false;
+      user.isLmsAdmin = false;
+    }
+
     user.isProfileComplete = true;
-    
     this.global.user(user);
-    console.log('Global person');
-    console.log(user);
+
+    if (!user.isProfileComplete) {
+      this.router.navigate(['/profile']);
+    }
+  
   }
 
   logout() {

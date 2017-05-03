@@ -5,6 +5,7 @@ import { ProfileComponent } from "./profile.component";
 import { ProfileRoutingModule } from "./profile-routing.module";
 import { ProfileStudentComponent } from './student/profile-student.component';
 import { FilterUnknownPipe } from "./pipes/filter-unknown.pipe";
+import { ProfileFacultyComponent } from './faculty/profile-faculty.component';
 
 @NgModule({
     imports: [
@@ -14,7 +15,8 @@ import { FilterUnknownPipe } from "./pipes/filter-unknown.pipe";
     declarations: [
         ProfileComponent,
         ProfileStudentComponent,
-        FilterUnknownPipe
+        FilterUnknownPipe,
+        ProfileFacultyComponent
     ],
     exports: [],
     providers: []

@@ -56,7 +56,7 @@
             <div *ngIf="isEditing">
               <form #profileForm="ngForm">
                 <div layout-gt-xs="row" layout-margin>
-                  <md-select flex="50" #genderForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Gender" [(ngModel)]="user.mpGender" name="gender"
+                  <md-select flex="50" #genderForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Gender" [(ngModel)]="user && user.mpGender" name="gender"
                     required>
                     <md-option [value]="gender.female">Female</md-option>
                     <md-option [value]="gender.male">Male</md-option>
@@ -71,7 +71,7 @@
                   </md-hint>
                 </div>
                 <div layout-gt-xs="row" layout-margin>
-                  <md-select flex="50" #affiliationForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Affiliation" [(ngModel)]="user.mpAffiliation"
+                  <md-select flex="50" #affiliationForm="ngModel" pattern="^((?!Unknown).)*$" placeholder="Affiliation" [(ngModel)]="user && user.mpAffiliation"
                     (ngModelChange)="updatePayGradeList()" invalidAffiliation="Unknown" name="affiliation" required>
                     <md-option *ngFor="let affiliation of affiliationList | filterUnknownPipe" [value]="affiliation.value">
                       {{affiliation.value}}
@@ -86,7 +86,7 @@
                   </md-hint>
                 </div>
                 <div layout-gt-xs="row" layout-margin>
-                  <md-select flex="50" #componentForm="ngModel" placeholder="Military Component" [(ngModel)]="user.mpComponent" pattern="^((?!Unknown).)*$"
+                  <md-select flex="50" #componentForm="ngModel" placeholder="Military Component" [(ngModel)]="user && user.mpComponent" pattern="^((?!Unknown).)*$"
                     name="militaryComponent" required>           
                     <md-option *ngFor="let component of componentList | filterUnknownPipe" [value]="component.value">
                       {{component.value}}
@@ -102,9 +102,9 @@
                 </div>
                 <div layout-gt-xs="row" layout-margin>
                   <md-select flex="50" #paygradeForm="ngModel" placeholder="Paygrade"
-                  [(ngModel)]="user.mpPaygrade" pattern="^((?!Unknown).)*$" name="paygrade" required>
-                    <md-option *ngFor="let grade of payGradeList" [value]="grade.pg">
-                      {{grade.displayName}}
+                  [(ngModel)]="user && user.mpPaygrade" pattern="^((?!Unknown).)*$" name="paygrade" required>
+                    <md-option *ngFor="let grade of payGradeList | filterUnknownPipe" [value]="grade.prop">
+                      {{grade.value}}
                     </md-option>
                     <md-option value="Unknown">[Select Your Paygrade]</md-option>
                   </md-select>
@@ -142,7 +142,7 @@
       <md-tab *ngIf="userRoles?.isFaculty">
         <ng-template md-tab-label>Faculty</ng-template>
         <div *ngIf="user">
-          <!--Add Faculty Component-->
+          <ecat-profile-faculty [profile]="user.faculty"></ecat-profile-faculty>
         </div>
       </md-tab>
     </md-tab-group>

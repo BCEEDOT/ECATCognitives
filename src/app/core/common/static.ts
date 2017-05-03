@@ -440,20 +440,20 @@ export class EcLocalDataService {
         return componentArray;
     }
 
-    get milPaygradeList(): Array<{ pg: string, displayName: string }> {
+    get milPaygradeList(): Array<{ prop: string, value: string }> {
         const paygradeArray = [];
         const paygrades = mp.MpPaygrade;
         for (let prop in paygrades) {
             if (paygrades.hasOwnProperty(prop)) {
-                paygradeArray.push({ pg: paygrades[prop], displayName: paygrades[prop] });
+                paygradeArray.push({ prop: paygrades[prop], value: paygrades[prop] });
             }
         }
         return paygradeArray;
     }
 
-    updatePayGradeList = (user: user.Person): { user: user.Person, paygradelist: Array<{ pg: string, displayName: string }> } => {
+    updatePayGradeList = (user: user.Person): { user: user.Person, paygradelist: Array<{ prop: string, value: string }> } => {
 
-        const payGradeList: Array<{ pg: string, displayName: string }> = [];
+        const payGradeList: Array<{ prop: string, value: string }> = [];
 
         const milPayGrade = this.milPaygradeGraft;
 
@@ -467,8 +467,8 @@ export class EcLocalDataService {
                     const designator = milPayGrade[grade]['designator'];
                     payGradeList.push(
                         {
-                            pg: designator,
-                            displayName: designator
+                            prop: designator,
+                            value: designator
                         });
                 }
             }
@@ -501,8 +501,8 @@ export class EcLocalDataService {
                     const displayName = (affilKey && milPayGrade[grade][affilKey]) ? `${milPayGrade[grade]['designator']}: ${milPayGrade[grade][affilKey]['rankLongName']}` : milPayGrade[grade]['designator'];
                     payGradeList.push(
                         {
-                            pg: designator,
-                            displayName: displayName
+                            prop: designator,
+                            value: displayName
                         });
                 }
             }
