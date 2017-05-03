@@ -46,9 +46,6 @@ export class AppComponent implements OnInit {
       this.persona = user;
     });
 
-
-
-
     // this.global.user$.subscribe((user) => {
     //   this.persona = user;
     // });

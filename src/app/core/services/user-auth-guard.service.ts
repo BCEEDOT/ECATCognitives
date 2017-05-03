@@ -15,21 +15,23 @@ import { AuthUtilityService } from "./auth-utility.service";
 import { EmProviderService } from "./em-provider.service";
 import { UserRegistrationHelper } from "../entities/user";
 import { DataContext, ResourceEndPoint } from "../../app-constants";
+import { GlobalService } from "./global.service";
 
 @Injectable()
 export class UserAuthGuard implements CanActivate {
 
-  userContextActivated = false;
 
   constructor(private authService: AuthService,
     private router: Router, private authUtility: AuthUtilityService,
-    private emProvider: EmProviderService, private regHelper: UserRegistrationHelper) { }
+    private emProvider: EmProviderService, private regHelper: UserRegistrationHelper,
+    private global: GlobalService) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+
     let url: string = state.url;
 
     //First check if a user has a token and if it is expired
-    if (tokenNotExpired('ecatAccessToken') && this.userContextActivated) {
+    if (tokenNotExpired('ecatAccessToken') && this.global.userDataContextActivated.value) {
 
       return true;
 
@@ -56,7 +58,7 @@ export class UserAuthGuard implements CanActivate {
       return <any>this.emProvider.prepare(DataContext.User, this.regHelper, ResourceEndPoint.User)
         .then(() => {
           console.log('User Context Activated');
-          this.userContextActivated = true;
+          this.global.userDataContext(true);
           this.authService.activateUser();
           return true;
         })

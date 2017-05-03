@@ -75,6 +75,7 @@ export class AuthService implements IHttpInterceptor {
 
     let accessTokenSigned = localStorage.getItem('ecatAccessToken');
     let idTokenSigned = localStorage.getItem('ecatUserIdToken');
+    console.log(this.global.persona.value);
 
     let accessToken = this.jwtHelper.decodeToken(accessTokenSigned);
     let idToken = this.jwtHelper.decodeToken(idTokenSigned);
@@ -120,6 +121,13 @@ export class AuthService implements IHttpInterceptor {
   }
 
   logout() {
+    if (this.emProvider) {
+      this.emProvider.clear(DataContext.User);
+      //this.emProvider.clear(DataContext.Student);
+    }
+    
+    this.global.user(null);
+    this.global.userDataContext(false);
     localStorage.removeItem('ecatAccessToken');
     localStorage.removeItem('ecatUserIdToken');
     this.router.navigate(['/login']);

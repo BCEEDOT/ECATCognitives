@@ -103,6 +103,12 @@ export class EmProviderService {
     return emStatus.promise;
   }
 
+  clear(ecatContext: DataContext): void {
+    if (EmProviderService.masterManagers[ecatContext].manager) {
+      EmProviderService.masterManagers[ecatContext].manager.clear();
+    }
+  }
+
   getManager(ecatContext: DataContext): EntityManager {
     return EmProviderService.masterManagers[ecatContext].manager;
   }
