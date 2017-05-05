@@ -6,7 +6,8 @@ import { StudentRoutingModule } from "./student-routing.module";
 import { StudentAuthGuard } from "./services/student-auth-guard.service";
 import { StudentDataContext } from "./services/student-data-context.service";
 import { EntityStudentModule } from "../core/entities/student";
-
+import { AssessComponent } from './assess/assess.component';
+import { StratComponent } from './strat/strat.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,9 @@ import { EntityStudentModule } from "../core/entities/student";
         EntityStudentModule
     ],
     declarations: [
-        StudentComponent
+        StudentComponent,
+        AssessComponent,
+        StratComponent,
     ],
     exports: [],
     providers: [

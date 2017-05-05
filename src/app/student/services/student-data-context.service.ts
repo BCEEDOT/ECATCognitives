@@ -19,7 +19,11 @@ export class StudentDataContext extends BaseDataContext {
     student: DataContext;
     isLoaded = {
         initCourses: false,
-        course: {}
+        course: {},
+        crseInStudGroup: {},
+        workGroup: {},
+        wgResult: {},
+        spInventory: {}
     }
 
     private studentApiResources: IStudentApiResources = {
@@ -58,27 +62,36 @@ export class StudentDataContext extends BaseDataContext {
         let query = EntityQuery.from(this.studentApiResources.initCourses.resource);
 
         return <Promise<Course[]>>this.manager.executeQuery(query)
-            .then(res => {
-                console.log(res.results);
-                var store = this.manager.metadataStore;
-                var courseType = store.getEntityType('Course');
-                courseType.dataProperties.forEach((dp) => {
-                    console.log(dp.name);
-                });
-
-                console.log(store);
-                console.log(courseType);
-                var course = res.results[0];
-                course.entityAspect;
-                course.entityType;
-                return res.results as Array<Course>;
-                
-                
-            })
+            .then(initCourseResponse)
             .catch(e => {
-                console.log('Did not retrieve users' + e);
+                console.log('Did not retrieve courses' + e);
                 return Promise.reject(e);
             });
+
+        function initCourseResponse(data: QueryResult): Array<Course> {
+            const courses = data.results as Array<Course>;
+
+            //that.isLoaded.initCourses = courses.length > 0;
+
+            courses.forEach(course => {
+                var workGroups = course.workGroups;
+                if (workGroups && workGroups.length > 0) {
+                    //this.isLoaded[course.id] = true;
+
+
+                    workGroups.forEach(workGroup => {
+                        if (workGroup.groupMembers && workGroup.groupMembers.length > 0) {
+                            //that.isLoaded.workGroup[workGroup.workGroupId] = true;
+                        }
+                    });
+                }
+            });
+            console.log('Courses loaded from server');
+            return courses;
+
+        }
     }
+
+
 
 }
