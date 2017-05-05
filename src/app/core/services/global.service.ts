@@ -16,7 +16,6 @@ export interface ILoggedInUser {
 @Injectable()
 export class GlobalService {
 
-  isProfileComplete: BehaviorSubject<Boolean> = new BehaviorSubject(false);
   userDataContextActivated: BehaviorSubject<Boolean> = new BehaviorSubject(false);
   persona: BehaviorSubject<ILoggedInUser> = new BehaviorSubject({} as ILoggedInUser);
 
@@ -26,10 +25,6 @@ export class GlobalService {
 
   userDataContext(activated) {
     this.userDataContextActivated.next(activated);
-  }
-
-  profileComplete(completed) {
-    this.isProfileComplete.next(completed);
   }
 
 }
