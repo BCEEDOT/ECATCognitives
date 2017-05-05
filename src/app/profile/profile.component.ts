@@ -8,7 +8,7 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 import { Person } from "../core/entities/user";
 import { GlobalService, ILoggedInUser } from "../core/services/global.service";
 import { UserDataContext } from "../core/services/data/user-data-context.service";
-import { MpGender } from "../core/common/mapStrings";
+import { MpGender, MpAffiliation, MpComponent, MpPaygrade } from "../core/common/mapStrings";
 import { EcLocalDataService } from "../core/common/static";
 
 @Component({
@@ -51,10 +51,13 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.payGradeList = this.ecLocal.milPaygradeList;
     this.affiliationList = this.ecLocal.milAffil;
     this.componentList = this.ecLocal.milComponent;
+    this.user = this.global.persona.value.person;
+    console.log(this.user.registrationComplete)
   };
 
   ngAfterViewInit() {
-    if (!this.global.persona.value.isProfileComplete) {
+   
+    if (!this.user.registrationComplete) {
       this.isEditing = true;
       this.dialogService.openAlert({
         message: 'You must complete your profile before using the app.',
@@ -77,8 +80,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
     this.userDataContext.getProfile()
       .then(() => {
-        //No processing of results. The getProfile method attaches the profiles to the global person object.
-        this.user = this.global.persona.value.person;
+        //No processing of results. The getProfile method attaches the profiles to the global person object
         this.userRoles = this.global.persona.value;
         this.setPrettyName();
         this.loadingService.resolve(this.profileLoading);
@@ -90,7 +92,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   saveProfile() {
     this.loadingService.register(this.profileLoading);
-
+    if (this.user.mpAffiliation !== MpAffiliation.unk && this.user.mpComponent !== MpComponent.unk && this.user.mpGender !== MpGender.unk && this.user.mpPaygrade !== MpPaygrade.unk){
+       this.user.registrationComplete = true;
+    }
+   
     this.userDataContext.commit()
       .then((res) => {
         this.loadingService.resolve(this.profileLoading);

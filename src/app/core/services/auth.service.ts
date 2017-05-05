@@ -91,7 +91,8 @@ export class AuthService implements IHttpInterceptor {
       mpPaygrade: idToken.mpPaygrade,
       mpComponent: idToken.mpComponent,
       email: idToken.email,
-      registrationComplete: true,
+      //TODO: Update with value from idToken
+      registrationComplete: false,
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
@@ -111,10 +112,9 @@ export class AuthService implements IHttpInterceptor {
       user.isLmsAdmin = false;
     }
 
-    user.isProfileComplete = true;
     this.global.user(user);
 
-    if (!user.isProfileComplete) {
+    if (!user.person.registrationComplete) {
       this.router.navigate(['/profile']);
     }
   
