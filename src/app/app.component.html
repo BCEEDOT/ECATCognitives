@@ -3,7 +3,7 @@
     <md-nav-list>
         <a md-list-item routerLink="/dashboard" (click)="layout.close()"><md-icon>dashboard</md-icon>Home</a>
         <a md-list-item routerLink="/users" (click)="layout.close()"><md-icon>people</md-icon>Users</a>
-        <a md-list-item routerLink="/student" (click)="layout.close()"><md-icon>people</md-icon>Student</a>
+        <a md-list-item routerLink="/student/assessment" (click)="layout.close()"><md-icon>people</md-icon>Student</a>
         <a *ngIf="isFaculty" md-list-item routerLink="/faculty" (click)="layout.close()"><md-icon>people</md-icon>Faculty</a>
     </md-nav-list>
     <md-nav-list td-navigation-drawer-menu>

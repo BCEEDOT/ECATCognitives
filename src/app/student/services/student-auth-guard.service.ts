@@ -18,7 +18,7 @@ import { DataContext, ResourceEndPoint } from "../../app-constants";
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
 @Injectable()
-export class StudentAuthGuard implements CanActivate {
+export class StudentAuthGuard implements CanActivate, CanActivateChild {
 
   studentContextActivated = false;
   persona: ILoggedInUser;
@@ -55,9 +55,9 @@ export class StudentAuthGuard implements CanActivate {
     }
   }
 
-  // canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-  //   return this.canActivate(route, state);
-  // }
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    return this.canActivate(route, state);
+  }
 
   // canLoad(route: Route): boolean {
   //   let url = `/${route.path}`;
