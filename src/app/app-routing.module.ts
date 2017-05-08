@@ -8,7 +8,8 @@ import { LoginComponent } from './login/login.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'lti/ltiEntry', redirectTo: '/dashboard' }
   //{ path: '**', component: PageNotFoundComponent }
 ];
 
