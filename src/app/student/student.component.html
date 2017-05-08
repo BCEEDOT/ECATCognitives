@@ -8,15 +8,19 @@
       <md-icon svgIcon="assets:github"></md-icon>
     </a>
   </div>
-    <h3>Student Assessment Center</h3>
-    <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-      <md-toolbar td-sidenav-content>
-        <span>Users</span>
-        <button md-icon-button><md-icon class="md-24">settings</md-icon></button>
-        <span flex></span>
-        <button routerLink="./assess" routerLinkActive="active" md-icon-button><md-icon class="md-24">view_module</md-icon></button>
-        <button routerLink="./strat" routerLinkActive="active" md-icon-button><md-icon class="md-24">sort</md-icon></button>
-      </md-toolbar>
-       <router-outlet></router-outlet>
-    </md-card>
+  <md-card *ngFor="let c of courses">
+    <p>
+      <span>{{c.name}}</span>
+    </p>
+  </md-card>
+  <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+    <md-toolbar td-sidenav-content>
+      <span>Users</span>
+      <button md-icon-button><md-icon class="md-24">settings</md-icon></button>
+      <span flex></span>
+      <button routerLink="./assess" routerLinkActive="active" md-icon-button><md-icon class="md-24">view_module</md-icon></button>
+      <button routerLink="./strat" routerLinkActive="active" md-icon-button><md-icon class="md-24">sort</md-icon></button>
+    </md-toolbar>
+    <router-outlet></router-outlet>
+  </md-card>
 </td-layout-nav>

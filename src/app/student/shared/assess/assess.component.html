@@ -1,3 +1,5 @@
-<p>
-  assess works!
-</p>
+<md-card *ngFor="let c of courses|async">
+  <p>
+    <span >{{c.name}}</span>
+  </p>
+</md-card>

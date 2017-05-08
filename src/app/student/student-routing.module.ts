@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
+//import { AssessmentResolver } from "./services/assessment.resolver"
 import { StudentAuthGuard } from './services/student-auth-guard.service';
 import { StudentDataContext } from "./services/student-data-context.service";
 import { GlobalService } from "../core/services/global.service";
@@ -18,63 +19,44 @@ const studentRoutes: Routes = [
   {
     path: 'student',
     //Check if role is student, spin up Student Data Context
-    canActivate: [StudentAuthGuard], 
+    canActivate: [StudentAuthGuard],
     children: [
       {
         path: 'assessment',
         component: StudentComponent,
         canActivateChild: [StudentAuthGuard],
+        //Get the students courses
+        resolve: { assess: 'assessmentResolver' },
         children: [
+          // {
+          //   path: '',
+          //   component: AssessComponent,
+          //   //Set active course and workgroup. Determine if results are published for active group. 
+          // },
           {
-            path: '',
-            component: CoursesComponent,
-            //Get the students courses
-            resolve: { courses: 'coursesResolver' },
+            path: 'list/:csrId/:wrkGrpId',
+            //set to most recent course, allow student to switch between courses.
+            component: ListComponent,
+            // children: [
+            //   { path: 'sp', component: SpComponent},
+            //   { path: 'comment', component: CommentComponent}
+            // ]
+            //resolve: { list: 'listResolver' },
           },
           {
-            path: 'course/:id',
-            //set to most recent course, allow student to switch between courses.
-            component: CourseComponent,
-            resolve: { course: 'courseResolver'},
-            canActivateChild: [StudentAuthGuard],
-            children: [
-              {
-                path: '',
-                component: WorkgroupsComponent,
-                //get the students groups for the course
-                resolve: { workGroups: 'workGroupsResolver'},
-              },
-              {
-                path: 'workgroup/:id',
-                component: WorkgroupComponent,
-                //set the most recent workGroup, allow student to switch between workgroups
-                resolve: { workGroup: 'workGroupResolver'},
-                canActivateChild: [StudentAuthGuard],
-                children: [
-                  {
-                    path: 'list',
-                    component: ListComponent,
-                    //Show Assessments and stratifications if group is not published.
-                    resolve: { list: 'listResolver'}
-                  },
-                  {
-                    path: 'result',
-                    component: ResultsComponent,
-                    //show results if group is published
-                    resolve: { result: 'resultsResolver'}
-                  }
-                ]
-              }
-            ]
+            path: 'results/:crsId/:wrkGrpId',
+            component: ResultsComponent,
+            //resolve: { results: 'resultsResolver' },
           }
+
         ]
       }
     ]
   }
 ];
 
- export function coursesResolver(studentDataContext: StudentDataContext) {
-   return (route: ActivatedRouteSnapshot) => resolve.initCourses(route.params['course']);
+export function assessmentResolver(studentDataContext: StudentDataContext) {
+  return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses(route.params['course']);
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
@@ -104,6 +86,10 @@ const studentRoutes: Routes = [
   exports: [
     RouterModule
   ],
-  providers: []
+  providers: [
+    {
+      provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
+    }
+  ]
 })
 export class StudentRoutingModule { }
