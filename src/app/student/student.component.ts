@@ -37,25 +37,25 @@ export class StudentComponent implements OnInit {
     // broadcast to all listener observables when loading the page
     this.media.broadcast();
     this.titleService.setTitle('ECAT Users');
-    this.initCourses();
+    //this.initCourses();
   }
 
-  initCourses(): void {
-    //maps to ng-template tag
-    this.loadingService.register('course.list');
-    this.studentDataContext.initCourses()
-        .then((courses) => {
-          this.courses = courses;
-          this.loadingService.resolve('course.list');
-          console.log(this.courses);
-        })
-        .catch(e => {
-          this.loadingService.resolve('course.list');
-          console.log('error getting users');
-          console.log(e);
-        })
+  // initCourses(): void {
+  //   //maps to ng-template tag
+  //   this.loadingService.register('course.list');
+  //   this.studentDataContext.initCourses()
+  //       .then((courses) => {
+  //         this.courses = courses;
+  //         this.loadingService.resolve('course.list');
+  //         console.log(this.courses);
+  //       })
+  //       .catch(e => {
+  //         this.loadingService.resolve('course.list');
+  //         console.log('error getting users');
+  //         console.log(e);
+  //       })
 
-  }
+  // }
 
 
   // loadUsers(): void {

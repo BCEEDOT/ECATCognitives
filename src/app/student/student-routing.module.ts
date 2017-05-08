@@ -29,7 +29,7 @@ const studentRoutes: Routes = [
             path: '',
             component: CoursesComponent,
             //Get the students courses
-            //resolve: { courses: 'coursesResolver' },
+            resolve: { courses: 'coursesResolver' },
           },
           {
             path: 'course/:id',
@@ -73,9 +73,9 @@ const studentRoutes: Routes = [
   }
 ];
 
-// export function coursesResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.courses(route.params['course']);
-// }
+ export function coursesResolver(studentDataContext: StudentDataContext) {
+   return (route: ActivatedRouteSnapshot) => resolve.initCourses(route.params['course']);
+}
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.course(+route.params['id']);
