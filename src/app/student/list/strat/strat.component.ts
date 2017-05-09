@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-strat',
+  selector: 'strat',
   templateUrl: './strat.component.html',
   styleUrls: ['./strat.component.scss']
 })

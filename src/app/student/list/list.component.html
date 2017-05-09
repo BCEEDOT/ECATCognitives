@@ -1,3 +1,14 @@
-<p>
-  list works!
-</p>
+<md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+  <md-tab-group md-stretch-tabs>
+      <md-tab>
+        <ng-template md-tab-label>Assessment</ng-template>
+        <h3>{{hasAcknowldged}}</h3>
+        <assess></assess>
+      </md-tab>
+      <md-tab>
+        <ng-template md-tab-label>Stratification</ng-template>
+          <strat></strat>
+      </md-tab>
+    </md-tab-group>
+</md-card>
+

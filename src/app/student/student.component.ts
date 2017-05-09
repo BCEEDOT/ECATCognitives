@@ -1,3 +1,4 @@
+import { mixingMultiProvidersWithRegularProvidersError } from '@angular/core/src/di/reflective_errors';
 import { MpSpStatus } from '../core/common/mapStrings';
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,11 +7,10 @@ import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 import { Observable } from 'rxjs/Observable';
 import * as _ from "lodash";
-
+import 'rxjs/add/operator/pluck';
 
 import { Course, WorkGroup } from "../core/entities/student";
-import { GlobalService } from "../core/services/global.service";
-import { StudentDataContext } from "./services/student-data-context.service";
+import { WorkGroupService } from "./services/workgroup.service";
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -27,7 +27,7 @@ export class StudentComponent implements OnInit {
   courses$: Observable<Course[]>;
   courses: Course[];
   workGroups: WorkGroup[];
-  activeWorkgroup: WorkGroup;
+  activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
 
   constructor(private titleService: Title,
@@ -36,11 +36,10 @@ export class StudentComponent implements OnInit {
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private snackBarService: MdSnackBar,
-    private studentDataContext: StudentDataContext,
     public media: TdMediaService,
-    private global: GlobalService) {
+    private workGroupService: WorkGroupService) {
 
-    this.courses$ = <any>route.data.pluck('assess');
+    this.courses$ = route.data.pluck('assess');
   }
 
   goBack(route: string): void {
@@ -51,9 +50,9 @@ export class StudentComponent implements OnInit {
     // broadcast to all listener observables when loading the page
     //this.media.broadcast();
     this.titleService.setTitle('ECAT Users');
-
     this.courses$.subscribe(courses => {
       this.courses = courses;
+      console.log(this.courses);
       this.activate();
     });
 
@@ -62,29 +61,43 @@ export class StudentComponent implements OnInit {
 
   private activate(force?: boolean): void {
 
+    this.courses.sort((crseA: Course, crseB: Course) => {
+      if (crseA.startDate < crseB.startDate) return 1;
+      if (crseA.startDate > crseB.startDate) return -1;
+      return 0;
+    });
+
     this.courses.forEach(course => course['displayName'] = `${course.classNumber}: ${course.name}`);
     let activeCourse: Course;
     activeCourse = this.courses[0];
     this.workGroups = activeCourse.workGroups;
+
+    this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+      if (wgA.mpCategory < wgB.mpCategory) return 1;
+      if (wgA.mpCategory > wgB.mpCategory) return -1;
+      return 0;
+    })
+
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
     this.activeCourseId = activeCourse.id;
     let activeWorkgroup = this.workGroups[0];
 
     this.setActiveWorkgroup(activeWorkgroup, force);
-
-
   }
 
   private setActiveWorkgroup(workGroup: WorkGroup, force?: boolean): void {
     this.grpDisplayName = `${workGroup.mpCategory}: ${workGroup.customName || workGroup.defaultName}`;
-    this.activeWorkgroup = workGroup;
-    const viewOnly = workGroup.mpSpStatus !== MpSpStatus.open;
+    this.activeWorkGroup = workGroup;
+    const resultsPublished = workGroup.mpSpStatus !== MpSpStatus.open;
     const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
+    this.workGroupService.workGroup(workGroup);
 
     if (!force) {
-      true ? this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route });
+      resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
     }
   }
+
+
 
 
 

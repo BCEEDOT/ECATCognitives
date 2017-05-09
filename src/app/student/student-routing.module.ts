@@ -1,16 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
-//import { AssessmentResolver } from "./services/assessment.resolver"
 import { StudentAuthGuard } from './services/student-auth-guard.service';
 import { StudentDataContext } from "./services/student-data-context.service";
 import { GlobalService } from "../core/services/global.service";
 import { StudentComponent } from './student.component';
-import { AssessComponent } from "./shared/assess/assess.component";
-import { CoursesComponent } from "./shared/courses/courses.component";
-import { CourseComponent } from "./shared/course/course.component";
-import { WorkgroupsComponent } from "./shared/workgroups/workgroups.component";
-import { WorkgroupComponent } from "./shared/workgroup/workgroup.component";
 import { ListComponent } from "./list/list.component";
 import { ResultsComponent } from "./results/results.component";
 
@@ -56,7 +50,7 @@ const studentRoutes: Routes = [
 ];
 
 export function assessmentResolver(studentDataContext: StudentDataContext) {
-  return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses(route.params['course']);
+  return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses();
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {

@@ -8,19 +8,23 @@
       <md-icon svgIcon="assets:github"></md-icon>
     </a>
   </div>
-  <md-card *ngFor="let c of courses">
-    <p>
-      <span>{{c.name}}</span>
-    </p>
-  </md-card>
-  <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-    <md-toolbar td-sidenav-content>
-      <span>Users</span>
-      <button md-icon-button><md-icon class="md-24">settings</md-icon></button>
-      <span flex></span>
-      <button routerLink="./assess" routerLinkActive="active" md-icon-button><md-icon class="md-24">view_module</md-icon></button>
-      <button routerLink="./strat" routerLinkActive="active" md-icon-button><md-icon class="md-24">sort</md-icon></button>
-    </md-toolbar>
-    <router-outlet></router-outlet>
-  </md-card>
+  <div align="end" class="pad-right-md pad-top-sm">
+    <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
+      {{activeWorkGroup?.displayName}}
+      <md-icon class="md-24">expand_more</md-icon>
+    </button>
+    <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+      <button *ngFor="let workGroup of workGroups" md-menu-item>{{workGroup.displayName}}</button>
+    </md-menu>
+
+    <button md-icon-button [mdMenuTriggerFor]="menu">
+  <md-icon>menu</md-icon>
+</button>
+<md-menu #menu="mdMenu">
+    <button *ngFor="let course of courses" md-menu-item>{{course.displayName}}</button>
+</md-menu>
+    <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
+  </div>
+
+  <router-outlet></router-outlet>
 </td-layout-nav>
