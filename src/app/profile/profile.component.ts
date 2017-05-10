@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // broadcast to all listener observables when loading the page
-    this.media.broadcast();
+    //this.media.broadcast();
     this.titleService.setTitle('Profile');
     this.loadingService.register(this.profileLoading);
     this.loadProfile();
