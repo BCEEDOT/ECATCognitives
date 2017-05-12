@@ -15,7 +15,7 @@ import { DataContext } from '../../app-constants';
 export class StudentDataContext extends BaseDataContext {
 
     //person: IRepository<Person>;
-
+ 
     student: DataContext;
     isLoaded = {
         initCourses: false,

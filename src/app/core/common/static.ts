@@ -5,7 +5,7 @@ import * as user from "../entities/user";
 import * as student from "./../entities/student";
 import * as faculty from "./../entities/faculty";
 
-export class EcLocalDataService {
+export default class EcLocalDataService {
     static serviceId = 'data.static';
 
     static milPaygradeGraft: cm.IMilPayGrade = {

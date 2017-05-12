@@ -1,6 +1,7 @@
 import * as user from "./user";
 import * as student from "./student";
 import * as faculty from "./faculty";
+import { EntityBase } from "./EntityBase";
 
 export interface IApiResource {
     resource: string;
@@ -57,3 +58,22 @@ export interface IMilServiceRank {
     rankLongName: string;
 }
 
+export interface IStudSpInventory extends EntityBase, student.SpInventory {
+   id: number;
+   instrumentId: number;
+   displayOrder: number;
+   isDisplayed: boolean;
+   behavior: string;
+   //instrument: SpInstrument;
+   itemResponses: student.SpResponse[];
+}
+
+export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
+   id: number;
+   instrumentId: number;
+   displayOrder: number;
+   isDisplayed: boolean;
+   behavior: string;
+   //instrument: SpInstrument;
+   itemResponses: faculty.SpResponse[];
+}
