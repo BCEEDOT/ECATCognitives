@@ -6,7 +6,7 @@ import { EmProviderService } from '../../core/services/em-provider.service';
 import { DataContext } from '../../app-constants';
 
 
-@Injectable()
+//@Injectable()
 export class BaseDataContext {
 
     private static shelveSets = {};

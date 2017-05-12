@@ -1,3 +1,19 @@
-<p>
-  comment works!
-</p>
+<md-card>
+  <md-card-title>Comment for {{recipient.rank}} {{recipient.lastName}}, {{recipient.firstName}}</md-card-title>
+  <md-divider></md-divider>
+  <md-card-content>
+    <md-input-container class="md-block">
+      <label>Comment (3000 characters max)</label>
+      <textarea [(ngModel)]="comment.commentText" md-maxlength="3000" rows="5" md-select-on-focus [disabled]="viewOnly"></textarea>
+    </md-input-container>
+  </md-card-content>
+  <md-card-actions>
+    <md-radio-group *ngIf="isStudent">
+      <md-raised-button [(ngModel)]="reqAnon" value="true" [disabled]="viewOnly">Anonymous</md-raised-button>
+      <md-raised-button [(ngModel)]="reqAnon" value="false" [disabled]="viewOnly">Named</md-raised-button>
+    </md-radio-group>
+    <span></span>
+    <md-rasied-button (click)="cancel()">Cancel</md-rasied-button>
+    <md-raised-button [disabled]="!canSave" (click)="save()" [disabled]="viewOnly">Save</md-raised-button>
+  </md-card-actions>
+</md-card>

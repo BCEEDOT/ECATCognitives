@@ -12,23 +12,30 @@ export class SpProviderService {
   inventories: Array<IStudSpInventory | IFacSpInventory>;
   comment: StudSpComment | FacSpComment;
   persona: ILoggedInUser;
+  viewOnly: boolean;
   private ctx: BaseDataContext;
 
   constructor(private global: GlobalService) { }
 
-  loadAssessment(ctx: BaseDataContext, inventories: Array<IStudSpInventory | IFacSpInventory>){
+  loadAssessment(ctx: BaseDataContext, inventories: Array<IStudSpInventory | IFacSpInventory>, viewOnly: boolean){
     this.ctx = ctx;
     this.inventories = inventories;
+    this.persona = this.global.persona.value;
+    this.viewOnly = viewOnly;
   }
 
-  loadComment(ctx: BaseDataContext, comment: StudSpComment | FacSpComment) {
+  loadComment(ctx: BaseDataContext, comment: StudSpComment | FacSpComment, viewOnly: boolean) {
     this.ctx = ctx;
     this.comment = comment;
     this.persona = this.global.persona.value;
+    this.viewOnly = viewOnly;
   }
 
   save(): Promise<any> {
-    return this.ctx.commit()
+    if (this.viewOnly){
+
+    } else {
+      return this.ctx.commit()
       .then((result) => {
         console.log('success');
         return result;
@@ -37,9 +44,6 @@ export class SpProviderService {
         console.log('error');
         return result;
       })
-  }
-
-  discardChanges(): void {
-    this.ctx.rollback();
+    }    
   }
 }

@@ -8,7 +8,7 @@ import { SpProviderService } from './sp-provider.service';
   imports: [
     CommonModule
   ],
-  declarations: [AssessComponent, CommentComponent ],
+  declarations: [ AssessComponent, CommentComponent ],
   exports: [ AssessComponent, CommentComponent ],
   providers: [ SpProviderService ]
 })

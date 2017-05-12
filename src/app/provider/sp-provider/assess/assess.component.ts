@@ -29,10 +29,13 @@ export class AssessComponent implements OnInit {
         usl: SpFreqLevel.Usually,
         alw: SpFreqLevel.Always
     };
+  private assessLoad: string = 'AssessLoading';
+  private viewOnly: boolean = true;
 
   constructor(private spProvider: SpProviderService, 
     private router: Router,
-    private dialogService: TdDialogService) { }
+    private dialogService: TdDialogService,
+    private loadingService: TdLoadingService) { }
 
   ngOnInit() {
     this.inventories = this.spProvider.inventories;
@@ -43,7 +46,6 @@ export class AssessComponent implements OnInit {
     });
 
     this.isStudent = this.spProvider.persona.isStudent.valueOf();
-    this.inventories[0].responseForAssessee
     this.assessee = this.inventories[0].responseForAssessee.assessee.studentProfile.person as Person;
     this.isSelf = this.assessee.personId === this.spProvider.persona.person.personId;
 
@@ -56,6 +58,8 @@ export class AssessComponent implements OnInit {
     } else {
       this.perspective = 'was your student';
     }
+
+    this.viewOnly = this.spProvider.viewOnly;
   }
   
   previousInv(){
@@ -69,10 +73,15 @@ export class AssessComponent implements OnInit {
   }
 
   saveCheck(){
-    if (this.inventories.some(inv => inv.responseForAssessee.itemModelScore === null)){
-      this.canSave = false;
-    } else {
-      this.canSave = true;
+    if (!this.viewOnly){
+      let changes = this.inventories.some(inv => inv.entityAspect.entityState.isAddedModifiedOrDeleted());
+      let validResps = this.inventories.every(inv => inv.responseForAssessee.itemModelScore !== null);
+
+      if (changes && validResps){
+        this.canSave = true;
+      } else {
+        this.canSave = false;
+      }
     }
   }
 
@@ -85,20 +94,30 @@ export class AssessComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed){
-          
-        } else {
-
+          this.inventories.forEach(inv => inv.entityAspect.rejectChanges());
+          this.router.navigate(['/']);
         }
       });
     }
   }
 
   save(){
+    if (this.viewOnly){
+      this.dialogService.openAlert({
+        message: 'Group is not in open status',
+        title: 'Cannot Save',
+      });
+      return;
+    }
+
+    this.loadingService.register(this.assessLoad);
     this.spProvider.save()
       .then(result => {
+        this.loadingService.resolve(this.assessLoad);
         this.router.navigate(['/']);
       })
       .catch(result => {
+        this.loadingService.resolve(this.assessLoad);
         this.dialogService.openAlert({
           message: 'Your changes were not saved, please try again.',
           title: 'Save Error',
