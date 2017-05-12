@@ -6,7 +6,7 @@ import {
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { Course, WorkGroup, SpResult } from '../../core/entities/student';
+import { Course, WorkGroup, SpResult, CrseStudentInGroup } from '../../core/entities/student';
 import { IStudentApiResources } from "../../core/entities/client-models";
 import { MpEntityType } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
@@ -25,6 +25,9 @@ export class StudentDataContext extends BaseDataContext {
         wgResult: {},
         spInventory: {}
     }
+    activeGroupId: number;
+    activeCourseId: number;
+
 
     private studentApiResources: IStudentApiResources = {
         initCourses: {
@@ -81,7 +84,7 @@ export class StudentDataContext extends BaseDataContext {
 
                     workGroups.forEach(workGroup => {
                         if (workGroup.groupMembers && workGroup.groupMembers.length > 0) {
-                            //that.isLoaded.workGroup[workGroup.workGroupId] = true;
+                            that.isLoaded.workGroup[workGroup.workGroupId] = true;
                         }
                     });
                 }
@@ -89,6 +92,71 @@ export class StudentDataContext extends BaseDataContext {
             console.log('Courses loaded from server');
             return courses;
 
+        }
+    }
+
+    fetchActiveWorkGroup(workGroupId: number, forcedRefresh?: boolean): Promise<WorkGroup | Promise<void>> {
+
+        const that = this;
+
+        // if (!this.activeGroupId || !this.activeCourseId) {
+        //     console.log('No course/workgroup selected!', null, true);
+        //     return Promise.reject(() => {
+        //         return 'A course/workgroup must be selected';
+        //     });
+        // }
+
+        let workGroup: WorkGroup;
+        //const api = this.studentApiResources;
+
+        // if (this.isLoaded.workGroup[this.activeGroupId] && this.isLoaded.spInventory[this.activeGroupId] && !forcedRefresh) {
+        //     workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, this.activeGroupId) as WorkGroup;
+
+        //     console.log('Workgroup loaded from local cache', workGroup, false);
+        //     return Promise.resolve(workGroup);
+        // }
+
+        workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+
+        if (workGroup && workGroup.groupMembers.length > 0) {
+            return Promise.resolve(workGroup);
+        }
+
+        const params = { wgId: workGroupId, addAssessment: false };
+
+        // if (!this.isLoaded.spInventory[this.activeGroupId] || forcedRefresh) {
+        //     params.addAssessment = true;
+        // }
+
+        // const cachedGroupMembers = this.manager.getEntities(MpEntityType.crseStudInGrp) as Array<CrseStudentInGroup>;
+        // const activeGrpMems = cachedGroupMembers.filter(gm => gm.courseId === this.activeCourseId && gm.workGroupId === this.activeGroupId);
+        // if (!this.isLoaded.workGroup[this.activeGroupId] && activeGrpMems.length > 0) {
+        //     activeGrpMems.forEach(ent => this.manager.detachEntity(ent));
+        // }
+
+        let query = EntityQuery.from(this.studentApiResources.workGroup.resource)
+                                .withParameters(params);
+
+        return <Promise<WorkGroup>>this.manager.executeQuery(query)
+                                            .then(getActiveWorkGrpResponse)
+                                            .catch(this.queryFailed);
+
+        function getActiveWorkGrpResponse(data: QueryResult) {
+            workGroup = data.results[0] as WorkGroup;
+
+            if (!workGroup) {
+                const error = {
+                    errorMessage: 'Could not find this active workgroup on the server',
+                }
+                console.log('Query succeeded, but the course membership did not return a result', data, false);
+                return Promise.reject(() => error) as any;
+            }
+
+            //that.isLoaded.workGroup[workGroup.workGroupId] = true;
+            //that.isLoaded.spInventory[workGroup.workGroupId] = (workGroup.assignedSpInstr) ? true : false;
+
+            console.log(workGroup);
+            return workGroup;
         }
     }
 

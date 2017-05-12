@@ -121,7 +121,7 @@ export class AuthService implements IHttpInterceptor {
   logout() {
     if (this.emProvider) {
       this.emProvider.clear(DataContext.User);
-      //this.emProvider.clear(DataContext.Student);
+      this.emProvider.clear(DataContext.Student);
     }
     
     this.global.user(null);

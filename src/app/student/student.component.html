@@ -15,14 +15,18 @@
       <md-icon class="md-24">expand_more</md-icon>
     </button>
       <md-menu x-position="before" #posXMenu="mdMenu" class="before">
-        <button *ngFor="let workGroup of workGroups" md-menu-item>{{workGroup.displayName}}</button>
+        <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup, false)">
+          {{workGroup.displayName}}
+          </button>
       </md-menu>
 
       <button md-icon-button [mdMenuTriggerFor]="menu">
   <md-icon>menu</md-icon>
 </button>
       <md-menu #menu="mdMenu">
-        <button *ngFor="let course of courses" md-menu-item>{{course.displayName}}</button>
+        <button *ngFor="let course of courses" md-menu-item>
+          {{course.displayName}}
+          </button>
       </md-menu>
       <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
     </div>

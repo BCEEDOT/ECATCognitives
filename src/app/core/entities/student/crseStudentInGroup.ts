@@ -10,7 +10,7 @@ import { StudentInCourse } from './StudentInCourse';
 import { ProfileStudent } from './ProfileStudent';
 
 /// <code-import> Place custom imports between <code-import> tags
-
+import { EcLocalDataService } from "../../common/static"
 /// </code-import>
 
 export class CrseStudentInGroup extends EntityBase {
@@ -37,7 +37,21 @@ export class CrseStudentInGroup extends EntityBase {
    workGroup: WorkGroup;
 
    /// <code> Place custom code between <code> tags
-   
+
+   constructor() {
+       super();
+   }
+
+
+   get rankName(): string {
+        let _salutation: string;
+        const p = (this.studentProfile) ? this.studentProfile.person : null;
+        if (p && !_salutation) _salutation = EcLocalDataService.getSalutation(p.mpPaygrade, p.mpComponent, p.mpAffiliation);
+        
+        return (!p) ? 'Unk' : `${_salutation} ${this.studentProfile.person.lastName}, ${this.studentProfile.person.firstName}`;
+    }
+
+    static initializer(entity: CrseStudentInGroup) { }
    /// </code>
 
 }

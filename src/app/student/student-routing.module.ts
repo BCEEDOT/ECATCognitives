@@ -35,7 +35,7 @@ const studentRoutes: Routes = [
             //   { path: 'sp', component: SpComponent},
             //   { path: 'comment', component: CommentComponent}
             // ]
-            //resolve: { list: 'listResolver' },
+            resolve: { workGroup: 'workGroupResolver' },
           },
           {
             path: 'results/:crsId/:wrkGrpId',
@@ -51,6 +51,10 @@ const studentRoutes: Routes = [
 
 export function assessmentResolver(studentDataContext: StudentDataContext) {
   return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses();
+}
+
+export function workGroupResolver(studentDataContext: StudentDataContext) {
+  return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId']);
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
@@ -83,6 +87,9 @@ export function assessmentResolver(studentDataContext: StudentDataContext) {
   providers: [
     {
       provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
+    },
+    {
+      provide: 'workGroupResolver', useFactory: workGroupResolver, deps: [StudentDataContext]
     }
   ]
 })

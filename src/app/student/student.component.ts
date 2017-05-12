@@ -11,6 +11,7 @@ import 'rxjs/add/operator/pluck';
 
 import { Course, WorkGroup } from "../core/entities/student";
 import { WorkGroupService } from "./services/workgroup.service";
+import { StudentDataContext } from "./services/student-data-context.service"
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -37,7 +38,8 @@ export class StudentComponent implements OnInit {
     private dialogService: TdDialogService,
     private snackBarService: MdSnackBar,
     public media: TdMediaService,
-    private workGroupService: WorkGroupService) {
+    private workGroupService: WorkGroupService,
+    private studentDataContext: StudentDataContext) {
 
     this.courses$ = route.data.pluck('assess');
   }
@@ -79,23 +81,34 @@ export class StudentComponent implements OnInit {
     })
 
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
+    //this.activeCourseId = this.studentDataContext.activeCourseId = activeCourse.id;
     this.activeCourseId = activeCourse.id;
     let activeWorkgroup = this.workGroups[0];
 
-    this.setActiveWorkgroup(activeWorkgroup, force);
+    this.setActiveWorkGroup(activeWorkgroup, force);
   }
 
-  private setActiveWorkgroup(workGroup: WorkGroup, force?: boolean): void {
+  private setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
+
+    const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
+
+    this.studentDataContext.fetchActiveWorkGroup(workGroupId, false).then(workGroup => {
+      this.activeWorkGroup = workGroup as WorkGroup;
+    })
+
     this.grpDisplayName = `${workGroup.mpCategory}: ${workGroup.customName || workGroup.defaultName}`;
     this.activeWorkGroup = workGroup;
     const resultsPublished = workGroup.mpSpStatus !== MpSpStatus.open;
-    const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
+
+    //this.studentDataContext.activeGroupId = workGroupId;
     this.workGroupService.workGroup(workGroup);
 
     if (!force) {
       resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
     }
   }
+
+
 
 
 
