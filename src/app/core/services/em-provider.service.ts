@@ -3,8 +3,7 @@ import {
   EntityManager, NamingConvention, DataService, DataType, MetadataStore,
   EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, ValidationOptionsConfiguration, ValidationOptions
 } from 'breeze-client';
-import remove from 'lodash/remove';
-import includes from 'lodash/includes';
+import * as _ from "lodash";
 import { AuthHttp } from 'angular2-jwt';
 import { AjaxAngularAdapter } from "breeze-bridge-angular";
 
@@ -153,14 +152,14 @@ export class EmProviderService {
       return dp;
     });
     // Get all the nulls out
-    remove(dps, dp => !dp);
+    _.remove(dps, dp => !dp);
 
     // Get existing ignored properties
     let ignoredProperties: DataProperty[] = (<any>entityType).$ignoredProperties;
 
     // Signals that we've already installed our custom serializerFn
     if (ignoredProperties) {
-      remove(dps, dp => includes(ignoredProperties, dp))
+      _.remove(dps, dp => _.includes(ignoredProperties, dp))
       ignoredProperties = ignoredProperties.concat(dps);
     } else {
       // First ignored properties for this entity type
@@ -168,7 +167,7 @@ export class EmProviderService {
       let origSerializerFn: (dataProperty: DataProperty, value: any) => any = (<any>entityType).serializerFn;
       entityType.setProperties({
         serializerFn: (dp, value) => {
-          if (includes((<any>entityType).$ignoredProperties, dp)) {
+          if (_.includes((<any>entityType).$ignoredProperties, dp)) {
             // Return undefined if property is ignored for serialization
             return undefined;
           }
