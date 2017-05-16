@@ -30,6 +30,7 @@ export class StudentComponent implements OnInit {
   workGroups: WorkGroup[];
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
+  assessIsLoaded = 'assessIsLoaded';
 
   constructor(private titleService: Title,
     private router: Router,

@@ -119,6 +119,7 @@ export class StudentDataContext extends BaseDataContext {
         workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
 
         if (workGroup && workGroup.groupMembers.length > 0) {
+            console.log("WorkGroup loaded from local cache");
             return Promise.resolve(workGroup);
         }
 

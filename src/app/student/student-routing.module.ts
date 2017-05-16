@@ -54,7 +54,8 @@ export function assessmentResolver(studentDataContext: StudentDataContext) {
 }
 
 export function workGroupResolver(studentDataContext: StudentDataContext) {
-  return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId']);
+  return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId'])
+
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
