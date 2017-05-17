@@ -124,4 +124,36 @@ export class UserDataContext extends BaseDataContext {
 
 
 
+    getRoadRunnerInfos(force?: boolean): Promise<RoadRunner[]> {
+
+        const self = this;
+        //const isLoaded =
+
+
+        let query = EntityQuery.from(this.userApiResources.roadRunner.resource);
+
+        return <Promise<RoadRunner[]>>this.manager.executeQuery(query)
+            .then(res => res.results as RoadRunner[])
+            .catch(e => {
+                console.log('Did not retrieve users road runner info' + e);
+                return Promise.reject(e);
+            });
+    }
+
+    addRoadRunner(): RoadRunner {
+
+        //const profile = { personId: this.global.persona.value.person.personId };
+        const newAddress = this.manager.createEntity(MpEntityType.roadRunner,{personId: this.global.persona.value.person.personId}) as RoadRunner;
+
+        return newAddress;
+    }
+
+    // addRoadrunner(): ecat.entity.IRoadRunner {
+
+    //     const returnedAddress = this.manager.createEntity(_mp.MpEntityType.roadRunner, { personId: this.persona.personId }) as ecat.entity.IRoadRunner;
+
+    //     return returnedAddress;
+
+    // }
+
 }

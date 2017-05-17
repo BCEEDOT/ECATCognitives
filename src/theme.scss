@@ -95,6 +95,10 @@ $theme: mat-light-theme($primary, $accent, $warn);
 @include covalent-markdown-theme($theme);
 @include covalent-highlight-theme();
 
+//date picker
+ //@include calendar-theme($theme);
+
+
 // Active icon color in list nav
 md-nav-list {
     [md-list-item].active {

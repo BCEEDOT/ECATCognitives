@@ -13,6 +13,7 @@ import { UsersModule } from "./users/users.module";
 import { StudentModule } from "./student/student.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { ProfileModule } from "./profile/profile.module";
+import { RoadrunnerModule } from "./roadrunner/roadrunner.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
@@ -40,7 +41,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     ProfileModule,
     DashboardModule,
     BrowserAnimationsModule,
-    AppRoutingModule, //Add feature modules/routes before main routing module
+    AppRoutingModule,
+    RoadrunnerModule //Add feature modules/routes before main routing module
   ], // modules needed to run this module
   providers: [
     {

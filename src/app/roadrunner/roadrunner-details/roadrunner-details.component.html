@@ -1,0 +1,85 @@
+<td-layout-nav logo="assets:covalent">
+  <div td-toolbar-content layout="row" layout-align="center center" flex>
+    <span flex></span>
+    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+      <md-icon>chrome_reader_mode</md-icon>
+    </a>
+    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+      <md-icon svgIcon="assets:github"></md-icon>
+    </a>
+  </div>
+
+  <md-card>
+
+    <div *ngIf="event.length > 0">
+      <md-toolbar>
+        <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+
+          <span class="md-title">Edit the following content</span>
+
+        </div>
+      </md-toolbar>
+      <md-list class="will-load">
+        <!--<ng-template let-data let-last="last" ngFor [ngForOf]="event">-->
+
+
+          <div layout-gt-xs="row" layout-margin>
+            <md-input-container flex>
+              <textarea mdInput placeholder="Location" value="{{oneEvent.location}}" [(ngModel)]="oneEvent.location" name="contactNumber" maxlength="50" pattern="^\d+$" tdAutoTrim></textarea>
+
+            </md-input-container>
+          </div>
+
+          <div layout-gt-xs="row" layout-margin>
+            <md-input-container flex>
+              <input mdInput placeholder="Contact Number" value="{{oneEvent.phoneNumber}}" [(ngModel)]="oneEvent.phoneNumber" name="contactNumber" maxlength="10" pattern="^\d+$"
+                tdAutoTrim/>
+
+            </md-input-container>
+          </div>
+<div *ngIf="!oneEvent.prevSignOut">
+          <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+              <input mdInput id="leavedate" [value]="oneEvent?.leaveDate | date:'yyyy-MM-dd'" type="date" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value"/>
+
+            </md-input-container>
+          </div>
+
+          <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+
+              <input mdInput type="date" placeholder="Return Date" value="{{oneEvent?.returnDate | date:'yyyy-MM-dd'}}" (input)="oneEvent.returnDate = $event.target.value"/>
+            </md-input-container>
+          </div>
+</div>
+<div *ngIf="oneEvent.prevSignOut">
+            <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+              <input mdInput id="leavedate" type="date" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value"/>
+
+            </md-input-container>
+          </div>
+
+          <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+
+              <input mdInput type="date" placeholder="Return Date" (input)="oneEvent.returnDate = $event.target.value"/>
+            </md-input-container>
+          </div>
+  </div>
+        <!--</ng-template>-->
+
+      </md-list>
+
+      <div layout-gt-xs="row" layout-margin class="button-row">
+        <button md-raised-button color="primary" (click)="cancel()">Cancel</button>
+        <button md-raised-button color="primary" (click)="save()">Save</button>
+      </div>
+    </div>
+  </md-card>
+
+</td-layout-nav>

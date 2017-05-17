@@ -92,7 +92,7 @@ export class AuthService implements IHttpInterceptor {
       mpComponent: idToken.mpComponent,
       email: idToken.email,
       //TODO: Update with value from idToken
-      registrationComplete: false,
+      registrationComplete: true,
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
