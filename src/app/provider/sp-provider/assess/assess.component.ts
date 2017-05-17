@@ -1,12 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
+
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/pluck';
 
 import { SpProviderService } from '../sp-provider.service';
 import { Person } from '../../../core/entities/student';
 import { IStudSpInventory, IFacSpInventory } from '../../../core/entities/client-models'
 import { MpSpItemResponse } from '../../../core/common/mapStrings'
 import { SpEffectLevel, SpFreqLevel } from '../../../core/common/mapEnum'
+import { GlobalService } from "../../../core/services/global.service";
 
 @Component({
   selector: 'app-assess',
@@ -16,6 +20,7 @@ import { SpEffectLevel, SpFreqLevel } from '../../../core/common/mapEnum'
 
 export class AssessComponent implements OnInit {
   private inventories: Array<IStudSpInventory | IFacSpInventory>;
+  private inventories$: Observable<Array<IStudSpInventory | IFacSpInventory>>;
   private isStudent: boolean;
   private isSelf: boolean;
   private perspective: string;
@@ -30,24 +35,34 @@ export class AssessComponent implements OnInit {
         alw: SpFreqLevel.Always
     };
   private assessLoad: string = 'AssessLoading';
-  private viewOnly: boolean = true;
+  private viewOnly: boolean = false;
 
   constructor(private spProvider: SpProviderService, 
     private router: Router,
     private dialogService: TdDialogService,
-    private loadingService: TdLoadingService) { }
+    private loadingService: TdLoadingService,
+    private global: GlobalService, 
+    private route: ActivatedRoute) { 
+      this.inventories$ = route.data.pluck('inventories');
+    }
+
+  //@Input() inventories: Array<IStudSpInventory | IFacSpInventory>;
 
   ngOnInit() {
-    this.inventories = this.spProvider.inventories;
+    this.inventories$.subscribe(invs => {
+      this.inventories = invs;
+    });
+    console.log(this.inventories);
+    //this.spProvider.inventories = this.inventories;
     this.inventories.sort((a, b) => {
-      if (a.displayOrder < b.displayOrder){ return 1; }
-      if (a.displayOrder > b.displayOrder){ return -1; }
+      if (a.displayOrder < b.displayOrder){ return -1; }
+      if (a.displayOrder > b.displayOrder){ return 1; }
       return 0;
     });
 
-    this.isStudent = this.spProvider.persona.isStudent.valueOf();
+    this.isStudent = this.global.persona.value.isStudent;
     this.assessee = this.inventories[0].responseForAssessee.assessee.studentProfile.person as Person;
-    this.isSelf = this.assessee.personId === this.spProvider.persona.person.personId;
+    this.isSelf = this.assessee.personId === this.global.persona.value.person.personId;
 
     if (this.isStudent){
       if (this.isSelf){
@@ -59,16 +74,20 @@ export class AssessComponent implements OnInit {
       this.perspective = 'was your student';
     }
 
-    this.viewOnly = this.spProvider.viewOnly;
+    this.activeInventory = this.inventories[0];
+    console.log(this.activeInventory);
+    //this.viewOnly = this.spProvider.viewOnly;
   }
   
   previousInv(){
-    this.activeInventory = this.inventories.find(inv => inv.displayOrder === this.activeInventory.displayOrder - 1);
+    let prev = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder - 1));
+    this.activeInventory = prev;
     this.saveCheck();
   }
 
   nextInv(){
-    this.activeInventory = this.inventories.find(inv => inv.displayOrder === this.activeInventory.displayOrder + 1);
+    let next = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder + 1));
+    this.activeInventory = next;
     this.saveCheck();
   }
 

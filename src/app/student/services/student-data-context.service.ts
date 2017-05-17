@@ -6,10 +6,11 @@ import {
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { Course, WorkGroup, SpResult, CrseStudentInGroup } from '../../core/entities/student';
-import { IStudentApiResources } from "../../core/entities/client-models";
+import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse } from '../../core/entities/student';
+import { IStudentApiResources, IStudSpInventory } from "../../core/entities/client-models";
 import { MpEntityType } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
+import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
 @Injectable()
 export class StudentDataContext extends BaseDataContext {
@@ -48,7 +49,7 @@ export class StudentDataContext extends BaseDataContext {
         }
     }
 
-    constructor(emProvider: EmProviderService) {
+    constructor(emProvider: EmProviderService, private global: GlobalService) {
         super(DataContext.Student, emProvider);
     }
 
@@ -159,6 +160,33 @@ export class StudentDataContext extends BaseDataContext {
             console.log(workGroup);
             return workGroup;
         }
+    }
+
+    getSpInventory(courseId: number, workGroupId: number, assesseeId: number): Array<IStudSpInventory> {
+        let loggedInUser: ILoggedInUser;
+        loggedInUser = this.global.persona.value;
+        let userId = loggedInUser.person.personId;
+
+        let workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+        
+        if (!workGroup.assignedSpInstr) { 
+            return null;
+        }
+
+        let inventoryList = workGroup.assignedSpInstr.inventoryCollection as Array<IStudSpInventory>;
+
+        return inventoryList.map(inv => {
+            let key = {assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemid: inv.id };
+
+            let spResponse = this.manager.getEntityByKey(MpEntityType.spResponse, [userId, assesseeId, courseId, workGroupId, inv.id]) as SpResponse;
+
+            if (!spResponse){
+                spResponse = this.manager.createEntity(MpEntityType.spResponse, key) as SpResponse;
+            }
+
+            inv.responseForAssessee = spResponse;
+            return inv;
+        });
     }
 
 

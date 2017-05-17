@@ -1,26 +1,26 @@
 <md-card>
-  <md-card-title>Assessement for {{assessee.rank}} {{assessee.lastName}}, {{assesee.firstName}}</md-card-title>
+  <md-card-title>Assessement for {{assessee.rank}} {{assessee.lastName}}, {{assessee.firstName}}</md-card-title>
   <md-divider></md-divider>
   <md-card-content>
     <p>With regards to displaying the behavior {{activeInventory.behavior}} how effective {{perspective}}?</p>
-    <md-icon-button mdTooltip="Mark As (Not) Displayed" mdToolTipPosition="below" [mdMenuTriggerFor]="menu" [disabled]="viewOnly">
+    <button md-raised-button mdTooltip="Mark As (Not) Displayed" mdToolTipPosition="below" [md-menu-trigger-for]="menu" [disabled]="viewOnly">
       <md-icon>more_vert</md-icon>
-    </md-icon-button>
+    </button>
     <md-menu #menu="mdMenu">
       <button md-menu-item *ngIf="!activeInventory.behaveDisplayed" (click)="activeInventory.behaveDisplayed=true">Displayed</button>
       <button md-menu-item *ngIf="activeInventory.behaveDisplayed" (click)="activeInventory.behaveDisplayed=false">Not Displayed</button>
     </md-menu>
     <span></span>
     <div *ngIf="activeInventory.behaveDisplayed">
-      <md-radio-group>
-        <md-raised-button value="respEnum.ie" [class]="{'primary': activeInventory.behaviorEffect == respEnum.ie}" [(ngModel)]="activeInventory.behaviorEffect" [disabled]="viewOnly">Ineffective</md-radio-button>
-        <md-raised-button value="respEnum.e" [class]="{'primary': activeInventory.behaviorEffect == respEnum.e}" [(ngModel)]="activeInventory.behaviorEffect" [disabled]="viewOnly">Effective</md-radio-button>
-        <md-raised-button value="respEnum.he" [class]="{'primary': activeInventory.behaviorEffect == respEnum.he}" [(ngModel)]="activeInventory.behaviorEffect" [disabled]="viewOnly">Highly Effective</md-radio-button>
+      <md-radio-group name="effect" [(ngModel)]="activeInventory.behaviorEffect">
+        <button md-raised-button name="effect" value="respEnum.ie" [class]="{'primary': activeInventory.behaviorEffect == respEnum.ie}" [disabled]="viewOnly">Ineffective</button>
+        <button md-raised-button name="effect" value="respEnum.e" [class]="{'primary': activeInventory.behaviorEffect == respEnum.e}" [disabled]="viewOnly">Effective</button>
+        <button md-raised-button name="effect" value="respEnum.he" [class]="{'primary': activeInventory.behaviorEffect == respEnum.he}" [disabled]="viewOnly">Highly Effective</button>
       </md-radio-group>
       <span></span>
-      <md-radio-group>
-        <md-raised-button value="respEnum.alw" [class]="{'primary': activeInventory.behaviorFreq == respEnum.alw}" [(ngModel)]="activeInventory.behaviorFreq" [disabled]="viewOnly">Always</md-radio-button>
-        <md-raised-button value="respEnum.ul" [class]="{'primary': activeInventory.behaviorFreq == respEnum.usl}" [(ngModel)]="activeInventory.behaviorFreq" [disabled]="viewOnly">Usually</md-radio-button>
+      <md-radio-group name="freq" [(ngModel)]="activeInventory.behaviorFreq" >
+        <button md-raised-button name="freq" value="respEnum.alw" [class]="{'primary': activeInventory.behaviorFreq == respEnum.alw}" [disabled]="viewOnly">Always</button>
+        <button md-raised-button name="freq" value="respEnum.usl" [class]="{'primary': activeInventory.behaviorFreq == respEnum.usl}" [disabled]="viewOnly">Usually</button>
       </md-radio-group>
     </div>
     <div *ngIf="!activeInventory.behaveDisplayed">
@@ -28,18 +28,18 @@
     </div>
   </md-card-content>
   <md-card-actions>
-    <md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</md-raised-button>
-    <md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInv()">Next</md-raised-button>
+    <button md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</button>
+    <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInv()">Next</button>
     <span></span>
-    <md-rasied-button (click)="cancel()">Cancel</md-rasied-button>
-    <md-raised-button [disabled]="!canSave" (click)="save()">Save</md-raised-button>
+    <button md-raised-button (click)="cancel()">Cancel</button>
+    <button md-raised-button [disabled]="!canSave" (click)="save()">Save</button>
   </md-card-actions>
 </md-card>
 <md-sidenav md-is-locked-open="$mdMedia('min-width: 333px')" class="md-sidenav-right">
   <md-list>
     <md-list-item class="md-2-line" *ngFor="let inventory of inventories" (click)="activeInventory = inventory">
       <p>{{getShortBehavior(inventory)}}</p>
-      <p [class]="{{inventory.responseForAssessee.mpItemResponse}}">{{getResponseString(inventory)}}</p>
+      <p [ngClass]="inventory.responseForAssessee.mpItemResponse">{{getResponseString(inventory)}}</p>
     </md-list-item>
   </md-list>
 </md-sidenav>

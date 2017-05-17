@@ -9,11 +9,11 @@
   </md-card-content>
   <md-card-actions>
     <md-radio-group *ngIf="isStudent">
-      <md-raised-button [(ngModel)]="reqAnon" value="true" [disabled]="viewOnly">Anonymous</md-raised-button>
-      <md-raised-button [(ngModel)]="reqAnon" value="false" [disabled]="viewOnly">Named</md-raised-button>
+      <button md-raised-button [(ngModel)]="reqAnon" value="true" [disabled]="viewOnly">Anonymous</button>
+      <button md-raised-button [(ngModel)]="reqAnon" value="false" [disabled]="viewOnly">Named</button>
     </md-radio-group>
     <span></span>
-    <md-rasied-button (click)="cancel()">Cancel</md-rasied-button>
-    <md-raised-button [disabled]="!canSave" (click)="save()" [disabled]="viewOnly">Save</md-raised-button>
+    <button md-rasied-button (click)="cancel()">Cancel</button>
+    <button md-raised-button [disabled]="!canSave" (click)="save()" [disabled]="viewOnly">Save</button>
   </md-card-actions>
 </md-card>

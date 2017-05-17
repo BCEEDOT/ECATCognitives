@@ -22,7 +22,7 @@ export class SpInventory extends EntityBase {
    itemResponses: SpResponse[];
 
    /// <code> Place custom code between <code> tags
-   private behaveDisplayed = true;
+   private displayed = true;
    private freqLevel: mapEnum.SpFreqLevel = null;
    private effLevel: mapEnum.SpEffectLevel = null;
    private resultBreakout: any;
@@ -33,26 +33,26 @@ export class SpInventory extends EntityBase {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
     };
 
-    rejectChanges(): void {
-        this.responseForAssessee.entityAspect.rejectChanges();
-        this.effLevel = null;
-        this.freqLevel = null;
-        this.behaveDisplayed = this.behaviorDisplayed;
-        if (this.behaveDisplayed === true) {
-            this.calculateItemResponse();
-        }
-    }
+    // rejectChanges(): void {
+    //     this.responseForAssessee.entityAspect.rejectChanges();
+    //     this.effLevel = null;
+    //     this.freqLevel = null;
+    //     this.behaveDisplayed = this.behaveDisplayed;
+    //     if (this.behaveDisplayed === true) {
+    //         this.calculateItemResponse();
+    //     }
+    // }
 
-    resetAssess(): void {
-        this.effLevel = null;
-        this.freqLevel = null;
-        this.behaveDisplayed = true;
-        this.responseForAssessee = null;
-    }
+    // resetAssess(): void {
+    //     this.effLevel = null;
+    //     this.freqLevel = null;
+    //     this.behaveDisplayed = true;
+    //     this.responseForAssessee = null;
+    // }
 
-    resetResult(): void {
-        this.resultBreakout = null;
-    }
+    // resetResult(): void {
+    //     this.resultBreakout = null;
+    // }
 
     spResult: SpResult;
 
@@ -81,7 +81,7 @@ export class SpInventory extends EntityBase {
     }
 
     set behaviorFreq(freqLevel: mapEnum.SpFreqLevel) {
-        this.behaveDisplayed = true;
+        this.displayed = true;
         this.freqLevel = freqLevel;
         this.calculateItemResponse();
     }
@@ -109,12 +109,12 @@ export class SpInventory extends EntityBase {
     }
 
     set behaviorEffect(effLevel: mapEnum.SpEffectLevel) {
-        this.behaveDisplayed = true;
+        this.displayed = true;
         this.effLevel = effLevel;
         this.calculateItemResponse();
     }
 
-    get behaviorDisplayed(): boolean {
+    get behaveDisplayed(): boolean {
         if (!this.responseForAssessee) {
             return null;
         }
@@ -124,9 +124,9 @@ export class SpInventory extends EntityBase {
         return this.responseForAssessee.mpItemResponse !== mapStrings.MpSpItemResponse.nd;
     }
 
-    set behaviorDisplayed(behaveDisplayed: boolean) {
+    set behaveDisplayed(behaveDisplayed: boolean) {
 
-        this.behaveDisplayed = behaveDisplayed;
+        this.displayed = behaveDisplayed;
 
         if (behaveDisplayed) {
             this.freqLevel = this.effLevel = null;
@@ -203,63 +203,64 @@ export class SpInventory extends EntityBase {
         return null;
     }
 
-    get resultBreakOut(): any {
-        if (this.resultBreakOut) {
-            return this.resultBreakOut;
-        }
+    // get resultBreakOut(): any {
+    //     if (this.resultBreakOut) {
+    //         return this.resultBreakOut;
+    //     }
 
-        if (!this.spResult) {
-            return null;
-        }
+    //     if (!this.spResult) {
+    //         return null;
+    //     }
 
-        const breakOut = {
-            selfResult: '',
-            peersResult: '',
-            facultyResult: '',
-            peerBoChart: []
-        }
+    //     const breakOut = {
+    //         selfResult: '',
+    //         peersResult: '',
+    //         facultyResult: '',
+    //         peerBoChart: []
+    //     }
 
-        const responsesForItem = this.spResult.sanitizedResponses.filter(response => response.inventoryItemId === this.id);
+    //     //TODO: 
+    //     //const responsesForItem = this.spResult.sanitizedResponses.filter(response => response.inventoryItemId === this.id);
 
-        const compositeBreakOut = {};
+    //     const compositeBreakOut = {};
 
-        responsesForItem
-            .filter(response => !response.isSelfResponse)
-            .forEach(response => {
-                if (compositeBreakOut[response.mpItemResponse]) {
-                    compositeBreakOut[response.mpItemResponse] += 1;
-                } else {
-                    compositeBreakOut[response.mpItemResponse] = 1;
-                }
-            });
+    //     /*responsesForItem
+    //         .filter(response => !response.isSelfResponse)
+    //         .forEach(response => {
+    //             if (compositeBreakOut[response.mpItemResponse]) {
+    //                 compositeBreakOut[response.mpItemResponse] += 1;
+    //             } else {
+    //                 compositeBreakOut[response.mpItemResponse] = 1;
+    //             }
+    //         });*/
 
-        const dataSet = [];
+    //     const dataSet = [];
 
-        for (let bo in compositeBreakOut) {
-            if (compositeBreakOut.hasOwnProperty(bo)) {
-                if (bo === 'IEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AA0000' });
-                if (bo === 'IEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#FE6161' });
-                if (bo === 'ND') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AAAAAA' });
-                if (bo === 'EA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00AA58' });
-                if (bo === 'EU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#73FFBB' });
-                if (bo === 'HEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00308F' });
-                if (bo === 'HEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#7CA8FF' });
-            }
-        }
+    //     for (let bo in compositeBreakOut) {
+    //         if (compositeBreakOut.hasOwnProperty(bo)) {
+    //             if (bo === 'IEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AA0000' });
+    //             if (bo === 'IEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#FE6161' });
+    //             if (bo === 'ND') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AAAAAA' });
+    //             if (bo === 'EA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00AA58' });
+    //             if (bo === 'EU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#73FFBB' });
+    //             if (bo === 'HEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00308F' });
+    //             if (bo === 'HEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#7CA8FF' });
+    //         }
+    //     }
 
-        //TODO: fix staticData stuff, default class export doesn't seem to be working
-        breakOut.peerBoChart = dataSet;
-        //breakOut.peersResult = staticData.breakDownCalculation(compositeBreakOut);
+    //     //TODO: fix staticData stuff, default class export doesn't seem to be working
+    //     breakOut.peerBoChart = dataSet;
+    //     //breakOut.peersResult = staticData.breakDownCalculation(compositeBreakOut);
 
-        const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
-        const facResponse = (this.spResult.facultyResponses) ? this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
+    //     //const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
+    //     //const facResponse = (this.spResult.facultyResponses) ? //this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
 
-        //breakOut.selfResult = staticData.prettifyItemResponse(selfResponse.mpItemResponse);
-        //breakOut.facultyResult = (facResponse) ? staticData.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
+    //     //breakOut.selfResult = staticData.prettifyItemResponse(selfResponse.mpItemResponse);
+    //     //breakOut.facultyResult = (facResponse) ? staticData.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
        
-        this.resultBreakout = breakOut;
-        return breakOut;
-    }
+    //     this.resultBreakout = breakOut;
+    //     return breakOut;
+    // }
 
 }
 

@@ -28,7 +28,7 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.comment = this.spProvider.comment;
     this.recipient = this.comment.recipient.studentProfile.person as Person;
-    this.isStudent = this.spProvider.persona.isStudent.valueOf();
+    this.isStudent = this.spProvider.persona.isStudent;
     
     if (this.isStudent) {
       let studComment = this.comment as StudSpComment;

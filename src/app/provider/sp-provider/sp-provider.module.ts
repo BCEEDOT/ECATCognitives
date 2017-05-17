@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { SharedModule } from "../../shared/shared.module";
 import { AssessComponent } from './assess/assess.component';
 import { CommentComponent } from './comment/comment.component';
 import { SpProviderService } from './sp-provider.service';
 
 @NgModule({
   imports: [
-    CommonModule
+    SharedModule
   ],
   declarations: [ AssessComponent, CommentComponent ],
   exports: [ AssessComponent, CommentComponent ],
