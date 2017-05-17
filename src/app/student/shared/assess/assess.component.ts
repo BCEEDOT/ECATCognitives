@@ -12,7 +12,7 @@ import { GlobalService } from "../../../core/services/global.service"
   templateUrl: './assess.component.html',
   styleUrls: ['./assess.component.scss']
 })
-export class AssessComponent implements OnInit, AfterViewChecked {
+export class AssessComponent implements OnInit {
 
   activeWorkGroup: WorkGroup;
   user: CrseStudentInGroup
@@ -42,9 +42,9 @@ export class AssessComponent implements OnInit, AfterViewChecked {
   //    setTimeout(() => this.loadingService.register = () => this.loadingService.register());
   // }
 
-  ngAfterViewChecked() {
-    setTimeout(() => this.loadingService.register = () => this.loadingService.register());
-  }
+  // ngAfterViewChecked() {
+  //   setTimeout(() => this.loadingService.register = () => this.loadingService.register());
+  // }
 
 
 

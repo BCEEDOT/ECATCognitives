@@ -1,12 +1,12 @@
- <ng-template tdLoading="assessIsLoaded">
-        <md-list class="will-load">
-          <md-list-item>
-              <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{user?.rankName}} </h3>
-              <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
-              <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
-              <span flex></span>
-              <span>
+<ng-template tdLoading="assessIsLoaded">
+  <md-list class="will-load">
+    <md-list-item>
+      <md-icon md-list-avatar>person</md-icon>
+      <h3 md-line> {{user?.rankName}} </h3>
+      <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
+      <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
+      <span flex></span>
+      <span>
                   <button md-icon-button [md-menu-trigger-for]="menu">
                   <md-icon>more_vert</md-icon>
                   </button>
@@ -15,16 +15,16 @@
                       <button md-menu-item>Comment</button>
                   </md-menu>
               </span>
-            </md-list-item>
+    </md-list-item>
 
-          <ng-template let-peers let-last="last" ngFor [ngForOf]="peers">
-            <md-list-item>
-              <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{peers?.rankName}} </h3>
-              <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
-              <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
-              <span flex></span>
-              <span>
+    <ng-template let-peers let-last="last" ngFor [ngForOf]="peers">
+      <md-list-item>
+        <md-icon md-list-avatar>person</md-icon>
+        <h3 md-line> {{peers?.rankName}} </h3>
+        <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
+        <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
+        <span flex></span>
+        <span>
                   <button md-icon-button [md-menu-trigger-for]="menu">
                   <md-icon>more_vert</md-icon>
                   </button>
@@ -33,8 +33,8 @@
                       <button md-menu-item>Comment</button>
                   </md-menu>
               </span>
-            </md-list-item>
-            <md-divider *ngIf="!last" md-inset></md-divider>
-          </ng-template>
-        </md-list>
-      </ng-template>
+      </md-list-item>
+      <md-divider *ngIf="!last" md-inset></md-divider>
+    </ng-template>
+  </md-list>
+</ng-template>
