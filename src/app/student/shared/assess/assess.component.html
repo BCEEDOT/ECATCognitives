@@ -12,7 +12,7 @@
                   <md-icon>more_vert</md-icon>
                   </button>
                   <md-menu x-position="before" #menu="mdMenu">
-                      <a [routerLink]="[user?.studentId + '/assess']" md-menu-item>Assess</a>
+                      <a [routerLink]="['assess/' + user?.studentId]" md-menu-item>Assess</a>
                       <button md-menu-item>Comment</button>
                   </md-menu>
               </span>-->
@@ -30,7 +30,7 @@
                   <md-icon>more_vert</md-icon>
                   </button>
                   <md-menu x-position="before" #menu="mdMenu">
-                      <a [routerLink]="[peers.studentId + '/assess']" md-menu-item>Assess</a>
+                      <a [routerLink]="['assess/' + peers.studentId]" md-menu-item>Assess</a>
                       <button md-menu-item>Comment</button>
                   </md-menu>
               </span>-->

@@ -7,7 +7,7 @@ import { GlobalService } from "../core/services/global.service";
 import { StudentComponent } from './student.component';
 import { ListComponent } from "./list/list.component";
 import { ResultsComponent } from "./results/results.component";
-
+import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
 
 const studentRoutes: Routes = [
   {
@@ -41,6 +41,11 @@ const studentRoutes: Routes = [
             path: 'results/:crsId/:wrkGrpId',
             component: ResultsComponent,
             //resolve: { results: 'resultsResolver' },
+          },
+          {
+            path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
+            component: AssessComponent,
+            resolve: { inventories: 'spAssessResolver' }
           }
 
         ]
@@ -58,6 +63,10 @@ export function workGroupResolver(studentDataContext: StudentDataContext) {
 
   
 
+}
+
+export function spAssessResolver(studentDataContext: StudentDataContext) {
+  return (route: ActivatedRouteSnapshot) => studentDataContext.getSpInventory(+route.params['crsId'], +route.params['wrkGrpId'], +route.params['assesseeId']);
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
@@ -93,6 +102,9 @@ export function workGroupResolver(studentDataContext: StudentDataContext) {
     },
     {
       provide: 'workGroupResolver', useFactory: workGroupResolver, deps: [StudentDataContext]
+    },
+    {
+      provide: 'spAssessResolver', useFactory: spAssessResolver, deps: [StudentDataContext]
     }
   ]
 })
