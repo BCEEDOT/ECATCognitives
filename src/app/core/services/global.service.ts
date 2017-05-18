@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface ILoggedInUser {
   person: Person,
-  isLoggedIn: Boolean,
-  isStudent: Boolean,
-  isFaculty: Boolean,
-  isLmsAdmin: Boolean,
+  isLoggedIn: boolean,
+  isStudent: boolean,
+  isFaculty: boolean,
+  isLmsAdmin: boolean,
 }
 
 @Injectable()

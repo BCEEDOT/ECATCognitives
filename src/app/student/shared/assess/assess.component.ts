@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output, EventEmitter } from '@angular/core';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 
@@ -25,6 +25,7 @@ export class AssessComponent implements OnInit {
   }
 
   @Input() workGroup: WorkGroup;
+  @Output() assessCompare = new EventEmitter();
 
   ngOnInit() {
 
@@ -32,23 +33,7 @@ export class AssessComponent implements OnInit {
 
   }
 
-  //  ngOnChanges() {
-
-  //    console.log("workgroup changed")
-  //    this.activate();
-  // }
-
-  // ngAfterViewInit() {
-  //    setTimeout(() => this.loadingService.register = () => this.loadingService.register());
-  // }
-
-  // ngAfterViewChecked() {
-  //   setTimeout(() => this.loadingService.register = () => this.loadingService.register());
-  // }
-
-
-
-  activate() {
+   activate() {
     // this.workGroupService.workGroup$.subscribe(workGroup => {
     //   this.activeWorkGroup = workGroup;
     // });
@@ -57,9 +42,10 @@ export class AssessComponent implements OnInit {
 
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
+  }
 
-    console.log(this.user);
-    console.log(this.peers);
+  compare() {
+    this.assessCompare.emit();
   }
 
 }

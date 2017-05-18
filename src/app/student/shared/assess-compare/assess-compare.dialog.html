@@ -1,0 +1,21 @@
+<ngx-charts-line-chart
+      [view]="view"
+      [scheme]="blueOrangeScheme"
+      [results]="multi"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [autoScale]="autoScale"
+      [yAxisTickFormatting]="ratings"
+      [activeEntries]="single"
+      (select)="onSelect($event)">
+    </ngx-charts-line-chart>
+
+<p>{{data.workGroup.customName}}</p>
+
+<button type="button" (click)="dialogRef.close()">Close dialog</button>

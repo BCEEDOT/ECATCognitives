@@ -56,11 +56,15 @@ export class StudentDataContext extends BaseDataContext {
     initCourses(forceRefresh?: boolean): Promise<Course[]> {
         const that = this;
 
-        if (this.isLoaded.initCourses && !forceRefresh) {
-            const allCourses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
-            console.log('Courses loaded from local cache'), allCourses, false;
+        let allCourses: Array<Course>;
+        allCourses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
+
+        
+        if (allCourses.length > 0) {
+            console.log('Courses loaded from local cache');
             return Promise.resolve(allCourses);
         }
+
 
         let query = EntityQuery.from(this.studentApiResources.initCourses.resource);
 
@@ -136,11 +140,11 @@ export class StudentDataContext extends BaseDataContext {
         // }
 
         let query = EntityQuery.from(this.studentApiResources.workGroup.resource)
-                                .withParameters(params);
+            .withParameters(params);
 
         return <Promise<WorkGroup>>this.manager.executeQuery(query)
-                                            .then(getActiveWorkGrpResponse)
-                                            .catch(this.queryFailed);
+            .then(getActiveWorkGrpResponse)
+            .catch(this.queryFailed);
 
         function getActiveWorkGrpResponse(data: QueryResult) {
             workGroup = data.results[0] as WorkGroup;
