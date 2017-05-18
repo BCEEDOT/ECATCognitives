@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router'
+import { Location } from '@angular/common'
+import { ActivatedRoute } from '@angular/router'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 
 import { Observable } from "rxjs/Observable";
@@ -8,7 +9,7 @@ import 'rxjs/add/operator/pluck';
 import { SpProviderService } from '../sp-provider.service';
 import { Person } from '../../../core/entities/student';
 import { IStudSpInventory, IFacSpInventory } from '../../../core/entities/client-models'
-import { MpSpItemResponse } from '../../../core/common/mapStrings'
+import { MpSpItemResponse, MpSpStatus } from '../../../core/common/mapStrings'
 import { SpEffectLevel, SpFreqLevel } from '../../../core/common/mapEnum'
 import { GlobalService } from "../../../core/services/global.service";
 
@@ -38,22 +39,19 @@ export class AssessComponent implements OnInit {
   private viewOnly: boolean = false;
 
   constructor(private spProvider: SpProviderService, 
-    private router: Router,
     private dialogService: TdDialogService,
     private loadingService: TdLoadingService,
     private global: GlobalService, 
-    private route: ActivatedRoute) { 
+    private route: ActivatedRoute,
+    private location: Location) { 
       this.inventories$ = route.data.pluck('inventories');
     }
-
-  //@Input() inventories: Array<IStudSpInventory | IFacSpInventory>;
 
   ngOnInit() {
     this.inventories$.subscribe(invs => {
       this.inventories = invs;
     });
-    console.log(this.inventories);
-    //this.spProvider.inventories = this.inventories;
+
     this.inventories.sort((a, b) => {
       if (a.displayOrder < b.displayOrder){ return -1; }
       if (a.displayOrder > b.displayOrder){ return 1; }
@@ -75,8 +73,10 @@ export class AssessComponent implements OnInit {
     }
 
     this.activeInventory = this.inventories[0];
-    console.log(this.activeInventory);
-    //this.viewOnly = this.spProvider.viewOnly;
+
+    this.viewOnly = this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.open;
+
+    console.log(this.route);
   }
   
   previousInv(){
@@ -93,7 +93,7 @@ export class AssessComponent implements OnInit {
 
   saveCheck(){
     if (!this.viewOnly){
-      let changes = this.inventories.some(inv => inv.entityAspect.entityState.isAddedModifiedOrDeleted());
+      let changes = this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted());
       let validResps = this.inventories.every(inv => inv.responseForAssessee.itemModelScore !== null);
 
       if (changes && validResps){
@@ -114,9 +114,11 @@ export class AssessComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed){
           this.inventories.forEach(inv => inv.entityAspect.rejectChanges());
-          this.router.navigate(['/']);
+          this.location.back();
         }
       });
+    } else {
+      this.location.back();
     }
   }
 
@@ -133,7 +135,7 @@ export class AssessComponent implements OnInit {
     this.spProvider.save()
       .then(result => {
         this.loadingService.resolve(this.assessLoad);
-        this.router.navigate(['/']);
+        this.location.back();
       })
       .catch(result => {
         this.loadingService.resolve(this.assessLoad);
@@ -166,8 +168,8 @@ export class AssessComponent implements OnInit {
     }
 
     getShortBehavior(inv: IStudSpInventory | IFacSpInventory): string {
-      if (inv.behavior.length > 30){
-        return inv.behavior.substring(0, 27) + '...';
+      if (inv.behavior.length > 35){
+        return inv.behavior.substring(0, 32) + '...';
       } else {
         return inv.behavior;
       }

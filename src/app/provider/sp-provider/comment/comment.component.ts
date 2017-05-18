@@ -26,16 +26,16 @@ export class CommentComponent implements OnInit {
     private loadingService: TdLoadingService) { }
 
   ngOnInit() {
-    this.comment = this.spProvider.comment;
+    //this.comment = this.spProvider.comment;
     this.recipient = this.comment.recipient.studentProfile.person as Person;
-    this.isStudent = this.spProvider.persona.isStudent;
+    //this.isStudent = this.spProvider.persona.isStudent;
     
     if (this.isStudent) {
       let studComment = this.comment as StudSpComment;
       this.reqAnon = studComment.requestAnonymity;
     }
 
-    this.viewOnly = this.spProvider.viewOnly;
+    //this.viewOnly = this.spProvider.viewOnly;
   }
 
   save() {

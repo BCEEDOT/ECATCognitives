@@ -129,7 +129,7 @@ export class SpInventory extends EntityBase {
         if (behaveDisplayed) {
             this.freqLevel = this.effLevel = null;
             this.responseForAssessee.mpItemResponse = null;
-            this.compositeScore;
+            this.calculateItemResponse();
         } else {
             this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.nd;
             this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.nd;

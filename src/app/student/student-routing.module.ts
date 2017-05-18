@@ -43,7 +43,7 @@ const studentRoutes: Routes = [
             //resolve: { results: 'resultsResolver' },
           },
           {
-            path: 'list/:crsId/:wrkGrpId/:assesseeId/assess',
+            path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
             resolve: { inventories: 'spAssessResolver' }
           }
