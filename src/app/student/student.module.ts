@@ -11,9 +11,7 @@ import { ListComponent } from './list/list.component';
 import { ResultsComponent } from './results/results.component';
 import { AssessComponent } from './shared/assess/assess.component';
 import { WorkGroupService } from "./services/workgroup.service";
-import { AcknowledgeComponent } from './list/acknowledge/acknowledge.component'
 import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
-
 
 @NgModule({
     imports: [
@@ -28,7 +26,6 @@ import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
         ListComponent,
         ResultsComponent,
         AssessComponent,
-        AcknowledgeComponent,
     ],
     exports: [],
     providers: [
