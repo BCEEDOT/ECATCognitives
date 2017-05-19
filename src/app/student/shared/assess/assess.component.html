@@ -30,7 +30,7 @@
                   </button>
                   <md-menu x-position="before" #menu="mdMenu">
                       <a [routerLink]="['assess/' + peers.studentId]" md-menu-item>Assess</a>
-                      <button md-menu-item>Comment</button>
+                      <button md-menu-item (click)="comment(peers)">Comment</button>
                   </md-menu>
               </span>
       </md-list-item>

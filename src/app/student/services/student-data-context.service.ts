@@ -6,9 +6,9 @@ import {
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse } from '../../core/entities/student';
+import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse, StudSpComment, StudSpCommentFlag } from '../../core/entities/student';
 import { IStudentApiResources, IStudSpInventory } from "../../core/entities/client-models";
-import { MpEntityType } from "../../core/common/mapStrings";
+import { MpEntityType, MpCommentFlag } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
@@ -163,9 +163,7 @@ export class StudentDataContext extends BaseDataContext {
     }
 
     getSpInventory(courseId: number, workGroupId: number, assesseeId: number): Array<IStudSpInventory> {
-        let loggedInUser: ILoggedInUser;
-        loggedInUser = this.global.persona.value;
-        let userId = loggedInUser.person.personId;
+        let userId = this.global.persona.value.person.personId;
 
         let workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
         
@@ -189,6 +187,41 @@ export class StudentDataContext extends BaseDataContext {
         });
     }
 
+    getComment(courseId: number, workGroupId: number, recipientId: number): StudSpComment {
+        let userId = this.global.persona.value.person.personId;
 
+        if (!courseId || !workGroupId || !recipientId){
+            return null;
+        }
+
+        let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
+
+        let comment = spComments.filter(comment => comment.authorPersonId === userId && comment.recipientPersonId === recipientId && comment.courseId === courseId && comment.workGroupId === workGroupId)[0];
+
+        if (comment) {
+            return comment;
+        }
+
+        let newComment = {
+            authorPersonId: userId,
+            recipientPersonId: recipientId,
+            courseId: courseId,
+            workGroupId: workGroupId,
+            commentVersion: 0,
+            requestAnonymity: false
+        };
+
+        let newFlag = {
+            authorPersonId: userId,
+            recipientPersonId: recipientId,
+            courseId: courseId,
+            mpAuthor: MpCommentFlag.neut
+        }
+
+        let returnedComment = this.manager.createEntity(MpEntityType.spComment, newComment) as StudSpComment;
+        let flag = this.manager.createEntity(MpEntityType.spCommentFlag, newFlag) as StudSpCommentFlag;
+        returnedComment.flag = flag;
+        return returnedComment;
+    }
 
 }

@@ -1,0 +1,17 @@
+<h4 md-dialog-title>Comment for {{recipient.rankName}} {{recipient.lastName}}, {{recipient.firstName}}</h4>
+<md-dialog-content>
+  <md-input-container class="md-block">
+      <textarea mdInput placeholder="Comment (3000 characters max)" [(ngModel)]="comment.commentText" maxlength="3000" rows="15" cols="75" [disabled]="viewOnly" #commentArea></textarea>
+    </md-input-container>
+</md-dialog-content>
+<md-dialog-actions layout="row" layout-align="end center">
+  <div *ngIf="isStudent" flex="50">
+    <button md-raised-button (click)="comment.requestAnonymity=true; commentArea.dirty=true;" [disabled]="viewOnly" [ngClass]="{'btn-selected': comment.requestAnonymity===true}">Anonymous</button>
+    <button md-raised-button (click)="comment.requestAnonymity=false; commentArea.dirty=true;" [disabled]="viewOnly" [ngClass]="{'btn-selected': comment.requestAnonymity===false}">Named</button>
+  </div>
+  <span flex="50"></span>
+  <div flex="45">
+    <button md-raised-button (click)="cancel()">Cancel</button>
+    <button md-raised-button [disabled]="!viewOnly && commentArea.dirty && commentArea.valid" (click)="save()">Save</button>
+  </div>
+</md-dialog-actions>

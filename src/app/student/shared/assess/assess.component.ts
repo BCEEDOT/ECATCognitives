@@ -5,6 +5,7 @@ import { MdSnackBar } from '@angular/material';
 import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/student";
 import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
+import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
 
 
 @Component({
@@ -21,7 +22,7 @@ export class AssessComponent implements OnInit {
   assessIsLoaded = 'assessIsLoaded';
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProdiver: SpProviderService) {
   }
 
   @Input() workGroup: WorkGroup;
@@ -60,6 +61,10 @@ export class AssessComponent implements OnInit {
 
     console.log(this.user);
     console.log(this.peers);
+  }
+
+  comment(recipient: CrseStudentInGroup){
+    this.spProdiver.loadComment(recipient);
   }
 
 }

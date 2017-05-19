@@ -94,7 +94,7 @@ export class AssessComponent implements OnInit {
   saveCheck(){
     if (!this.viewOnly){
       let changes = this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted());
-      let validResps = this.inventories.every(inv => inv.responseForAssessee.itemModelScore !== null);
+      let validResps = this.inventories.every(inv => inv.responseForAssessee.mpItemResponse !== null);
 
       if (changes && validResps){
         this.canSave = true;
