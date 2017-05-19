@@ -3,10 +3,14 @@
     <md-list-item>
       <md-icon md-list-avatar>person</md-icon>
       <h3 md-line> {{user?.rankName}} </h3>
-      <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
-      <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
+      <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
+        <button md-button [routerLink]="['assess/' + user.studentId]">{{user?.assessText}} Assessment</button>
+        </span>
+      <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
+        <button md-button>{{user?.commentText}} Comment</button>
+        </span>
       <span flex></span>
-      
+
       <!--<span>
                   <button md-icon-button [md-menu-trigger-for]="menu">
                   <md-icon>more_vert</md-icon>
@@ -17,13 +21,18 @@
                   </md-menu>
               </span>-->
     </md-list-item>
+    <md-divider class="bgc-dark-orange-500" md-inset></md-divider>
 
-    <ng-template let-peers let-last="last" ngFor [ngForOf]="peers">
+    <ng-template let-peer let-last="last" ngFor [ngForOf]="peers">
       <md-list-item>
         <md-icon md-list-avatar>person</md-icon>
-        <h3 md-line> {{peers?.rankName}} </h3>
-        <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">Add Assessment</span>
-        <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">Add Comment</span>
+        <h3 md-line> {{peer?.rankName}} </h3>
+        <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
+          <button md-button [routerLink]="['assess/' + peer.studentId]">{{peer?.assessText}} Assessment</button>
+        </span>
+        <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
+          <button md-button>{{peer?.commentText}} Comment</button>
+        </span>
         <span flex></span>
         <!--<span>
                   <button md-icon-button [md-menu-trigger-for]="menu">

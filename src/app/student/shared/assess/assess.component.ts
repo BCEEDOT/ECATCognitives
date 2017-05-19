@@ -33,7 +33,7 @@ export class AssessComponent implements OnInit {
 
   }
 
-   activate() {
+  activate() {
     // this.workGroupService.workGroup$.subscribe(workGroup => {
     //   this.activeWorkGroup = workGroup;
     // });
@@ -41,6 +41,15 @@ export class AssessComponent implements OnInit {
     const userId = this.global.persona.value.person.personId;
 
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
+
+    this.user.updateStatusOfPeer();
+
+    this.activeWorkGroup.groupMembers.forEach(gm => {
+      gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'Edit' : 'Add';
+      gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'Edit' : 'Add';
+      //gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
+    });
+
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
   }
 

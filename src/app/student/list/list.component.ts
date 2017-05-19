@@ -20,12 +20,9 @@ import { AssessCompareDialog } from '../shared/assess-compare/assess-compare.dia
 })
 export class ListComponent implements OnInit {
 
-
   dialogRef: MdDialogRef<AssessCompareDialog>;
   lastCloseResult: string;
   actionsAlignment: string;
-
-  hasAcknowledged: boolean = false;
   user: CrseStudentInGroup;
   instructions: string;
   activeWorkGroup: WorkGroup;
@@ -51,7 +48,7 @@ export class ListComponent implements OnInit {
   private activate(force?: boolean): void {
 
     const userId = this.global.persona.value.person.personId;
-    this.hasAcknowledged = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0].hasAcknowledged;
+    this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
     //console.log(this.workGroupService.workGroup$.value);
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
     // this.workGroupService.workGroup$.subscribe(workGroup => {
@@ -60,12 +57,7 @@ export class ListComponent implements OnInit {
 
   }
 
-  agree(): void {
-    this.hasAcknowledged = true;
-  }
-
   assessCompare(): void {
-
 
     this.dialogRef = this.dialog.open(AssessCompareDialog, {
       disableClose: false,
