@@ -20,7 +20,7 @@
         <form #userStratForm="ngForm">
           <div layout-margin>
             <md-input-container>
-              <input mdInput #user2StratForm="ngModel" [(ngModel)]="user.proposedStratPosition" (ngModelChange)="evaluateStrat()" name="proposedUserStrat" min="1" max="{{groupCount}}"
+              <input mdInput #userStratForm="ngModel" [(ngModel)]="user.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid()" name="proposedUserStrat" min="1" max="{{groupCount}}"
                 type="number">
             </md-input-container>
           </div>
@@ -48,7 +48,7 @@
           <form #peerStratForm="ngForm">
             <div layout-margin>
               <md-input-container>
-                <input mdInput testStratForm="ngModel" [(ngModel)]="peer.proposedStratPosition" (ngModelChange)="evaluateStrat()" name="proposedPeerStrat" min="1" max="{{groupCount}}"
+                <input mdInput testStratForm="ngModel" [(ngModel)]="peer.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid()" name="proposedPeerStrat" min="1" max="{{groupCount}}"
                   type="number">
               </md-input-container>
             </div>
@@ -71,7 +71,7 @@
   <md-divider></md-divider>
 
   <md-list-item layout="row" layout-align="end" layout-margin>
-    <button md-raised-button color="accent" type="button" (click)="saveChanges()" class="text-upper">Save</button>
+    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
     <button md-raised-button color="accent" type="button" class="text-upper" (click)="cancelSave();">Cancel</button>
   </md-list-item>
 

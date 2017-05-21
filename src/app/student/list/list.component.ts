@@ -11,6 +11,7 @@ import { Course, WorkGroup, CrseStudentInGroup, SpInstrument } from "../../core/
 import { WorkGroupService } from "../services/workgroup.service";
 import { GlobalService } from "../../core/services/global.service"
 import { AssessCompareDialog } from '../shared/assess-compare/assess-compare.dialog';
+import { StudentDataContext } from "../services/student-data-context.service"
 
 
 @Component({
@@ -29,6 +30,7 @@ export class ListComponent implements OnInit {
   activeWorkGroup$: Observable<WorkGroup>;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
+    private studentDataContext: StudentDataContext,
     private route: ActivatedRoute, private dialogService: TdDialogService,
     public dialog: MdDialog, @Inject(DOCUMENT) doc: any
   ) {
@@ -43,17 +45,11 @@ export class ListComponent implements OnInit {
     })
   }
 
-
-
   private activate(force?: boolean): void {
 
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
-    //console.log(this.workGroupService.workGroup$.value);
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
-    // this.workGroupService.workGroup$.subscribe(workGroup => {
-    //   this.activeWorkGroup = workGroup;
-    // })
 
   }
 

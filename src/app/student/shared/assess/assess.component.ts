@@ -12,7 +12,7 @@ import { GlobalService } from "../../../core/services/global.service"
   templateUrl: './assess.component.html',
   styleUrls: ['./assess.component.scss']
 })
-export class AssessComponent implements OnInit {
+export class AssessComponent implements OnInit, OnChanges {
 
   activeWorkGroup: WorkGroup;
   user: CrseStudentInGroup
@@ -28,15 +28,15 @@ export class AssessComponent implements OnInit {
   @Output() assessCompare = new EventEmitter();
 
   ngOnInit() {
-
     this.activate();
+  }
 
+  ngOnChanges() {
+    this.activate();
   }
 
   activate() {
-    // this.workGroupService.workGroup$.subscribe(workGroup => {
-    //   this.activeWorkGroup = workGroup;
-    // });
+
     this.activeWorkGroup = this.workGroup;
     const userId = this.global.persona.value.person.personId;
 

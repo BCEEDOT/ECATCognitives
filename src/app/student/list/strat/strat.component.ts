@@ -3,7 +3,7 @@ import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 import 'rxjs/add/operator/debounceTime'
 
-import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/student";
+import { Course, WorkGroup, CrseStudentInGroup, StratResponse } from "../../../core/entities/student";
 import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
 import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
@@ -13,7 +13,7 @@ import { SpProviderService } from "../../../provider/sp-provider/sp-provider.ser
   templateUrl: './strat.component.html',
   styleUrls: ['./strat.component.scss']
 })
-export class StratComponent implements OnInit {
+export class StratComponent implements OnInit, OnChanges {
 
   activeWorkGroup: WorkGroup;
   user: CrseStudentInGroup
@@ -23,13 +23,18 @@ export class StratComponent implements OnInit {
   userId: number;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spTools: SpProviderService) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar,
+    private spTools: SpProviderService, private dialogService: TdDialogService) {
   }
 
   @Input() workGroup: WorkGroup;
   @Output() assessCompare = new EventEmitter();
 
   ngOnInit() {
+    this.activate();
+  }
+
+  ngOnChanges() {
     this.activate();
   }
 
@@ -41,50 +46,60 @@ export class StratComponent implements OnInit {
 
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
-    console.log(this.user);
-    console.log(this.peers);
   }
 
   compare() {
     this.assessCompare.emit();
   }
 
+  isValid(): boolean {
+    return this.activeWorkGroup.groupMembers.some(gm => !gm.stratIsValid);
+  }
+
   evaluateStrat(force?: boolean): void {
-    this.spTools.evaluateStratification(false, force).then((members) => {
-      console.log("Strats Evaluated");
-    });
-
-
-
-
-//     <div>
-//     <dl ng-repeat="err in peer.stratValidationErrors" ng-if="peer">
-//         <dt>{{err.cat}}</dt>
-//         <dd>{{err.text}}</dd>
-//     </dl>
-
-//     <dl ng-repeat="err in member.stratValidationErrors" ng-if="member">
-//         <dt>{{err.cat}}</dt>
-//         <dd>{{err.text}}</dd>
-//     </dl>
-
-//     <dl ng-repeat="err in al.me.stratValidationErrors" ng-if="!peer && !member">
-//         <dt>{{err.cat}}</dt>
-//         <dd>{{err.text}}</dd>
-//     </dl>
-// </div>
-    
+    this.spTools.evaluateStratification(false, force);
   }
 
   saveChanges(): void {
+    const that = this;
     this.evaluateStrat(true);
 
     const hasErrors = this.activeWorkGroup.groupMembers
-            .some(gm => !gm.stratIsValid);
+      .some(gm => !gm.stratIsValid);
 
     if (hasErrors) {
-      console.log("There was an error");
+      this.dialogService.openAlert({
+        message: 'Your proposed changes contain errors, please ensure all proposed changes are valid before saving'
+      })
     }
+
+    const gmWithChanges = this.activeWorkGroup.groupMembers
+      .filter(gm => gm.proposedStratPosition !== null);
+
+    const changeSet = [] as Array<number>;
+
+    gmWithChanges.forEach(gm => {
+      const stratResponse = gm.proposedStratPosition
+      gm.assesseeStratResponse[0].stratPosition = gm.proposedStratPosition;
+      changeSet.push(gm.studentId);
+    });
+
+    this.spTools.save().then(() =>{
+
+      this.activeWorkGroup.groupMembers
+                    .filter(gm => changeSet.some(cs => cs === gm.studentId))
+                    .forEach(gm => {
+                        gm.stratValidationErrors = [];
+                        gm.stratIsValid = true;
+                        gm.proposedStratPosition = null;
+                    });
+      this.user.updateStatusOfPeer();
+      this.snackBarService.open("Success, Strats Updated!", 'Dismiss')
+    }).catch((error) => {
+      this.dialogService.openAlert({
+        message: 'There was an error saving your changes, please try again.'
+      })
+    })
 
   }
 

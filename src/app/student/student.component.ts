@@ -95,7 +95,7 @@ export class StudentComponent implements OnInit {
 
     this.studentDataContext.fetchActiveWorkGroup(workGroupId, false).then(workGroup => {
       this.activeWorkGroup = workGroup as WorkGroup;
-    })
+    });
 
     this.grpDisplayName = `${workGroup.mpCategory}: ${workGroup.customName || workGroup.defaultName}`;
     this.activeWorkGroup = workGroup;
