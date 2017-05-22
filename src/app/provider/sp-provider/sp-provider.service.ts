@@ -13,9 +13,6 @@ import { CommentDialog } from "./comment/comment.dialog";
 
 @Injectable()
 export class SpProviderService {
-  // inventories: Array<IStudSpInventory | IFacSpInventory>;
-  //comment: StudSpComment | FacSpComment;
-  // viewOnly: boolean;
   dialogRef: MdDialogRef<CommentDialog>;
 
   constructor(private ctx: StudentDataContext,
@@ -33,15 +30,15 @@ export class SpProviderService {
     });
   }
 
-  save(): Promise<any> {
-    return this.ctx.commit()
-      .then((result) => {
-        console.log('success');
-        return result;
-      })
-      .catch((result) => {
-        console.log('error');
-        return result;
-      })
-  }    
+  // save(): Promise<any> {
+  //   return this.ctx.commit()
+  //     .then((result) => {
+  //       console.log('success');
+  //       return result;
+  //     })
+  //     .catch((result) => {
+  //       console.log('error');
+  //       return result;
+  //     })
+  // }    
 }

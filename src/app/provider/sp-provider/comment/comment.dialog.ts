@@ -3,7 +3,7 @@ import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 
 import { SpProviderService } from "../sp-provider.service";
-import { Person, StudSpComment } from '../../../core/entities/student';
+import { StudSpComment } from '../../../core/entities/student';
 import { FacSpComment } from '../../../core/entities/faculty';
 import { MpSpStatus } from "../../../core/common/mapStrings";
 import { GlobalService } from "../../../core/services/global.service";
@@ -16,13 +16,12 @@ import { StudentDataContext } from "../../../student/services/student-data-conte
 })
 export class CommentDialog implements OnInit {
   private comment: StudSpComment | FacSpComment;
-  private recipient: Person;
   private isStudent: boolean;
   private canSave: boolean = false;
   private commentLoad: string = 'CommentLoading';
-  private viewOnly: boolean;
+  private viewOnly: boolean = true;
 
-  constructor(private ctx: StudentDataContext,
+  constructor(private ctx: StudentDataContext, //| FacultyDataContext,
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private global: GlobalService,
@@ -31,9 +30,14 @@ export class CommentDialog implements OnInit {
 
   ngOnInit() {
     this.comment = this.data.comment as StudSpComment | FacSpComment;
-    this.recipient = this.comment.recipient.studentProfile.person as Person;
     this.isStudent = this.global.persona.value.isStudent;
-    this.viewOnly = this.comment.workGroup.mpSpStatus !== MpSpStatus.open;
+
+    if (this.isStudent) {
+      this.viewOnly = this.comment.workGroup.mpSpStatus !== MpSpStatus.open;
+    } else {
+      //instructors can still add comments when Under Review
+      this.viewOnly = this.comment.workGroup.mpSpStatus !== MpSpStatus.open && this.comment.workGroup.mpSpStatus !== MpSpStatus.underReview;
+    }
   }
 
   save() {
