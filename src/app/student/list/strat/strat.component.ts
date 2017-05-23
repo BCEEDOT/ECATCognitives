@@ -7,6 +7,7 @@ import { Course, WorkGroup, CrseStudentInGroup, StratResponse } from "../../../c
 import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
 import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
+import { StudentDataContext } from "../../services/student-data-context.service"
 
 @Component({
   selector: 'strat',
@@ -24,7 +25,8 @@ export class StratComponent implements OnInit, OnChanges {
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar,
-    private spTools: SpProviderService, private dialogService: TdDialogService) {
+    private spTools: SpProviderService, private dialogService: TdDialogService,
+    private studentDataContext: StudentDataContext) {
   }
 
   @Input() workGroup: WorkGroup;
@@ -79,7 +81,8 @@ export class StratComponent implements OnInit, OnChanges {
     const changeSet = [] as Array<number>;
 
     gmWithChanges.forEach(gm => {
-      const stratResponse = gm.proposedStratPosition
+      //const stratResponse = gm.proposedStratPosition
+      const stratResponse = this.studentDataContext.getSingleStrat(gm.studentId, this.workGroupService.workGroup$.value.workGroupId, gm.course.id);
       gm.assesseeStratResponse[0].stratPosition = gm.proposedStratPosition;
       changeSet.push(gm.studentId);
     });

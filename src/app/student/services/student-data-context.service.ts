@@ -6,7 +6,7 @@ import {
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse } from '../../core/entities/student';
+import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse, StratResponse } from '../../core/entities/student';
 import { IStudentApiResources, IStudSpInventory } from "../../core/entities/client-models";
 import { MpEntityType } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
@@ -26,8 +26,8 @@ export class StudentDataContext extends BaseDataContext {
         wgResult: {},
         spInventory: {}
     }
-    activeGroupId: number;
-    activeCourseId: number;
+    //activeGroupId: number;
+    //activeCourseId: number;
 
 
     private studentApiResources: IStudentApiResources = {
@@ -131,6 +131,29 @@ export class StudentDataContext extends BaseDataContext {
 
             return course;
         }
+    }
+
+    getSingleStrat(studentId: number, activeGroupId: number, activeCourseId: number): StratResponse {
+
+        const loggedUserId = this.global.persona.value.person.personId;
+
+        if (!activeGroupId || !activeCourseId) {
+            console.log('Missing required information', { groupId: activeCourseId, courseId: activeCourseId }, false);
+            return null;
+        }
+
+        const existingStrat = this.manager.getEntityByKey(MpEntityType.spStrat, [loggedUserId, studentId, activeCourseId, activeGroupId]) as StratResponse;
+
+        if (existingStrat) console.log('Strat for this individual not found', { assessor: loggedUserId, assessee: studentId, course: activeCourseId, workGroup: activeGroupId }, false);
+
+        return (existingStrat) ? existingStrat :
+            this.manager.createEntity(MpEntityType.spStrat, {
+                assesseePersonId: studentId,
+                assessorPersonId: loggedUserId,
+                courseId: activeCourseId,
+                workGroupId: activeGroupId
+            }) as StratResponse;
+
     }
 
     fetchActiveWorkGroup(workGroupId: number, forcedRefresh?: boolean): Promise<WorkGroup | Promise<void>> {

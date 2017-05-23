@@ -11,7 +11,7 @@ import { Course, WorkGroup, CrseStudentInGroup, SpInstrument } from "../../core/
 import { WorkGroupService } from "../services/workgroup.service";
 import { GlobalService } from "../../core/services/global.service"
 import { AssessCompareDialog } from '../shared/assess-compare/assess-compare.dialog';
-import { StudentDataContext } from "../services/student-data-context.service"
+import { StudentDataContext } from "../services/student-data-context.service";
 
 
 @Component({
