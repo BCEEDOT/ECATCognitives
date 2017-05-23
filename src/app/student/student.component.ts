@@ -28,6 +28,7 @@ export class StudentComponent implements OnInit {
   courses$: Observable<Course[]>;
   courses: Course[];
   workGroups: WorkGroup[];
+  activeCourse: Course;
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
@@ -71,9 +72,17 @@ export class StudentComponent implements OnInit {
     });
 
     this.courses.forEach(course => course['displayName'] = `${course.classNumber}: ${course.name}`);
-    let activeCourse: Course;
-    activeCourse = this.courses[0];
-    this.workGroups = activeCourse.workGroups;
+    //let activeCourse: Course;
+    this.activeCourse = this.courses[0];
+    this.activeCourseId = this.activeCourse.id;
+    
+    let activeWorkgroup = this.setupWorkGroups(this.activeCourse);
+    
+    this.setActiveWorkGroup(activeWorkgroup, force);
+  }
+
+  private setupWorkGroups(course: Course): WorkGroup {
+    this.workGroups = this.activeCourse.workGroups;
 
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
       if (wgA.mpCategory < wgB.mpCategory) return 1;
@@ -82,12 +91,24 @@ export class StudentComponent implements OnInit {
     })
 
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
-    //this.activeCourseId = this.studentDataContext.activeCourseId = activeCourse.id;
-    this.activeCourseId = activeCourse.id;
+
     let activeWorkgroup = this.workGroups[0];
 
-    this.setActiveWorkGroup(activeWorkgroup, force);
+    return activeWorkgroup;
+    
+  } 
+
+  private setActiveCourse(course: Course, force?: boolean): void {
+    this.studentDataContext.fetchActiveCourse(course.id, force)
+      .then(course => {
+        this.activeCourse = course as Course;
+        let activeWorkGroup = this.setupWorkGroups(this.activeCourse);
+        this.setActiveWorkGroup(activeWorkGroup, force);
+      }).catch(error => {
+        console.log('There was an error retriving the active course');
+      })
   }
+
 
   private setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
 
@@ -95,18 +116,19 @@ export class StudentComponent implements OnInit {
 
     this.studentDataContext.fetchActiveWorkGroup(workGroupId, false).then(workGroup => {
       this.activeWorkGroup = workGroup as WorkGroup;
+      this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
+
+      const resultsPublished = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
+
+      //this.studentDataContext.activeGroupId = workGroupId;
+      this.workGroupService.workGroup(this.activeWorkGroup);
+
+      if (!force) {
+        resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
+      }
     });
 
-    this.grpDisplayName = `${workGroup.mpCategory}: ${workGroup.customName || workGroup.defaultName}`;
-    this.activeWorkGroup = workGroup;
-    const resultsPublished = workGroup.mpSpStatus !== MpSpStatus.open;
 
-    //this.studentDataContext.activeGroupId = workGroupId;
-    this.workGroupService.workGroup(workGroup);
-
-    if (!force) {
-      resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
-    }
   }
 
 

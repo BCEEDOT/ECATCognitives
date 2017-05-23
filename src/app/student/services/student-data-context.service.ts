@@ -16,7 +16,7 @@ import { GlobalService, ILoggedInUser } from "../../core/services/global.service
 export class StudentDataContext extends BaseDataContext {
 
     //person: IRepository<Person>;
- 
+
     student: DataContext;
     isLoaded = {
         initCourses: false,
@@ -60,7 +60,7 @@ export class StudentDataContext extends BaseDataContext {
         let allCourses: Array<Course>;
         allCourses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
 
-        
+
         if (allCourses.length > 0) {
             console.log('Courses loaded from local cache');
             return Promise.resolve(allCourses);
@@ -97,6 +97,39 @@ export class StudentDataContext extends BaseDataContext {
             console.log('Courses loaded from server');
             return courses;
 
+        }
+    }
+
+    fetchActiveCourse(courseId: number, force?: boolean): Promise<Course | Promise<void>> {
+        const that = this;
+
+        // let course = this.manager.getEntityByKey(MpEntityType.workGroup, courseId) as Course;
+
+        // if (Course && Course.length > 0) {
+        //     console.log("WorkGroup loaded from local cache");
+        //     return Promise.resolve(course);
+        // }
+
+        const params = { crseId: courseId }
+        let query = EntityQuery.from(this.studentApiResources.course.resource).withParameters(params);
+
+        return <Promise<Course>>this.manager.executeQuery(query)
+            .then(getActiveCourseResponse)
+            .catch(this.queryFailed)
+
+        function getActiveCourseResponse(data: QueryResult) {
+            let course = data.results[0] as Course
+
+            if (!course) {
+                const error = {
+                    errorMessage: 'Could not find this active Course on the server'
+                }
+
+                console.log('Query succeeded, but the course did not return a result')
+                return Promise.reject(() => error) as any;
+            }
+
+            return course;
         }
     }
 
@@ -172,19 +205,19 @@ export class StudentDataContext extends BaseDataContext {
         let userId = loggedInUser.person.personId;
 
         let workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
-        
-        if (!workGroup.assignedSpInstr) { 
+
+        if (!workGroup.assignedSpInstr) {
             return null;
         }
 
         let inventoryList = workGroup.assignedSpInstr.inventoryCollection as Array<IStudSpInventory>;
 
         return inventoryList.map(inv => {
-            let key = {assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemid: inv.id };
+            let key = { assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemid: inv.id };
 
             let spResponse = this.manager.getEntityByKey(MpEntityType.spResponse, [userId, assesseeId, courseId, workGroupId, inv.id]) as SpResponse;
 
-            if (!spResponse){
+            if (!spResponse) {
                 spResponse = this.manager.createEntity(MpEntityType.spResponse, key) as SpResponse;
             }
 

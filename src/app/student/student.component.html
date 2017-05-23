@@ -20,11 +20,11 @@
           </button>
       </md-menu>
 
-      <button md-icon-button [mdMenuTriggerFor]="menu">
+      <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
   <md-icon>menu</md-icon>
 </button>
-      <md-menu #menu="mdMenu">
-        <button *ngFor="let course of courses" md-menu-item>
+      <md-menu #menu="mdMenu" x-position="before" class="before">
+        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
           {{course.displayName}}
           </button>
       </md-menu>
