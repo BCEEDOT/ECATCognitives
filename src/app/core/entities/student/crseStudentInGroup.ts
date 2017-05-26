@@ -48,15 +48,17 @@ export class CrseStudentInGroup extends EntityBase {
 
     /// <code> Place custom code between <code> tags
 
-    stratIsValid: boolean = true;
-    stratValidationErrors: Array<{ cat: string, text: string }> = null;
+    stratIsValid: boolean;
+    stratValidationErrors: Array<{ cat: string, text: string }>;
     proposedStratPosition: number = null;
 
     constructor() {
         super();
     }
 
-    private sop: any = null;
+    protected sop: any;
+
+    
 
     get rankName(): string {
         let _salutation: string;

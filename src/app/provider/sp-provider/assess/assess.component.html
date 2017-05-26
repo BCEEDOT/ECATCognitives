@@ -39,7 +39,7 @@
   <md-nav-list>
     <h4>Behaviors</h4>
     <a md-list-item class="md-2-line" *ngFor="let inventory of inventories" (click)="activeInventory=inventory; saveCheck()" [ngClass]="{'inv-selected': activeInventory.id===inventory.id}">
-      <p md-line style="color: #3e6d92">{{getShortBehavior(inventory)}}</p>
+      <p md-line class="md-title" style="color: #3e6d92">{{getShortBehavior(inventory)}}</p>
       <p md-line [class]="inventory.responseForAssessee.mpItemResponse">{{getResponseString(inventory)}}</p>
     </a>
   </md-nav-list>

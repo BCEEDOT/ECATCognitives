@@ -1,6 +1,6 @@
 import { mixingMultiProvidersWithRegularProvidersError } from '@angular/core/src/di/reflective_errors';
 import { MpSpStatus } from '../core/common/mapStrings';
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
@@ -8,10 +8,13 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 import { Observable } from 'rxjs/Observable';
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
+import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { Course, WorkGroup } from "../core/entities/student";
 import { WorkGroupService } from "./services/workgroup.service";
 import { StudentDataContext } from "./services/student-data-context.service"
+import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -32,6 +35,7 @@ export class StudentComponent implements OnInit {
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
+  dialogRef: MdDialogRef<AssessCompareDialog>;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -41,13 +45,18 @@ export class StudentComponent implements OnInit {
     private snackBarService: MdSnackBar,
     public media: TdMediaService,
     private workGroupService: WorkGroupService,
-    private studentDataContext: StudentDataContext) {
+    private studentDataContext: StudentDataContext,
+    public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
 
     this.courses$ = route.data.pluck('assess');
   }
 
   goBack(route: string): void {
     this.router.navigate(['/']);
+  }
+
+  refreshFromServer() {
+    this.setActiveCourse(this.activeCourse, true);
   }
 
   ngOnInit(): void {
@@ -79,6 +88,27 @@ export class StudentComponent implements OnInit {
     let activeWorkgroup = this.setupWorkGroups(this.activeCourse);
     
     this.setActiveWorkGroup(activeWorkgroup, force);
+  }
+
+  assessCompare(): void {
+
+    this.dialogRef = this.dialog.open(AssessCompareDialog, {
+      disableClose: false,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: ''
+      },
+      data: {
+        workGroup: this.activeWorkGroup
+      }
+    });
+
   }
 
   private setupWorkGroups(course: Course): WorkGroup {

@@ -4,10 +4,10 @@
       <md-icon md-list-avatar>person</md-icon>
       <h3 md-line> {{user?.rankName}} </h3>
       <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
-        <button md-button [routerLink]="['assess/' + user.studentId]">{{user?.assessText}} Assessment</button>
+        <button md-button [routerLink]="['assess/' + user.studentId]"><md-icon>{{user?.assessText}}</md-icon> Assessment </button>
         </span>
       <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
-        <button md-button>{{user?.commentText}} Comment</button>
+        <button md-button><md-icon>{{user?.commentText}}</md-icon> Comment </button>
         </span>
       <span flex></span>
 
@@ -28,10 +28,10 @@
         <md-icon md-list-avatar>person</md-icon>
         <h3 md-line> {{peer?.rankName}} </h3>
         <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button [routerLink]="['assess/' + peer.studentId]">{{peer?.assessText}} Assessment</button>
+          <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{user?.assessText}}</md-icon> Assessment</button>
         </span>
         <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button>{{peer?.commentText}} Comment</button>
+          <button md-button><md-icon>{{user?.commentText}}</md-icon> Comment</button>
         </span>
         <span flex></span>
         <!--<span>
@@ -49,6 +49,3 @@
   </md-list>
 </ng-template>
 
-<a md-fab color="accent" class="mat-fab-bottom-right" (click)="compare()">
-  <md-icon>add</md-icon>
-</a>

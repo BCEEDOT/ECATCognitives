@@ -48,6 +48,31 @@ export class StratComponent implements OnInit, OnChanges {
 
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
+    this.evaluateStrat(true);
+  }
+
+
+  cancel() {
+    if (this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null)) {
+      this.dialogService.openConfirm({
+        message: 'Are you sure you want to cancel and discard your changes?',
+        title: 'Unsaved Changed',
+        acceptButton: 'Yes',
+        cancelButton: 'No'
+      }).afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.activeWorkGroup.groupMembers.forEach(gm => {
+             gm.stratValidationErrors = [];
+             gm.stratIsValid = true;
+             gm.proposedStratPosition = null;
+           });
+          this.snackBarService.open('Changes Discarded', 'Dismiss', {duration: 2000})
+          //this.location.back();
+        }
+      });
+    } else {
+      //this.location.back();
+    }
   }
 
   compare() {
@@ -55,7 +80,23 @@ export class StratComponent implements OnInit, OnChanges {
   }
 
   isValid(): boolean {
-    return this.activeWorkGroup.groupMembers.some(gm => !gm.stratIsValid);
+    let invalidStrats = this.activeWorkGroup.groupMembers.some(gm => !gm.stratIsValid);
+    let isDirty = this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null);
+
+    if (!isDirty) {
+      return true;
+    } 
+
+    if (invalidStrats) {
+      return true;
+    }
+
+    return false;
+
+  }
+
+  isPristine(): boolean {
+    return this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null);
   }
 
   evaluateStrat(force?: boolean): void {
@@ -87,15 +128,15 @@ export class StratComponent implements OnInit, OnChanges {
       changeSet.push(gm.studentId);
     });
 
-    this.spTools.save().then(() =>{
+    this.spTools.save().then(() => {
 
       this.activeWorkGroup.groupMembers
-                    .filter(gm => changeSet.some(cs => cs === gm.studentId))
-                    .forEach(gm => {
-                        gm.stratValidationErrors = [];
-                        gm.stratIsValid = true;
-                        gm.proposedStratPosition = null;
-                    });
+        .filter(gm => changeSet.some(cs => cs === gm.studentId))
+        .forEach(gm => {
+          gm.stratValidationErrors = [];
+          gm.stratIsValid = true;
+          gm.proposedStratPosition = null;
+        });
       this.user.updateStatusOfPeer();
       this.snackBarService.open("Success, Strats Updated!", 'Dismiss')
     }).catch((error) => {

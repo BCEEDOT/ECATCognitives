@@ -8,7 +8,8 @@ md-card {
     max-width: 75%;
     //width: 920px;
     //margin: .5em auto ;
-    align-self: center;
+    //align-self: center;
+    height: 300px;
     padding-bottom: 1%
 }
 
@@ -29,13 +30,13 @@ h4 {
     margin-bottom:5px;
 }
 
-.HEA { color: darkblue; }
-.HEU { color: blue; }
-.EA { color: darkgreen; }
-.EU { color: green; }
-.IEA {color: darkred }
-.IEU { color: red; }
-.ND { color: gray; }
+// .HEA { color: darkblue; }
+// .HEU { color: blue; }
+// .EA { color: darkgreen; }
+// .EU { color: green; }
+// .IEA {color: darkred }
+// .IEU { color: red; }
+// .ND { color: gray; }
 
 .btn-selected { 
     background-color: #3e6d92; 

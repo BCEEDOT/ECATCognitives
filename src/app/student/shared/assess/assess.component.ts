@@ -45,16 +45,14 @@ export class AssessComponent implements OnInit, OnChanges {
     this.user.updateStatusOfPeer();
 
     this.activeWorkGroup.groupMembers.forEach(gm => {
-      gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'Edit' : 'Add';
-      gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'Edit' : 'Add';
+      gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'mode_edit' : 'add';
+      gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'mode_edit' : 'add';
       //gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
     });
 
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
-  }
 
-  compare() {
-    this.assessCompare.emit();
+    console.log(this.user);
   }
 
 }
