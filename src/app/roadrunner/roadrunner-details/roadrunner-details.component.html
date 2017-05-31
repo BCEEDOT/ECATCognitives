@@ -9,7 +9,7 @@
     </a>
   </div>
 
-  <md-card>
+  <md-card >
 
     <div *ngIf="event.length > 0">
       <md-toolbar>
@@ -23,54 +23,66 @@
         <!--<ng-template let-data let-last="last" ngFor [ngForOf]="event">-->
 
 
-          <div layout-gt-xs="row" layout-margin>
-            <md-input-container flex>
-              <textarea mdInput placeholder="Location" value="{{oneEvent.location}}" [(ngModel)]="oneEvent.location" name="contactNumber" maxlength="50" pattern="^\d+$" tdAutoTrim></textarea>
+        <div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <textarea mdInput placeholder="Location" value="{{oneEvent.location}}" [(ngModel)]="oneEvent.location" name="contactNumber"
+              maxlength="50" pattern="^\d+$" tdAutoTrim></textarea>
 
-            </md-input-container>
-          </div>
+          </md-input-container>
+        </div>
 
-          <div layout-gt-xs="row" layout-margin>
-            <md-input-container flex>
-              <input mdInput placeholder="Contact Number" value="{{oneEvent.phoneNumber}}" [(ngModel)]="oneEvent.phoneNumber" name="contactNumber" maxlength="10" pattern="^\d+$"
-                tdAutoTrim/>
+        <div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <input mdInput placeholder="Contact Number" value="{{oneEvent.phoneNumber}}" [(ngModel)]="oneEvent.phoneNumber" name="contactNumber"
+              maxlength="10" pattern="^\d+$" tdAutoTrim/>
 
-            </md-input-container>
-          </div>
-<div *ngIf="!oneEvent.prevSignOut">
-          <div layout-gt-xs="row" layout-margin>
-
-            <md-input-container flex>
-              <input mdInput id="leavedate" [value]="oneEvent?.leaveDate | date:'yyyy-MM-dd'" type="date" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value"/>
-
-            </md-input-container>
-          </div>
-
+          </md-input-container>
+        </div>
+        <div *ngIf="!oneEvent.prevSignOut">
           <div layout-gt-xs="row" layout-margin>
 
             <md-input-container flex>
+              <!--<input mdInput [mdDatepicker]="leave" id="leavedate" [value]="oneEvent?.leaveDate | date:'yyyy-MM-dd'" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value"/>-->
 
-              <input mdInput type="date" placeholder="Return Date" value="{{oneEvent?.returnDate | date:'yyyy-MM-dd'}}" (input)="oneEvent.returnDate = $event.target.value"/>
+              <input mdInput [mdDatepicker]="leave" value="{{oneEvent.leaveDate}}" [(ngModel)]="oneEvent.leaveDate" placeholder="Leave Date"
+              />
+              <button mdSuffix [mdDatepickerToggle]="leave"></button>
             </md-input-container>
-          </div>
-</div>
-<div *ngIf="oneEvent.prevSignOut">
-            <div layout-gt-xs="row" layout-margin>
-
-            <md-input-container flex>
-              <input mdInput id="leavedate" type="date" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value"/>
-
-            </md-input-container>
+            <md-datepicker #leave></md-datepicker>
           </div>
 
           <div layout-gt-xs="row" layout-margin>
 
             <md-input-container flex>
 
-              <input mdInput type="date" placeholder="Return Date" (input)="oneEvent.returnDate = $event.target.value"/>
+              <input mdInput [mdDatepicker]="return" placeholder="Return Date" value="{{oneEvent.returnDate}}" [(ngModel)]="oneEvent.returnDate"
+              />
+              <button mdSuffix [mdDatepickerToggle]="return"></button>
+
+            </md-input-container>
+            <md-datepicker #return></md-datepicker>
+          </div>
+        </div>
+
+
+        <!--Dont think i need this div-->
+        <div *ngIf="oneEvent.prevSignOut">
+          <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+              <input mdInput id="leavedate" type="date" placeholder="Leave Date" (input)="oneEvent.leaveDate = $event.target.value" />
+
             </md-input-container>
           </div>
-  </div>
+
+          <div layout-gt-xs="row" layout-margin>
+
+            <md-input-container flex>
+
+              <input mdInput type="date" placeholder="Return Date" (input)="oneEvent.returnDate = $event.target.value" />
+            </md-input-container>
+          </div>
+        </div>
         <!--</ng-template>-->
 
       </md-list>

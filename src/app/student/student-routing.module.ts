@@ -1,17 +1,83 @@
-import { NgModule }             from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
 import { StudentAuthGuard } from './services/student-auth-guard.service';
-import { StudentComponent }    from './student.component';
+import { StudentDataContext } from "./services/student-data-context.service";
 import { GlobalService } from "../core/services/global.service";
+import { StudentComponent } from './student.component';
+import { ListComponent } from "./list/list.component";
+import { ResultsComponent } from "./results/results.component";
+
 
 const studentRoutes: Routes = [
-  { 
-    path: 'student',  
-    component: StudentComponent,
-    canActivate: [StudentAuthGuard] 
-  } 
+  {
+    path: 'student',
+    //Check if role is student, spin up Student Data Context
+    canActivate: [StudentAuthGuard],
+    children: [
+      {
+        path: 'assessment',
+        component: StudentComponent,
+        canActivateChild: [StudentAuthGuard],
+        //Get the students courses
+        resolve: { assess: 'assessmentResolver' },
+        children: [
+          // {
+          //   path: '',
+          //   component: AssessComponent,
+          //   //Set active course and workgroup. Determine if results are published for active group. 
+          // },
+          {
+            path: 'list/:csrId/:wrkGrpId',
+            //set to most recent course, allow student to switch between courses.
+            component: ListComponent,
+            // children: [
+            //   { path: 'sp', component: SpComponent},
+            //   { path: 'comment', component: CommentComponent}
+            // ]
+            resolve: { workGroup: 'workGroupResolver' },
+          },
+          {
+            path: 'results/:crsId/:wrkGrpId',
+            component: ResultsComponent,
+            //resolve: { results: 'resultsResolver' },
+          }
+
+        ]
+      }
+    ]
+  }
 ];
+
+export function assessmentResolver(studentDataContext: StudentDataContext) {
+  return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses();
+}
+
+export function workGroupResolver(studentDataContext: StudentDataContext) {
+  return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId'])
+
+}
+
+// export function courseResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.course(+route.params['id']);
+// }
+
+// export function workGroupsResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.workGroups(+route.parent.params['workgroup']);
+// }
+
+// export function workGroupResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.workgroup(+route.params['id']);
+// }
+
+// export function listResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
+// }
+
+// export function resultsResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.results(+route.params['id']);
+// }
+
 @NgModule({
   imports: [
     RouterModule.forChild(studentRoutes)
@@ -19,6 +85,13 @@ const studentRoutes: Routes = [
   exports: [
     RouterModule
   ],
-  providers: []
+  providers: [
+    {
+      provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
+    },
+    {
+      provide: 'workGroupResolver', useFactory: workGroupResolver, deps: [StudentDataContext]
+    }
+  ]
 })
 export class StudentRoutingModule { }
