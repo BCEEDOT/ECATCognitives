@@ -33,26 +33,26 @@ export class SpInventory extends EntityBase {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
     };
 
-    // rejectChanges(): void {
-    //     this.responseForAssessee.entityAspect.rejectChanges();
-    //     this.effLevel = null;
-    //     this.freqLevel = null;
-    //     this.behaveDisplayed = this.behaveDisplayed;
-    //     if (this.behaveDisplayed === true) {
-    //         this.calculateItemResponse();
-    //     }
-    // }
+    rejectChanges(): void {
+        this.responseForAssessee.entityAspect.rejectChanges();
+        this.effLevel = null;
+        this.freqLevel = null;
+        this.behaveDisplayed = this.behaveDisplayed;
+        if (this.behaveDisplayed === true) {
+            this.calculateItemResponse();
+        }
+    }
 
-    // resetAssess(): void {
-    //     this.effLevel = null;
-    //     this.freqLevel = null;
-    //     this.behaveDisplayed = true;
-    //     this.responseForAssessee = null;
-    // }
+    resetAssess(): void {
+        this.effLevel = null;
+        this.freqLevel = null;
+        this.behaveDisplayed = true;
+        this.responseForAssessee = null;
+    }
 
-    // resetResult(): void {
-    //     this.resultBreakout = null;
-    // }
+    resetResult(): void {
+        this.resultBreakout = null;
+    }
 
     spResult: SpResult;
 

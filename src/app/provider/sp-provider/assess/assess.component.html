@@ -1,6 +1,6 @@
 <div class="flex-container">
   <md-card>
-    <md-card-title *ngIf="!isSelf">Assessement for {{assessee.rank}} {{assessee.lastName}}, {{assessee.firstName}}</md-card-title>
+    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory.responseForAssessee.assessee.rankName}}</md-card-title>
     <md-card-title *ngIf="isSelf">Self Assessment</md-card-title>
     <md-divider></md-divider>
     <md-card-content>
@@ -15,12 +15,14 @@
       </md-menu>
       <span></span>
       <div *ngIf="activeInventory.behaveDisplayed">
-        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.ie; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.ie}" [disabled]="viewOnly">Ineffective</button>
-        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.e; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.e}" [disabled]="viewOnly">Effective</button>
-        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.he; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.he}" [disabled]="viewOnly">Highly Effective</button>
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.ie; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.ie}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.ie">Ineffective</button>
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.e; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.e}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.e">Effective</button>
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.he; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.he}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.he">Highly Effective</button>
         <span></span>
-        <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.alw; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.alw}" [disabled]="viewOnly">Always</button>
-        <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.usl; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.usl}" [disabled]="viewOnly">Usually</button>
+        <div style="float:right">
+          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.alw; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.alw}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.alw">Always</button>
+          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.usl; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.usl}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.usl">Usually</button>
+        </div>
       </div>
       <div *ngIf="!activeInventory.behaveDisplayed">
         <p class="text-center">NOT DISPLAYED</p>
@@ -30,8 +32,9 @@
       <button md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</button>
       <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInv()">Next</button>
       <div style="float: right">
-        <button md-raised-button (click)="cancel()">Cancel</button>
-        <button md-raised-button [disabled]="!canSave" (click)="save()">Save</button>
+        <button md-raised-button *ngIf="viewOnly" (click)="cancel()">Exit</button>
+        <button md-raised-button *ngIf="!viewOnly" (click)="cancel()">Cancel</button>
+        <button md-raised-button *ngIf="!viewOnly" [disabled]="!canSave" (click)="save()">Save</button>
       </div>
     </md-card-actions>
   </md-card>

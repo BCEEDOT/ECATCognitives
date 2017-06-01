@@ -6,8 +6,7 @@ import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';
 
-import { SpProviderService } from '../sp-provider.service';
-import { Person } from '../../../core/entities/student';
+import { StudentDataContext } from "../../../student/services/student-data-context.service";
 import { IStudSpInventory, IFacSpInventory } from '../../../core/entities/client-models'
 import { MpSpItemResponse, MpSpStatus } from '../../../core/common/mapStrings'
 import { SpEffectLevel, SpFreqLevel } from '../../../core/common/mapEnum'
@@ -25,7 +24,6 @@ export class AssessComponent implements OnInit {
   private isStudent: boolean;
   private isSelf: boolean;
   private perspective: string;
-  private assessee: Person;
   private activeInventory: IStudSpInventory | IFacSpInventory;
   private canSave: boolean = false;
   private respEnum = {
@@ -36,9 +34,9 @@ export class AssessComponent implements OnInit {
         alw: SpFreqLevel.Always
     };
   private assessLoad: string = 'AssessLoading';
-  private viewOnly: boolean = false;
+  private viewOnly: boolean = true;
 
-  constructor(private spProvider: SpProviderService, 
+  constructor(private ctx: StudentDataContext, //| FacultyDataContext, 
     private dialogService: TdDialogService,
     private loadingService: TdLoadingService,
     private global: GlobalService, 
@@ -59,8 +57,7 @@ export class AssessComponent implements OnInit {
     });
 
     this.isStudent = this.global.persona.value.isStudent;
-    this.assessee = this.inventories[0].responseForAssessee.assessee.studentProfile.person as Person;
-    this.isSelf = this.assessee.personId === this.global.persona.value.person.personId;
+    this.isSelf = this.inventories[0].responseForAssessee.assessee.studentProfile.person.personId === this.global.persona.value.person.personId;
 
     if (this.isStudent){
       if (this.isSelf){
@@ -74,9 +71,12 @@ export class AssessComponent implements OnInit {
 
     this.activeInventory = this.inventories[0];
 
-    this.viewOnly = this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.open;
-
-    console.log(this.route);
+    if (this.isStudent) {
+      this.viewOnly = this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.open;
+    } else {
+      //instructors can still add assessments when Under Review
+      this.viewOnly = this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.open && this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.underReview;
+    }
   }
   
   previousInv(){
@@ -94,7 +94,7 @@ export class AssessComponent implements OnInit {
   saveCheck(){
     if (!this.viewOnly){
       let changes = this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted());
-      let validResps = this.inventories.every(inv => inv.responseForAssessee.itemModelScore !== null);
+      let validResps = this.inventories.every(inv => inv.responseForAssessee.mpItemResponse !== null);
 
       if (changes && validResps){
         this.canSave = true;
@@ -105,7 +105,7 @@ export class AssessComponent implements OnInit {
   }
 
   cancel(){
-    if (this.inventories.some(inv => inv.entityAspect.entityState.isAddedModifiedOrDeleted())){
+    if (this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted())){
       this.dialogService.openConfirm({
         message: 'Are you sure you want to cancel and discard your changes?',
         title: 'Unsaved Changed',
@@ -113,7 +113,7 @@ export class AssessComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed){
-          this.inventories.forEach(inv => inv.entityAspect.rejectChanges());
+          this.inventories.forEach(inv => inv.rejectChanges());
           this.location.back();
         }
       });
@@ -132,7 +132,7 @@ export class AssessComponent implements OnInit {
     }
 
     this.loadingService.register(this.assessLoad);
-    this.spProvider.save()
+    this.ctx.commit()
       .then(result => {
         this.loadingService.resolve(this.assessLoad);
         this.location.back();

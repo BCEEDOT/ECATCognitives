@@ -2,33 +2,24 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { isNumeric } from 'rxjs/util/isNumeric';
 import 'rxjs/util/isNumeric';
+import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
-
-// import { BaseDataContext } from '../../shared/services/base-data-context.service';
-// import { IStudSpInventory, IFacSpInventory } from '../../core/entities/client-models'
-// import { StudSpComment } from "../../core/entities/student/StudSpComment";
-// import { FacSpComment } from "../../core/entities/faculty/FacSpComment";
-import { CrseStudentInGroup, WorkGroup } from "../../core/entities/Student";
+import { CrseStudentInGroup, WorkGroup, StudSpComment } from "../../core/entities/Student";
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 import { Person } from "../../core/entities/user/Person";
 import { StudentDataContext } from "../../student/services/student-data-context.service";
 import { WorkGroupService } from "../../student/services/workgroup.service";
-
-
+import { FacSpComment } from "../../core/entities/faculty/FacSpComment";
+import { CommentDialog } from "./comment/comment.dialog";
 
 @Injectable()
 export class SpProviderService {
-  // inventories: Array<IStudSpInventory | IFacSpInventory>;
-  // comment: StudSpComment | FacSpComment;
-  // persona: ILoggedInUser;
-  // viewOnly: boolean;
-  //private ctx: IAssessContext;
+  dialogRef: MdDialogRef<CommentDialog>;
 
-  //private off: Promise<Array<CrseStudentInGroup>>;
   private off: any;
-  workGroup: WorkGroup
+  workGroup: WorkGroup;
 
-  constructor(private ctx: StudentDataContext, private stuWorkGroupService: WorkGroupService) { }
+  constructor(private ctx: StudentDataContext, private stuWorkGroupService: WorkGroupService, private dialog: MdDialog) { }
 
   save(): Promise<any> {
     return this.ctx.commit()
@@ -40,6 +31,18 @@ export class SpProviderService {
         console.log('error');
         return result;
       })
+  }
+
+  loadComment(recipient: CrseStudentInGroup) {
+    let comment = this.ctx.getComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
+
+    this.dialogRef = this.dialog.open(CommentDialog, {
+      disableClose: true,
+      //hasBackdrop: true,
+      data: {
+        comment: comment,
+      }
+    });
   }
 
   evaluateStratification(isInstructor?: boolean, force?: boolean): Promise<Array<CrseStudentInGroup>> {
@@ -162,5 +165,7 @@ export class SpProviderService {
       //Possibly need to store changes back in the workgroupservice. 
 
     }
+
+    
   }
 }

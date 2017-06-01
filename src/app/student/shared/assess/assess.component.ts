@@ -5,6 +5,7 @@ import { MdSnackBar } from '@angular/material';
 import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/student";
 import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
+import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
 
 
 @Component({
@@ -21,7 +22,7 @@ export class AssessComponent implements OnInit, OnChanges {
   assessIsLoaded = 'assessIsLoaded';
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProdiver: SpProviderService) {
   }
 
   @Input() workGroup: WorkGroup;
@@ -52,6 +53,10 @@ export class AssessComponent implements OnInit, OnChanges {
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
 
     console.log(this.user);
+  }
+
+  comment(recipient: CrseStudentInGroup){
+    this.spProdiver.loadComment(recipient);
   }
 
 }
