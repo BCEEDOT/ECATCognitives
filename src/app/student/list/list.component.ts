@@ -5,8 +5,6 @@ import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 
-
-
 import { Course, WorkGroup, CrseStudentInGroup, SpInstrument } from "../../core/entities/student";
 import { WorkGroupService } from "../services/workgroup.service";
 import { GlobalService } from "../../core/services/global.service"
@@ -27,6 +25,8 @@ export class ListComponent implements OnInit {
   instructions: string;
   activeWorkGroup: WorkGroup;
   activeWorkGroup$: Observable<WorkGroup>;
+  paramWorkGroupId: number;
+  paramCourseId: number;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
@@ -35,13 +35,23 @@ export class ListComponent implements OnInit {
   ) {
 
     this.activeWorkGroup$ = route.data.pluck('workGroup');
+
+    this.route.params.subscribe(params => {
+      this.paramWorkGroupId = +params['wrkGrpId'];
+      this.paramCourseId = +params['crsId'];
+
+    });
+
   }
 
   ngOnInit() {
+
     this.activeWorkGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
       this.activate();
-    })
+    });
+
+    
   }
 
   private activate(force?: boolean): void {
@@ -51,9 +61,6 @@ export class ListComponent implements OnInit {
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
     console.log(this.user);
 
-
   }
-
-  
 
 }

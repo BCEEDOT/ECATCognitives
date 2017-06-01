@@ -67,7 +67,7 @@ export class BaseDataContext {
     //This is save changes
     commit(): Promise<any> {
         //let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
-        console.log(this.getChanges());
+        //console.log(this.getChanges());
         //return <any>this.manager.saveChanges(null, saveOptions)
         return <any>this.manager.saveChanges()
             .then((saveResult) => {

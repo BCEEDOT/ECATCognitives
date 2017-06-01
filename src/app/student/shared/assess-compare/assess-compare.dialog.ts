@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, ViewChild, TemplateRef } from '@angular/core';
 import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
+import { TdChipsComponent } from "@covalent/core";
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { multi } from './data';
 import { single} from './singledata';
@@ -8,7 +9,8 @@ import { single} from './singledata';
 @Component({
   selector: 'assess-compare-dialog',
   templateUrl: './assess-compare.dialog.html',
-  styleUrls: ['./assess-compare.dialog.scss']
+  styleUrls: ['./assess-compare.dialog.scss'],
+  viewProviders: [TdChipsComponent]
 })
 export class AssessCompareDialog implements OnInit {
 
@@ -16,6 +18,27 @@ export class AssessCompareDialog implements OnInit {
 
   single: any[];
   multi: any[];
+  multiOriginal: any[];
+
+  readOnly: boolean = false;
+  chipAddition: boolean = true;
+
+  // items: string[] = [
+  //   'stepper',
+  //   'expansion-panel',
+  //   'markdown',
+  //   'highlight',
+  //   'loading',
+  //   'media',
+  //   'chips',
+  //   'http',
+  //   'json-formatter',
+  //   'pipes',
+  //   'need more?',
+  // ];
+
+  itemsRequireMatch: string[] = [];
+  items: string[] = [];
 
   view: any[] = [900, 400];
 
@@ -33,22 +56,80 @@ export class AssessCompareDialog implements OnInit {
     domain: ['#0D47A1', '#01579B', '#1976D2', '#039BE5', '#00BCD4', '#FB8C00', '#FFA726', '#FFCC80', '#FFECB3'],
   };
 
-  constructor(public dialogRef: MdDialogRef<AssessCompareDialog>,
+  constructor(public dialogRef: MdDialogRef<AssessCompareDialog>, private chips: TdChipsComponent,
     @Inject(MD_DIALOG_DATA) public data: any) {
 
     Object.assign(this, {single, multi});
+    this.multiOriginal = this.multi;
+
+    this.multi.forEach(data => {
+      this.items.push(data.name);
+      this.itemsRequireMatch.push(data.name);
+    })
+
+
 
   }
 
+  add(value: string): void {
+
+    let multiTest; 
+    
+    multiTest = this.multi;
+
+    console.log(this.multiOriginal);
+
+    this.multi = this.multiOriginal.filter(data => {
+
+      let match = false;
+
+      this.itemsRequireMatch.forEach(item => {
+        if (data.name == item) {
+          match = true;
+        }
+
+      });
+
+      return match;
+    });
+
+    console.log(this.multi);
+
+
+
+    //this.multi.push(this.multiOriginal.filter(data => data.name == value)[0]);
+
+    
+    // console.log(add);
+
+    // multiTest.push(add);
+
+    // this.multi = multiTest;
+
+    // console.log(this.multi);
+
+  }
+
+  remove(value: string): void {
+    console.log(value);
+    this.multi = this.multi.filter(data => data.name != value);
+  }
+
   ngOnInit() {
+    console.log(this.itemsRequireMatch);
   }
 
   onSelect(event) {
 
     this.multi = this.multi.filter(data => data.name != event);
+    
     console.log(event);
 
 
+  }
+
+  reset(): void {
+    // this.multi = this.multiOriginal;
   }
 
   ratings(val: any): any {

@@ -1,4 +1,3 @@
-import { mixingMultiProvidersWithRegularProvidersError } from '@angular/core/src/di/reflective_errors';
 import { MpSpStatus } from '../core/common/mapStrings';
 import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -35,6 +34,7 @@ export class StudentComponent implements OnInit {
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
+
   dialogRef: MdDialogRef<AssessCompareDialog>;
 
   constructor(private titleService: Title,
@@ -60,15 +60,13 @@ export class StudentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // broadcast to all listener observables when loading the page
-    //this.media.broadcast();
+
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
       console.log(this.courses);
       this.activate();
     });
-
 
   }
 
@@ -81,7 +79,6 @@ export class StudentComponent implements OnInit {
     });
 
     this.courses.forEach(course => course['displayName'] = `${course.classNumber}: ${course.name}`);
-    //let activeCourse: Course;
     this.activeCourse = this.courses[0];
     this.activeCourseId = this.activeCourse.id;
     
@@ -96,7 +93,7 @@ export class StudentComponent implements OnInit {
       disableClose: false,
       hasBackdrop: true,
       backdropClass: '',
-      width: '',
+      width: '950px',
       height: '',
       position: {
         top: '',
@@ -133,6 +130,7 @@ export class StudentComponent implements OnInit {
       .then(course => {
         this.activeCourse = course as Course;
         let activeWorkGroup = this.setupWorkGroups(this.activeCourse);
+        this.activeCourseId = this.activeCourse.id;
         this.setActiveWorkGroup(activeWorkGroup, force);
       }).catch(error => {
         console.log('There was an error retriving the active course');
@@ -150,7 +148,6 @@ export class StudentComponent implements OnInit {
 
       const resultsPublished = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
 
-      //this.studentDataContext.activeGroupId = workGroupId;
       this.workGroupService.workGroup(this.activeWorkGroup);
 
       if (!force) {

@@ -106,7 +106,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log("App on init is firing");
     this.global.persona.subscribe((user) => {
       console.log("User has been updated in app Component")
       this.persona = user;

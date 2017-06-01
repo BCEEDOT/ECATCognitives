@@ -38,8 +38,8 @@ export class StudentAuthGuard implements CanActivate, CanActivateChild {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
     
-    console.log(this.persona.isStudent);
-    console.log(this.studentContextActivated);
+    //console.log(this.persona.isStudent);
+    //console.log(this.studentContextActivated);
     //First check if a user has a token and if it is expired
     if (tokenNotExpired('ecatAccessToken') && this.studentContextActivated && this.persona.isStudent) {
 

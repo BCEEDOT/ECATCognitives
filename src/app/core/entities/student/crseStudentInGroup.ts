@@ -110,6 +110,28 @@ export class CrseStudentInGroup extends EntityBase {
                 .filter(comment => comment.authorPersonId === this.studentId &&
                     comment.recipientPersonId === gm.studentId)[0];
 
+            const knownReponse = mp.MpSpItemResponse;
+
+            const responseList = gm.assesseeSpResponses
+                .filter(response => response.assessorPersonId === this.studentId &&
+                    response.assesseePersonId === gm.studentId);
+
+           
+            if (this.workGroup.assignedSpInstr) {
+                this.workGroup
+                    .assignedSpInstr
+                    .inventoryCollection
+                    .forEach(inventoryItem => {
+                        const hasResponse = responseList.some(response => response.inventoryItemId === inventoryItem.id);
+                        if (!hasResponse) {
+                            sigStatus.missingAssessItems.push(inventoryItem.id);
+                        }
+                    });
+
+            }
+
+            
+
             sigStatus.assessComplete = sigStatus.missingAssessItems.length === 0;
             sigStatus.isPeerAllComplete = sigStatus.assessComplete && sigStatus.stratComplete;
             this.sop[gm.studentId.toString()] = sigStatus;

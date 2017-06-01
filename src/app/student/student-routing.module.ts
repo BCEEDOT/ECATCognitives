@@ -27,8 +27,9 @@ const studentRoutes: Routes = [
           //   component: AssessComponent,
           //   //Set active course and workgroup. Determine if results are published for active group. 
           // },
+          
           {
-            path: 'list/:csrId/:wrkGrpId',
+            path: 'list/:crsId/:wrkGrpId',
             //set to most recent course, allow student to switch between courses.
             component: ListComponent,
             // children: [
@@ -46,6 +47,11 @@ const studentRoutes: Routes = [
             path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
             resolve: { inventories: 'spAssessResolver' }
+          },
+          {
+            path: '',
+            component: StudentComponent,
+            resolve: { assess: 'assessmentResolver'},
           }
 
         ]
@@ -60,9 +66,6 @@ export function assessmentResolver(studentDataContext: StudentDataContext) {
 
 export function workGroupResolver(studentDataContext: StudentDataContext) {
   return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId'])
-
-  
-
 }
 
 export function spAssessResolver(studentDataContext: StudentDataContext) {

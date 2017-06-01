@@ -1,3 +1,18 @@
+<!--<div fxLayout="row" fxLayoutAlign="end start">
+  <button md-icon-button (click)="dialogRef.close()"><md-icon>clear</md-icon></button>
+</div>-->
+<div fxLayout="row" class="pad-bottom-xl" >
+  <td-chips [chipAddition]="chipAddition"
+            [items]="items"
+            [(ngModel)]="itemsRequireMatch"
+            placeholder="Enter a flight members name"
+            [readOnly]="readOnly"
+            (add)="add($event)" 
+            (remove)="remove($event)"
+            requireMatch>
+  </td-chips>
+</div>
+
 <ngx-charts-line-chart
       [view]="view"
       [scheme]="blueOrangeScheme"
@@ -14,8 +29,9 @@
       [yAxisTickFormatting]="ratings"
       [activeEntries]="single"
       (select)="onSelect($event)">
-    </ngx-charts-line-chart>
+</ngx-charts-line-chart>
 
-<p>{{data.workGroup.customName}}</p>
+<!--<button md-icon-button (click)="reset()">Reset</button>-->
 
-<button type="button" (click)="dialogRef.close()">Close dialog</button>
+
+

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output } from '@angular/core';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 
@@ -25,7 +25,6 @@ export class AssessComponent implements OnInit, OnChanges {
   }
 
   @Input() workGroup: WorkGroup;
-  @Output() assessCompare = new EventEmitter();
 
   ngOnInit() {
     this.activate();

@@ -28,10 +28,10 @@
         <md-icon md-list-avatar>person</md-icon>
         <h3 md-line> {{peer?.rankName}} </h3>
         <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{user?.assessText}}</md-icon> Assessment</button>
+          <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{peer?.assessText}}</md-icon> Assessment</button>
         </span>
         <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button><md-icon>{{user?.commentText}}</md-icon> Comment</button>
+          <button md-button><md-icon>{{peer?.commentText}}</md-icon> Comment</button>
         </span>
         <span flex></span>
         <!--<span>

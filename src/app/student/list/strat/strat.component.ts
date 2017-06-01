@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output } from '@angular/core';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 import 'rxjs/add/operator/debounceTime'
@@ -30,7 +30,6 @@ export class StratComponent implements OnInit, OnChanges {
   }
 
   @Input() workGroup: WorkGroup;
-  @Output() assessCompare = new EventEmitter();
 
   ngOnInit() {
     this.activate();
@@ -73,10 +72,6 @@ export class StratComponent implements OnInit, OnChanges {
     } else {
       //this.location.back();
     }
-  }
-
-  compare() {
-    this.assessCompare.emit();
   }
 
   isValid(): boolean {
