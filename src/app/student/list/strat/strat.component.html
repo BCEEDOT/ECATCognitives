@@ -1,4 +1,4 @@
-<ng-template tdLoading="stratIsLoaded">
+<ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
 
   <md-list>
     <md-list-item>

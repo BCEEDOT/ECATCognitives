@@ -126,6 +126,9 @@ export class StudentComponent implements OnInit {
   } 
 
   private setActiveCourse(course: Course, force?: boolean): void {
+
+    this.workGroupService.isLoading(true);
+
     this.studentDataContext.fetchActiveCourse(course.id, force)
       .then(course => {
         this.activeCourse = course as Course;
@@ -139,6 +142,8 @@ export class StudentComponent implements OnInit {
 
 
   private setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
+
+    this.workGroupService.isLoading(true);
 
     const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
 

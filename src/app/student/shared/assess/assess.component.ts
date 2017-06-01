@@ -19,10 +19,12 @@ export class AssessComponent implements OnInit, OnChanges {
   user: CrseStudentInGroup
   peers: Array<CrseStudentInGroup>;
   userId: number;
-  assessIsLoaded = 'assessIsLoaded';
+  isLoading: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProdiver: SpProviderService) {
+
+      this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
   }
 
   @Input() workGroup: WorkGroup;
@@ -39,11 +41,8 @@ export class AssessComponent implements OnInit, OnChanges {
 
     this.activeWorkGroup = this.workGroup;
     const userId = this.global.persona.value.person.personId;
-
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
-
     this.user.updateStatusOfPeer();
-
     this.activeWorkGroup.groupMembers.forEach(gm => {
       gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'mode_edit' : 'add';
       gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'mode_edit' : 'add';
@@ -52,7 +51,9 @@ export class AssessComponent implements OnInit, OnChanges {
 
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
 
-    console.log(this.user);
+    this.workGroupService.isLoading(false);
+
+
   }
 
   comment(recipient: CrseStudentInGroup){

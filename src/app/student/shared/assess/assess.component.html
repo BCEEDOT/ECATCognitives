@@ -1,5 +1,5 @@
-<ng-template tdLoading="assessIsLoaded">
-  <md-list class="will-load">
+<ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+  <md-list>
     <md-list-item>
       <md-icon md-list-avatar>person</md-icon>
       <h3 md-line> {{user?.rankName}} </h3>
