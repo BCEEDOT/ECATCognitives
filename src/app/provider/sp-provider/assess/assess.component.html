@@ -32,8 +32,9 @@
       <button md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</button>
       <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInv()">Next</button>
       <div style="float: right">
-        <button md-raised-button (click)="cancel()">Cancel</button>
-        <button md-raised-button [disabled]="!canSave" (click)="save()">Save</button>
+        <button md-raised-button *ngIf="viewOnly" (click)="cancel()">Exit</button>
+        <button md-raised-button *ngIf="!viewOnly" (click)="cancel()">Cancel</button>
+        <button md-raised-button *ngIf="!viewOnly" [disabled]="!canSave" (click)="save()">Save</button>
       </div>
     </md-card-actions>
   </md-card>

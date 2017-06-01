@@ -22,7 +22,7 @@ export class SpProviderService {
     let comment = this.ctx.getComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
 
     this.dialogRef = this.dialog.open(CommentDialog, {
-      disableClose: false,
+      disableClose: true,
       //hasBackdrop: true,
       data: {
         comment: comment,

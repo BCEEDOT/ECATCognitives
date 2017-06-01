@@ -113,7 +113,7 @@ export class AssessComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed){
-          this.inventories.forEach(inv => inv.responseForAssessee.entityAspect.rejectChanges());
+          this.inventories.forEach(inv => inv.rejectChanges());
           this.location.back();
         }
       });

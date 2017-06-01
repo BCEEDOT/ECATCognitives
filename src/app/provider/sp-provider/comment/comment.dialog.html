@@ -1,4 +1,4 @@
-<h4 md-dialog-title>Comment for {{comment.recipient.rankName}}</h4>
+<h4 md-dialog-title>Comment for {{comment?.recipient?.rankName}}</h4>
 <md-dialog-content>
   <md-input-container class="md-block">
       <textarea mdInput placeholder="Comment (3000 characters max)" [(ngModel)]="comment.commentText" maxlength="3000" rows="15" cols="75" [disabled]="viewOnly" #commentText="ngModel"></textarea>

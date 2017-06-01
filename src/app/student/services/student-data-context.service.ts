@@ -174,7 +174,7 @@ export class StudentDataContext extends BaseDataContext {
         let inventoryList = workGroup.assignedSpInstr.inventoryCollection as Array<IStudSpInventory>;
 
         return inventoryList.map(inv => {
-            let key = {assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemid: inv.id };
+            let key = {assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemId: inv.id };
 
             let spResponse = this.manager.getEntityByKey(MpEntityType.spResponse, [userId, assesseeId, courseId, workGroupId, inv.id]) as SpResponse;
 
