@@ -19,24 +19,8 @@ export class AssessCompareDialog implements OnInit {
   single: any[];
   multi: any[];
   multiOriginal: any[];
-
   readOnly: boolean = false;
   chipAddition: boolean = true;
-
-  // items: string[] = [
-  //   'stepper',
-  //   'expansion-panel',
-  //   'markdown',
-  //   'highlight',
-  //   'loading',
-  //   'media',
-  //   'chips',
-  //   'http',
-  //   'json-formatter',
-  //   'pipes',
-  //   'need more?',
-  // ];
-
   itemsRequireMatch: string[] = [];
   items: string[] = [];
 
@@ -67,8 +51,6 @@ export class AssessCompareDialog implements OnInit {
       this.itemsRequireMatch.push(data.name);
     })
 
-
-
   }
 
   add(value: string): void {
@@ -93,21 +75,6 @@ export class AssessCompareDialog implements OnInit {
       return match;
     });
 
-    console.log(this.multi);
-
-
-
-    //this.multi.push(this.multiOriginal.filter(data => data.name == value)[0]);
-
-    
-    // console.log(add);
-
-    // multiTest.push(add);
-
-    // this.multi = multiTest;
-
-    // console.log(this.multi);
-
   }
 
   remove(value: string): void {
@@ -119,14 +86,14 @@ export class AssessCompareDialog implements OnInit {
     console.log(this.itemsRequireMatch);
   }
 
-  onSelect(event) {
+  // onSelect(event) {
 
-    this.multi = this.multi.filter(data => data.name != event);
+  //   this.multi = this.multi.filter(data => data.name != event);
     
-    console.log(event);
+  //   console.log(event);
 
 
-  }
+  // }
 
   reset(): void {
     // this.multi = this.multiOriginal;
