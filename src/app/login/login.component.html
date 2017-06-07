@@ -9,7 +9,7 @@
           <md-card-title>Login</md-card-title>
           <md-divider></md-divider>
           <md-card-content>
-            <form #loginForm="ngForm">
+            <form #loginForm="ngForm" (keyup.enter)="login()">
               <div layout="row">
                 <md-input-container flex> 
                   <input mdInput #userElement #userControl="ngModel" placeholder="Username" type="text" maxlength="30" name="username" [(ngModel)]="username" required>
@@ -34,7 +34,7 @@
           </md-card-content>
           <md-divider></md-divider>
           <md-card-actions layout="row">
-            <button flex md-raised-button color="accent" [disabled]="!loginForm.form.valid" (click)="login()">Sign In</button>
+            <button flex md-raised-button color="primary" [disabled]="!loginForm.form.valid" (click)="login()" >Sign In</button>
           </md-card-actions>
         </md-card>
       </div>
