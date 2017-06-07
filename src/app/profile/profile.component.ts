@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     // broadcast to all listener observables when loading the page
-    this.media.broadcast();
+    //this.media.broadcast();
     this.titleService.setTitle('Profile');
     this.loadingService.register(this.profileLoading);
     this.loadProfile();
@@ -52,7 +52,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.affiliationList = this.ecLocal.milAffil;
     this.componentList = this.ecLocal.milComponent;
     this.user = this.global.persona.value.person;
-    console.log(this.user.registrationComplete)
   };
 
   ngAfterViewInit() {

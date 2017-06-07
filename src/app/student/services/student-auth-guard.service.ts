@@ -18,7 +18,7 @@ import { DataContext, ResourceEndPoint } from "../../app-constants";
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
 @Injectable()
-export class StudentAuthGuard implements CanActivate {
+export class StudentAuthGuard implements CanActivate, CanActivateChild {
 
   studentContextActivated = false;
   persona: ILoggedInUser;
@@ -38,7 +38,8 @@ export class StudentAuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url: string = state.url;
     
-
+    //console.log(this.persona.isStudent);
+    //console.log(this.studentContextActivated);
     //First check if a user has a token and if it is expired
     if (tokenNotExpired('ecatAccessToken') && this.studentContextActivated && this.persona.isStudent) {
 
@@ -54,9 +55,9 @@ export class StudentAuthGuard implements CanActivate {
     }
   }
 
-  // canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-  //   return this.canActivate(route, state);
-  // }
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    return this.canActivate(route, state);
+  }
 
   // canLoad(route: Route): boolean {
   //   let url = `/${route.path}`;

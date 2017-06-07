@@ -16,7 +16,8 @@ const appRoutes: Routes = [
   imports: [
     //Uses old style routing for older browsers eg... http://localhost/#/Home
     //RouterModule.forRoot(appRoutes, { useHash: true });
-    RouterModule.forRoot(appRoutes)
+    //TODO: Enable tracing for production
+    RouterModule.forRoot(appRoutes, {enableTracing: true})
   ],
   exports: [
     RouterModule

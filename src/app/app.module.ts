@@ -3,7 +3,6 @@ import { Http, RequestOptions } from "@angular/http";
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { CovalentCoreModule } from '@covalent/core';
 import { JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS, provideAuth } from "angular2-jwt";
 import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 

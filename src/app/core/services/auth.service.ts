@@ -75,8 +75,6 @@ export class AuthService implements IHttpInterceptor {
 
     let accessTokenSigned = localStorage.getItem('ecatAccessToken');
     let idTokenSigned = localStorage.getItem('ecatUserIdToken');
-    console.log(this.global.persona.value);
-
     let accessToken = this.jwtHelper.decodeToken(accessTokenSigned);
     let idToken = this.jwtHelper.decodeToken(idTokenSigned);
     var user: ILoggedInUser = <ILoggedInUser>{};
@@ -92,7 +90,7 @@ export class AuthService implements IHttpInterceptor {
       mpComponent: idToken.mpComponent,
       email: idToken.email,
       //TODO: Update with value from idToken
-      registrationComplete: false,
+      registrationComplete: true,
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
@@ -123,7 +121,7 @@ export class AuthService implements IHttpInterceptor {
   logout() {
     if (this.emProvider) {
       this.emProvider.clear(DataContext.User);
-      //this.emProvider.clear(DataContext.Student);
+      this.emProvider.clear(DataContext.Student);
     }
     
     this.global.user(null);
