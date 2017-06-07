@@ -35,10 +35,10 @@ export class SpInventory extends EntityBase {
         this.responseForAssessee.entityAspect.rejectChanges();
         this.effLevel = null;
         this.freqLevel = null;
-        this.behaveDisplayed = this.behaveDisplayed;
-        if (this.behaveDisplayed === true) {
-            this.calculateItemResponse();
-        }
+        this.behaveDisplayed = true;//this.behaveDisplayed;
+        // if (this.behaveDisplayed === true) {
+        //     this.calculateItemResponse();
+        // }
     }
 
     resetAssess(): void {
