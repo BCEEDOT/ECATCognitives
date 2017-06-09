@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   userRoles: ILoggedInUser;
   user: Person;
   prettyName: string;
-  isEditing: Boolean = false;
+  isEditing: boolean = false;
   gender = MpGender;
   profileLoading = 'profileLoading';
   payGradeList;
