@@ -3,6 +3,7 @@ import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
 import { UserAuthGuard } from '../core/services/user-auth-guard.service';
 import { CognitivesComponent } from './cognitives.component';
+import { UserDataContext } from "../core/services/data/user-data-context.service";
 import { ResultComponent } from './result/result.component';
 
 
@@ -11,18 +12,18 @@ const cognitivesRoutes: Routes = [
     path: 'cognitives',
     component: CognitivesComponent,
     canActivate: [UserAuthGuard],
-    children: [
-      {
-        path: 'result/:cogId',
-        component: ResultComponent,
-
-      }
-    ]
+    resolve: { results: 'resultsResolver' },
+  }, 
+  {
+    path: 'cognitive/result/:cogId',
+    component: ResultComponent,
   }
+
+
 ];
 
-export function resultResolver(cognitivesComponent: CognitivesComponent) {
-  return (route: ActivatedRouteSnapshot) => cognitivesComponent.activate();
+export function resultsResolver(userDataContext: UserDataContext) {
+  return (route: ActivatedRouteSnapshot) => userDataContext.getCogResults(true);
 }
 
 @NgModule({
@@ -34,7 +35,7 @@ export function resultResolver(cognitivesComponent: CognitivesComponent) {
   ],
   providers:
   [{
-    provide: 'resultResolver', useFactory: resultResolver, deps: [CognitivesComponent]
+    provide: 'resultsResolver', useFactory: resultsResolver, deps: [UserDataContext]
   }]
 })
 

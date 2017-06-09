@@ -123,14 +123,14 @@ export class UserDataContext extends BaseDataContext {
             });
     }
 
-    getCogResults(force: boolean, all: boolean): Promise<CogResponse[]> {
+    getCogResults(all: boolean, force?: boolean): Promise<Array<any>> {
 
          let query = EntityQuery.from(this.userApiResources.cogResults.resource).withParameters({force: force, all: all});
 
-        return <Promise<CogResponse[]>>this.manager.executeQuery(query)
+        return <Promise<Array<any>>>this.manager.executeQuery(query)
             .then(res => {
                 console.log('getCogResults is querying the server');
-                return res.results as CogResponse[]
+                return res.results;
             })
             .catch(e => {
                 console.log('Did not retrieve CogRespones' + e);

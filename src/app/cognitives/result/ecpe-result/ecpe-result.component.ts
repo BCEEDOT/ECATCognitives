@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import * as _ from "lodash";
 
 import { CogEcpeResult } from "../../../core/entities/user";
 import { CogResultsService } from "../../services/cog-results.service";
@@ -18,14 +20,21 @@ export class EcpeResultComponent implements OnInit {
   private ecpeSD = 124;
   //private ecpeLine = 49.9;
 
-  constructor( private cogResultsService: CogResultsService) { }
+  constructor( private cogResultsService: CogResultsService, private router: Router) { }
 
   ngOnInit() {
     
     //this.ecpeResult = this.cogResultsService.cogEcpeResult$.value;
     this.cogResultsService.cogEcpeResult$.subscribe(res => {
       this.ecpeResult = res;
-    })
+    });
+
+    console.log('This is ecpe result');
+    console.log(this.ecpeResult);
+
+    if (_.isEmpty(this.ecpeResult)) {
+        this.router.navigate(['/cognitives']);
+    }
     
     this.calcEcpeResult(this.ecpeResult);
     console.log(this.ecpeResult);

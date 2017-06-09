@@ -1,9 +1,13 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
-import { QueryResult} from 'breeze-client';
+import { QueryResult } from 'breeze-client';
+import { Observable } from 'rxjs/Observable';
+import * as _ from "lodash";
+import 'rxjs/add/operator/pluck';
+
 import { CogEcmspeResult, CogEcpeResult, CogEsalbResult, CogEtmpreResult } from "../core/entities/user";
 import { GlobalService } from "../core/services/global.service";
 import { UserDataContext } from "../core/services/data/user-data-context.service";
@@ -11,12 +15,12 @@ import { CogResultsService } from "./services/cog-results.service";
 import * as _mp from "../core/common/mapStrings";
 
 @Component({
-  //Selector only needed if another template is going to refernece
-  selector: 'qs-cognitives',
-  templateUrl: './cognitives.component.html',
-  styleUrls: ['./cognitives.component.scss']
-  //Limits only to current view and not children
-  //viewProviders: [ UsersService ],
+    //Selector only needed if another template is going to refernece
+    selector: 'qs-cognitives',
+    templateUrl: './cognitives.component.html',
+    styleUrls: ['./cognitives.component.scss']
+    //Limits only to current view and not children
+    //viewProviders: [ UsersService ],
 })
 export class CognitivesComponent implements OnInit {
 
@@ -24,6 +28,10 @@ export class CognitivesComponent implements OnInit {
     protected etmpreResult: CogEtmpreResult;
     protected esalbResult: CogEsalbResult;
     protected ecmspeResult: CogEcmspeResult;
+
+    cogResults$: Observable<Array<any>>;
+    cogResults: Array<any>;
+
 
     protected view = {
         list: CogViews.List,
@@ -36,150 +44,138 @@ export class CognitivesComponent implements OnInit {
     protected cogType = _mp.MpCogInstrumentType;
 
 
-  constructor(private titleService: Title,
-    private router: Router,
-    private loadingService: TdLoadingService,
-    private dialogService: TdDialogService,
-    private snackBarService: MdSnackBar,
-    private userDataContext: UserDataContext,
-    public media: TdMediaService,
-    private global: GlobalService,
-    private cogResultsService: CogResultsService) { }
+    constructor(private titleService: Title,
+        private route: ActivatedRoute,
+        private router: Router,
+        private loadingService: TdLoadingService,
+        private dialogService: TdDialogService,
+        private snackBarService: MdSnackBar,
+        private userDataContext: UserDataContext,
+        public media: TdMediaService,
+        private global: GlobalService,
+        private cogResultsService: CogResultsService) {
 
-  goBack(route: string): void {
-    this.router.navigate(['/']);
-  }
- 
-  ngOnInit(): void {
-    // broadcast to all listener observables when loading the page
-    this.media.broadcast();
-    this.titleService.setTitle('Cognitives');
-    this.activate();
-  }
+        this.cogResults$ = route.data.pluck('results');
 
-  activate(force?: boolean): void {
-    //maps to ng-template tag
-    this.loadingService.register('cognitives.list');
+    }
 
-    const that = this;
+    goBack(route: string): void {
+        this.router.navigate(['/']);
+    }
 
-    this.userDataContext.getCogResults (false, force )
-        .then(res => getCogResultsResponse(res))
-        .catch(e => {
-          this.loadingService.resolve('cognitives.list');
-          console.log('error getting cognitives');
-          console.log(e);
+    ngOnInit(): void {
+        // broadcast to all listener observables when loading the page
+        this.titleService.setTitle('Cognitives Center');
+        this.cogResults$.subscribe(results => {
+            this.cogResults = results;
         })
+        this.activate();
+    }
 
-  function getCogResultsResponse(result: Array<any>) {
-//RICKY
-//console.log(result);
-            if (result.length !== null) {
-                result.forEach(res => {
-                    if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.ecpe) 
-                    {
-                        that.cogResultsService.cogEcpeResult(res);
-                        that.ecpeResult = res;
-                        //that.calcEcpeResult();
-                    }
-                    if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.etmpre) 
-                    { 
-                        that.etmpreResult = res; 
-                    }
-                    if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.esalb) 
-                    { 
-                        that.esalbResult = res; 
-                    }
-                    if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.ecmspe) 
-                    { 
-                        that.ecmspeResult = res; 
-                    }
-                });
-            }
-//RICKY
-//console.log(that.ecpeResult);      
+    activate(force?: boolean): void {
+        //maps to ng-template tag
+        this.loadingService.register('cognitives.list');
+
+        const that = this;
+
+        if (this.cogResults.length !== null) {
+            this.cogResults.forEach(res => {
+                if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.ecpe) {
+                    that.cogResultsService.cogEcpeResult(res);
+                    that.ecpeResult = res;
+                    //that.calcEcpeResult();
+                }
+                if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.etmpre) {
+                    that.etmpreResult = res;
+                }
+                if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.esalb) {
+                    that.esalbResult = res;
+                }
+                if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.ecmspe) {
+                    that.ecmspeResult = res;
+                }
+            });
         }
 
+    }//end activate
+
+
+
+    /*    takeAssess(selType: string): void {
+            let assessModalOption: angular.ui.bootstrap.IModalSettings = {
+                controller: cogAssess.controllerId,
+                controllerAs: 'cogAssess',
+                bindToController: true,
+                keyboard: false,
+                backdrop: 'static',
+                templateUrl: '@[appCore]/feature/cog/assess.html'
+            };
     
-  }//end activate
-
-
-
-/*    takeAssess(selType: string): void {
-        let assessModalOption: angular.ui.bootstrap.IModalSettings = {
-            controller: cogAssess.controllerId,
-            controllerAs: 'cogAssess',
-            bindToController: true,
-            keyboard: false,
-            backdrop: 'static',
-            templateUrl: '@[appCore]/feature/cog/assess.html'
-        };
-
-        //let prevAttempt = (this[`${type}Result`]) ? this[`${type}Result`].attempt : 0;
-        var prevAttempt: number;
-        switch (selType) {
-            case _mp.MpCogInstrumentType.ecpe:
-                prevAttempt = (this.ecpeResult) ? this.ecpeResult.attempt : 0;
-                assessModalOption.resolve = {
-                    cogType: function () { return selType },
-                    prevAttempt: function () { return prevAttempt }
-                }
-
-                this.$uim.open(assessModalOption).result.then(res => {
-                    if (res !== null) {
-                        this.ecpeResult = res;
-                        this.calcEcpeResult();
-                        $('<style>#ecpeGraph:after{left:' + this.ecpeLine + '%}</style>').appendTo('head');
-                        this.activeView = this.view.ecpe;
+            //let prevAttempt = (this[`${type}Result`]) ? this[`${type}Result`].attempt : 0;
+            var prevAttempt: number;
+            switch (selType) {
+                case _mp.MpCogInstrumentType.ecpe:
+                    prevAttempt = (this.ecpeResult) ? this.ecpeResult.attempt : 0;
+                    assessModalOption.resolve = {
+                        cogType: function () { return selType },
+                        prevAttempt: function () { return prevAttempt }
                     }
-                });
-                break;
-            case _mp.MpCogInstrumentType.etmpre:
-                prevAttempt = (this.etmpreResult) ? this.etmpreResult.attempt : 0;
-                assessModalOption.resolve = {
-                    cogType: function () { return selType },
-                    prevAttempt: function () { return prevAttempt }
-                }
-
-                this.$uim.open(assessModalOption).result.then(res => {
-                    if (res !== null) {
-                        this.etmpreResult = res;
-                        this.activeView = this.view.etmpre;
+    
+                    this.$uim.open(assessModalOption).result.then(res => {
+                        if (res !== null) {
+                            this.ecpeResult = res;
+                            this.calcEcpeResult();
+                            $('<style>#ecpeGraph:after{left:' + this.ecpeLine + '%}</style>').appendTo('head');
+                            this.activeView = this.view.ecpe;
+                        }
+                    });
+                    break;
+                case _mp.MpCogInstrumentType.etmpre:
+                    prevAttempt = (this.etmpreResult) ? this.etmpreResult.attempt : 0;
+                    assessModalOption.resolve = {
+                        cogType: function () { return selType },
+                        prevAttempt: function () { return prevAttempt }
                     }
-                });
-                break;
-            case _mp.MpCogInstrumentType.esalb:
-                prevAttempt = (this.esalbResult) ? this.esalbResult.attempt : 0;
-                assessModalOption.resolve = {
-                    cogType: function () { return selType },
-                    prevAttempt: function () { return prevAttempt }
-                }
-
-                this.$uim.open(assessModalOption).result.then(res => {
-                    if (res !== null) {
-                        this.esalbResult = res;
-                        this.activeView = this.view.esalb;
+    
+                    this.$uim.open(assessModalOption).result.then(res => {
+                        if (res !== null) {
+                            this.etmpreResult = res;
+                            this.activeView = this.view.etmpre;
+                        }
+                    });
+                    break;
+                case _mp.MpCogInstrumentType.esalb:
+                    prevAttempt = (this.esalbResult) ? this.esalbResult.attempt : 0;
+                    assessModalOption.resolve = {
+                        cogType: function () { return selType },
+                        prevAttempt: function () { return prevAttempt }
                     }
-                });
-                break;
-            case _mp.MpCogInstrumentType.ecmspe:
-                prevAttempt = (this.ecmspeResult) ? this.ecmspeResult.attempt : 0;
-                assessModalOption.resolve = {
-                    cogType: function () { return selType },
-                    prevAttempt: function () { return prevAttempt }
-                }
-
-                this.$uim.open(assessModalOption).result.then(res => {
-                    if (res !== null) {
-                        this.ecmspeResult = res;
-                        this.activeView = this.view.ecmspe;
+    
+                    this.$uim.open(assessModalOption).result.then(res => {
+                        if (res !== null) {
+                            this.esalbResult = res;
+                            this.activeView = this.view.esalb;
+                        }
+                    });
+                    break;
+                case _mp.MpCogInstrumentType.ecmspe:
+                    prevAttempt = (this.ecmspeResult) ? this.ecmspeResult.attempt : 0;
+                    assessModalOption.resolve = {
+                        cogType: function () { return selType },
+                        prevAttempt: function () { return prevAttempt }
                     }
-                });
-                break;
-            default:
-                return null;
-        }
-    }*/
+    
+                    this.$uim.open(assessModalOption).result.then(res => {
+                        if (res !== null) {
+                            this.ecmspeResult = res;
+                            this.activeView = this.view.ecmspe;
+                        }
+                    });
+                    break;
+                default:
+                    return null;
+            }
+        }*/
 
 
 }//end CognitivesComponent

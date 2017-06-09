@@ -12,21 +12,22 @@ export class ResultComponent implements OnInit {
 
 
 
-private cogResultId: string;
+  private cogResultId: string;
 
-  constructor(    
-       private route: ActivatedRoute) {
-        this.route.params.subscribe(params => {
-            this.cogResultId = params['cogId'];
-        } );
-     }
-    
-
-
-  ngOnInit() {
+  constructor(
+    private route: ActivatedRoute) {
+    this.route.params.subscribe(params => {
+      this.cogResultId = params['cogId'];
+    });
   }
 
 
-   
+
+  ngOnInit() {
+    
+  }
+
+
+
 
 }
