@@ -15,6 +15,7 @@ import { ProfileModule } from "./profile/profile.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
+import { CognitivesModule } from "./cognitives/cognitives.module";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -39,7 +40,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     ProfileModule,
     DashboardModule,
     BrowserAnimationsModule,
-    AppRoutingModule, //Add feature modules/routes before main routing module
+    AppRoutingModule, 
+    CognitivesModule, //Add feature modules/routes before main routing module
   ], // modules needed to run this module
   providers: [
     {

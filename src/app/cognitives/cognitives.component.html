@@ -1,0 +1,237 @@
+<td-layout-nav logo="assets:covalent">
+
+    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+        <span fxFlex></span>
+        <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+            <md-icon>chrome_reader_mode</md-icon>
+        </a>
+        <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+            <md-icon svgIcon="assets:github"></md-icon>
+        </a>
+    </div>
+
+    <h2>Cognitive Assessment Center</h2>
+
+    <md-card tdMediaToggle="gt-xs">
+        <ng-template tdLoading="userIsLoaded">
+            <!-- e-CPE -->
+            <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center">
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/AI.png" height="100" width="200">
+                    </a>
+                </div>
+                <div fxFlex="60">
+                    <h4>Electronic Cognitive Preference Estimator (e-CPE)</h4>
+                    <p>One of the key areas of focus within EMPE is that of helping you as an individual and as a team member to become a more effective problem solver. This is aided by having a better understanding of the cognitive processes we all use – and the variations that exist in the way each person uses them.</p>
+                </div>
+                <div fxFlex="15" *ngIf="!ecpeResult"> 
+                    <button md-raised-button color="primary"> Start </button> :
+                </div>
+                <div fxFlex="15" *ngIf="ecpeResult"> 
+                    <button md-raised-button color="primary" [routerLink]= "['result/' + 1]"> Results </button>
+                </div>
+        </div>
+            <!-- e-SALB --> 
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Compass.png" height="100" width="200">
+                    </a>
+                </div>
+                <div fxFlex="60">
+                    <h4 class="f-400">Electronic Self Assessment of Leadership Behavior (e-SALB)</h4>
+                    <p>One of the key areas of focus within EPME is that of helping you as an individual and as a team member to become a more effective leader in differing and challenging environments/situations. The e-SALB instrument was developed to help accomplish this outcome. This self-assessment instrument helps students identify their strengths and areas for improvement based on the Full Range Leadership Development (FRLD) model.</p>
+                </div>
+                <div fxFlex="15" *ngIf="!esalbResult"> 
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+                <div fxFlex="15" *ngIf="esalbResult"> 
+                    <button md-raised-button color="primary"> Results </button>
+                </div>
+            </div>
+            <!-- e-CMSPE -->
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Scale.png" height="100" width="200">
+                    </a>
+                </div>
+                <div fxFlex="60">
+                    <h4 class="f-400">Electronic Conflict Management Style Preference Estimator (e-CMSPE)</h4>
+                    <p>Gaining an understanding of which conflict management styles you prefer can help you become an even more effective leader by capitalizing on your strengths and by focusing on development needs, experiences, assignments and training and educational opportunities to help overcome weaknesses.</p>
+                </div>
+                <div fxFlex="15" *ngIf="!ecmspeResult"> 
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+                <div fxFlex="15" *ngIf="ecmspeResult"> 
+                    <button md-raised-button color="primary"> Results </button>
+                </div>
+            </div>
+            <!-- e-TMPRE -->
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Team.png" height="100" width="200">
+                    </a>
+                </div>
+                <div fxFlex="60">
+                            <h4 class="f-400">Electronic Team Members Preferred Role Estimator (e-TMPRE)</h4>
+                            <p>Becoming aware of your own team member role preferences, as well as the preferences of other members of a team, can help you: better understand why you prefer a particular role on a team, contribute to the team’s ability to solve Problem A while managing problem B, enhance the overall team performance (i.e. make the sum greater than the whole), and lead teams more effectively.</p>
+                </div>
+                <div fxFlex="15" *ngIf="!etmpreResult"> 
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+                <div fxFlex="15" *ngIf="etmpreResult"> 
+                    <button md-raised-button color="primary"> Results </button>
+                </div>
+            </div>
+        </ng-template>
+    </md-card>
+</td-layout-nav>
+    <!--<div class="container animated fadeInRight">
+    <div class="block-header">
+        <h2>Cognitive Assessment Center</h2>
+    </div>
+
+    <div class="card" id="crses-main">
+        <div class="listview lv-bordered lv-lg">
+            <div class="row p-t-10">
+                <div class="lv-body">
+                    <div class="col-md-10">
+                        <div class="row p-l-30">
+                            <div class="col-xs-3 p-t-20">
+                                <a href="#" class="thumbnail">
+                                    <img src="assets/images/AI.png" height="300" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="col-xs-8 text-justify p-t-15">
+                                <h4 class="f-400">Electronic Cognitive Preference Estimator (e-CPE)</h4>
+                                <p>One of the key areas of focus within EMPE is that of helping you as an individual and as a team member to become a more effective problem solver. This is aided by having a better understanding of the cognitive processes we all use – and the variations that exist in the way each person uses them.</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                   <div class="col-md-2 text-left p-t-30 m-t-30">
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="!cog.ecpeResult" ng-click="cog.takeAssess(cog.cogType.ecpe)">Start</button>
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="cog.ecpeResult" ng-click="cog.activeView = cog.view.ecpe">Results</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-t-10">
+                <div class="lv-body">
+                    <div class="col-md-10">
+                        <div class="row p-l-30">
+                            <div class="col-xs-3 p-t-20">
+                                <a href="#" class="thumbnail">
+                                    <img src="assets/images/Compass.png" height="300" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="col-xs-8 text-justify p-t-15">
+                                <h4 class="f-400">Electronic Self Assessment of Leadership Behavior (e-SALB)</h4>
+                                <p>One of the key areas of focus within EPME is that of helping you as an individual and as a team member to become a more effective leader in differing and challenging environments/situations. The e-SALB instrument was developed to help accomplish this outcome. This self-assessment instrument helps students identify their strengths and areas for improvement based on the Full Range Leadership Development (FRLD) model.</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                   <div class="col-md-2 text-left p-t-30 m-t-30">
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="!cog.esalbResult" ng-click="cog.takeAssess(cog.cogType.esalb)">Start</button>
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="cog.esalbResult" ng-click="cog.activeView = cog.view.esalb">Results</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-t-10">
+                <div class="lv-body">
+                    <div class="col-md-10">
+                        <div class="row p-l-30">
+                            <div class="col-xs-3 p-t-20">
+                                <a href="#" class="thumbnail">
+                                    <img src="assets/images/Scale.png" height="300" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="col-xs-8 text-justify p-t-15">
+                                <h4 class="f-400">Electronic Conflict Management Style Preference Estimator (e-CMSPE)</h4>
+                                <p>Gaining an understanding of which conflict management styles you prefer can help you become an even more effective leader by capitalizing on your strengths and by focusing on development needs, experiences, assignments and training and educational opportunities to help overcome weaknesses.</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                   <div class="col-md-2 text-left p-t-30 m-t-30">
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="!cog.ecmspeResult" ng-click="cog.takeAssess(cog.cogType.ecmspe)">Start</button>
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="cog.ecmspeResult" ng-click="cog.activeView = cog.view.ecmspe">Results</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-t-10">
+                <div class="lv-body">
+                    <div class="col-md-10">
+                        <div class="row p-l-30">
+                            <div class="col-xs-3 p-t-20">
+                                <a href="#" class="thumbnail">
+                                    <img src="assets/images/Team.png" height="300" width="200" alt="">
+                                </a>
+                            </div>
+                            <div class="col-xs-8 text-justify p-t-15">
+                                <h4 class="f-400">Electronic Team Members Preferred Role Estimator (e-TMPRE)</h4>
+                                <p>Becoming aware of your own team member role preferences, as well as the preferences of other members of a team, can help you: better understand why you prefer a particular role on a team, contribute to the team’s ability to solve Problem A while managing problem B, enhance the overall team performance (i.e. make the sum greater than the whole), and lead teams more effectively.</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                 <div class="col-md-2 text-left p-t-30 m-t-30">
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="!cog.etmpreResult" ng-click="cog.takeAssess(cog.cogType.etmpre)">Start</button>
+                        <button class="btn btn-primary btn-lg waves-effect" ng-if="cog.etmpreResult" ng-click="cog.activeView = cog.view.etmpre">Results</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>-->
+
+
+
+
+
+
+
+
+
+    <!-- </div>
+    <div class="card" id="grps-main">
+        <div class="listview lv-bordered lv-lg">
+            <div class="lv-header-alt clearfix p-b-15">
+                <a href="javascript:void(0)"
+                   type="button"
+                   class="btn btn-link pull-left"
+                   ng-if="cog.activeView!==cog.view.list"
+                   ng-click="cog.activeView=cog.view.list">
+                    <i class="zmdi zmdi-arrow-left zmdi-hc-fw"></i>Back to List
+                </a>
+            </div>
+        </div>
+        <div ng-switch="cog.activeView">
+            <div ng-switch-when="0">
+                <div ng-include="'@[appCore]/feature/cognitives/cognitives.list.html'"></div>
+            </div>
+            <div ng-switch-when="1">
+                <div ng-include="'@[appCore]/feature/cognitives/cognitives.ecpe.html'"></div>
+            </div>
+            <div ng-switch-when="2">
+                <div ng-include="'@[appCore]/feature/cognitives/cognitives.etmpre.html'"></div>
+            </div>
+            <div ng-switch-when="3">
+                <div ng-include="'@[appCore]/feature/cognitives/cognitives.esalb.html'"></div>
+            </div>
+            <div ng-switch-when="4">
+                <div ng-include="'@[appCore]/feature/cognitives/cognitives.ecmspe.html'"></div>
+            </div>
+        </div>-->

@@ -6,7 +6,7 @@ import {
 
 import { BaseDataContext } from '../../../shared/services';
 import { EmProviderService } from '../em-provider.service';
-import { Person, ProfileStudent, ProfileFaculty, CogInstrument, RoadRunner } from '../../entities/user';
+import { Person, ProfileStudent, ProfileFaculty, CogResponse, CogInstrument, RoadRunner } from '../../entities/user';
 import { IUserApiResources } from "../../entities/client-models";
 import { MpEntityType, MpInstituteRole } from "../../common/mapStrings";
 import { DataContext } from '../../../app-constants';
@@ -96,7 +96,8 @@ export class UserDataContext extends BaseDataContext {
     //TODO: Delete before going to production. Test method only
     getUsers(): Promise<Person[]> {
 
-        let query = EntityQuery.from('getusers');
+       let query = EntityQuery.from('getusers');
+       
 
         return <Promise<Person[]>>this.manager.executeQuery(query)
             .then(res => {
@@ -122,6 +123,19 @@ export class UserDataContext extends BaseDataContext {
             });
     }
 
+    getCogResults(force: boolean, all: boolean): Promise<CogResponse[]> {
 
+         let query = EntityQuery.from(this.userApiResources.cogResults.resource).withParameters({force: force, all: all});
+
+        return <Promise<CogResponse[]>>this.manager.executeQuery(query)
+            .then(res => {
+                console.log('getCogResults is querying the server');
+                return res.results as CogResponse[]
+            })
+            .catch(e => {
+                console.log('Did not retrieve CogRespones' + e);
+                return Promise.reject(e);
+            });
+    }
 
 }
