@@ -23,6 +23,9 @@ import { AuthService } from "./core/services/auth.service";
 export class AppComponent implements OnInit {
 
   persona: ILoggedInUser = <ILoggedInUser>{};
+  isFaculty: boolean = false;
+  isStudent: boolean = false;
+  isLmsAdmin: boolean = false;
 
   constructor(private _iconRegistry: MdIconRegistry,
     private router: Router,
@@ -67,16 +70,16 @@ export class AppComponent implements OnInit {
     //Point to nightly build of covalent and see if that fixes the issue. 
     router.events.
       filter(e => isStart(e) || isEnd(e))
-        .map(e => isStart(e))
-        .distinctUntilChanged()
-        .subscribe(showLoader => {
-              if (showLoader) {
-                //this.loadingService.register();
-                console.log('loader ON');
-              } else {
-                //this.loadingService.resolve();
-                console.log('loader OFF');
-              }
+      .map(e => isStart(e))
+      .distinctUntilChanged()
+      .subscribe(showLoader => {
+        if (showLoader) {
+          //this.loadingService.register();
+          console.log('loader ON');
+        } else {
+          //this.loadingService.resolve();
+          console.log('loader OFF');
+        }
       });
 
 
@@ -109,16 +112,12 @@ export class AppComponent implements OnInit {
     this.global.persona.subscribe((user) => {
       console.log("User has been updated in app Component")
       this.persona = user;
+      if (this.persona) {
+        this.isStudent = this.persona.isStudent;
+        this.isFaculty = this.persona.isFaculty;
+        this.isLmsAdmin = this.persona.isLmsAdmin;
+      }
     });
-
-    // this.global.user$.subscribe((user) => {
-    //   this.persona = user;
-    // });
-
-    // this.global.isFaculty$.subscribe((role) => {
-    //   this.isFaculty = role;
-    // });
-
 
   }
 

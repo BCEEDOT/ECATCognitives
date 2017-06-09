@@ -29,6 +29,16 @@ export interface IStudentApiResources extends IApiResources {
     wgResult: IApiResource;
 }
 
+export interface IFacultyApiResources extends IApiResources {
+    initCourses: IApiResource;
+    course: IApiResource;
+    workGroup: IApiResource;
+    instrument: IApiResource;
+    wgComment: IApiResource;
+    wgResult: IApiResource;
+    currentWorkGroup: IApiResource;
+}
+
 export interface IMilPayGrade {
     civ: { designator: string };
     fn: { designator: string };

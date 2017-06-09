@@ -1,4 +1,4 @@
-<td-layout-nav logo="assets:covalent" toolbarTitle="Assessment Center">
+<td-layout-nav logo="assets:covalent" toolbarTitle="WorkGroup Center">
   <div td-toolbar-content layout="row" layout-align="center center" flex>
     <span flex></span>
     <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
@@ -11,29 +11,16 @@
   <div class="width">
     <div align="end" class="pad-right-md pad-top-sm">
       <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
-      {{activeWorkGroup?.displayName}}
+       {{activeCourse?.displayName}}
       <md-icon class="md-24">expand_more</md-icon>
     </button>
       <md-menu x-position="before" #posXMenu="mdMenu" class="before">
-        <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup, false)">
-          {{workGroup.displayName}}
-          </button>
-      </md-menu>
-
-      <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
-        <md-icon>menu</md-icon>
-      </button>
-      <md-menu #menu="mdMenu" x-position="before" class="before">
         <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
           {{course.displayName}}
-          </button>
+        </button>
       </md-menu>
       <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
     </div>
   </div>
   <router-outlet></router-outlet>
 </td-layout-nav>
-
-<a md-fab color="accent" class="mat-fab-bottom-right" (click)="assessCompare()">
-  <md-icon>show_chart</md-icon>
-</a>

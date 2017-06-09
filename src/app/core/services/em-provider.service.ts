@@ -103,7 +103,7 @@ export class EmProviderService {
   }
 
   clear(ecatContext: DataContext): void {
-    if (EmProviderService.masterManagers[ecatContext].manager) {
+    if (EmProviderService.masterManagers[ecatContext]) {
       EmProviderService.masterManagers[ecatContext].manager.clear();
     }
   }
