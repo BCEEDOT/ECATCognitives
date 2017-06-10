@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { TdLoadingService } from "@covalent/core";
 import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/groupBy';
+import 'rxjs/add/operator/mergeAll';
 
 
 import { GlobalService, ILoggedInUser } from "./core/services/global.service";
@@ -50,9 +52,9 @@ export class AppComponent implements OnInit {
     this._iconRegistry.addSvgIconInNamespace('assets', 'querygrid',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/querygrid.svg'));
 
-    router.events.subscribe(e => {
+    // router.events.subscribe(e => {
 
-    });
+    // });
 
     // router.events.
     //   // Groups all events by id and returns Observable<Observable<Event>>.
@@ -74,10 +76,14 @@ export class AppComponent implements OnInit {
       .distinctUntilChanged()
       .subscribe(showLoader => {
         if (showLoader) {
-          //this.loadingService.register();
+
+          //Temporary workaround for Teradata beta5
+          Promise.resolve(null).then(() => {this.loadingService.register(); })
+          
           console.log('loader ON');
         } else {
-          //this.loadingService.resolve();
+          //Temporary workaround for Teradata beta5
+          Promise.resolve(null).then(() => {this.loadingService.resolve(); })
           console.log('loader OFF');
         }
       });
