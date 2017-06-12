@@ -1,0 +1,26 @@
+<td-layout-nav logo="assets:covalent" toolbarTitle="WorkGroup Center">
+  <div td-toolbar-content layout="row" layout-align="center center" flex>
+    <span flex></span>
+    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+      <md-icon>chrome_reader_mode</md-icon>
+    </a>
+    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+      <md-icon svgIcon="assets:github"></md-icon>
+    </a>
+  </div>
+  <div class="width">
+    <div align="end" class="pad-right-md pad-top-sm">
+      <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
+       {{activeCourse?.displayName}}
+      <md-icon class="md-24">expand_more</md-icon>
+    </button>
+      <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
+          {{course.displayName}}
+        </button>
+      </md-menu>
+      <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</td-layout-nav>

@@ -1,0 +1,37 @@
+<!--<div fxLayout="row" fxLayoutAlign="end start">
+  <button md-icon-button (click)="dialogRef.close()"><md-icon>clear</md-icon></button>
+</div>-->
+<div fxLayout="row" class="pad-bottom-xl" >
+  <td-chips [chipAddition]="chipAddition"
+            [items]="items"
+            [(ngModel)]="itemsRequireMatch"
+            placeholder="Click to add"
+            [readOnly]="readOnly"
+            (add)="add($event)" 
+            (remove)="remove($event)"
+            requireMatch>
+  </td-chips>
+</div>
+
+<ngx-charts-line-chart
+      [view]="view"
+      [scheme]="blueOrangeScheme"
+      [results]="multi"
+      [gradient]="gradient"
+      [xAxis]="showXAxis"
+      [yAxis]="showYAxis"
+      [legend]="showLegend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [autoScale]="autoScale"
+      [yAxisTickFormatting]="ratings"
+      [activeEntries]="single"
+      (select)="onSelect($event)">
+</ngx-charts-line-chart>
+
+<!--<button md-icon-button (click)="reset()">Reset</button>-->
+
+
+

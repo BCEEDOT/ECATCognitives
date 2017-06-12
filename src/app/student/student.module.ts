@@ -11,12 +11,15 @@ import { ListComponent } from './list/list.component';
 import { ResultsComponent } from './results/results.component';
 import { AssessComponent } from './shared/assess/assess.component';
 import { WorkGroupService } from "./services/workgroup.service";
+import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
+import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
 
 @NgModule({
     imports: [
         StudentRoutingModule,
         SharedModule,
-        EntityStudentModule
+        EntityStudentModule,
+        SpProviderModule
     ],
     declarations: [
         StudentComponent,
@@ -24,12 +27,16 @@ import { WorkGroupService } from "./services/workgroup.service";
         ListComponent,
         ResultsComponent,
         AssessComponent,
+        AssessCompareDialog,
     ],
     exports: [],
     providers: [
         StudentAuthGuard,
         StudentDataContext,
         WorkGroupService
+    ],
+    entryComponents: [
+        AssessCompareDialog
     ]
 })
 

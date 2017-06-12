@@ -1,26 +1,26 @@
-<md-card *ngIf="!hasAcknowledged">
+<md-card *ngIf="!user?.hasAcknowledged">
   <md-card-title>Instructions</md-card-title>
   <md-divider></md-divider>
   <md-card-content>
-     <div [innerHTML]="instructions"></div>
+    <div [innerHTML]="instructions"></div>
   </md-card-content>
   <md-divider></md-divider>
   <md-card-actions>
-    <button md-button color="primary" class="text-upper" (click)="agree();">I AGREE</button>
+    <button md-button color="primary" class="text-upper" (click)="user.hasAcknowledged=true;">I AGREE</button>
     <button md-button class="text-upper">Cancel</button>
   </md-card-actions>
 </md-card>
-  
-<md-card *ngIf="hasAcknowledged">
-  <md-tab-group md-stretch-tabs>
-      <md-tab>
-        <ng-template md-tab-label>Assessment</ng-template>
-        <assess [workGroup]="activeWorkGroup"></assess>
-      </md-tab>
-      <md-tab>
-        <ng-template md-tab-label>Stratification</ng-template>
-          <strat></strat>
-      </md-tab>
-    </md-tab-group>
-</md-card>
 
+<md-card *ngIf="user?.hasAcknowledged">
+  <md-tab-group md-stretch-tabs>
+    <md-tab>
+      <ng-template md-tab-label>Assessment</ng-template>
+      <assess [workGroup]="activeWorkGroup" (assessCompare)="assessCompare()"></assess>
+    </md-tab>
+    <md-tab>
+      <ng-template md-tab-label>Stratification</ng-template>
+      <strat [workGroup]="activeWorkGroup" (assessCompare)="assessCompare()"></strat>
+    </md-tab>
+  </md-tab-group>
+
+</md-card>

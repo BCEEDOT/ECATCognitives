@@ -6,16 +6,16 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface ILoggedInUser {
   person: Person,
-  isLoggedIn: Boolean,
-  isStudent: Boolean,
-  isFaculty: Boolean,
-  isLmsAdmin: Boolean,
+  isLoggedIn: boolean,
+  isStudent: boolean,
+  isFaculty: boolean,
+  isLmsAdmin: boolean,
 }
 
 @Injectable()
 export class GlobalService {
 
-  userDataContextActivated: BehaviorSubject<Boolean> = new BehaviorSubject(false);
+  userDataContextActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
   persona: BehaviorSubject<ILoggedInUser> = new BehaviorSubject({} as ILoggedInUser);
 
   user(user: ILoggedInUser) {

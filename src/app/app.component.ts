@@ -1,6 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MdIconRegistry } from '@angular/material';
+import {
+  RouterModule, Routes, Router,
+  ActivatedRouteSnapshot, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, Event
+} from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { TdLoadingService } from "@covalent/core";
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/groupBy';
+import 'rxjs/add/operator/mergeAll';
+
 
 import { GlobalService, ILoggedInUser } from "./core/services/global.service";
 import { Person } from "./core/entities/user/person";
@@ -14,8 +25,13 @@ import { AuthService } from "./core/services/auth.service";
 export class AppComponent implements OnInit {
 
   persona: ILoggedInUser = <ILoggedInUser>{};
+  isFaculty: boolean = false;
+  isStudent: boolean = false;
+  isLmsAdmin: boolean = false;
 
   constructor(private _iconRegistry: MdIconRegistry,
+    private router: Router,
+    private loadingService: TdLoadingService,
     private _domSanitizer: DomSanitizer,
     private global: GlobalService,
     private authService: AuthService) {
@@ -36,24 +52,78 @@ export class AppComponent implements OnInit {
     this._iconRegistry.addSvgIconInNamespace('assets', 'querygrid',
       this._domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/querygrid.svg'));
 
+    // router.events.subscribe(e => {
+
+    // });
+
+    // router.events.
+    //   // Groups all events by id and returns Observable<Observable<Event>>.
+    //   groupBy(e => e.id).
+    //   // Reduces events and returns Observable<Observable<Event[]>>.
+    //   // The inner observable has only one element.
+    //   map(collectAllEventsForNavigation).
+    //   // Returns Observable<Event[]>.
+    //   mergeAll().
+    //   subscribe((es: Event[]) => {
+    //     console.log("navigation events", es);
+    //   });
+
+
+    //Point to nightly build of covalent and see if that fixes the issue. 
+    router.events.
+      filter(e => isStart(e) || isEnd(e))
+      .map(e => isStart(e))
+      .distinctUntilChanged()
+      .subscribe(showLoader => {
+        if (showLoader) {
+
+          //Temporary workaround for Teradata beta5
+          Promise.resolve(null).then(() => {this.loadingService.register(); })
+          
+          console.log('loader ON');
+        } else {
+          //Temporary workaround for Teradata beta5
+          Promise.resolve(null).then(() => {this.loadingService.resolve(); })
+          console.log('loader OFF');
+        }
+      });
+
+
+    function isStart(e: Event): boolean {
+      return e instanceof NavigationStart;
+    }
+    function isEnd(e: Event): boolean {
+      return e instanceof NavigationEnd ||
+        e instanceof NavigationCancel ||
+        e instanceof NavigationError;
+    }
+
+    function collectAllEventsForNavigation(obs: Observable<Event>):
+      Observable<Event[]> {
+      let observer: Observer<Event[]>;
+      const events = [];
+      const sub = obs.subscribe(e => {
+        events.push(e);
+        if (isEnd(e)) {
+          observer.next(events);
+          observer.complete();
+        }
+      });
+      return new Observable<Event[]>(o => observer = o);
+    }
   }
 
   ngOnInit() {
 
-    console.log("App on init is firing");
     this.global.persona.subscribe((user) => {
-     console.log("User has been updated in app Component")
+      console.log("User has been updated in app Component")
       this.persona = user;
+      if (this.persona) {
+        this.isStudent = this.persona.isStudent;
+        this.isFaculty = this.persona.isFaculty;
+        this.isLmsAdmin = this.persona.isLmsAdmin;
+      }
     });
-
-    // this.global.user$.subscribe((user) => {
-    //   this.persona = user;
-    // });
-
-    // this.global.isFaculty$.subscribe((role) => {
-    //   this.isFaculty = role;
-    // });
-
 
   }
 

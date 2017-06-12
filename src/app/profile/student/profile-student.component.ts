@@ -13,7 +13,7 @@ import { UserDataContext } from "../../core/services/data/user-data-context.serv
 export class ProfileStudentComponent implements OnInit {
   @Input() profile: ProfileStudent;
 
-  isEditing: Boolean = false;
+  isEditing: boolean = false;
   profileLoading = 'studentProfileLoading';
 
   constructor(private loadingService: TdLoadingService, private snackBarService: MdSnackBar, 

@@ -21,7 +21,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   userRoles: ILoggedInUser;
   user: Person;
   prettyName: string;
-  isEditing: Boolean = false;
+  isEditing: boolean = false;
   gender = MpGender;
   profileLoading = 'profileLoading';
   payGradeList;
@@ -52,7 +52,6 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.affiliationList = this.ecLocal.milAffil;
     this.componentList = this.ecLocal.milComponent;
     this.user = this.global.persona.value.person;
-    console.log(this.user.registrationComplete)
   };
 
   ngAfterViewInit() {
