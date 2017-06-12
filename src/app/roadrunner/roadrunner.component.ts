@@ -9,48 +9,32 @@ import { GlobalService, ILoggedInUser } from "../core/services/global.service";
 import { UserDataContext } from "../core/services/data/user-data-context.service";
 import {RoadrunnerService } from './services/roadrunner.service';
 
-
-//import { DialogComponent } from "../roadrunner/roadrunner.dialog.component";
-
 @Component({
-  //Selector only needed if another template is going to refernece
   selector: 'qs-roadrunner',
   templateUrl: './roadrunner.component.html',
   styleUrls: ['./roadrunner.component.scss']
   //Limits only to current view and not children
-  //viewProviders: [ UsersService ],
+
 })
 export class RoadrunnerComponent implements OnInit {
 
-  // searchTerm: string = '';
-  // fromRow: number = 1;
-  // currentPage: number = 1;
-  // pageSize: number = 5;
-  // sortBy: string = 'LeaveDate';
-  // sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
+
+  roadRunnerLoading = 'roadRunnerLoading';
 
   constructor(private titleService: Title,
     private router: Router,
     private loadingService: TdLoadingService,
-    //private dialogService: TdDialogService,
     private snackBarService: MdSnackBar,
-    //private dialog: MdDialog,
     private userDataContext: UserDataContext,
     private _dataTableService: TdDataTableService,
-    //private dialogComponent: DialogComponent,
-    //private usersService: UsersService,
     public media: TdMediaService,
     private global: GlobalService,
     private roadRunnerService: RoadrunnerService
   ) { }
 
 
-
-
   roadRunnerInfos: RoadRunner [];
-
   people: Person[] = [];
-
   persona: ILoggedInUser = <ILoggedInUser>{};
 
 
@@ -61,11 +45,16 @@ export class RoadrunnerComponent implements OnInit {
 
 
   signOut(edit): void {
+
+    if(edit.signOut){
+      edit.prevSignOut = true;
+    }
+
     edit.signOut = !edit.signOut;
-    this.loadingService.register('updateRoadrunner');
+    this.loadingService.register(this.roadRunnerLoading);
     this.userDataContext.commit()
       .then((res)=>{
-        this.loadingService.resolve('updateRoadrunner');
+        this.loadingService.resolve(this.roadRunnerLoading);
         console.log('check roadrunner database');
       })
 
@@ -73,38 +62,60 @@ export class RoadrunnerComponent implements OnInit {
   }
 
   clone(edit){
-  let newAddress = this.userDataContext.addRoadRunner();
+    let newAddress = this.userDataContext.addRoadRunner();
+    newAddress.location = edit.location;
+    newAddress.phoneNumber = edit.phoneNumber;
+    newAddress.prevSignOut = false;
 
- newAddress.location = edit.location;
- newAddress.phoneNumber = edit.phoneNumber;
- newAddress.prevSignOut = false;
+    this.roadRunnerInfos.push(newAddress);
 
-this.roadRunnerInfos.push(newAddress);
-
-  console.log(newAddress);
-  console.log(this.roadRunnerInfos)
-}
-  // collapsedEvent(): void {
-
-  // }
+    console.log(newAddress);
+    console.log(this.roadRunnerInfos);
+  }
 
 
   ngOnInit(): void {
 
-
-
-    // broadcast to all listener observables when loading the page
     this.media.broadcast();
     this.titleService.setTitle('ECAT Users');
+    //this.loadingService.register(this.roadRunnerLoading);
     this.loadUsers();
-
     this.getRoadRunnerInfo();
-
-
     this.roadRunnerService.roadRunnerData.subscribe((road)=>{
       console.log("roadrunner update")
       this.roadRunnerInfos = road;
       console.log(this.roadRunnerInfos)
+
+      if (this.roadRunnerInfos.length > 0){
+        for (let info of this.roadRunnerInfos){
+            var templocation = info.location;
+
+            console.log(templocation)
+            console.log(info.id)
+          var arrayOfLocation = templocation.split("\n");
+          console.log(arrayOfLocation);
+
+          info['splitLocation'] = arrayOfLocation;
+        }
+
+      console.log(this.roadRunnerInfos)
+
+      }
+      //Trying to break up the locations
+
+      //var templocation = this.roadRunnerInfos[1].location;
+
+      //console.log(templocation)
+     //var arrayOfLocation = templocation.split("\n");
+     //console.log(arrayOfLocation);
+
+
+            // this.inventoryList.forEach(item => {
+            //     item.responseForAssessee.entityAspect.rejectChanges();
+            //     item['isChanged'] = false;
+            //     if (item['showBehavior']) { this.closeEditAssessItem(item, false) }
+            // });
+
     })
 
 
@@ -135,16 +146,13 @@ this.roadRunnerInfos.push(newAddress);
   }
 
   loadUsers(): void {
-    //maps to ng-template tag
-    this.loadingService.register('person.list');
+
     this.userDataContext.getUsers()
       .then((people) => {
         this.people = people;
-        this.loadingService.resolve('person.list');
         console.log(this.people);
       })
       .catch(e => {
-        this.loadingService.resolve('person.list');
         console.log('error getting users');
         console.log(e);
       })

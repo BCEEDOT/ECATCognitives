@@ -33,61 +33,64 @@
     </md-toolbar>
 
 
+    <div *tdLoading="'roadRunnerLoading'">
+      <md-list class="will-load">
 
-    <md-list class="will-load">
+      
+        <div *ngIf="roadRunnerInfos.length > 0">
 
-
-      <div *ngIf="roadRunnerInfos.length > 0">
-
-        <ng-template let-rrData let-last="last" ngFor [ngForOf]="roadRunnerInfos">
-
-
-          <div *ngIf="!rrData?.prevSignOut">
-            <md-list-item>
-
-              <h3 md-line> {{rrData?.location}} </h3>
-
-              <p md-line hide-gt-xs class="md-caption" [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }} </p>
-              <span md-line hide-gt-xs>
-                <a md-icon-button  color="primary" [routerLink]="[rrData.id]">
-                  <md-icon >edit</md-icon>
-                </a>
-                <a *ngIf="!rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">
-                  <md-icon >directions_run</md-icon>
-                </a>
-                <a *ngIf="rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">
-                  <md-icon >keyboard_return</md-icon>
-
-                </a>
-            </span>
+          <ng-template let-rrData let-last="last" ngFor [ngForOf]="roadRunnerInfos">
 
 
-              <span hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
-              <div class="md-caption tc-grey-500" flex-gt-xs="50" >
-                Start Date: 
-                <span [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }}</span>
-          </div>
-          </span>
+            <div *ngIf="!rrData?.prevSignOut">
+              <md-list-item>
+                <!--<div *ngIf="rrData.splitLocation.length > 1">-->
+                <h4 md-line *ngIf="rrData.splitLocation.length > 1"> {{rrData?.splitLocation[0]}} </h4>
+                <p md-line *ngIf="rrData.splitLocation.length > 1">{{rrData?.splitLocation[1]}}</p>
+                <!--</div>-->
+                <h4 md-line *ngIf="rrData.splitLocation.length === 1"> {{rrData?.splitLocation[0]}}</h4>
+                <p md-line></p>
+                <p md-line hide-gt-xs class="md-caption" [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }} </p>
+                <span md-line hide-gt-xs>
+                  <a md-icon-button  color="primary" [routerLink]="[rrData.id]">
+                    <md-icon >edit</md-icon>
+                  </a>
+                  <a *ngIf="!rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">
+                    <md-icon >directions_run</md-icon>
+                  </a>
+                  <a *ngIf="rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">
+                    <md-icon >keyboard_return</md-icon>
 
-          <div class=" example-button-row" hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
-            <span style="padding-right:10px;">
-              <button md-raised-button color="primary" [routerLink]="[rrData.id]" >View/Edit</button>
-            </span>
-            <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign Out</button>
-            <button *ngIf="rrData?.signOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign In</button>
-          </div>
-          </md-list-item>
-          <md-divider *ngIf="!last" md-inset></md-divider>
-      </div>
-      </ng-template>
-      </div>
+                  </a>
+                </span>
 
-      <div *ngIf="roadRunnerInfos.length === 0">
-        <h2>You have no locations loaded</h2>
-      </div>
 
-    </md-list>
+                <span hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
+                <div class="md-caption tc-grey-500" flex-gt-xs="50" >
+                  Start Date: 
+                  <span [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }}</span>
+                </div>
+                </span>
 
+                <div class=" example-button-row" hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
+                  <span style="padding-right:10px;">
+                    <button md-raised-button color="primary" [routerLink]="[rrData.id]" >View/Edit</button>
+                  </span>
+                  <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign Out</button>
+                  <button *ngIf="rrData?.signOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign In</button>
+                </div>
+              </md-list-item>
+              <md-divider *ngIf="!last" md-inset></md-divider>
+            </div>
+          </ng-template>
+        </div>
+
+        <div *ngIf="roadRunnerInfos.length === 0">
+          <h2>You have no locations loaded</h2>
+        </div>
+      
+      </md-list>
+    </div>
   </md-card>
 
   <md-card *ngIf="persona.isStudent" tdMediaToggle="gt-xs" [mediaClasses]="['push']">
@@ -110,7 +113,18 @@
           <div *ngIf="rrData?.prevSignOut">
             <md-list-item>
 
-              <h3 md-line> {{rrData?.location}} </h3>
+                <!--<div *ngIf="rrData.splitLocation.length > 1">-->
+                <h4 md-line *ngIf="rrData.splitLocation.length > 1"> {{rrData?.splitLocation[0]}} </h4>
+                <p md-line *ngIf="rrData.splitLocation.length > 1">{{rrData?.splitLocation[1]}}</p>
+                <!--</div>-->
+                <h4 md-line *ngIf="rrData.splitLocation.length === 1"> {{rrData?.splitLocation[0]}}</h4>
+                <p md-line></p>
+
+
+
+              <!--<h4 md-line>{{rrData?.location}} </h4>
+              <p md-line></p>-->
+
 
               <p md-line hide-gt-xs class="md-caption" [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }} </p>
               <span md-line hide-gt-xs>
@@ -120,13 +134,13 @@
             </span>
 
               <span flex></span>
-            <span hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
+              <span hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
                   <div class="md-caption tc-grey-500" flex-gt-xs="50" >
                     Start Date: 
                     <span [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }}</span>
-                  </div>
+          </div>
 
-            </span>
+          </span>
 
           <span hide-xs flex-gt-xs="60" flex-xs="40" layout-gt-xs="row" style="justify-content:space-around;">
 

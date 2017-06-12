@@ -4,15 +4,8 @@ import { UserDataContext } from "../../core/services/data/user-data-context.serv
 import { RoadRunner } from "../../core/entities/user";
 import { Router } from '@angular/router';
 
-//import {MaterialModule, MdNativeDateModule} from'@angular/material';
-// @import '~@angular/material/core/theming/prebuilt/deeppurple-amber';
-// @import '~angular-material-datepicker/src/datepicker/calendar.component.scss';
+
 import { ActivatedRoute } from '@angular/router';
-
-
-
-//import { GlobalService, ILoggedInUser } from "../core/services/global.service";
-//@include calendar-theme($theme);
 
 @Component({
     //selector: 'roadrunner-details',
@@ -113,12 +106,24 @@ export class RoadrunnerDetailsComponent implements OnInit {
     save() {
         this.userDataContext.commit()
             .then((res) => {
-                //this.loadingService.resolve('updateRoadrunner');
                 console.log('check roadrunner database');
+                this.router.navigate(['roadrunner/']);
             })
 
-        this.router.navigate(['roadrunner/']);
+        
     }
 
+
+    delete(){
+
+        this.oneEvent.entityAspect.setDeleted();
+
+        this.userDataContext.commit()
+        .then((res) =>{
+            console.log('check roadrunner database');
+            this.router.navigate(['roadrunner/']);
+        })
+
+    }
 
 }

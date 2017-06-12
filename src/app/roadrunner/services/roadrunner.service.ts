@@ -41,6 +41,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export class RoadrunnerService{
 
+roadRunnerLoading = 'roadRunnerLoading';
+
 roadRunnerData:  BehaviorSubject<RoadRunner[]> = new BehaviorSubject({} as RoadRunner[]);
 
 road(road: RoadRunner[]){
@@ -67,17 +69,17 @@ getRoadRunnerInfo(): void {
 //getRoadRunnerInfo(): void{
 //this.loadRoadRunnerInfo();
 
-    this.loadingService.register('roadrunnerdata.list');
+    this.loadingService.register(this.roadRunnerLoading);
     this.userDataContext.getRoadRunnerInfos()
       .then((roadRunnerData) => {
         this.road(roadRunnerData);
-        this.loadingService.resolve('roadrunnerdata.list')
+        this.loadingService.resolve(this.roadRunnerLoading);
         
         console.log(this.roadRunnerData.value);
         //return Promise.resolve(this.roadRunnerData);
       })
       .catch(e => {
-        this.loadingService.resolve('roadrunnerdata.list');
+        this.loadingService.resolve(this.roadRunnerLoading);
         console.log('error getting roadrunner info');
         console.log(e);
       })
@@ -143,52 +145,52 @@ console.log(this.roadInfo)
 }
 
 
- const USERDATA: any[] = [
-    {
-      'id': 1,
-      'location': 'My house',
-      'phoneNumber': '1111111111',
-      'LeaveDate': '3 May 1990',
-      'ReturnDate': '5 May 1990',
-      'editing': false,
-      'details':false,
-      'signedOut':false,
-      'prevSignOut': false
-    },
-    {
-      'id': 2,
-      'location': 'My Girls house',
-      'phoneNumber': '5555555555',
-      'LeaveDate': '26 May 1990',
-      'ReturnDate': '28 May 1990',
-      'editing': false,
-      'details':false,
-      'signedOut':false,
-      'prevSignOut': false
-    },
-    {
-      'id': 3,
-      'location': 'Another Girls house',
-      'phoneNumber': '666666666',
-      'LeaveDate': '26 April 2014',
-      'ReturnDate': '28 April 2014',
-      'editing': false,
-      'details':false,
-      'signedOut':false,
-      'prevSignOut': true
-    },
-        {
-      'id': 4,
-      'location': 'home',
-      'phoneNumber': '123456789',
-      'LeaveDate': '26 April 2014',
-      'ReturnDate': '28 April 2014',
-      'editing': false,
-      'details':false,
-      'signedOut':true,
-      'prevSignOut': false
-    }
+//  const USERDATA: any[] = [
+//     {
+//       'id': 1,
+//       'location': 'My house',
+//       'phoneNumber': '1111111111',
+//       'LeaveDate': '3 May 1990',
+//       'ReturnDate': '5 May 1990',
+//       'editing': false,
+//       'details':false,
+//       'signedOut':false,
+//       'prevSignOut': false
+//     },
+//     {
+//       'id': 2,
+//       'location': 'My Girls house',
+//       'phoneNumber': '5555555555',
+//       'LeaveDate': '26 May 1990',
+//       'ReturnDate': '28 May 1990',
+//       'editing': false,
+//       'details':false,
+//       'signedOut':false,
+//       'prevSignOut': false
+//     },
+//     {
+//       'id': 3,
+//       'location': 'Another Girls house',
+//       'phoneNumber': '666666666',
+//       'LeaveDate': '26 April 2014',
+//       'ReturnDate': '28 April 2014',
+//       'editing': false,
+//       'details':false,
+//       'signedOut':false,
+//       'prevSignOut': true
+//     },
+//         {
+//       'id': 4,
+//       'location': 'home',
+//       'phoneNumber': '123456789',
+//       'LeaveDate': '26 April 2014',
+//       'ReturnDate': '28 April 2014',
+//       'editing': false,
+//       'details':false,
+//       'signedOut':true,
+//       'prevSignOut': false
+//     }
 
 
-  ]
+//   ]
 
