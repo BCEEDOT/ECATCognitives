@@ -137,7 +137,7 @@ export class FacultyDataContextService extends BaseDataContext {
     const that = this;
     let workgroup = this.manager.getEntityByKey(MpEntityType.workGroup, grpId) as WorkGroup;
 
-    if (workgroup && workgroup.groupMembers.length > 0) {
+    if (workgroup && workgroup.groupMembers.length > 0 && !forceRefresh) {
       console.log('WorkGroup loaded from local cache');
       return Promise.resolve(workgroup);
     }

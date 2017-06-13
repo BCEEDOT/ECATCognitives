@@ -16,16 +16,7 @@ import { ProfileStudent } from './ProfileStudent';
 import { EcLocalDataService } from "../../common/static";
 import * as mp from "../../common/mapStrings"
 
-interface ICrseStudInGrpStatus {
-    assessComplete: boolean;
-    isPeerAllComplete: boolean;
-    stratComplete: boolean;
-    stratedPosition: number;
-    missingAssessItems: Array<number>;
-    hasComment: boolean;
-}
-
-/*interface IFacCrseStudInGrpStatus {
+/*interface ICrseStudInGrpStatus {
     assessComplete: boolean;
     stratComplete: boolean;
     missingAssessItems: Array<number>;
@@ -37,9 +28,9 @@ interface ICrseStudInGrpStatus {
     gaveCompositeScore: number;
     stratedPosition: number;
     hasComment: boolean;
-}*/
+}
 
-/*interface ISpGaveStatusBreakOut {
+interface ISpGaveStatusBreakOut {
     gaveHE: number;
     gaveE: number;
     gaveIE: number;
@@ -90,13 +81,14 @@ export class CrseStudentInGroup extends EntityBase {
 
     numOfStratIncomplete = null;
     numberOfAuthorComments = null;
-    statusOfStudent: any;
+    //statusOfStudent: any;
 
    constructor() {
        super();
    }
 
     protected sop: any;
+    protected sos: any;
 
    get rankName(): string {
         let _salutation: string;
@@ -107,8 +99,6 @@ export class CrseStudentInGroup extends EntityBase {
     }
 
     get statusOfPeer(): any {
-
-
         if (!this.workGroup) {
             return null;
         }
@@ -120,17 +110,34 @@ export class CrseStudentInGroup extends EntityBase {
         return this.sop;
     }
 
+    get statusOfStudent(): any {
+        if (!this.workGroup){
+            return null;
+        }
+        if (this.sos) {
+            return this.sos;
+        }
+        this.sos = {};
+        this.updateStatusOfStudent();
+        return this.sos;
+
+    }
+
     updateStatusOfPeer(): any {
         if (!this.sop) this.sop = {};
         const groupMembers = this.workGroup.groupMembers.filter(gm => !gm.entityAspect.entityState.isDetached());
 
         groupMembers.forEach((gm) => {
+            let cummScore = 0;
 
-            const sigStatus: ICrseStudInGrpStatus = {
+            const sigStatus: any = {
                 assessComplete: false,
                 stratComplete: false,
                 isPeerAllComplete: false,
                 missingAssessItems: [],
+                breakout: { IE: 0, ND: 0, E: 0, HE: 0 },
+                breakOutChartData: [],
+                compositeScore: 0,
                 stratedPosition: null,
                 hasComment: false
             }
@@ -154,7 +161,43 @@ export class CrseStudentInGroup extends EntityBase {
                 .filter(response => response.assessorPersonId === this.studentId &&
                     response.assesseePersonId === gm.studentId);
 
-           
+            responseList.forEach(response => {
+
+                switch (response.mpItemResponse) {
+
+                    case knownReponse.iea:
+                        sigStatus.breakout.IE += 1;
+                        cummScore += 0;
+                        break;
+                    case knownReponse.ieu:
+                        sigStatus.breakout.IE += 1;
+                        cummScore += 1;
+                        break;
+                    case knownReponse.nd:
+                        cummScore += 2;
+                        sigStatus.breakout.ND += 1;
+                        break;
+                    case knownReponse.eu:
+                        cummScore += 3;
+                        sigStatus.breakout.E += 1;
+                        break;
+                    case knownReponse.ea:
+                        cummScore += 4;
+                        sigStatus.breakout.E += 1;
+                        break;
+                    case knownReponse.heu:
+                        cummScore += 5;
+                        sigStatus.breakout.HE += 1;
+                        break;
+                    case knownReponse.hea:
+                        cummScore += 6;
+                        sigStatus.breakout.HE += 1;
+                        break;
+                    default:
+                        break;
+                }
+            });
+
             if (this.workGroup.assignedSpInstr) {
                 this.workGroup
                     .assignedSpInstr
@@ -166,12 +209,27 @@ export class CrseStudentInGroup extends EntityBase {
                         }
                     });
 
+                cummScore = (cummScore / (this.workGroup.assignedSpInstr.inventoryCollection.length * 6)) * 100;
+                //sigStatus.compositeScore = parseFloat(cummScore.toFixed(2));
+                sigStatus.compositeScore = Math.round(cummScore);
             }
 
-            
-
             sigStatus.assessComplete = sigStatus.missingAssessItems.length === 0;
+
             sigStatus.isPeerAllComplete = sigStatus.assessComplete && sigStatus.stratComplete;
+
+            const { HE, E, IE, ND } = sigStatus.breakout;
+
+            sigStatus.breakOutChartData.push({ name: 'Highly Effective', value: HE });
+            sigStatus.breakOutChartData.push({ name: 'Effective', value: E });
+            sigStatus.breakOutChartData.push({ name: 'Ineffective', value: IE });
+            sigStatus.breakOutChartData.push({ name: 'Not Displayed', value: ND });
+
+            // sigStatus.breakOutChartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
+            // sigStatus.breakOutChartData.push({ label: 'Effective', data: E, color: '#00AA58' });
+            // sigStatus.breakOutChartData.push({ label: 'Ineffective', data: IE, color: '#AA0000' });
+            // sigStatus.breakOutChartData.push({ label: 'Not Display', data: ND, color: '#AAAAAA' });
+
             this.sop[gm.studentId.toString()] = sigStatus;
         });
         return this.sop;
@@ -272,10 +330,14 @@ export class CrseStudentInGroup extends EntityBase {
         const { HE, E, IE, ND } = bo;
 
         const chartData = [];
-        chartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
-        chartData.push({ label: 'Effective', data: E, color: '#00AA58' });
-        chartData.push({ label: 'Ineffective', data: IE, color: '#AA0000' });
-        chartData.push({ label: 'Not Display', data: ND, color: '#AAAAAA' });
+        chartData.push({ name: 'Highly Effective', value: HE });
+        chartData.push({ name: 'Effective', value: E });
+        chartData.push({ name: 'Ineffective', value: IE });
+        chartData.push({ name: 'Not Displayed', value: ND });
+        // chartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
+        // chartData.push({ label: 'Effective', data: E, color: '#00AA58' });
+        // chartData.push({ label: 'Ineffective', data: IE, color: '#AA0000' });
+        // chartData.push({ label: 'Not Display', data: ND, color: '#AAAAAA' });
 
 
         let totalMarkings = 0;
@@ -341,13 +403,16 @@ export class CrseStudentInGroup extends EntityBase {
         const { gaveHE, gaveE, gaveIE, gaveND } = gaveBo;
 
         const gaveChartData = [];
+        gaveChartData.push({ name: 'Highly Effective', value: gaveHE });
+        gaveChartData.push({ name: 'Effective', value: gaveE });
+        gaveChartData.push({ name: 'Ineffective', value: gaveIE });
+        gaveChartData.push({ name: 'Not Displayed', value: gaveND });
+        // gaveChartData.push({ label: 'Highly Effective', data: gaveHE, color: '#00308F' });
+        // gaveChartData.push({ label: 'Effective', data: gaveE, color: '#00AA58' });
+        // gaveChartData.push({ label: 'Ineffective', data: gaveIE, color: '#AA0000' });
+        // gaveChartData.push({ label: 'Not Display', data: gaveND, color: '#AAAAAA' });
 
-        gaveChartData.push({ label: 'Highly Effective', data: gaveHE, color: '#00308F' });
-        gaveChartData.push({ label: 'Effective', data: gaveE, color: '#00AA58' });
-        gaveChartData.push({ label: 'Ineffective', data: gaveIE, color: '#AA0000' });
-        gaveChartData.push({ label: 'Not Display', data: gaveND, color: '#AAAAAA' });
-
-        this.statusOfStudent =  {
+        this.sos =  {
             assessComplete: missingItems.length === 0,
             stratComplete: stratComplete,
             hasComment: hasComment,
@@ -360,6 +425,8 @@ export class CrseStudentInGroup extends EntityBase {
             gaveCompositeScore: gaveComposite,
             stratedPosition: stratedPosition
         }
+
+        return this.sos;
     }
 
     /*private updateResult(): ecat.entity.ext.IStudentDetailResult {
@@ -403,16 +470,6 @@ export class CrseStudentInGroup extends EntityBase {
         if (this._resultForStud) return this._resultForStud
         this._resultForStud = {} as any;
         return this.updateResult();
-    }
-
-    get statusOfStudent(): ecat.entity.ext.IFacCrseStudInGrpStatus {
-
-        if (this.statusOfStudent) {
-            return this.statusOfStudent;
-        }
-        this.updateStatusOfStudent();
-        return this.statusOfStudent;
-
     }*/
 
     static initializer(entity: CrseStudentInGroup) { }
