@@ -18,9 +18,7 @@ export class ListComponent implements OnInit {
 
   workGroups: WorkGroup[];
   workGroupOrig: WorkGroup[];
-  strings: string[] = [
-    'Flight 1'
-  ];
+  strings: string[] = [];
 
   filteredStrings: string[] = [];
   stringsModel: string[] = [];
@@ -40,7 +38,6 @@ export class ListComponent implements OnInit {
       this.course = course;
       this.activate();
     });
-
 
   }
 
