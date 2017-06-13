@@ -49,7 +49,13 @@ export class StatusComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.workGroup$.subscribe(wg => {this.workGroup = wg;});
+    this.workGroup$.subscribe(wg => {
+      this.workGroup = wg;
+      this.activate();
+    });
+  }
+
+  activate() {
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as Array<CrseStudExtended>;
 
@@ -58,7 +64,7 @@ export class StatusComponent implements OnInit {
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
 
-      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
+      //gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
 
       gm.check = {
         isSelfDone: isSelfDone,
@@ -73,11 +79,11 @@ export class StatusComponent implements OnInit {
       }
     });
 
-    this.facIncomplete = this.members.some(mem => {
-      if (mem.statusOfStudent.spResponses.length == 0) {return true;}
-      if (!mem.statusOfStudent.stratComplete) {return true;}
-      return false;
-    });
+    // this.facIncomplete = this.members.some(mem => {
+    //   if (mem.statusOfStudent.spResponses.length == 0) {return true;}
+    //   if (!mem.statusOfStudent.stratComplete) {return true;}
+    //   return false;
+    // });
 
     if (this.workGroup.canPublish && !this.facIncomplete){
       this.canReview = true;

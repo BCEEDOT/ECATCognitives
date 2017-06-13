@@ -13,9 +13,9 @@
       </md-list-item>
       <md-list-item *ngFor="let student of members">
         <span>{{student.rankName}}</span>
-        <span><md-icon [ngClass]="student.check.isSelfDone ? 'md-check' : 'md-clear'"></md-icon></span>
-        <span><md-icon [ngClass]="student.check.sp.isDone ? 'md-check' : 'md-clear'" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above"></md-icon></span>
-        <span><md-icon [ngClass]="student.check.strat.isDone ? 'md-check' : 'md-clear'" mdTooltip={{stuent.check.strat.count}} mdToolTipPosition="above"></md-icon></span>
+        <span><md-icon *ngIf="student.check.isSelfDone">check</md-icon><md-icon *ngIf="!student.check.isSelfDone">clear</md-icon></span>
+        <span><md-icon *ngIf="student.check.sp.isDone">check</md-icon><md-icon *ngIf="!student.check.sp.isDone" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above">clear</md-icon></span>
+        <span><md-icon *ngIf="student.check.strat.isDone">check</md-icon><md-icon *ngIf="!student.check.strat.isDone" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above">clear</md-icon></span>
         <span>{{student.numberOfAuthorComments}}</span>
         <span>Chart placeholder</span>
       </md-list-item>

@@ -42,7 +42,7 @@ const facultyRoutes: Routes = [
               {
                 path: 'list/:crsId/status/:wrkGrpId',
                 component: StatusComponent,
-                resolve: { workgroup: 'workgroupResolver'}
+                resolve: { workGroup: 'facWorkGroupResolver'}
               }
               // {
               //   path: 'results/:crsId/:wrkGrpId',
@@ -88,7 +88,7 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.workGroups(+route.parent.params['workgroup']);
 // }
 
-export function workGroupResolver(facultyDataContext: FacultyDataContextService) {
+export function facWorkGroupResolver(facultyDataContext: FacultyDataContextService) {
   return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
 }
 
@@ -114,6 +114,9 @@ export function workGroupResolver(facultyDataContext: FacultyDataContextService)
     {
       provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
     },
+    {
+      provide: 'facWorkGroupResolver', useFactory: facWorkGroupResolver, deps: [FacultyDataContextService]
+    }
     // {
     //   provide: 'spAssessResolver', useFactory: spAssessResolver, deps: [StudentDataContext]
     // }
