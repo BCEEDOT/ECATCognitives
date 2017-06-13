@@ -1,5 +1,3 @@
-<ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
-
   <md-list>
     <md-list-item>
       <span fxFlex="60"></span>
@@ -68,4 +66,3 @@
     <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
     <button md-raised-button color="accent" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
   </md-list-item>
-</ng-template>

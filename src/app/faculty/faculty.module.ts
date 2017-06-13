@@ -9,7 +9,6 @@ import { EntityFacultyModule } from "../core/entities/faculty";
 import { ListComponent } from './workgroups/list/list.component';
 import { FacultyDataContextService } from "./services/faculty-data-context.service";
 
-
 @NgModule({
   imports: [
     FacultyRoutingModule,
@@ -19,11 +18,13 @@ import { FacultyDataContextService } from "./services/faculty-data-context.servi
   declarations: [
     FacultyComponent,
     WorkGroupsComponent,
-    ListComponent
+    ListComponent,
   ], 
   providers: [
     FacultyAuthGuardService,
-    FacultyDataContextService
+    FacultyDataContextService,
+  ], 
+  exports: [
   ]
 })
 export class FacultyModule { }

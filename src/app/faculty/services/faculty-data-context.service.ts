@@ -1,94 +1,92 @@
 import { Injectable } from '@angular/core';
 import {
   EntityManager, NamingConvention, DataService, DataType, MetadataStore,
-  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, QueryResult
+  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, QueryResult,
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course } from "../../core/entities/faculty";
+import { Course, WorkGroup } from '../../core/entities/faculty';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { IFacultyApiResources } from "../../core/entities/client-models";
-import { MpEntityType, MpCommentFlag } from "../../core/common/mapStrings";
+import { IFacultyApiResources } from '../../core/entities/client-models';
+import { MpEntityType, MpCommentFlag } from '../../core/common/mapStrings';
 import { DataContext } from '../../app-constants';
-import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
+import { GlobalService, ILoggedInUser } from '../../core/services/global.service';
 
 @Injectable()
 export class FacultyDataContextService extends BaseDataContext {
 
-
   private facultyApiResource: IFacultyApiResources = {
     initCourses: {
       returnedEntityType: MpEntityType.course,
-      resource: 'GetCourses'
+      resource: 'GetCourses',
     },
     course: {
       returnedEntityType: MpEntityType.course,
-      resource: 'ActiveCourse'
+      resource: 'ActiveCourse',
     },
     workGroup: {
       returnedEntityType: MpEntityType.workGroup,
-      resource: 'ActiveWorkGroup'
+      resource: 'ActiveWorkGroup',
     },
     instrument: {
       returnedEntityType: MpEntityType.spInstr,
-      resource: 'SpInstrument'
+      resource: 'SpInstrument',
     },
     wgComment: {
       returnedEntityType: MpEntityType.spComment,
-      resource: 'ActiveWgSpComment'
+      resource: 'ActiveWgSpComment',
     },
     wgFacComment: {
       returnedEntityType: MpEntityType.facSpComment,
-      resource: 'ActiveWgFacComment'
+      resource: 'ActiveWgFacComment',
     },
     wgResult: {
       returnedEntityType: MpEntityType.workGroup,
-      resource: 'ActiveWgSpResult'
+      resource: 'ActiveWgSpResult',
     },
     currentWorkGroup: {
       returnedEntityType: MpEntityType.workGroup,
-      resource: 'GetRoadRunnerWorkGroups'
-    }
-  }
+      resource: 'GetRoadRunnerWorkGroups',
+    },
+  };
 
   constructor(emProvider: EmProviderService, private global: GlobalService) {
     super(DataContext.Faculty, emProvider);
   }
 
   getActiveCourse(courseId: number, forceRefresh?: boolean): Promise<Course | Promise<void>> {
-    const that = this;
+    const that: any = this;
     let course: Course;
 
 
     course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
 
-    const params = { courseId: courseId }
+    const params: any = { courseId: courseId };
 
-    let query = EntityQuery.from(this.facultyApiResource.course.resource).withParameters(params);
+    let query: any = EntityQuery.from(this.facultyApiResource.course.resource).withParameters(params);
 
-    const resource = this.facultyApiResource.course.resource;
+    const resource: any = this.facultyApiResource.course.resource;
 
     return <Promise<Course>>this.manager.executeQuery(query)
       .then(fetchActiveCourseResponse)
-      .catch(this.queryFailed)
+      .catch(this.queryFailed);
 
     function fetchActiveCourseResponse(data: QueryResult): Course {
       course = data.results[0] as Course;
 
       if (!course) {
-        const error = {
-          errorMessage: 'Could not find this active Course on the server'
-        }
+        const error: any = {
+          errorMessage: 'Could not find this active Course on the server',
+        };
 
-        console.log('Query succeeded, but the course did not return a result')
+        console.log('Query succeeded, but the course did not return a result');
         return Promise.reject(() => error) as any;
       }
 
-
-      const workGroups = course.workGroups;
+      const workGroups: WorkGroup[] = course.workGroups;
 
       if (workGroups && workGroups.length > 0) {
-        //that.isLoaded.course[course.id] = true;
+        // that.isLoaded.course[course.id] = true;
       }
 
       console.log('Course loaded from remote store', course, false);
@@ -98,36 +96,36 @@ export class FacultyDataContextService extends BaseDataContext {
   }
 
   initCourses(forceRefresh?: boolean): Promise<Course[]> {
-    const that = this;
-    let courses: Array<Course>;
+    const that: any = this;
+    let courses: Course[];
 
-    courses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
+    courses = this.manager.getEntities(MpEntityType.course) as Course[];
 
     if (courses.length > 0) {
       console.log('Courses loaded from local cache');
       return Promise.resolve(courses);
     }
 
-    const api = this.facultyApiResource;
+    const api: any = this.facultyApiResource;
 
-    let query = EntityQuery.from(this.facultyApiResource.initCourses.resource);
+    let query: any = EntityQuery.from(this.facultyApiResource.initCourses.resource);
 
 
     return <Promise<Course[]>>this.manager.executeQuery(query)
       .then(initCoursesReponse)
-      .catch(e => {
+      .catch((e: Event) => {
         console.log('Did not retrieve courses' + e);
         return Promise.reject(e);
       });
 
 
-    function initCoursesReponse(data: QueryResult): Array<Course> {
-      courses = data.results as Array<Course>;
+    function initCoursesReponse(data: QueryResult): Course[] {
+      courses = data.results as Course[]
 
-      courses.forEach(course => {
-        const workGroups = course.workGroups;
+      courses.forEach((course: Course) => {
+        const workGroups: WorkGroup[] = course.workGroups;
         if (workGroups && workGroups.length > 0) {
-          //that.isLoaded.course[course.id] = true;
+          // that.isLoaded.course[course.id] = true;
         }
       });
       console.log('Courses loaded from remote store', courses, false);
