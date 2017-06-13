@@ -21,7 +21,7 @@
               <md-icon> assessment </md-icon>
               <span class="md-subhead"> Assess </span>
             </button>
-            <button md-menu-item> 
+            <button md-menu-item [routerLink]="['status/' + workGroup.workGroupId]"> 
               <md-icon> check_circle </md-icon>
               <span class="md-subhead"> Status </span>
             </button>

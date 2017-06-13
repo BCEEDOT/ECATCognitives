@@ -5,7 +5,7 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup } from '../../core/entities/faculty';
+import { Course, WorkGroup } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { MpEntityType, MpCommentFlag } from '../../core/common/mapStrings';
@@ -131,6 +131,40 @@ export class FacultyDataContextService extends BaseDataContext {
       console.log('Courses loaded from remote store', courses, false);
       return courses;
     }
+  }
+
+  fetchActiveWorkGroup(crsId: number, grpId: number, forceRefresh?: boolean): Promise<WorkGroup> {
+    const that = this;
+    let workgroup = this.manager.getEntityByKey(MpEntityType.workGroup, grpId) as WorkGroup;
+
+    if (workgroup && workgroup.groupMembers.length > 0) {
+      console.log('WorkGroup loaded from local cache');
+      return Promise.resolve(workgroup);
+    }
+
+    const params = { courseId: crsId, workGroupId: grpId };
+
+    let query = EntityQuery.from(this.facultyApiResource.workGroup.resource).withParameters(params);
+
+    return <Promise<WorkGroup>>this.manager.executeQuery(query)
+      .then(fetchActiveWorkGroupResponse)
+      .catch(this.queryFailed);
+
+    function fetchActiveWorkGroupResponse(data: QueryResult){
+      let retGroup = data.results[0] as WorkGroup;
+
+      if (!retGroup){
+        const error = {
+          errorMessage: 'Could not find this active workgroup on the server'
+        }
+        console.log('Query succeeded, but no workgroup data was returned', data, false);
+        return Promise.reject(() => error) as any;
+      }
+
+      console.log(retGroup);
+      return retGroup
+    }
+
   }
 
 }

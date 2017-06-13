@@ -8,6 +8,7 @@ import { FacultyAuthGuardService } from "./services/faculty-auth-guard.service";
 import { EntityFacultyModule } from "../core/entities/faculty";
 import { ListComponent } from './workgroups/list/list.component';
 import { FacultyDataContextService } from "./services/faculty-data-context.service";
+import { StatusComponent } from './workgroups/status/status.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { FacultyDataContextService } from "./services/faculty-data-context.servi
     FacultyComponent,
     WorkGroupsComponent,
     ListComponent,
+    StatusComponent
   ], 
   providers: [
     FacultyAuthGuardService,

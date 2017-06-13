@@ -7,6 +7,7 @@ import { WorkGroupsComponent } from './workgroups/work-groups.component';
 import { FacultyComponent } from './faculty.component';
 import { ListComponent } from './workgroups/list/list.component';
 import { GlobalService } from '../core/services/global.service';
+import { StatusComponent } from './workgroups/status/status.component'
 import { Course } from '../core/entities/faculty';
 
 const facultyRoutes: Routes = [
@@ -37,7 +38,12 @@ const facultyRoutes: Routes = [
                 //   { path: 'comment', component: CommentComponent}
                 // ]
                 resolve: { course: 'courseResolver' },
-              // },
+              },
+              {
+                path: 'list/:crsId/status/:wrkGrpId',
+                component: StatusComponent,
+                resolve: { workGroup: 'facWorkGroupResolver'}
+              }
               // {
               //   path: 'results/:crsId/:wrkGrpId',
               //   component: ResultsComponent,
@@ -52,7 +58,7 @@ const facultyRoutes: Routes = [
               //   path: '',
               //   component: StudentComponent,
               //   resolve: { assess: 'assessmentResolver'},
-               }
+              //}
 
             ]
           }
@@ -82,9 +88,9 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.workGroups(+route.parent.params['workgroup']);
 // }
 
-// export function workGroupResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.workgroup(+route.params['id']);
-// }
+export function facWorkGroupResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
+}
 
 // export function listResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
@@ -108,6 +114,9 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
     {
       provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
     },
+    {
+      provide: 'facWorkGroupResolver', useFactory: facWorkGroupResolver, deps: [FacultyDataContextService]
+    }
     // {
     //   provide: 'spAssessResolver', useFactory: spAssessResolver, deps: [StudentDataContext]
     // }
