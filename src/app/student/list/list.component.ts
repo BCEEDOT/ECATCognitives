@@ -18,7 +18,6 @@ import { StudentDataContext } from "../services/student-data-context.service";
 })
 export class ListComponent implements OnInit {
 
-  
   lastCloseResult: string;
   actionsAlignment: string;
   user: CrseStudentInGroup;
@@ -27,6 +26,7 @@ export class ListComponent implements OnInit {
   activeWorkGroup$: Observable<WorkGroup>;
   paramWorkGroupId: number;
   paramCourseId: number;
+  isLoading: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
@@ -45,13 +45,10 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.activeWorkGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
       this.activate();
     });
-
-    
   }
 
   private activate(force?: boolean): void {
@@ -59,7 +56,6 @@ export class ListComponent implements OnInit {
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
-    console.log(this.user);
 
   }
 

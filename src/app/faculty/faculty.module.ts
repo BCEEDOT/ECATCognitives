@@ -10,7 +10,6 @@ import { ListComponent } from './workgroups/list/list.component';
 import { FacultyDataContextService } from "./services/faculty-data-context.service";
 import { StatusComponent } from './workgroups/status/status.component';
 
-
 @NgModule({
   imports: [
     FacultyRoutingModule,
@@ -25,7 +24,9 @@ import { StatusComponent } from './workgroups/status/status.component';
   ], 
   providers: [
     FacultyAuthGuardService,
-    FacultyDataContextService
+    FacultyDataContextService,
+  ], 
+  exports: [
   ]
 })
 export class FacultyModule { }
