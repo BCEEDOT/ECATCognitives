@@ -55,12 +55,7 @@ export class AssessCompareDialog implements OnInit {
 
   add(value: string): void {
 
-    let multiTest; 
-    
-    multiTest = this.multi;
-
-    console.log(this.multiOriginal);
-
+    let multiTest = this.multi;
     this.multi = this.multiOriginal.filter(data => {
 
       let match = false;

@@ -17,15 +17,13 @@ import { Course, WorkGroup } from '../../../core/entities/faculty';
 export class ListComponent implements OnInit {
 
   workGroups: WorkGroup[];
+  workGroupOrig: WorkGroup[];
   strings: string[] = [
-    'Flight1',
-    'Flight2',
-    'Flight3',
-    'Flight4',
+    'Flight 1'
   ];
 
-  filteredStrings: string[];
-  stringsModel: string[] = this.strings.slice(0, 0);
+  filteredStrings: string[] = [];
+  stringsModel: string[] = [];
 
   course$: Observable<Course>;
   course: Course;
@@ -37,17 +35,21 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filterStrings('');
+
     this.course$.subscribe((course: Course) => {
       this.course = course;
       this.activate();
     });
+
+
   }
 
   activate(): void {
 
+    const grpName = {};
+  
     if (this.course.workGroups) {
-      this.workGroups = this.course.workGroups;
+      this.workGroups = this.workGroupOrig = this.course.workGroups;
       this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
         if (wgA.mpCategory < wgB.mpCategory) {
           return -1;
@@ -68,19 +70,80 @@ export class ListComponent implements OnInit {
         }
       });
 
+      this.workGroups.forEach((g, i, array) => {
+        grpName[g.groupNumber] = null;
+      });
+
+      this.strings = Object.keys(grpName)
+        .sort((a: any, b: any) => a - b)
+        .map(grpNum => `Flight ${grpNum}`);
+
+      this.filteredStrings = this.strings;
+
     }
   }
 
   filterStrings(value: string): void {
-    if (value) {
-      this.filteredStrings = this.strings.filter((item: any) => {
-        return item.toLowerCase().indexOf(value.toLowerCase()) > -1;
-      }).filter((filteredItem: any) => {
-        return this.stringsModel ? this.stringsModel.indexOf(filteredItem) < 0 : true;
+    this.filteredStrings = this.strings.filter((item: any) => {
+      return item.toLowerCase().indexOf(value.toLowerCase()) > -1;
+    }).filter((filteredItem: any) => {
+      return this.stringsModel ? this.stringsModel.indexOf(filteredItem) < 0 : true;
+    });
+  }
+
+  add(value: string): void {
+
+    this.workGroups = this.workGroupOrig.filter(wg => {
+      let match = false;
+
+      this.stringsModel.forEach(item => {
+        let flight = `Flight ${wg.groupNumber}`;
+        if (flight === item) {
+          match = true;
+        }
       });
+
+      return match;
+    });
+
+  }
+
+  remove(value: string): void {
+
+    if (this.stringsModel.length > 0) {
+      this.workGroups = this.workGroupOrig.filter(wg => {
+        let match = false;
+
+        this.stringsModel.forEach(item => {
+          let flight = `Flight ${wg.groupNumber}`;
+          if (flight === item) {
+            match = true;
+          }
+        });
+
+        return match;
+      });
+    } else {
+      this.workGroups = this.workGroupOrig;
     }
+
+
   }
 
 
+  // let multiTest = this.multi;
+  // this.multi = this.multiOriginal.filter(data => {
+
+  //   let match = false;
+
+  //   this.itemsRequireMatch.forEach(item => {
+  //     if (data.name == item) {
+  //       match = true;
+  //     }
+
+  //   });
+
+  //   return match;
+  // });
 
 }

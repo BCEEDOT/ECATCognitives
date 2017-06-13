@@ -1,5 +1,6 @@
 <md-card class="width">
-  <td-chips [items]="filteredStrings" [(ngModel)]="stringsModel" placeholder="Enter Flight" (inputChange)="filterStrings($event)"
+  <td-chips [items]="filteredStrings" (add)="add($event)" [debounce]="500"
+          (remove)="remove($event)" [(ngModel)]="stringsModel" placeholder="Click to filter by flight" (inputChange)="filterStrings($event)"
     requireMatch>
   </td-chips>
   <md-list>
