@@ -1,0 +1,30 @@
+<md-card>
+  <md-card-title>{{wgName}} Status</md-card-title>
+  <md-divider></md-divider>
+  <md-card-content>
+    <md-list>
+      <md-list-item>
+        <span>Student</span>
+        <span>Self</span>
+        <span>Peer</span>
+        <span>Strats</span>
+        <span>Comments</span>
+        <span>Response Aggregates</span>
+      </md-list-item>
+      <md-list-item *ngFor="let student of members">
+        <span>{{student.rankName}}</span>
+        <span><md-icon [ngClass]="student.check.isSelfDone ? 'md-check' : 'md-clear'"></md-icon></span>
+        <span><md-icon [ngClass]="student.check.sp.isDone ? 'md-check' : 'md-clear'" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above"></md-icon></span>
+        <span><md-icon [ngClass]="student.check.strat.isDone ? 'md-check' : 'md-clear'" mdTooltip={{stuent.check.strat.count}} mdToolTipPosition="above"></md-icon></span>
+        <span>{{student.numberOfAuthorComments}}</span>
+        <span>Chart placeholder</span>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+  <md-card-actions>
+    <button md-raised-button (click)="this.location.back()">Back</button>
+    <span flex></span>
+    <button md-raised-button (click)="this.refreshData()">Refresh</button>
+    <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review Flight</button>
+  </md-card-actions>
+</md-card>

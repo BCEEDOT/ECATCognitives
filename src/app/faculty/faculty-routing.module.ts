@@ -6,6 +6,7 @@ import { FacultyDataContextService } from "./services/faculty-data-context.servi
 import { WorkGroupsComponent } from "./workgroups/work-groups.component";
 import { FacultyComponent } from "./faculty.component";
 import { ListComponent } from "./workgroups/list/list.component";
+import { StatusComponent } from './workgroups/status/status.component'
 import { GlobalService } from "../core/services/global.service";
 
 const facultyRoutes: Routes = [
@@ -36,7 +37,12 @@ const facultyRoutes: Routes = [
                 //   { path: 'comment', component: CommentComponent}
                 // ]
                 resolve: { course: 'courseResolver' },
-              // },
+              },
+              {
+                path: 'list/:crsId/status/:wrkGrpId',
+                component: StatusComponent,
+                resolve: { workgroup: 'workgroupResolver'}
+              }
               // {
               //   path: 'results/:crsId/:wrkGrpId',
               //   component: ResultsComponent,
@@ -51,7 +57,7 @@ const facultyRoutes: Routes = [
               //   path: '',
               //   component: StudentComponent,
               //   resolve: { assess: 'assessmentResolver'},
-               }
+              //}
 
             ]
           }
@@ -80,9 +86,9 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.workGroups(+route.parent.params['workgroup']);
 // }
 
-// export function workGroupResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.workgroup(+route.params['id']);
-// }
+export function workGroupResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
+}
 
 // export function listResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
