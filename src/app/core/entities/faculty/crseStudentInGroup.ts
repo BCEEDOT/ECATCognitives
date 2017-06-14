@@ -25,19 +25,19 @@ interface ICrseStudInGrpStatus {
     hasComment: boolean;
 }
 
-/*interface IFacCrseStudInGrpStatus {
+interface IFacCrseStudInGrpStatus {
     assessComplete: boolean;
     stratComplete: boolean;
     missingAssessItems: Array<number>;
-    breakout: ISpStatusBreakOut;
-    gaveBreakOut: ISpGaveStatusBreakOut;
+    //breakout: ISpStatusBreakOut;
+    //gaveBreakOut: ISpGaveStatusBreakOut;
     breakOutChartData: Array<any>;
     gaveBreakOutChartData: Array<any>;
     compositeScore: number;
     gaveCompositeScore: number;
     stratedPosition: number;
     hasComment: boolean;
-}*/
+}
 
 /*interface ISpGaveStatusBreakOut {
     gaveHE: number;
@@ -90,7 +90,7 @@ export class CrseStudentInGroup extends EntityBase {
 
     numOfStratIncomplete = null;
     numberOfAuthorComments = null;
-    statusOfStudent: any;
+    protected sos: any;
 
    constructor() {
        super();
@@ -347,7 +347,7 @@ export class CrseStudentInGroup extends EntityBase {
         gaveChartData.push({ label: 'Ineffective', data: gaveIE, color: '#AA0000' });
         gaveChartData.push({ label: 'Not Display', data: gaveND, color: '#AAAAAA' });
 
-        this.statusOfStudent =  {
+        this.sos =  {
             assessComplete: missingItems.length === 0,
             stratComplete: stratComplete,
             hasComment: hasComment,
@@ -362,7 +362,7 @@ export class CrseStudentInGroup extends EntityBase {
         }
     }
 
-    /*private updateResult(): ecat.entity.ext.IStudentDetailResult {
+    /**private updateResult(): ecat.entity.ext.IStudentDetailResult {
         const counts = {
             h: this.spResult.breakOut.highEffA + this.spResult.breakOut.highEffU,
             e: this.spResult.breakOut.effA + this.spResult.breakOut.effU,
@@ -405,7 +405,7 @@ export class CrseStudentInGroup extends EntityBase {
         return this.updateResult();
     }
 
-    get statusOfStudent(): ecat.entity.ext.IFacCrseStudInGrpStatus {
+    get statusOfStudent(): IFacCrseStudInGrpStatus {
 
         if (this.statusOfStudent) {
             return this.statusOfStudent;
@@ -413,7 +413,7 @@ export class CrseStudentInGroup extends EntityBase {
         this.updateStatusOfStudent();
         return this.statusOfStudent;
 
-    }*/
+    }**/
 
     static initializer(entity: CrseStudentInGroup) { }
    /// </code>

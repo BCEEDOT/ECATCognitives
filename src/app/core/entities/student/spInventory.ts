@@ -10,24 +10,25 @@ import { SpResult } from './SpResult';
 /// </code-import>
 
 export class SpInventory extends EntityBase {
-   // Generated code. Do not place code below this line.
-   id: number;
-   instrumentId: number;
-   displayOrder: number;
-   isDisplayed: boolean;
-   behavior: string;
-   instrument: SpInstrument;
-   itemResponses: SpResponse[];
+    // Generated code. Do not place code below this line.
+    id: number;
+    instrumentId: number;
+    displayOrder: number;
+    isDisplayed: boolean;
+    behavior: string;
+    instrument: SpInstrument;
 
-   /// <code> Place custom code between <code> tags
-   private displayed = true;
-   private freqLevel: mapEnum.SpFreqLevel = null;
-   private effLevel: mapEnum.SpEffectLevel = null;
-   private resultBreakout: any;
-   private commentText: string;
-   /// </code>
 
-   get compositeScore(): number {
+    /// <code> Place custom code between <code> tags
+    private displayed = true;
+    private freqLevel: mapEnum.SpFreqLevel = null;
+    private effLevel: mapEnum.SpEffectLevel = null;
+    private resultBreakout: any;
+    private commentText: string;
+    itemResponses: SpResponse[];
+    /// </code>
+
+    get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
     };
 
@@ -53,7 +54,6 @@ export class SpInventory extends EntityBase {
     }
 
     spResult: SpResult;
-
     responseForAssessee: SpResponse;
 
     get behaviorFreq(): mapEnum.SpFreqLevel {
@@ -157,27 +157,27 @@ export class SpInventory extends EntityBase {
                     this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.hea;
                 } else {
                     this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.heu;
-                    this.responseForAssessee.itemModelScore  = mapEnum.CompositeModelScore.heu;
+                    this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.heu;
                 }
                 break;
 
             case mapEnum.SpEffectLevel.Effective:
                 if (this.freqLevel === mapEnum.SpFreqLevel.Always) {
                     this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.ea;
-                    this.responseForAssessee.itemModelScore  = mapEnum.CompositeModelScore.ea;
+                    this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.ea;
                 } else {
                     this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.eu;
-                    this.responseForAssessee.itemModelScore  = mapEnum.CompositeModelScore.eu;
+                    this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.eu;
                 }
                 break;
 
             case mapEnum.SpEffectLevel.Ineffective:
                 if (this.freqLevel === mapEnum.SpFreqLevel.Always) {
                     this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.iea;
-                    this.responseForAssessee.itemModelScore  = mapEnum.CompositeModelScore.iea;
+                    this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.iea;
                 } else {
                     this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.ieu;
-                    this.responseForAssessee.itemModelScore  = mapEnum.CompositeModelScore.ieu;
+                    this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.ieu;
                 }
                 break;
 
@@ -254,7 +254,7 @@ export class SpInventory extends EntityBase {
 
     //     breakOut.selfResult = staticData.prettifyItemResponse(selfResponse.mpItemResponse);
     //     breakOut.facultyResult = (facResponse) ? staticData.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
-       
+
     //     this.resultBreakout = breakOut;
     //     return breakOut;
     // }

@@ -5,9 +5,10 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup } from "../../core/entities/faculty";
+import { Course, WorkGroup, FacSpResponse } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
+import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
 import { MpEntityType, MpCommentFlag } from '../../core/common/mapStrings';
 import { DataContext } from '../../app-constants';
 import { GlobalService, ILoggedInUser } from '../../core/services/global.service';
@@ -150,10 +151,10 @@ export class FacultyDataContextService extends BaseDataContext {
       .then(fetchActiveWorkGroupResponse)
       .catch(this.queryFailed);
 
-    function fetchActiveWorkGroupResponse(data: QueryResult){
+    function fetchActiveWorkGroupResponse(data: QueryResult) {
       let retGroup = data.results[0] as WorkGroup;
 
-      if (!retGroup){
+      if (!retGroup) {
         const error = {
           errorMessage: 'Could not find this active workgroup on the server'
         }
@@ -166,5 +167,36 @@ export class FacultyDataContextService extends BaseDataContext {
     }
 
   }
+
+  getFacSpInventory(courseId: number, workGroupId: number, assesseeId: number): IFacSpInventory[] {
+   
+        const workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+        let userId = this.global.persona.value.person.personId;
+
+        if (!workGroup.assignedSpInstr) {
+            console.log('Missing an assigned instrument for this workgroup', workGroup, false);
+            return null;
+        }
+
+        //const inventoryList = workGroup.assignedSpInstr.inventoryCollection as Array<ecat.entity.IStudSpInventory>;
+        let inventoryList = workGroup.assignedSpInstr.inventoryCollection as IFacSpInventory[];
+
+        return inventoryList.map((invItem: IFacSpInventory) => {
+            const key = { assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemId: invItem.id };
+
+            let facSpReponse = this.manager.getEntityByKey(MpEntityType.facSpResponse, [assesseeId, courseId, workGroupId, invItem.id]) as FacSpResponse;
+
+            if (!facSpReponse) {
+                facSpReponse = this.manager.createEntity(MpEntityType.facSpResponse, key) as FacSpResponse;
+                facSpReponse.facultyPersonId = userId
+            }
+            //Since we are reusing the inventory item breeze will auto try the backing fields...need to reset them to ensure there is no carryover between assessments;
+            //invItem.resetAssess();
+            invItem.responseForAssessee = facSpReponse;
+
+            return invItem;
+        }) as IFacSpInventory[];
+
+    }
 
 }

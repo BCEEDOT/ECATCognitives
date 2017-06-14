@@ -17,9 +17,9 @@
         </md-list-item>
         <div fxFlex="10">
           <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
-            <button md-menu-item> 
+            <button md-menu-item [routerLink]="['evaluate/' + workGroup.workGroupId]"> 
               <md-icon> assessment </md-icon>
-              <span class="md-subhead"> Assess </span>
+              <span class="md-subhead"> Evaluate </span>
             </button>
             <button md-menu-item [routerLink]="['status/' + workGroup.workGroupId]"> 
               <md-icon> check_circle </md-icon>

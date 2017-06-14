@@ -1,6 +1,6 @@
 <div class="flex-container">
   <md-card>
-    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory.responseForAssessee.assessee.rankName}}</md-card-title>
+    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory?.responseForAssessee?.assessee?.rankName}}</md-card-title>
     <md-card-title *ngIf="isSelf">Self Assessment</md-card-title>
     <md-divider></md-divider>
     <md-card-content>
