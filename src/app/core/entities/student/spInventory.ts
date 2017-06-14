@@ -17,7 +17,6 @@ export class SpInventory extends EntityBase {
    isDisplayed: boolean;
    behavior: string;
    instrument: SpInstrument;
-   itemResponses: SpResponse[];
 
    /// <code> Place custom code between <code> tags
    private displayed = true;
@@ -25,6 +24,7 @@ export class SpInventory extends EntityBase {
    private effLevel: mapEnum.SpEffectLevel = null;
    private resultBreakout: any;
    private commentText: string;
+   itemResponses: SpResponse[];
    /// </code>
 
    get compositeScore(): number {

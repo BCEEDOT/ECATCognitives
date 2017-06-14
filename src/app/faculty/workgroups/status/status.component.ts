@@ -39,7 +39,7 @@ export class StatusComponent implements OnInit {
   private members: Array<CrseStudExtended>;
   private wgName: string;
   private facIncomplete: boolean = false;
-  private chartColors = {domain: ['#00308F', '#00AA58', '#AA0000', '#AAAAAA']};
+  private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
 
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,
@@ -71,7 +71,11 @@ export class StatusComponent implements OnInit {
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
 
-      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
+      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.value > 0);
+
+      if (gm['hasChartData']) {
+        gm['chartData'] = [ { "name": "% Given", "series": gm.statusOfStudent.gaveBreakOutChartData }];
+      }
 
       gm.check = {
         isSelfDone: isSelfDone,
@@ -86,11 +90,11 @@ export class StatusComponent implements OnInit {
       }
     });
 
-    // this.facIncomplete = this.members.some(mem => {
-    //   if (mem.statusOfStudent.spResponses.length == 0) {return true;}
-    //   if (!mem.statusOfStudent.stratComplete) {return true;}
-    //   return false;
-    // });
+    this.facIncomplete = this.members.some(mem => {
+      if (mem.statusOfStudent.spResponses !== undefined && mem.statusOfStudent.spResponses.length > 0) {return true;}
+      if (!mem.statusOfStudent.stratComplete) {return true;}
+      return false;
+    });
 
     if (this.workGroup.canPublish && !this.facIncomplete){
       this.canReview = true;

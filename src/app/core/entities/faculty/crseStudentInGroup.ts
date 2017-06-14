@@ -222,8 +222,9 @@ export class CrseStudentInGroup extends EntityBase {
 
             sigStatus.breakOutChartData.push({ name: 'Highly Effective', value: HE });
             sigStatus.breakOutChartData.push({ name: 'Effective', value: E });
-            sigStatus.breakOutChartData.push({ name: 'Ineffective', value: IE });
             sigStatus.breakOutChartData.push({ name: 'Not Displayed', value: ND });
+            sigStatus.breakOutChartData.push({ name: 'Ineffective', value: IE });
+            
 
             // sigStatus.breakOutChartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
             // sigStatus.breakOutChartData.push({ label: 'Effective', data: E, color: '#00AA58' });
@@ -332,8 +333,9 @@ export class CrseStudentInGroup extends EntityBase {
         const chartData = [];
         chartData.push({ name: 'Highly Effective', value: HE });
         chartData.push({ name: 'Effective', value: E });
-        chartData.push({ name: 'Ineffective', value: IE });
         chartData.push({ name: 'Not Displayed', value: ND });
+        chartData.push({ name: 'Ineffective', value: IE });
+        
         // chartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
         // chartData.push({ label: 'Effective', data: E, color: '#00AA58' });
         // chartData.push({ label: 'Ineffective', data: IE, color: '#AA0000' });
@@ -395,18 +397,18 @@ export class CrseStudentInGroup extends EntityBase {
         gaveComposite = ((gaveCummScore / (this.workGroup.assignedSpInstr.inventoryCollection.length * 6 * peers.length)) * 100);
         gaveComposite = Math.round(gaveComposite);
  
-        gaveBo.gaveHE = (totalHe / totalMarkings * 100);
-        gaveBo.gaveE = (totalE / totalMarkings * 100);
-        gaveBo.gaveIE = (totalIe / totalMarkings * 100);
-        gaveBo.gaveND = (totalNd / totalMarkings * 100);
+        gaveBo.gaveHE = Math.round((totalHe / totalMarkings * 100));
+        gaveBo.gaveE = Math.round((totalE / totalMarkings * 100));
+        gaveBo.gaveIE = Math.round((totalIe / totalMarkings * 100));
+        gaveBo.gaveND = Math.round((totalNd / totalMarkings * 100));
 
         const { gaveHE, gaveE, gaveIE, gaveND } = gaveBo;
 
         const gaveChartData = [];
         gaveChartData.push({ name: 'Highly Effective', value: gaveHE });
         gaveChartData.push({ name: 'Effective', value: gaveE });
-        gaveChartData.push({ name: 'Ineffective', value: gaveIE });
         gaveChartData.push({ name: 'Not Displayed', value: gaveND });
+        gaveChartData.push({ name: 'Ineffective', value: gaveIE });
         // gaveChartData.push({ label: 'Highly Effective', data: gaveHE, color: '#00308F' });
         // gaveChartData.push({ label: 'Effective', data: gaveE, color: '#00AA58' });
         // gaveChartData.push({ label: 'Ineffective', data: gaveIE, color: '#AA0000' });
