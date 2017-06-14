@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { ActivatedRoute, Router } from "@angular/router";
 import { TdDialogService } from "@covalent/core";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';
@@ -38,6 +39,7 @@ export class StatusComponent implements OnInit {
   private members: Array<CrseStudExtended>;
   private wgName: string;
   private facIncomplete: boolean = false;
+  private chartColors = {domain: ['#00308F', '#00AA58', '#AA0000', '#AAAAAA']};
 
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,
@@ -58,13 +60,18 @@ export class StatusComponent implements OnInit {
   activate() {
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as Array<CrseStudExtended>;
+    this.members.sort((a: CrseStudExtended, b: CrseStudExtended) => {
+      if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) {return 1;}
+      if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) {return -1;}
+      return 0;
+    })
 
     this.members.forEach(gm => {
       const isSelfDone = gm.statusOfPeer[gm.studentId].assessComplete;
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
 
-      //gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
+      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
 
       gm.check = {
         isSelfDone: isSelfDone,
