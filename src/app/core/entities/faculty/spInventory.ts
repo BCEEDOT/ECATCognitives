@@ -6,8 +6,8 @@ import { SpInstrument } from './SpInstrument';
 import * as mapEnum from '../../common/mapEnum';
 import * as mapStrings from '../../common/mapStrings'
 import * as staticData from '../../common/static'
-import { SpResult } from './spResult';
-import { FacSpResponse } from './facSpResponse';
+import { SpResult } from './SpResult';
+import { FacSpResponse } from "./FacSpResponse";
 /// </code-import>
 
 export class SpInventory extends EntityBase {
@@ -20,7 +20,6 @@ export class SpInventory extends EntityBase {
    modifiedById: number;
    modifiedDate: Date;
    instrument: SpInstrument;
-   
 
    /// <code> Place custom code between <code> tags
    private displayed = true;
@@ -28,7 +27,7 @@ export class SpInventory extends EntityBase {
    private effLevel: mapEnum.SpEffectLevel = null;
    private resultBreakout: any;
    private commentText: string;
-   itemResponses: FacSpResponse[];
+   itemResponses: SpResponse[] | FacSpResponse[];
    /// </code>
 
    get compositeScore(): number {

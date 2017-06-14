@@ -5,25 +5,33 @@
     <md-list>
       <md-list-item>
         <span fxFlex="45"></span>
-        <span fxFlex="10">SELF</span>
-        <span fxFlex="10">PEER</span>
-        <span fxFlex="10">STRATS</span>
-        <span fxFlex="15">COMMENTS</span>
-        <span fxFlex="20">RESPONSE AGGREGATES</span>
+        <span fxFlex="10" class="text-center">SELF</span>
+        <span fxFlex="10" class="text-center">PEER</span>
+        <span fxFlex="10" class="text-center">STRATS</span>
+        <span fxFlex="15" class="text-center">COMMENTS</span>
+        <span fxFlex="20" class="text-center">RESPONSE AGGREGATES</span>
       </md-list-item>
       <md-list-item *ngFor="let student of members">
         <span fxFlex="45">{{student.rankName}}</span>
-        <span fxFlex="10"><md-icon *ngIf="student.check.isSelfDone">check</md-icon><md-icon *ngIf="!student.check.isSelfDone">clear</md-icon></span>
-        <span fxFlex="10"><md-icon *ngIf="student.check.sp.isDone">check</md-icon><md-icon *ngIf="!student.check.sp.isDone" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above">clear</md-icon></span>
-        <span fxFlex="10"><md-icon *ngIf="student.check.strat.isDone">check</md-icon><md-icon *ngIf="!student.check.strat.isDone" mdTooltip={{student.check.sp.count}} mdToolTipPosition="above">clear</md-icon></span>
+        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.isSelfDone">check</md-icon><md-icon *ngIf="!student.check.isSelfDone">clear</md-icon></span>
+        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.sp.isDone">check</md-icon><md-icon *ngIf="!student.check.sp.isDone" mdTooltip={{student.check.sp.count}} mdTooltipPosition="above">clear</md-icon></span>
+        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.strat.isDone">check</md-icon><md-icon *ngIf="!student.check.strat.isDone" mdTooltip={{student.check.strat.count}} mdTooltipPosition="above">clear</md-icon></span>
         <span fxFlex="15" class="text-center">{{student.numberOfAuthorComments}}</span>
-        <span fxFlex="20">
-          <ngx-charts-pie-chart
+        <span fxFlex="20" class="text-center">
+          <ngx-charts-bar-horizontal-stacked
+            [view]="[150, 50]"
+            [scheme]="chartColors"
+            [results]="student.chartData"
+            [showGridLines]="false"
+            (select)="onSelect($event)"
+            *ngIf="student.hasChartData">
+          </ngx-charts-bar-horizontal-stacked>
+          <!--ngx-charts-pie-chart
             [view]="[75, 75]"
             [scheme]="chartColors"
             [results]="student.statusOfStudent.gaveBreakOutChartData"
             (select)="onSelect($event)">
-          </ngx-charts-pie-chart>
+          </ngx-charts-pie-chart-->
         </span>
       </md-list-item>
     </md-list>
@@ -32,6 +40,7 @@
     <button md-raised-button (click)="this.location.back()">Back</button>
     <span fxFlex></span>
     <button md-raised-button (click)="this.refreshData()">Refresh</button>
-    <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review Flight</button>
+    <!--button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review Flight</button-->
   </md-card-actions>
 </md-card>
+<a md-fab color="accent" class="mat-fab-bottom-right"><md-icon>check</md-icon></a>

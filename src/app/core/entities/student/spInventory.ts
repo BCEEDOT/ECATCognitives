@@ -10,25 +10,24 @@ import { SpResult } from './SpResult';
 /// </code-import>
 
 export class SpInventory extends EntityBase {
-    // Generated code. Do not place code below this line.
-    id: number;
-    instrumentId: number;
-    displayOrder: number;
-    isDisplayed: boolean;
-    behavior: string;
-    instrument: SpInstrument;
+   // Generated code. Do not place code below this line.
+   id: number;
+   instrumentId: number;
+   displayOrder: number;
+   isDisplayed: boolean;
+   behavior: string;
+   instrument: SpInstrument;
 
+   /// <code> Place custom code between <code> tags
+   private displayed = true;
+   private freqLevel: mapEnum.SpFreqLevel = null;
+   private effLevel: mapEnum.SpEffectLevel = null;
+   private resultBreakout: any;
+   private commentText: string;
+   itemResponses: SpResponse[];
+   /// </code>
 
-    /// <code> Place custom code between <code> tags
-    private displayed = true;
-    private freqLevel: mapEnum.SpFreqLevel = null;
-    private effLevel: mapEnum.SpEffectLevel = null;
-    private resultBreakout: any;
-    private commentText: string;
-    itemResponses: SpResponse[];
-    /// </code>
-
-    get compositeScore(): number {
+   get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
     };
 
