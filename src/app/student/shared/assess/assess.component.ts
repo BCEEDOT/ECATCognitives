@@ -22,7 +22,7 @@ export class AssessComponent implements OnInit, OnChanges {
   isLoading: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProdiver: SpProviderService) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
 
       //this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
   }
@@ -57,7 +57,7 @@ export class AssessComponent implements OnInit, OnChanges {
   }
 
   comment(recipient: CrseStudentInGroup): any {
-    this.spProdiver.loadComment(recipient);
+    this.spProvider.loadComment(recipient);
   }
 
 }

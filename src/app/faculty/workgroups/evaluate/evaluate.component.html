@@ -4,20 +4,20 @@
       <md-tab-group md-stretch-tabs>
         <md-tab>
           <ng-template md-tab-label>Assessment</ng-template>
-          <h2>Assessment</h2>
           <assess [workGroup]="activeWorkGroup"></assess>
         </md-tab>
         <md-tab>
           <ng-template md-tab-label>Stratification</ng-template>
-          <h2>Stratification</h2>
           <strat [workGroup]="activeWorkGroup"></strat>
         </md-tab>
         <md-tab [disabled]="!showComments">
           <ng-template md-tab-label>Comments</ng-template>
-          <h2>Comments</h2>
           <comments [workGroup]="activeWorkGroup"></comments>
         </md-tab>
       </md-tab-group>
+      <md-card-actions>
+        <button md-raised-button (click)="this.location.back()">Back</button>
+      </md-card-actions>
     </md-card>
   </ng-template>
 </div>

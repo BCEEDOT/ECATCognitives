@@ -56,7 +56,6 @@ export class StratComponent implements OnInit, OnChanges {
     //this.workGroupService.isLoading(false);
   }
 
-
   cancel() {
     if (this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null)) {
       this.dialogService.openConfirm({
