@@ -75,7 +75,7 @@ export interface IStudSpInventory extends EntityBase, student.SpInventory {
    isDisplayed: boolean;
    behavior: string;
    //instrument: SpInstrument;
-   itemResponses: student.SpResponse[];
+   //itemResponses: student.SpResponse[];
 }
 
 export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
@@ -85,5 +85,5 @@ export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
    isDisplayed: boolean;
    behavior: string;
    //instrument: SpInstrument;
-   itemResponses: faculty.SpResponse[];
+   //itemResponses: faculty.FacSpResponse[];
 }

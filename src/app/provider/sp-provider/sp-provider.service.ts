@@ -4,11 +4,14 @@ import { isNumeric } from 'rxjs/util/isNumeric';
 import 'rxjs/util/isNumeric';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
-import { CrseStudentInGroup, WorkGroup, StudSpComment } from "../../core/entities/Student";
+import { CrseStudentInGroup as StuCrseStudentInGroup, WorkGroup, StudSpComment } from "../../core/entities/student";
+import { CrseStudentInGroup as FacCrseStudentInGroup } from "../../core/entities/faculty";
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 import { Person } from "../../core/entities/user/Person";
 import { StudentDataContext } from "../../student/services/student-data-context.service";
+import { FacultyDataContextService } from "../../faculty/services/faculty-data-context.service";
 import { WorkGroupService } from "../../student/services/workgroup.service";
+import { FacWorkgroupService } from "../../faculty/services/facworkgroup.service";
 import { FacSpComment } from "../../core/entities/faculty/FacSpComment";
 import { CommentDialog } from "./comment/comment.dialog";
 
@@ -19,22 +22,49 @@ export class SpProviderService {
   private off: any;
   workGroup: WorkGroup;
 
-  constructor(private ctx: StudentDataContext, private stuWorkGroupService: WorkGroupService, private dialog: MdDialog) { }
-
-  save(): Promise<any> {
-    return this.ctx.commit()
-      .then((result) => {
-        console.log('success');
-        return result;
-      })
-      .catch((result) => {
-        console.log('error');
-        return result;
-      })
+  constructor(private studentDataContext: StudentDataContext,
+    private stuWorkGroupService: WorkGroupService,
+    private facWorkGroupService: FacWorkgroupService,
+    private facultyDataContext: FacultyDataContextService,
+    private global: GlobalService,
+    private dialog: MdDialog) {
   }
 
-  loadComment(recipient: CrseStudentInGroup) {
-    let comment = this.ctx.getComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
+  save(): Promise<any> {
+
+    if (this.global.persona.value.isStudent) {
+      return this.studentDataContext.commit()
+        .then((result) => {
+          console.log('success');
+          return result;
+        })
+        .catch((result) => {
+          console.log('error');
+          return result;
+        })
+    } else {
+      return this.facultyDataContext.commit()
+        .then((result) => {
+          console.log('success');
+          return result;
+        })
+        .catch((result) => {
+          console.log('error');
+          return result;
+        })
+    }
+  }
+
+
+
+  loadComment(recipient: StuCrseStudentInGroup | FacCrseStudentInGroup) {
+    let comment;
+
+    if (this.global.persona.value.isStudent) {
+      comment = this.studentDataContext.getComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
+    } else {
+      comment = this.facultyDataContext.getFacComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
+    }
 
     this.dialogRef = this.dialog.open(CommentDialog, {
       disableClose: true,
@@ -45,7 +75,7 @@ export class SpProviderService {
     });
   }
 
-  evaluateStratification(isInstructor?: boolean, force?: boolean): Promise<Array<CrseStudentInGroup>> {
+  evaluateStratification(isInstructor?: boolean, force?: boolean): Promise<Array<StuCrseStudentInGroup & FacCrseStudentInGroup>> {
     const that = this;
 
     if (this.off) {
@@ -61,16 +91,17 @@ export class SpProviderService {
     }
 
 
-    function evaluate(): Array<CrseStudentInGroup> {
-      const members = (isInstructor) ?
-        //that.dCtx.faculty.getActiveWgMembers() :
-        //that.dCtx.student.getActiveWgMemberships();
-        null :
-        that.stuWorkGroupService.workGroup$.value.groupMembers //TODO: Fill with Instructor activeworkgroup members
+    function evaluate(): Array<StuCrseStudentInGroup & FacCrseStudentInGroup> {
+      
+      let members;
 
-      //this.workGroupService.workGroup$.value.groupMembers
+      if (isInstructor) {
+        members = that.facWorkGroupService.facWorkGroup$.value.groupMembers;
+      } else {
+        members = that.stuWorkGroupService.workGroup$.value.groupMembers;
+      }
 
-      members.forEach((member: CrseStudentInGroup, i, array: Array<CrseStudentInGroup>) => {
+      members.forEach((member: StuCrseStudentInGroup & FacCrseStudentInGroup, i, array: Array<StuCrseStudentInGroup & FacCrseStudentInGroup>) => {
         member.stratValidationErrors = [];
 
         if (!isInstructor) {
@@ -92,12 +123,12 @@ export class SpProviderService {
           }
 
         } else {
-          // if ((!member.facultyStrat || !member.facultyStrat.stratPosition) && !member.proposedStratPosition) {
-          //   member.stratValidationErrors.push({
-          //     cat: 'Required',
-          //     text: 'Proposed strat must be greater than 0'
-          //   });
-          // }
+          if ((!member.facultyStrat || !member.facultyStrat.stratPosition) && !member.proposedStratPosition) {
+            member.stratValidationErrors.push({
+              cat: 'Required',
+              text: 'Proposed strat must be greater than 0'
+            });
+          }
 
 
         }
@@ -145,16 +176,16 @@ export class SpProviderService {
                 });
               });
           } else {
-            // array
-            //   .filter(p => p.facultyStrat && p.facultyStrat.stratPosition === member.proposedStratPosition &&
-            //     p.facultyStrat.stratPosition !== null &&
-            //     p.proposedStratPosition === null)
-            //   .forEach(pp => {
-            //     member.stratValidationErrors.push({
-            //       cat: 'Duplicate',
-            //       text: `${pp.rankName}: is currently at this position without a proposed change.`
-            //     });
-            //   });
+            array
+              .filter(p => p.facultyStrat && p.facultyStrat.stratPosition === member.proposedStratPosition &&
+                p.facultyStrat.stratPosition !== null &&
+                p.proposedStratPosition === null)
+              .forEach(pp => {
+                member.stratValidationErrors.push({
+                  cat: 'Duplicate',
+                  text: `${pp.rankName}: is currently at this position without a proposed change.`
+                });
+              });
           }
         }
         member.stratIsValid = member.stratValidationErrors.length === 0;
@@ -166,6 +197,6 @@ export class SpProviderService {
 
     }
 
-    
+
   }
 }

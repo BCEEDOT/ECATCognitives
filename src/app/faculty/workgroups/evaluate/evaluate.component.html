@@ -1,0 +1,27 @@
+<div class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card>
+      <md-tab-group md-stretch-tabs>
+        <md-tab>
+          <ng-template md-tab-label>Assessment</ng-template>
+          <assess [workGroup]="activeWorkGroup"></assess>
+        </md-tab>
+        <md-tab>
+          <ng-template md-tab-label>Stratification</ng-template>
+          <strat [workGroup]="activeWorkGroup"></strat>
+        </md-tab>
+        <md-tab [disabled]="!showComments">
+          <ng-template md-tab-label>Comments</ng-template>
+          <comments [workGroup]="activeWorkGroup"></comments>
+        </md-tab>
+      </md-tab-group>
+      <md-card-actions>
+        <button md-raised-button (click)="this.location.back()">Back</button>
+      </md-card-actions>
+    </md-card>
+  </ng-template>
+</div>
+
+<a md-fab color="accent" class="mat-fab-bottom-right" [ngClass]="wgStatus" (click)="assessCompare()">
+  <md-icon>rate_review</md-icon>
+</a>

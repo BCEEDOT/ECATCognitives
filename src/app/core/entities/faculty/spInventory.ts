@@ -7,6 +7,7 @@ import * as mapEnum from '../../common/mapEnum';
 import * as mapStrings from '../../common/mapStrings'
 import * as staticData from '../../common/static'
 import { SpResult } from './SpResult';
+import { FacSpResponse } from "./FacSpResponse";
 /// </code-import>
 
 export class SpInventory extends EntityBase {
@@ -19,7 +20,6 @@ export class SpInventory extends EntityBase {
    modifiedById: number;
    modifiedDate: Date;
    instrument: SpInstrument;
-   itemResponses: SpResponse[];
 
    /// <code> Place custom code between <code> tags
    private displayed = true;
@@ -27,6 +27,7 @@ export class SpInventory extends EntityBase {
    private effLevel: mapEnum.SpEffectLevel = null;
    private resultBreakout: any;
    private commentText: string;
+   itemResponses: SpResponse[] | FacSpResponse[];
    /// </code>
 
    get compositeScore(): number {
@@ -37,10 +38,10 @@ export class SpInventory extends EntityBase {
         this.responseForAssessee.entityAspect.rejectChanges();
         this.effLevel = null;
         this.freqLevel = null;
-        this.behaveDisplayed = this.behaveDisplayed;
-        if (this.behaveDisplayed === true) {
-            this.calculateItemResponse();
-        }
+        this.behaveDisplayed = true;//this.behaveDisplayed;
+        // if (this.behaveDisplayed === true) {
+        //     this.calculateItemResponse();
+        // }
     }
 
     resetAssess(): void {
@@ -55,8 +56,7 @@ export class SpInventory extends EntityBase {
     }
 
     spResult: SpResult;
-
-    responseForAssessee: SpResponse;
+    responseForAssessee: FacSpResponse = null;
 
     get behaviorFreq(): mapEnum.SpFreqLevel {
         if (!this.responseForAssessee) {
@@ -119,7 +119,7 @@ export class SpInventory extends EntityBase {
             return null;
         }
         if (!this.responseForAssessee.mpItemResponse) {
-            return this.behaveDisplayed;
+            return this.displayed;
         }
         return this.responseForAssessee.mpItemResponse !== mapStrings.MpSpItemResponse.nd;
     }
@@ -131,7 +131,8 @@ export class SpInventory extends EntityBase {
         if (behaveDisplayed) {
             this.freqLevel = this.effLevel = null;
             this.responseForAssessee.mpItemResponse = null;
-            this.compositeScore;
+            this.calculateItemResponse();
+            //this.compositeScore;
         } else {
             this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.nd;
             this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.nd;

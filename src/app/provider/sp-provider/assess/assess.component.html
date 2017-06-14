@@ -1,11 +1,11 @@
 <div class="flex-container">
   <md-card>
-    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory.responseForAssessee.assessee.rankName}}</md-card-title>
+    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory?.responseForAssessee?.assessee?.rankName}}</md-card-title>
     <md-card-title *ngIf="isSelf">Self Assessment</md-card-title>
     <md-divider></md-divider>
     <md-card-content>
       <p>With regards to displaying the behavior <span style="color: #3e6d92">{{activeInventory.behavior}}</span> how effective {{perspective}}?</p>
-      <button md-icon-button mdTooltip="Mark As (Not) Displayed" mdToolTipPosition="below" [md-menu-trigger-for]="menu" [disabled]="viewOnly" style="float: left">
+      <button md-icon-button mdTooltip="Mark As (Not) Displayed" mdTooltipPosition="below" [md-menu-trigger-for]="menu" [disabled]="viewOnly" style="float: left">
         <md-icon>more_vert</md-icon>
       </button>
       <span></span>
