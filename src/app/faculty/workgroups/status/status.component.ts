@@ -38,7 +38,7 @@ export class StatusComponent implements OnInit {
   private canReview: boolean = false;
   private members: Array<CrseStudExtended>;
   private wgName: string;
-  private facIncomplete: boolean = false;
+  //private facIncomplete: boolean = false;
   private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
 
   constructor(private ctx: FacultyDataContextService,
@@ -90,15 +90,18 @@ export class StatusComponent implements OnInit {
       }
     });
 
-    this.facIncomplete = this.members.some(mem => {
-      if (mem.statusOfStudent.spResponses !== undefined && mem.statusOfStudent.spResponses.length > 0) {return true;}
-      if (!mem.statusOfStudent.stratComplete) {return true;}
-      return false;
-    });
+    this.canReview = this.workGroup.canPublish;
+    if (this.workGroup.mpSpStatus === MpSpStatus.underReview || this.workGroup.mpSpStatus === MpSpStatus.reviewed) {this.canReview = true;}
 
-    if (this.workGroup.canPublish && !this.facIncomplete){
-      this.canReview = true;
-    }
+    // this.facIncomplete = this.members.some(mem => {
+    //   if (mem.statusOfStudent.spResponses !== undefined && mem.statusOfStudent.spResponses.length > 0) {return true;}
+    //   if (!mem.statusOfStudent.stratComplete) {return true;}
+    //   return false;
+    // });
+
+    // if (this.workGroup.canPublish && !this.facIncomplete){
+    //   this.canReview = true;
+    // }
   }
 
   refreshData() {
@@ -109,18 +112,22 @@ export class StatusComponent implements OnInit {
   }
 
   reviewFlight() {
-    if(!this.canReview){
-      let message: string;
-
-      if (this.workGroup.mpSpStatus === MpSpStatus.underReview) {
-        //this.router.navigate(['/publish']);
-      } else if (this.workGroup.mpSpStatus === MpSpStatus.published) {
+    switch(this.workGroup.mpSpStatus){
+      case MpSpStatus.created:
+      case MpSpStatus.published:
         this.dialogService.openAlert({
-          message: 'This group is already published.',
-          title: 'Cannot Begin Review'
+          message: 'Group is not in the proper state for review.',
+          title: 'Cannot Review Flight'
         });
         return;
-      }
+      case MpSpStatus.underReview:
+      case MpSpStatus.reviewed:
+        this.router.navigate(['list', this.workGroup.courseId, 'evaluate', this.workGroup.workGroupId], {relativeTo: this.route.parent});
+        break;
+    }
+
+    if(!this.canReview){
+      let message: string;
 
       let studIncomplete: boolean = true;
       studIncomplete = this.members.some(mem => {
@@ -130,22 +137,31 @@ export class StatusComponent implements OnInit {
         return false;
       });
 
-      message= 'There are incomplete items. /n';
       if (studIncomplete) { 
-        message = message + '/n All students must complete all assessments and strats.'
+        this.dialogService.openAlert({
+          message: 'All students must complete all assessments and strats.',
+          title: 'Cannot Review Flight'
+        });
       } 
-
-      if (this.facIncomplete){
-        message = message + '/n You must assess and strat all students.'
-      }
-
-      this.dialogService.openAlert({
-        message: message,
-        title: 'Cannot Begin Review'
-      });
       return;
+
     } else {
-      //this.router.navigate(['/publish']);
+      if (this.workGroup.mpSpStatus === MpSpStatus.open){
+        this.dialogService.openConfirm({
+          message: 'Students will no longer be able to make changes to assessments/comments/strats. \n\n Are you sure you want to place this flight Under Review?',
+          title: 'Review Flight',
+          acceptButton: 'Yes',
+          cancelButton: 'No'
+        }).afterClosed().subscribe((confirmed: boolean) => {
+          if (confirmed) {
+            this.workGroup.mpSpStatus = MpSpStatus.underReview;
+            this.ctx.commit().then(_ => {
+                this.router.navigate(['list', this.workGroup.courseId, 'evaluate', this.workGroup.workGroupId], {relativeTo: this.route.parent});
+              }
+            )
+          }
+        });
+      }
     }
   }
 

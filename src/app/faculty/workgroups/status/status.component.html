@@ -1,5 +1,11 @@
 <md-card class="width">
-  <md-card-title>{{wgName}} Status</md-card-title>
+  <md-card-title>
+    <button md-raised-button (click)="this.location.back()"><!--md-icon>arrow_back</md-icon-->Back</button>
+    <span fxFlex="100" class="text-center">{{wgName}} Status</span>
+    <span fxFlex></span>
+    <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review</button>
+    <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+  </md-card-title>
   <md-divider></md-divider>
   <md-card-content>
     <md-list>
@@ -26,21 +32,8 @@
             (select)="onSelect($event)"
             *ngIf="student.hasChartData">
           </ngx-charts-bar-horizontal-stacked>
-          <!--ngx-charts-pie-chart
-            [view]="[75, 75]"
-            [scheme]="chartColors"
-            [results]="student.statusOfStudent.gaveBreakOutChartData"
-            (select)="onSelect($event)">
-          </ngx-charts-pie-chart-->
         </span>
       </md-list-item>
     </md-list>
   </md-card-content>
-  <md-card-actions>
-    <button md-raised-button (click)="this.location.back()">Back</button>
-    <span fxFlex></span>
-    <button md-raised-button (click)="this.refreshData()">Refresh</button>
-    <!--button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review Flight</button-->
-  </md-card-actions>
 </md-card>
-<a md-fab color="accent" class="mat-fab-bottom-right"><md-icon>check</md-icon></a>
