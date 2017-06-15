@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { WorkGroup } from "../../../../core/entities/faculty";
+import { WorkGroup, CrseStudentInGroup } from "../../../../core/entities/faculty";
 
 @Component({
   selector: 'comments',
@@ -11,7 +11,7 @@ export class CommentsComponent implements OnInit {
 
   constructor() { }
 
-  @Input() workGroup: WorkGroup;
+  @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
   }

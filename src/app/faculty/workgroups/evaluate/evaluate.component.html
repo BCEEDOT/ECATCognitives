@@ -1,27 +1,43 @@
 <div class="width">
   <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
     <md-card>
+      <md-card-title>
+        <div fxFlex>
+          <button md-raised-button (click)="this.location.back()">Back</button>
+        </div>
+        <div fxFlex="100" class="text-center">
+          {{wgName}} - {{workGroup.mpSpStatus}}
+        </div>
+        <div fxFlex>
+          <button md-raised-button (click)="this.location.back()">Review</button>
+        </div>
+      </md-card-title>
+      <md-divider></md-divider>
       <md-tab-group md-stretch-tabs>
         <md-tab>
-          <ng-template md-tab-label>Assessment</ng-template>
-          <assess [workGroup]="activeWorkGroup"></assess>
+          <ng-template md-tab-label>
+            Assess
+            <md-icon [ngClass]="(assessIncomplete) ? 'tc-red-700' : 'tc-green-700'">{{assessStatusIcon}}</md-icon>
+          </ng-template>
+          <assess [members]="members"></assess>
         </md-tab>
         <md-tab>
-          <ng-template md-tab-label>Stratification</ng-template>
-          <strat [workGroup]="activeWorkGroup"></strat>
+          <ng-template md-tab-label>
+            Strat
+            <md-icon [ngClass]="(stratIncomplete) ? 'tc-red-700' : 'tc-green-700'">{{stratStatusIcon}}</md-icon>
+          </ng-template>
+          <strat [members]="members"></strat>
         </md-tab>
         <md-tab [disabled]="!showComments">
-          <ng-template md-tab-label>Comments</ng-template>
-          <comments [workGroup]="activeWorkGroup"></comments>
+          <ng-template md-tab-label>
+            Review Comments
+            <md-icon *ngIf="!showComments">lock</md-icon>
+          </ng-template>
+          <comments [members]="members"></comments>
         </md-tab>
       </md-tab-group>
-      <md-card-actions>
-        <button md-raised-button (click)="this.location.back()">Back</button>
-      </md-card-actions>
     </md-card>
   </ng-template>
-</div>
 
-<a md-fab color="accent" class="mat-fab-bottom-right" [ngClass]="wgStatus" (click)="assessCompare()">
-  <md-icon>rate_review</md-icon>
-</a>
+  <a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['../../status', workGroupId]"><md-icon>check</md-icon></a>
+</div>

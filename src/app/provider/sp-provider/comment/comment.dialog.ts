@@ -63,6 +63,8 @@ export class CommentDialog implements OnInit {
 
     this.loadingService.register(this.commentLoad);
 
+    
+
     if (this.isStudent) {
 
       this.studentDataContext.commit()

@@ -191,7 +191,7 @@ export class FacultyDataContextService extends BaseDataContext {
         facSpReponse.facultyPersonId = userId
       }
       //Since we are reusing the inventory item breeze will auto try the backing fields...need to reset them to ensure there is no carryover between assessments;
-      //invItem.resetAssess();
+      invItem.resetAssess();
       invItem.responseForAssessee = facSpReponse;
 
       return invItem;

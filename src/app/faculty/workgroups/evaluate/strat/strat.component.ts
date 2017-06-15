@@ -14,10 +14,10 @@ export class StratComponent implements OnInit {
 
   constructor(private spProvider: SpProviderService,) { }
 
-  @Input() workGroup: WorkGroup;
+  @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-    this.groupMembers = this.workGroup.groupMembers;
+    this.groupMembers = this.members;
 
     console.log(this.groupMembers);
   }
