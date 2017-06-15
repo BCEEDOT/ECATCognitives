@@ -9,7 +9,7 @@
           {{wgName}} - {{workGroup.mpSpStatus}}
         </div>
         <div fxFlex>
-          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review</button>
+          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === 'Published'">{{reviewBtnText}}</button>
         </div>
       </md-card-title>
       <md-divider></md-divider>
@@ -32,6 +32,7 @@
           <ng-template md-tab-label>
             Review Comments
             <md-icon *ngIf="!showComments">lock</md-icon>
+            <md-icon *ngIf="showComments" [ngClass]="(commentIncomplete) ? 'tc-red-700' : 'tc-green-700'">{{commentStatusIcon}}</md-icon>
           </ng-template>
           <comments [members]="members"></comments>
         </md-tab>

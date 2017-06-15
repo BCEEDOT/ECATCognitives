@@ -5,13 +5,14 @@
     </md-input-container>
 </md-dialog-content>
 <md-dialog-actions>
-  <div *ngIf="isStudent" flex="50">
-    <button md-raised-button (click)="comment.requestAnonymity=true; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==true" [ngClass]="{'btn-selected': comment.requestAnonymity===true}">Anonymous</button>
-    <button md-raised-button (click)="comment.requestAnonymity=false; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==false" [ngClass]="{'btn-selected': comment.requestAnonymity===false}">Named</button>
+  <div flex="50">
+    <button md-raised-button (click)="comment.requestAnonymity=true; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==true" [ngClass]="{'btn-selected': comment.requestAnonymity===true}" *ngIf="isStudent">Anonymous</button>
+    <button md-raised-button (click)="comment.requestAnonymity=false; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==false" [ngClass]="{'btn-selected': comment.requestAnonymity===false}" *ngIf="isStudent">Named</button>
   </div>
-  <span flex="50"></span>
-  <div flex="45">
+  <span flex="30"></span>
+  <div flex="65">
     <button md-raised-button (click)="cancel()">Cancel</button>
+    <button md-raised-button [disabled]="viewOnly" (click)="delete()">Delete</button>
     <button md-raised-button [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
   </div>
 </md-dialog-actions>

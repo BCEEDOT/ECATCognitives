@@ -97,6 +97,26 @@ export class CommentDialog implements OnInit {
     }
   }
 
+  delete() {
+    if (this.comment.entityAspect.entityState.isAdded()){
+      this.cancel();
+      return;
+    }
+
+    this.dialogService.openConfirm({
+        message: 'Are you sure you want to delete this comment?',
+        title: 'Delete Comment',
+        acceptButton: 'Yes',
+        cancelButton: 'No'
+      }).afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.comment.flag.entityAspect.setDeleted();
+          this.comment.entityAspect.setDeleted();
+          this.save();
+        }
+      });
+  }
+
   cancel() {
     if (this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() || this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
       this.dialogService.openConfirm({

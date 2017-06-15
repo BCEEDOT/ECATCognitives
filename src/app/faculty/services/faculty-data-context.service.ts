@@ -5,7 +5,7 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag } from "../../core/entities/faculty";
+import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag, StudSpComment } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
@@ -224,6 +224,38 @@ export class FacultyDataContextService extends BaseDataContext {
     }
 
     return facComment;
+  }
+
+  fetchActiveWgSpComments(courseId: number, groupId: number, forceRefresh?: boolean): Promise<Array<StudSpComment>> {
+    let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
+    let activeWgComments = spComments.filter(com => com.workGroupId === groupId);
+
+    if (activeWgComments.length > 0){
+      console.log('WorkGroup loaded from local cache');
+      return Promise.resolve(activeWgComments);
+    }
+
+    const params = { courseId: courseId, workGroupId: groupId };
+
+    let query = EntityQuery.from(this.facultyApiResource.wgComment.resource).withParameters(params);
+
+    return <Promise<Array<StudSpComment>>>this.manager.executeQuery(query)
+      .then(wgCommentResponse)
+      .catch(this.queryFailed);
+
+    function wgCommentResponse(data: QueryResult) {
+      let comments = data.results as Array<StudSpComment>;
+
+      // if (!comments) {
+      //   const error = {
+      //     errorMessage: 'Did not get any comments from the server'
+      //   }
+      //   console.log('Query succeeded, but no comments were returned', data, false);
+      //   return Promise.reject(() => error) as any;
+      // }
+
+      return comments;
+    }
   }
 
 }
