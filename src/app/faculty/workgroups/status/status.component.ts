@@ -92,16 +92,6 @@ export class StatusComponent implements OnInit {
 
     this.canReview = this.workGroup.canPublish;
     if (this.workGroup.mpSpStatus === MpSpStatus.underReview || this.workGroup.mpSpStatus === MpSpStatus.reviewed) {this.canReview = true;}
-
-    // this.facIncomplete = this.members.some(mem => {
-    //   if (mem.statusOfStudent.spResponses !== undefined && mem.statusOfStudent.spResponses.length > 0) {return true;}
-    //   if (!mem.statusOfStudent.stratComplete) {return true;}
-    //   return false;
-    // });
-
-    // if (this.workGroup.canPublish && !this.facIncomplete){
-    //   this.canReview = true;
-    // }
   }
 
   refreshData() {
@@ -126,13 +116,6 @@ export class StatusComponent implements OnInit {
         this.router.navigate(['list', this.workGroup.courseId, 'evaluate', this.workGroup.workGroupId], {relativeTo: this.route.parent});
         break;
     }
-
-    this.canReview = this.members.some(mem => {
-      if (!mem.check.isSelfDone) {return true;}
-      if (!mem.check.sp.isDone) {return true;}
-      if (!mem.check.strat.isDone) {return true;}
-      return false;
-    });
 
     if(!this.canReview){
       this.dialogService.openAlert({
