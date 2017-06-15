@@ -108,6 +108,7 @@ export class StatusComponent implements OnInit {
     this.ctx.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true)
       .then(data => {
         this.workGroup = data;
+        this.activate();
       });
   }
 
@@ -126,23 +127,18 @@ export class StatusComponent implements OnInit {
         break;
     }
 
+    this.canReview = this.members.some(mem => {
+      if (!mem.check.isSelfDone) {return true;}
+      if (!mem.check.sp.isDone) {return true;}
+      if (!mem.check.strat.isDone) {return true;}
+      return false;
+    });
+
     if(!this.canReview){
-      let message: string;
-
-      let studIncomplete: boolean = true;
-      studIncomplete = this.members.some(mem => {
-        if (!mem.check.isSelfDone) {return true;}
-        if (!mem.check.sp.isDone) {return true;}
-        if (!mem.check.strat.isDone) {return true;}
-        return false;
+      this.dialogService.openAlert({
+        message: 'All students must complete all assessments and strats.',
+        title: 'Cannot Review Flight'
       });
-
-      if (studIncomplete) { 
-        this.dialogService.openAlert({
-          message: 'All students must complete all assessments and strats.',
-          title: 'Cannot Review Flight'
-        });
-      } 
       return;
 
     } else {
