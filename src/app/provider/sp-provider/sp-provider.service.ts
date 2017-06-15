@@ -1,8 +1,11 @@
+import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { isNumeric } from 'rxjs/util/isNumeric';
 import 'rxjs/util/isNumeric';
+import 'rxjs/add/observable/of';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { CrseStudentInGroup as StuCrseStudentInGroup, WorkGroup, StudSpComment } from "../../core/entities/student";
 import { CrseStudentInGroup as FacCrseStudentInGroup } from "../../core/entities/faculty";
@@ -18,6 +21,7 @@ import { CommentDialog } from "./comment/comment.dialog";
 @Injectable()
 export class SpProviderService {
   dialogRef: MdDialogRef<CommentDialog>;
+  commentClosed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   private off: any;
   workGroup: WorkGroup;
@@ -55,6 +59,10 @@ export class SpProviderService {
     }
   }
 
+  commentClosed(commentClosed: boolean) {
+    this.commentClosed$.next(commentClosed);
+  }
+
 
 
   loadComment(recipient: StuCrseStudentInGroup | FacCrseStudentInGroup) {
@@ -72,6 +80,11 @@ export class SpProviderService {
       data: {
         comment: comment,
       }
+    });
+
+    this.dialogRef.afterClosed().subscribe(() => {
+      console.log('Comment closed');
+      this.commentClosed(true);
     });
   }
 
@@ -92,7 +105,7 @@ export class SpProviderService {
 
 
     function evaluate(): Array<StuCrseStudentInGroup & FacCrseStudentInGroup> {
-      
+
       let members;
 
       if (isInstructor) {

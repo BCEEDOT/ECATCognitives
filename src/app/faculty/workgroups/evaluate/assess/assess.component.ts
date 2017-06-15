@@ -18,6 +18,14 @@ export class AssessComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
+    //Is this a superhack job.........?
+    this.spProvider.commentClosed$.subscribe(() =>{
+      this.activate();
+    });
+    this.activate();
+  }
+
+  activate():void {
     this.groupMembers = this.members;
 
     console.log(this.groupMembers);
@@ -41,6 +49,7 @@ export class AssessComponent implements OnInit {
       gm['assessText'] = assessText;
     });
   }
+
 
   comment(recipient: CrseStudentInGroup): any {
     this.spProvider.loadComment(recipient);
