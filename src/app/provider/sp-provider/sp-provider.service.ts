@@ -172,7 +172,7 @@ export class SpProviderService {
             .filter(p => p.proposedStratPosition === member.proposedStratPosition && p.studentId !== member.studentId)
             .forEach(pp => {
               member.stratValidationErrors.push({
-                cat: 'Duplicate',
+                cat: 'Duplicate - Another member has the same proposed change',
                 text: `${pp.rankName}: has an identical proposed change`
               });
             });
@@ -195,7 +195,7 @@ export class SpProviderService {
                 p.proposedStratPosition === null)
               .forEach(pp => {
                 member.stratValidationErrors.push({
-                  cat: 'Duplicate',
+                  cat: 'Duplicate - Another member is currently at this position without a proposed change',
                   text: `${pp.rankName}: is currently at this position without a proposed change.`
                 });
               });

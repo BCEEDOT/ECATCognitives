@@ -18,7 +18,7 @@ export class AssessComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-    //Is this a superhack job.........?
+    //Is this a super hack job.........?
     this.spProvider.commentClosed$.subscribe(() =>{
       this.activate();
     });

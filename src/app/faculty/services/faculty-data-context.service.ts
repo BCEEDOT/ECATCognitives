@@ -5,7 +5,7 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag } from "../../core/entities/faculty";
+import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag, FacStratResponse } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
@@ -225,5 +225,20 @@ export class FacultyDataContextService extends BaseDataContext {
 
     return facComment;
   }
+
+  getSingleStrat(courseId: number, groupId: number, studentId: number) {
+        
+        const loggedUserId = this.global.persona.value.person.personId;
+
+        const existingStrat = this.manager.getEntityByKey(MpEntityType.facStratResponse, [studentId, courseId, groupId]) as FacStratResponse;
+
+        return (existingStrat) ? existingStrat :
+            this.manager.createEntity(MpEntityType.facStratResponse, {
+                assesseePersonId: studentId,
+                facultyPersonId: loggedUserId,
+                courseId: courseId,
+                workGroupId: groupId
+            }) as FacStratResponse;
+    }
 
 }
