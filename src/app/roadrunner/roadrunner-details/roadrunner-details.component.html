@@ -11,7 +11,7 @@
 
   <md-card >
 
-    <div *ngIf="event.length > 0">
+    <div *ngIf="event.length > 0 || checkNew == 'New'">
       <md-toolbar>
         <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
 
@@ -100,3 +100,4 @@
   </md-card>
 
 </td-layout-nav>
+

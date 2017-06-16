@@ -1,4 +1,4 @@
-<td-layout-nav logo="assets:covalent">
+<td-layout-nav logo="assets:covalent" toolbarTitle="RoadRunner">
   <div td-toolbar-content layout="row" layout-align="center center" flex>
     <span flex></span>
     <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
@@ -9,9 +9,44 @@
     </a>
   </div>
 
+<md-select *ngIf="persona.isFaculty" placeholder="Select Flight">
+   <md-option *ngFor="let flight of flights" (click)="filter(flight)" [value]="flight">{{flight}}</md-option>
+</md-select>
+
   <md-card *ngIf="persona.isFaculty">
+    <p></p>
+    <!--<md-card>-->
+      <!--<md-select placeholder="Select Flight">
+   <md-option *ngFor="" [value]=""></md-option>
+</md-select>-->
+<div>
+  <span class="md-title">Students Signed Out For {{flightDisplayed}}</span>
+</div>
+<div *tdLoading="'roadRunnerLoading'">
 
+  <!--<td-chips (add)="add($event)" [items]="flights" placeholder="Click to filter by Flight"
+      [readOnly]="readOnly" requireMatch>
+    </td-chips>-->
+<!--<button md-raised-button color="primary" (click)="filter('Flight 17')">Filter</button>-->
+<md-divider></md-divider>
+    <td-data-table 
+      [data] = "studentsOut"
+      [columns] = "columns">
 
+       <template tdDataTableTemplate="columnName" let-value="value" let-row="row" let-column="column">
+   <div layout="row">
+     <span flex>{{value}}</span> 
+     
+     
+   </div>
+
+ </template>
+    
+</td-data-table>
+</div>
+<p></p>
+    
+  <!--</md-card>-->
   </md-card>
   <!-- My code -->
 
@@ -161,7 +196,7 @@
 
 </td-layout-nav>
 
-<div>
+<div *ngIf="persona.isStudent">
   <a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['New']">
     <md-icon>add</md-icon>
   </a>

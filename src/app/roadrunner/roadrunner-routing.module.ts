@@ -4,15 +4,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserAuthGuard } from '../core/services/user-auth-guard.service';
 import { RoadrunnerComponent }    from './roadrunner.component';
 import { RoadrunnerDetailsComponent } from'./roadrunner-details/roadrunner-details.component';
+import { FacultyAuthGuardService} from '../faculty/services/faculty-auth-guard.service';
 
 const RoadrunnerRoutes: Routes = [
   { 
-    path: 'roadrunner',  
+    path: 'roadrunnerStudent',  
     component: RoadrunnerComponent,
     canActivate: [UserAuthGuard] 
   },
   {
-    path: 'roadrunner/:id',
+    path: 'roadrunnerFaculty',
+    component: RoadrunnerComponent,
+    canActivate: [FacultyAuthGuardService]
+  },
+  {
+    path: 'roadrunnerStudent/:id',
     component: RoadrunnerDetailsComponent
     //resolve: { rr: rrResolver}
   } 

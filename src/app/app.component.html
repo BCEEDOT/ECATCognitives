@@ -5,7 +5,9 @@
         <!--<a md-list-item routerLink="/users" (click)="layout.close()"><md-icon>people</md-icon>Users</a>-->
         <a *ngIf="isStudent" md-list-item routerLink="/student/assessment" (click)="layout.close()"><md-icon>assessment</md-icon>Assessment Center</a>
         <a *ngIf="isFaculty" md-list-item routerLink="/faculty/workgroups" (click)="layout.close()"><md-icon>people</md-icon>Workgroup Center</a>
-         <a md-list-item routerLink="/roadrunner" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
+
+         <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
+         <a *ngIf="isFaculty" md-list-item routerLink="/roadrunnerFaculty" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
 
     </md-nav-list>
     <md-nav-list td-navigation-drawer-menu>

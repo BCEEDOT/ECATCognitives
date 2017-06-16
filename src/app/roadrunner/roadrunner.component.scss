@@ -41,3 +41,13 @@
   //justify-content: space-between;
   //justify-content:space-around;
 }
+
+.md-title{
+  display:flex;
+  justify-content: center;
+}
+md-select{
+  display: flex;
+  padding-right: 20px;
+    justify-content: flex-end
+}

@@ -5,16 +5,18 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course } from "../../core/entities/faculty";
+import { Course, WorkGroup } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from "../../core/entities/client-models";
 import { MpEntityType, MpCommentFlag } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
 import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
 
+
 @Injectable()
 export class FacultyDataContextService extends BaseDataContext {
 
+  activeCourseId: number;
 
   private facultyApiResource: IFacultyApiResources = {
     initCourses: {
@@ -134,5 +136,40 @@ export class FacultyDataContextService extends BaseDataContext {
       return courses;
     }
   }
+
+   fetchRoadRunnerWorkGroups(courseId: number, forceRefresh?: boolean): Promise<WorkGroup[] | Promise<void>> {
+         const self = this;
+
+         let flights = this.manager.getEntities(MpEntityType.workGroup) as WorkGroup[];
+
+    //     if (this.isLoaded.roadRunner[this.activeCourseId] && !forceRefresh) {
+    //         if (flights) {
+    //             let rrFlights = flights.filter(wg => {
+    //                 return (wg.courseId === this.activeCourseId && wg.mpCategory === _mp.MpGroupCategory.bc1);
+    //             });
+    //             this.log.success('Roadrunner info loaded from local cache', rrFlights, false);
+    //             return this.c.$q.when(rrFlights);
+    //         }
+    //     }
+
+        let query = EntityQuery.from(this.facultyApiResource.currentWorkGroup.resource).withParameters({courseId: courseId});
+
+        return <Promise<WorkGroup[]>>this.manager.executeQuery(query)
+            //.using(this.manager)
+            //.withParameters({ courseId: courseId })
+            //.execute()
+            .then(getCurrentWorkGroup)
+            .catch(this.queryFailed);
+
+        function getCurrentWorkGroup(workGroupResult: QueryResult) {
+            if (workGroupResult.results.length === 0) {
+                console.log('Roadrunner query did not return any results', workGroupResult.results, false);
+            } else {
+               // self.isLoaded.roadRunner[self.activeCourseId] = true;
+                console.log('Roadrunner info loaded from remote store', workGroupResult.results, false);
+            }
+            return workGroupResult.results;
+        }
+    }
 
 }

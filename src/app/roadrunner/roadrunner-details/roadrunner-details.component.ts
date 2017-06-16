@@ -100,14 +100,14 @@ export class RoadrunnerDetailsComponent implements OnInit {
         // this.roadRunnerService.roadRunnerData.value.rejectChanges();
         //this.roadRunnerService.roadRunnerData.value.entityAspect.rejectChanges();
         //this.userDataContext.Entry(this.event).Reload();
-        this.router.navigate(['roadrunner/']);
+        this.router.navigate(['roadrunnerStudent/']);
     }
 
     save() {
         this.userDataContext.commit()
             .then((res) => {
                 console.log('check roadrunner database');
-                this.router.navigate(['roadrunner/']);
+                this.router.navigate(['roadrunnerStudent/']);
             })
 
         
@@ -121,7 +121,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
         this.userDataContext.commit()
         .then((res) =>{
             console.log('check roadrunner database');
-            this.router.navigate(['roadrunner/']);
+            this.router.navigate(['roadrunnerStudent/']);
         })
 
     }
