@@ -22,7 +22,6 @@ export class StratComponent implements OnInit, OnChanges {
   errorMessage: string;
   groupCount: number;
   userId: number;
-  isLoading: boolean = false;;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar,
@@ -43,7 +42,6 @@ export class StratComponent implements OnInit, OnChanges {
   }
 
   activate() {
-    this.loadingService.register('replaceTemplateSyntax');
     this.activeWorkGroup = this.workGroup;
 
     this.groupCount = this.activeWorkGroup.groupMembers.length;
@@ -53,7 +51,6 @@ export class StratComponent implements OnInit, OnChanges {
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
     this.evaluateStrat(true);
 
-    this.workGroupService.isLoading(false);
   }
 
   cancel() {

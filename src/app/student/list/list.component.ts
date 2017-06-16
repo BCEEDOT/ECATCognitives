@@ -42,6 +42,10 @@ export class ListComponent implements OnInit {
 
     });
 
+    this.workGroupService.isLoading$.subscribe(value => {
+      this.isLoading = value;
+    })
+
   }
 
   ngOnInit() {
@@ -56,6 +60,8 @@ export class ListComponent implements OnInit {
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
+
+    this.workGroupService.isLoading(false);
 
   }
 
