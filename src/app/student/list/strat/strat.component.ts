@@ -29,7 +29,7 @@ export class StratComponent implements OnInit, OnChanges {
     private spTools: SpProviderService, private dialogService: TdDialogService,
     private studentDataContext: StudentDataContext) {
 
-      this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
+      //this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
   }
 
   @Input() workGroup: WorkGroup;
@@ -43,6 +43,7 @@ export class StratComponent implements OnInit, OnChanges {
   }
 
   activate() {
+    this.loadingService.register('replaceTemplateSyntax');
     this.activeWorkGroup = this.workGroup;
 
     this.groupCount = this.activeWorkGroup.groupMembers.length;
@@ -52,10 +53,8 @@ export class StratComponent implements OnInit, OnChanges {
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
     this.evaluateStrat(true);
 
-    this.workGroupService.isLoading(false);
-
+    //this.workGroupService.isLoading(false);
   }
-
 
   cancel() {
     if (this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null)) {
@@ -69,7 +68,7 @@ export class StratComponent implements OnInit, OnChanges {
           this.activeWorkGroup.groupMembers.forEach(gm => {
              gm.stratValidationErrors = [];
              gm.stratIsValid = true;
-             gm.proposedStratPosition = null;
+             gm.proposedStratPosition = undefined;
            });
           this.snackBarService.open('Changes Discarded', 'Dismiss', {duration: 2000})
           //this.location.back();
@@ -86,7 +85,7 @@ export class StratComponent implements OnInit, OnChanges {
 
     if (!isDirty) {
       return true;
-    } 
+    }
 
     if (invalidStrats) {
       return true;

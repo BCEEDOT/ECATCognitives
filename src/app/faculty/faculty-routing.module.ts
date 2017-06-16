@@ -2,23 +2,27 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
 import { FacultyAuthGuardService } from './services/faculty-auth-guard.service';
-import { FacultyDataContextService } from "./services/faculty-data-context.service";
-import { WorkGroupsComponent } from "./workgroups/work-groups.component";
-import { FacultyComponent } from "./faculty.component";
-import { ListComponent } from "./workgroups/list/list.component";
-import { GlobalService } from "../core/services/global.service";
+import { FacultyDataContextService } from './services/faculty-data-context.service';
+import { WorkGroupsComponent } from './workgroups/work-groups.component';
+import { FacultyComponent } from './faculty.component';
+import { ListComponent } from './workgroups/list/list.component';
+import { GlobalService } from '../core/services/global.service';
+import { StatusComponent } from './workgroups/status/status.component'
+import { EvaluateComponent } from './workgroups/evaluate/evaluate.component';
+import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
+import { Course } from '../core/entities/faculty';
 
 const facultyRoutes: Routes = [
   {
     path: 'faculty',
-    //Check if role is student, spin up Student Data Context
+    // Check if role is student, spin up Student Data Context
     canActivate: [FacultyAuthGuardService],
     children: [
       {
         path: 'workgroups',
         component: FacultyComponent,
         canActivateChild: [FacultyAuthGuardService],
-        //Get the students courses
+        // Get the students courses
         resolve: { courses: 'coursesResolver' },
             children: [
               // {
@@ -29,29 +33,39 @@ const facultyRoutes: Routes = [
 
               {
                 path: 'list/:crsId',
-                //set to most recent course, allow student to switch between courses.
+                // set to most recent course, allow student to switch between courses.
                 component: ListComponent,
                 // children: [
                 //   { path: 'sp', component: SpComponent},
                 //   { path: 'comment', component: CommentComponent}
                 // ]
                 resolve: { course: 'courseResolver' },
-              // },
+              },
+              {
+                path: 'list/:crsId/status/:wrkGrpId',
+                component: StatusComponent,
+                resolve: { workGroup: 'facWorkGroupResolver'}
+              },
+              {
+                path: 'list/:crsId/evaluate/:wrkGrpId',
+                component: EvaluateComponent,
+                resolve: { workGroup: 'facWorkGroupResolver'}
+              },
               // {
               //   path: 'results/:crsId/:wrkGrpId',
               //   component: ResultsComponent,
               //   //resolve: { results: 'resultsResolver' },
               // },
-              // {
-              //   path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
-              //   component: AssessComponent,
-              //   resolve: { inventories: 'spAssessResolver' }
-              // },
+              {
+                path: 'list/:crsId/evaluate/:wrkGrpId/assess/:assesseeId',
+                component: AssessComponent,
+                resolve: { inventories: 'facSpAssessResolver' }
+              },
               // {
               //   path: '',
               //   component: StudentComponent,
               //   resolve: { assess: 'assessmentResolver'},
-               }
+              //}
 
             ]
           }
@@ -60,7 +74,7 @@ const facultyRoutes: Routes = [
     ]
 
 
-export function coursesResolver(facultyDataContext: FacultyDataContextService) {
+export function coursesResolver(facultyDataContext: FacultyDataContextService){
    return (route: ActivatedRouteSnapshot) => facultyDataContext.initCourses();
  }
 
@@ -68,9 +82,10 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
   return (route: ActivatedRouteSnapshot) => facultyDataContext.getActiveCourse(+route.params['crsId']);
 }
 
-// export function spAssessResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.getSpInventory(+route.params['crsId'], +route.params['wrkGrpId'], +route.params['assesseeId']);
-// }
+export function facSpAssessResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.getFacSpInventory(+route.params['crsId'], 
++route.params['wrkGrpId'], +route.params['assesseeId']);
+}
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.course(+route.params['id']);
@@ -80,9 +95,9 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.workGroups(+route.parent.params['workgroup']);
 // }
 
-// export function workGroupResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.workgroup(+route.params['id']);
-// }
+export function facWorkGroupResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
+}
 
 // export function listResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
@@ -97,7 +112,7 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
     RouterModule.forChild(facultyRoutes)
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ],
   providers: [
     {
@@ -106,9 +121,12 @@ export function courseResolver(facultyDataContext: FacultyDataContextService) {
     {
       provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
     },
-    // {
-    //   provide: 'spAssessResolver', useFactory: spAssessResolver, deps: [StudentDataContext]
-    // }
+    {
+      provide: 'facWorkGroupResolver', useFactory: facWorkGroupResolver, deps: [FacultyDataContextService]
+    },
+    {
+      provide: 'facSpAssessResolver', useFactory: facSpAssessResolver, deps: [FacultyDataContextService]
+    }
   ]
 })
 export class FacultyRoutingModule { }

@@ -115,7 +115,7 @@ export class StudentComponent implements OnInit {
       if (wgA.mpCategory < wgB.mpCategory) return 1;
       if (wgA.mpCategory > wgB.mpCategory) return -1;
       return 0;
-    })
+    });
 
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
 

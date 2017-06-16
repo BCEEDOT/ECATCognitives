@@ -35,7 +35,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
     ],
     declarations: [
-
     ],
     exports: [
         FlexLayoutModule,
@@ -50,7 +49,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule,
         CovalentHighlightModule,
         CovalentMarkdownModule,
-        NgxChartsModule
+        NgxChartsModule,
     ],
     providers: []
 })

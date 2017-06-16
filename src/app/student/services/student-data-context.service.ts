@@ -243,6 +243,7 @@ export class StudentDataContext extends BaseDataContext {
                 spResponse = this.manager.createEntity(MpEntityType.spResponse, key) as SpResponse;
             }
 
+            inv.resetAssess();
             inv.responseForAssessee = spResponse;
             return inv;
         });

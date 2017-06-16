@@ -37,7 +37,7 @@ export class AssessCompareDialog implements OnInit {
   yAxisLabel = 'Rating';
 
   blueOrangeScheme: any = {
-    domain: ['#0D47A1', '#01579B', '#1976D2', '#039BE5', '#00BCD4', '#FB8C00', '#FFA726', '#FFCC80', '#FFECB3'],
+    domain: ['#0D47A1', '#FFCC80', '#1976D2', '#039BE5', '#00BCD4', '#FB8C00', '#FFA726', '#FFCC80', '#FFECB3'],
   };
 
   constructor(public dialogRef: MdDialogRef<AssessCompareDialog>, private chips: TdChipsComponent,
@@ -55,12 +55,7 @@ export class AssessCompareDialog implements OnInit {
 
   add(value: string): void {
 
-    let multiTest; 
-    
-    multiTest = this.multi;
-
-    console.log(this.multiOriginal);
-
+    let multiTest = this.multi;
     this.multi = this.multiOriginal.filter(data => {
 
       let match = false;

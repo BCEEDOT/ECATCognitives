@@ -187,8 +187,10 @@ export class MpSweetAlertType {
 export class MpSpStatus {
 
     static und = 'Udr';
+    static created = 'Created';
     static open = 'Open';
     static underReview = 'Under Review';
+    static reviewed = 'Reviewed';
     static published = 'Published';
     static arch = 'ArchiveE';
 }
