@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MdSnackBar } from "@angular/material";
 import { TdDialogService } from "@covalent/core";
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
@@ -9,6 +10,7 @@ import 'rxjs/add/operator/pluck';
 import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";
 import { FacWorkgroupService } from "../../services/facworkgroup.service";
 import { MpSpStatus } from "../../../core/common/mapStrings";
+import { FacultyDataContextService } from "../../services/faculty-data-context.service";
 
 @Component({
   templateUrl: './evaluate.component.html',
@@ -19,9 +21,6 @@ export class EvaluateComponent implements OnInit {
 
   showComments: boolean = false;
   wgStatus: string = "tc-red-900";
-  stratIncomplete: boolean = true;
-  assessIncomplete: boolean = true;
-  commentIncomplete: boolean = true;
   assessStatusIcon: string;
   stratStatusIcon: string;
   commentStatusIcon: string = 'lock';
@@ -35,11 +34,17 @@ export class EvaluateComponent implements OnInit {
   private wgName: string;
   private reviewBtnText: string = 'Review';
 
+  assessComplete: boolean;
+  stratComplete: boolean;
+  commentsComplete: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
     private dialogService: TdDialogService,
+    private ctx: FacultyDataContextService,
+    private snackBar: MdSnackBar
   ) {
 
     this.workGroup$ = route.data.pluck('workGroup');
@@ -58,6 +63,18 @@ export class EvaluateComponent implements OnInit {
       this.facWorkGroupService.facWorkGroup(this.workGroup);
       this.activate();
     });
+    this.facWorkGroupService.assessComplete$.subscribe(ac => {
+      this.assessComplete = ac;
+      this.assessStatusIcon = (this.assessComplete) ? "check_box" : "indeterminate_check_box";
+    });
+    this.facWorkGroupService.stratComplete$.subscribe(sc => {
+      this.stratComplete = sc;
+      this.stratStatusIcon = (this.stratComplete) ? "check_box" : "indeterminate_check_box";
+    });
+    this.facWorkGroupService.commentsComplete$.subscribe(cc => {
+      this.commentsComplete = cc;
+      this.commentStatusIcon = (this.commentsComplete) ? "check_box" : "indeterminate_check_box";
+    });
   }
 
   activate() {
@@ -71,15 +88,17 @@ export class EvaluateComponent implements OnInit {
       return 0;
     });
 
-    this.assessIncomplete = this.members.some(mem => {
+    let assessIncomplete = this.members.some(mem => {
       if (!mem.statusOfStudent.assessComplete) { return true; }
       return false;
     });
+    this.facWorkGroupService.assessComplete(!assessIncomplete);
 
-    this.stratIncomplete = this.members.some(mem => {
+    let stratIncomplete = this.members.some(mem => {
       if (!mem.statusOfStudent.stratComplete) { return true; }
       return false;
     });
+    this.facWorkGroupService.stratComplete(!stratIncomplete);
 
     switch(this.workGroup.mpSpStatus){
       case MpSpStatus.created:
@@ -89,16 +108,22 @@ export class EvaluateComponent implements OnInit {
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
-        if (!this.assessIncomplete && !this.stratIncomplete){
+        if (this.assessComplete && this.stratComplete){
           this.canReview = true;
+        } else {
+          this.canReview = false;
         }
         this.showComments = true;
+
+        let commentIncomplete = true;
         if (this.workGroup.spComments.length > 0) {
-          this.commentIncomplete = this.workGroup.spComments.some(com => com.flag.mpFaculty === null);
+          commentIncomplete = this.workGroup.spComments.some(com => com.flag.mpFaculty === null);
         } else {
-          this.commentIncomplete = true;
+          commentIncomplete = true;
         }
-        this.commentStatusIcon = (this.commentIncomplete) ? "indeterminate_check_box": "check_box";
+        if (this.canReview) {this.canReview = !commentIncomplete;}
+        this.facWorkGroupService.commentsComplete(!commentIncomplete);
+
         break;
       case MpSpStatus.reviewed:
         this.reviewBtnText = 'Re-review';
@@ -108,10 +133,6 @@ export class EvaluateComponent implements OnInit {
         this.canReview = false;
         break;
     }
-
-    this.assessStatusIcon = (this.assessIncomplete) ? "indeterminate_check_box": "check_box"; 
-    this.stratStatusIcon = (this.stratIncomplete) ? "indeterminate_check_box": "check_box"; 
-
   }
 
   reviewFlight() {
@@ -147,18 +168,22 @@ export class EvaluateComponent implements OnInit {
       });
       
     } else {
+      let setTo;
       switch(this.workGroup.mpSpStatus){
         case MpSpStatus.open:
           message = 'Students will no longer be able to make changes to assessments/comments/strats. \n\n Are you sure you want to place this flight Under Review?';
           title = 'Review Group';
+          setTo = MpSpStatus.underReview;
           break;
         case MpSpStatus.underReview:
           message = 'This will set the group as Reviewed and allow the ISA to Publish results. \n\n Are you sure you are done with your review?';
           title = 'Complete Review';
+          setTo = MpSpStatus.reviewed;
           break;
         case MpSpStatus.reviewed:
           message = 'This will set the group back to Under Review so you can change assessments/strats/comment flags. Are you sure you want to re-review?';
           title = 'Re-Review Group';
+          setTo = MpSpStatus.underReview;
           break;
       }
 
@@ -169,7 +194,11 @@ export class EvaluateComponent implements OnInit {
           cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-
+          this.workGroup.mpSpStatus = setTo;
+          this.ctx.commit().then(success => {
+            this.snackBar.open('Group Status Updated!', 'Dismiss');
+            this.activate();
+          })
         }
       });
     }

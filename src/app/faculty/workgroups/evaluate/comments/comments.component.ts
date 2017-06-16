@@ -7,6 +7,7 @@ import { WorkGroup, CrseStudentInGroup, StudSpComment } from "../../../../core/e
 import { ActivatedRoute } from "@angular/router";
 import { FacultyDataContextService } from "../../../services/faculty-data-context.service";
 import { MpCommentFlag } from "../../../../core/common/mapStrings";
+import { FacWorkgroupService } from "../../../services/facworkgroup.service";
 
 @Component({
   selector: 'comments',
@@ -26,7 +27,8 @@ export class CommentsComponent implements OnInit {
     private location: Location,
     private ctx: FacultyDataContextService,
     private snackBar: MdSnackBar,
-    private dialogService: TdDialogService) { }
+    private dialogService: TdDialogService,
+    private facWorkGroupService: FacWorkgroupService,) { }
 
   @Input() members: CrseStudentInGroup[];
 
@@ -47,16 +49,23 @@ export class CommentsComponent implements OnInit {
     this.selectedAuthor = this.memsWithComments[0];
     if (this.selectedAuthor.workGroup.spComments.length === 0){
       this.grpHasComments = false;
+      this.facWorkGroupService.commentsComplete(true);
       return;
     }
-    
+
+    if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
+        this.facWorkGroupService.commentsComplete(true);
+    } else {
+      this.facWorkGroupService.commentsComplete(false);
+    }
+
     this.changeAuthor(this.selectedAuthor);
   }
 
   changeAuthor(sel: CrseStudentInGroup){
     this.selectedAuthor = sel;
     this.authoredComments = this.selectedAuthor.authorOfComments;
-    
+
     this.authoredComments.sort((a: StudSpComment, b: StudSpComment) => {
       if (a.recipient.studentProfile.person.lastName > b.recipient.studentProfile.person.lastName) {return 1;}
       if (a.recipient.studentProfile.person.lastName < b.recipient.studentProfile.person.lastName) {return -1;}
@@ -109,6 +118,9 @@ export class CommentsComponent implements OnInit {
   save() {
     this.ctx.commit().then(fulfilled => {
       this.snackBar.open('Comment Flags Saved!', 'Dismiss');
+      if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
+        this.facWorkGroupService.commentsComplete(true);
+      }
     }, (reject => {
       this.dialogService.openAlert({message: 'There was a problem saving your flags, please try again.', title: 'Save Error'});
     }));
