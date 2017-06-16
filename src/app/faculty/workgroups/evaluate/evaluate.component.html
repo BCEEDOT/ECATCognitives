@@ -9,21 +9,21 @@
           {{wgName}} - {{workGroup.mpSpStatus}}
         </div>
         <div fxFlex>
-          <button md-raised-button (click)="this.activate()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review</button>
+          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === 'Published'">{{reviewBtnText}}</button>
         </div>
       </md-card-title>
       <md-tab-group md-stretch-tabs>
         <md-tab>
           <ng-template md-tab-label>
             Assess
-            <md-icon [ngClass]="(assessIncomplete) ? 'tc-red-700' : 'tc-green-700'">{{assessStatusIcon}}</md-icon>
+            <md-icon [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
           </ng-template>
           <assess [members]="members"></assess>
         </md-tab>
         <md-tab>
           <ng-template md-tab-label>
             Strat
-            <md-icon [ngClass]="(stratIncomplete) ? 'tc-red-700' : 'tc-green-700'">{{stratStatusIcon}}</md-icon>
+            <md-icon [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
           </ng-template>
           <strat [members]="members"></strat>
         </md-tab>
@@ -31,6 +31,7 @@
           <ng-template md-tab-label>
             Review Comments
             <md-icon *ngIf="!showComments">lock</md-icon>
+            <md-icon *ngIf="showComments" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
           </ng-template>
           <comments [members]="members"></comments>
         </md-tab>

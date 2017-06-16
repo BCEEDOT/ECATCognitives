@@ -8,8 +8,10 @@ export class FacWorkgroupService {
 
     facWorkGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
     assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-    checkStrat$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    stratComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    commentsComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     facWorkGroup(facWorkGroup: WorkGroup) {
         this.facWorkGroup$.next(facWorkGroup);
@@ -19,15 +21,16 @@ export class FacWorkgroupService {
         this.isLoading$.next(isLoading);
     }
 
-    assessComplete(yes: boolean) {
-        this.assessComplete$.next(yes);
+    assessComplete(assessComplete: boolean){
+        this.assessComplete$.next(assessComplete);
     }
 
-    checkStrat(yes: boolean) {
-        this.checkStrat$.next(yes);
+    stratComplete(stratComplete: boolean){
+        this.stratComplete$.next(stratComplete);
     }
 
-
-
+    commentsComplete(commentsComplete: boolean){
+        this.commentsComplete$.next(commentsComplete);
+    }
 
 }

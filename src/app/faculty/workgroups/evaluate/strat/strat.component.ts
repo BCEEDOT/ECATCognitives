@@ -124,7 +124,7 @@ export class StratComponent implements OnInit {
                     gm.stratIsValid = true;
                     gm.proposedStratPosition = null;
                 });
-            this.facWorkGroupService.checkStrat(true);
+            this.facWorkGroupService.stratComplete(true);
             this.snackBarService.open("Success, Strats Updated!", 'Dismiss')
         }).catch((error) => {
             this.dialogService.openAlert({
