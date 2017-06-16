@@ -86,6 +86,14 @@ export class AssessComponent implements OnInit {
     }
   }
 
+  onLeftArrow(event: Event) {
+    this.previousInv();
+  }
+
+  onRightArrow(event: Event) {
+    this.nextInv();
+  }
+
   previousInv() {
     let prev = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder - 1));
     this.activeInventory = prev;
