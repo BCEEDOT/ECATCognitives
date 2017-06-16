@@ -19,9 +19,9 @@ export class AssessComponent implements OnInit {
 
   ngOnInit() {
     //Is this a super hack job.........?
-    this.spProvider.commentClosed$.subscribe(() =>{
-      this.activate();
-    });
+    // this.spProvider.commentClosed$.subscribe(() =>{
+    //   this.activate();
+    // });
     this.activate();
   }
 
@@ -52,7 +52,7 @@ export class AssessComponent implements OnInit {
 
 
   comment(recipient: CrseStudentInGroup): any {
-    this.spProvider.loadComment(recipient);
+    this.spProvider.loadComment(recipient).subscribe(() => { this.activate()});
   }
 
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
+import { Subject } from 'rxjs/Subject';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
@@ -28,6 +30,8 @@ export class EvaluateComponent implements OnInit {
   workGroupId: number;
   paramWorkGroupId: number;
   paramCourseId: number;
+  time$: Observable<string> = new Observable<string>();
+  test: string;
   private wgName: string;
 
   constructor(
@@ -53,6 +57,7 @@ export class EvaluateComponent implements OnInit {
       this.facWorkGroupService.facWorkGroup(this.workGroup);
       this.activate();
     });
+
   }
 
   activate() {
@@ -66,21 +71,25 @@ export class EvaluateComponent implements OnInit {
       return 0;
     });
 
+    this.facWorkGroupService.checkStrat(true);
+
     this.assessIncomplete = this.members.some(mem => {
       if (!mem.statusOfStudent.assessComplete) { return true; }
       return false;
     });
 
+    this.assessStatusIcon = (this.assessIncomplete) ? "indeterminate_check_box" : "check_box";
 
-    this.stratIncomplete = this.members.some(mem => {
-      if (!mem.statusOfStudent.stratComplete) { return true; }
-      return false;
-    });
+    this.facWorkGroupService.checkStrat$.subscribe(check => {
 
+      this.stratIncomplete = this.members.some(mem => {
+        if (!mem.statusOfStudent.stratComplete) { return true; }
+        return false;
+      });
 
-    this.assessStatusIcon = (this.assessIncomplete) ? "indeterminate_check_box": "check_box"; 
-    this.stratStatusIcon = (this.stratIncomplete) ? "indeterminate_check_box": "check_box"; 
+      this.stratStatusIcon = (this.stratIncomplete) ? "indeterminate_check_box" : "check_box";
 
+    })
   }
 
 }
