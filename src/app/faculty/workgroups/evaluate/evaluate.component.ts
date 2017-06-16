@@ -33,8 +33,6 @@ export class EvaluateComponent implements OnInit {
   workGroupId: number;
   paramWorkGroupId: number;
   paramCourseId: number;
-  time$: Observable<string> = new Observable<string>();
-  test: string;
   private wgName: string;
   private reviewBtnText: string = 'Review';
 
@@ -82,6 +80,7 @@ export class EvaluateComponent implements OnInit {
   }
 
   activate() {
+    //this.facWorkGroupService.onListView(false);
     this.workGroupId = this.workGroup.workGroupId;
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as CrseStudentInGroup[];
@@ -150,7 +149,7 @@ export class EvaluateComponent implements OnInit {
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.open:
-          message = 'All students have have all assessments and strats complete. Check group status screen for more information.';
+          message = 'All students have all assessments and strats complete. Check group status screen for more information.';
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.underReview:

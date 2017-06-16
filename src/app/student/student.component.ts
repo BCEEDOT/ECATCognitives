@@ -64,7 +64,6 @@ export class StudentComponent implements OnInit {
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
-      console.log(this.courses);
       this.activate();
     });
 

@@ -24,7 +24,7 @@ export class AssessComponent implements OnInit, OnChanges {
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
 
-      //this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
+      this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
   }
 
   @Input() workGroup: WorkGroup;
@@ -51,7 +51,7 @@ export class AssessComponent implements OnInit, OnChanges {
 
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
 
-    //this.workGroupService.isLoading(false);
+    this.workGroupService.isLoading(false);
 
 
   }

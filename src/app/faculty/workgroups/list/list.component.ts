@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
-import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
-import { Observable } from 'rxjs/Observable';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TdDialogService, TdLoadingService, TdMediaService } from '@covalent/core';
 import * as _ from 'lodash';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/pluck';
 
 import { Course, WorkGroup } from '../../../core/entities/faculty';
+import { FacultyDataContextService } from '../../services/faculty-data-context.service';
+import { FacWorkgroupService } from '../../services/facworkgroup.service';
+
 
 @Component({
   selector: 'qs-app-list',
@@ -25,47 +28,45 @@ export class ListComponent implements OnInit {
 
   course$: Observable<Course>;
   course: Course;
+  isLoading: boolean = true;
+  paramCourseId: number;
 
   options: boolean = false;
 
-  constructor(private route: ActivatedRoute) {
-    this.course$ = this.route.data.pluck('course');
+  constructor(private route: ActivatedRoute, private loadingService: TdLoadingService, 
+  private facWorkGroupService: FacWorkgroupService, private facultyDataContext: FacultyDataContextService) {
+    //this.course$ = this.route.data.pluck('course');
+
+    this.route.params.subscribe(params => {
+      this.paramCourseId = +params['crsId'];
+    });
   }
 
   ngOnInit(): void {
 
-    this.course$.subscribe((course: Course) => {
+    // this.course$.subscribe((course: Course) => {
+    //   this.course = course;
+    //   this.activate();
+    // });
+
+    this.isLoading = true;
+
+    this.facultyDataContext.getActiveCourse(this.paramCourseId).then((course: Course) => {
       this.course = course;
       this.activate();
-    });
+    })
+
+
+
 
   }
 
   activate(): void {
 
     const grpName = {};
-  
+
     if (this.course.workGroups) {
       this.workGroups = this.workGroupOrig = this.course.workGroups;
-      this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
-        if (wgA.mpCategory < wgB.mpCategory) {
-          return -1;
-        }
-        else if (wgA.mpCategory > wgB.mpCategory) {
-          return 1
-        }
-
-        if (wgA.groupNumber < wgB.groupNumber) {
-          return +wgA.groupNumber - +wgB.groupNumber;
-        }
-
-        else if (wgA.groupNumber < wgB.groupNumber) {
-          return +wgB.groupNumber - +wgA.groupNumber;
-        } else {
-
-          return 0;
-        }
-      });
 
       this.workGroups.forEach((g, i, array) => {
         grpName[g.groupNumber] = null;
@@ -77,7 +78,10 @@ export class ListComponent implements OnInit {
 
       this.filteredStrings = this.strings;
 
+      this.isLoading = false;
+
     }
+
   }
 
   filterStrings(value: string): void {
@@ -126,21 +130,5 @@ export class ListComponent implements OnInit {
 
 
   }
-
-
-  // let multiTest = this.multi;
-  // this.multi = this.multiOriginal.filter(data => {
-
-  //   let match = false;
-
-  //   this.itemsRequireMatch.forEach(item => {
-  //     if (data.name == item) {
-  //       match = true;
-  //     }
-
-  //   });
-
-  //   return match;
-  // });
 
 }

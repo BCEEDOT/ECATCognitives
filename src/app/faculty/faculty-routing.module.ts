@@ -39,7 +39,7 @@ const facultyRoutes: Routes = [
                 //   { path: 'sp', component: SpComponent},
                 //   { path: 'comment', component: CommentComponent}
                 // ]
-                resolve: { course: 'courseResolver' },
+                //resolve: { course: 'courseResolver' },
               },
               {
                 path: 'list/:crsId/status/:wrkGrpId',
@@ -78,9 +78,9 @@ export function coursesResolver(facultyDataContext: FacultyDataContextService){
    return (route: ActivatedRouteSnapshot) => facultyDataContext.initCourses();
  }
 
-export function courseResolver(facultyDataContext: FacultyDataContextService) {
-  return (route: ActivatedRouteSnapshot) => facultyDataContext.getActiveCourse(+route.params['crsId']);
-}
+// export function courseResolver(facultyDataContext: FacultyDataContextService) {
+//   return (route: ActivatedRouteSnapshot) => facultyDataContext.getActiveCourse(+route.params['crsId']);
+// }
 
 export function facSpAssessResolver(facultyDataContext: FacultyDataContextService) {
   return (route: ActivatedRouteSnapshot) => facultyDataContext.getFacSpInventory(+route.params['crsId'], 
@@ -118,9 +118,9 @@ export function facWorkGroupResolver(facultyDataContext: FacultyDataContextServi
     {
       provide: 'coursesResolver', useFactory: coursesResolver, deps: [FacultyDataContextService]
     },
-    {
-      provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
-    },
+    // {
+    //   provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
+    // },
     {
       provide: 'facWorkGroupResolver', useFactory: facWorkGroupResolver, deps: [FacultyDataContextService]
     },
