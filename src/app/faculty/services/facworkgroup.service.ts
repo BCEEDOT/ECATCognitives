@@ -12,6 +12,7 @@ export class FacWorkgroupService {
     assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     stratComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     commentsComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    onListView$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     facWorkGroup(facWorkGroup: WorkGroup) {
         this.facWorkGroup$.next(facWorkGroup);
@@ -31,6 +32,10 @@ export class FacWorkgroupService {
 
     commentsComplete(commentsComplete: boolean){
         this.commentsComplete$.next(commentsComplete);
+    }
+
+    onListView(onListView: boolean) {
+        this.onListView$.next(onListView);
     }
 
 }

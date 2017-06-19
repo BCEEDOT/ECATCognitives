@@ -12,7 +12,6 @@
           <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === 'Published'">{{reviewBtnText}}</button>
         </div>
       </md-card-title>
-      <md-divider></md-divider>
       <md-tab-group md-stretch-tabs>
         <md-tab>
           <ng-template md-tab-label>
@@ -39,6 +38,7 @@
       </md-tab-group>
     </md-card>
   </ng-template>
-
-  <a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['../../status', workGroupId]"><md-icon>check</md-icon></a>
 </div>
+<a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['../../status', workGroupId]">
+  <md-icon>check</md-icon>
+</a>

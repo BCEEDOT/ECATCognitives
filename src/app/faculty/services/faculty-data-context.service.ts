@@ -5,7 +5,7 @@ import {
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag, StudSpComment } from "../../core/entities/faculty";
+import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag, FacStratResponse, StudSpComment } from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
@@ -226,11 +226,25 @@ export class FacultyDataContextService extends BaseDataContext {
     return facComment;
   }
 
+  getSingleStrat(courseId: number, groupId: number, studentId: number) {
+
+    const loggedUserId = this.global.persona.value.person.personId;
+
+    const existingStrat = this.manager.getEntityByKey(MpEntityType.facStratResponse, [studentId, courseId, groupId]) as FacStratResponse;
+
+    return (existingStrat) ? existingStrat :
+      this.manager.createEntity(MpEntityType.facStratResponse, {
+        assesseePersonId: studentId,
+        facultyPersonId: loggedUserId,
+        courseId: courseId,
+        workGroupId: groupId
+      }) as FacStratResponse;
+  }
   fetchActiveWgSpComments(courseId: number, groupId: number, forceRefresh?: boolean): Promise<Array<StudSpComment>> {
     let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
     let activeWgComments = spComments.filter(com => com.workGroupId === groupId);
 
-    if (activeWgComments.length > 0){
+    if (activeWgComments.length > 0) {
       console.log('WorkGroup loaded from local cache');
       return Promise.resolve(activeWgComments);
     }

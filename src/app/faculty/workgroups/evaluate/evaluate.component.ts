@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
+import { Subject } from 'rxjs/Subject';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MdSnackBar } from "@angular/material";
 import { TdDialogService } from "@covalent/core";
@@ -78,6 +80,7 @@ export class EvaluateComponent implements OnInit {
   }
 
   activate() {
+    //this.facWorkGroupService.onListView(false);
     this.workGroupId = this.workGroup.workGroupId;
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as CrseStudentInGroup[];
@@ -100,7 +103,7 @@ export class EvaluateComponent implements OnInit {
     });
     this.facWorkGroupService.stratComplete(!stratIncomplete);
 
-    switch(this.workGroup.mpSpStatus){
+    switch (this.workGroup.mpSpStatus) {
       case MpSpStatus.created:
       case MpSpStatus.open:
         this.reviewBtnText = 'Review';
@@ -108,7 +111,7 @@ export class EvaluateComponent implements OnInit {
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
-        if (this.assessComplete && this.stratComplete){
+        if (this.assessComplete && this.stratComplete) {
           this.canReview = true;
         } else {
           this.canReview = false;
@@ -121,7 +124,7 @@ export class EvaluateComponent implements OnInit {
         } else {
           commentIncomplete = true;
         }
-        if (this.canReview) {this.canReview = !commentIncomplete;}
+        if (this.canReview) { this.canReview = !commentIncomplete; }
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
 
         break;
@@ -139,14 +142,14 @@ export class EvaluateComponent implements OnInit {
     let message: string;
     let title: string;
 
-    if (!this.canReview){
-      switch(this.workGroup.mpSpStatus){
+    if (!this.canReview) {
+      switch (this.workGroup.mpSpStatus) {
         case MpSpStatus.created:
           message = 'Group has not yet been opened to students.'
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.open:
-          message = 'All students have have all assessments and strats complete. Check group status screen for more information.';
+          message = 'All students have all assessments and strats complete. Check group status screen for more information.';
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.underReview:
@@ -166,10 +169,10 @@ export class EvaluateComponent implements OnInit {
         message: message,
         title: title
       });
-      
+
     } else {
       let setTo;
-      switch(this.workGroup.mpSpStatus){
+      switch (this.workGroup.mpSpStatus) {
         case MpSpStatus.open:
           message = 'Students will no longer be able to make changes to assessments/comments/strats. \n\n Are you sure you want to place this flight Under Review?';
           title = 'Review Group';
@@ -188,10 +191,10 @@ export class EvaluateComponent implements OnInit {
       }
 
       this.dialogService.openConfirm({
-          message: message,
-          title: title,
-          acceptButton: 'Yes',
-          cancelButton: 'No'
+        message: message,
+        title: title,
+        acceptButton: 'Yes',
+        cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.workGroup.mpSpStatus = setTo;

@@ -1,3 +1,4 @@
+
   <md-list>
     <md-list-item>
       <span fxFlex="60"></span>
@@ -23,12 +24,12 @@
         </div>
       </div>
       <div fxFlex="10">
-          <span *ngIf="user.stratIsValid">
+        <span *ngIf="user.stratIsValid">
             Valid
         </span>
-          <span *ngIf="!user.stratIsValid">
+        <span *ngIf="!user.stratIsValid">
            <span mdTooltip="{{user.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
-          </span>
+        </span>
       </div>
     </md-list-item>
     <md-divider class="bgc-dark-orange-500" md-inset></md-divider>
@@ -49,12 +50,12 @@
           </div>
         </div>
         <div fxFlex="10">
-            <span *ngIf="peer.stratIsValid">
+          <span *ngIf="peer.stratIsValid">
             Valid
           </span>
-            <span *ngIf="!peer.stratIsValid">
+          <span *ngIf="!peer.stratIsValid">
            <span mdTooltip="{{peer.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
-            </span>
+          </span>
         </div>
 
       </md-list-item>

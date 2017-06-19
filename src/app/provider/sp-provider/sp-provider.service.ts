@@ -65,7 +65,7 @@ export class SpProviderService {
 
 
 
-  loadComment(recipient: StuCrseStudentInGroup | FacCrseStudentInGroup) {
+  loadComment(recipient: StuCrseStudentInGroup | FacCrseStudentInGroup): Observable<MdDialogRef<CommentDialog>> {
     let comment;
 
     if (this.global.persona.value.isStudent) {
@@ -74,18 +74,18 @@ export class SpProviderService {
       comment = this.facultyDataContext.getFacComment(recipient.courseId, recipient.workGroupId, recipient.studentId);
     }
 
-    this.dialogRef = this.dialog.open(CommentDialog, {
+    return this.dialog.open(CommentDialog, {
       disableClose: true,
       //hasBackdrop: true,
       data: {
         comment: comment,
       }
-    });
+    }).afterClosed();
 
-    this.dialogRef.afterClosed().subscribe(() => {
-      console.log('Comment closed');
-      this.commentClosed(true);
-    });
+    // this.dialogRef.afterClosed().subscribe(() => {
+    //   console.log('Comment closed');
+    //   this.commentClosed(true);
+    // });
   }
 
   evaluateStratification(isInstructor?: boolean, force?: boolean): Promise<Array<StuCrseStudentInGroup & FacCrseStudentInGroup>> {
@@ -172,7 +172,7 @@ export class SpProviderService {
             .filter(p => p.proposedStratPosition === member.proposedStratPosition && p.studentId !== member.studentId)
             .forEach(pp => {
               member.stratValidationErrors.push({
-                cat: 'Duplicate',
+                cat: 'Duplicate - Another member has the same proposed change',
                 text: `${pp.rankName}: has an identical proposed change`
               });
             });
@@ -195,7 +195,7 @@ export class SpProviderService {
                 p.proposedStratPosition === null)
               .forEach(pp => {
                 member.stratValidationErrors.push({
-                  cat: 'Duplicate',
+                  cat: 'Duplicate - Another member is currently at this position without a proposed change',
                   text: `${pp.rankName}: is currently at this position without a proposed change.`
                 });
               });
