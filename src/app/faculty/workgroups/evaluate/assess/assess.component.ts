@@ -12,25 +12,25 @@ import { FacWorkgroupService } from "../../../services/facworkgroup.service";
 export class AssessComponent implements OnInit {
 
   groupMembers: CrseStudentInGroup[];
-  isViewOnly: boolean = false;
+  readOnly: boolean = false;
 
   constructor(private spProvider: SpProviderService,
-  private facWorkgroupService: FacWorkgroupService) { }
+  private facWorkGroupService: FacWorkgroupService) { }
 
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-    //Is this a super hack job.........?
-    // this.spProvider.commentClosed$.subscribe(() =>{
-    //   this.activate();
-    // });
+
+    this.facWorkGroupService.readOnly$.subscribe(status => {
+      this.readOnly = status;
+      this.activate();
+    });
+    
     this.activate();
   }
 
   activate():void {
     this.groupMembers = this.members;
-
-    console.log(this.groupMembers);
 
     this.groupMembers.forEach(gm => {
       gm.updateStatusOfStudent();
@@ -40,9 +40,9 @@ export class AssessComponent implements OnInit {
       let commentText = '';
       let assessText = '';
 
-      if (this.isViewOnly) {
-        commentText = hasComment ? 'View' : 'None';
-        assessText = assessComplete ? 'View' : 'None';
+      if (this.readOnly) {
+        commentText = hasComment ? 'comment' : 'not_interested';
+        assessText = assessComplete ? 'view_list' : 'None';
       } else {
         commentText = hasComment ? 'mode_edit' : 'add';
         assessText = assessComplete ? 'mode_edit' : 'add';
@@ -52,7 +52,7 @@ export class AssessComponent implements OnInit {
     });
 
     if (!this.groupMembers.some(mem => mem.statusOfStudent.assessComplete === false)){
-      this.facWorkgroupService.assessComplete(true);
+      this.facWorkGroupService.assessComplete(true);
     }
   }
 

@@ -127,7 +127,7 @@ export class CommentsComponent implements OnInit {
 
   save() {
     this.ctx.commit().then(fulfilled => {
-      this.snackBar.open('Comment Flags Saved!', 'Dismiss');
+      this.snackBar.open('Comment Flags Saved!', 'Dismiss', { duration: 2000});
       if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
         this.facWorkGroupService.commentsComplete(true);
       }

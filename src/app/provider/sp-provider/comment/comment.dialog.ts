@@ -70,7 +70,7 @@ export class CommentDialog implements OnInit {
       this.studentDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.commentLoad);
-          this.snackBarService.open("Success, Comment Saved!", 'Dismiss')
+          this.snackBarService.open("Success, Comment Saved!", 'Dismiss', {duration: 2000})
           this.dialogRef.close();
         })
         .catch(result => {
@@ -84,7 +84,7 @@ export class CommentDialog implements OnInit {
       this.facultyDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.commentLoad);
-          this.snackBarService.open("Success, Comment Saved!", 'Dismiss')
+          this.snackBarService.open("Success, Comment Saved!", 'Dismiss', {duration: 2000})
           this.dialogRef.close();
         })
         .catch(result => {

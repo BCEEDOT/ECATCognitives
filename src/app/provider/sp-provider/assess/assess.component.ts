@@ -151,7 +151,7 @@ export class AssessComponent implements OnInit {
       this.studentDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.assessLoad);
-          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss')
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', {duration: 2000})
           this.location.back();
         })
         .catch(result => {
@@ -165,7 +165,7 @@ export class AssessComponent implements OnInit {
       this.facultyDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.assessLoad);
-          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss')
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', {duration: 2000})
           this.location.back();
         })
         .catch(result => {

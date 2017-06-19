@@ -26,6 +26,7 @@ export class EvaluateComponent implements OnInit {
   stratStatusIcon: string;
   commentStatusIcon: string = 'lock';
   canReview: boolean = false;
+  readOnly: boolean = false;
   members: CrseStudentInGroup[];
   workGroup: WorkGroup;
   workGroup$: Observable<WorkGroup>;
@@ -80,12 +81,16 @@ export class EvaluateComponent implements OnInit {
       this.canReviewCheck();
     });
 
+    this.facWorkGroupService.readOnly$.subscribe(status => {
+      this.readOnly = status;
+    })
+
     this.facWorkGroupService.onListView(false);
 
   }
 
   activate() {
-    //this.facWorkGroupService.onListView(false);
+    //this.facWorkGroupService.readOnly(false);
     this.workGroupId = this.workGroup.workGroupId;
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as CrseStudentInGroup[];
@@ -137,10 +142,12 @@ export class EvaluateComponent implements OnInit {
         this.reviewBtnText = 'Re-review';
         this.canReview = true;
         this.showComments = true;
+        this.facWorkGroupService.readOnly(true);
         break;
       case MpSpStatus.published:
         this.canReview = false;
         this.showComments = true;
+        this.facWorkGroupService.readOnly(true);        
         break;
     }
   }
@@ -201,6 +208,7 @@ export class EvaluateComponent implements OnInit {
 
     } else {
       let setTo;
+      let setReadOnly;
       switch (this.workGroup.mpSpStatus) {
         case MpSpStatus.open:
           message = 'Students will no longer be able to make changes to assessments/comments/strats. \n\n Are you sure you want to place this flight Under Review?';
@@ -211,11 +219,13 @@ export class EvaluateComponent implements OnInit {
           message = 'This will set the group as Reviewed and allow the ISA to Publish results. \n\n Are you sure you are done with your review?';
           title = 'Complete Review';
           setTo = MpSpStatus.reviewed;
+          setReadOnly = true;
           break;
         case MpSpStatus.reviewed:
           message = 'This will set the group back to Under Review so you can change assessments/strats/comment flags. Are you sure you want to re-review?';
           title = 'Re-Review Group';
           setTo = MpSpStatus.underReview;
+          setReadOnly = false;
           break;
       }
 
@@ -227,8 +237,9 @@ export class EvaluateComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.workGroup.mpSpStatus = setTo;
+          this.facWorkGroupService.readOnly(setReadOnly);
           this.ctx.commit().then(success => {
-            this.snackBar.open('Group Status Updated!', 'Dismiss');
+            this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
             this.activate();
           })
         }
