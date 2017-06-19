@@ -6,7 +6,7 @@ import { TdDialogService } from "@covalent/core";
 import { WorkGroup, CrseStudentInGroup, StudSpComment } from "../../../../core/entities/faculty";
 import { ActivatedRoute } from "@angular/router";
 import { FacultyDataContextService } from "../../../services/faculty-data-context.service";
-import { MpCommentFlag } from "../../../../core/common/mapStrings";
+import { MpCommentFlag, MpSpStatus } from "../../../../core/common/mapStrings";
 import { FacWorkgroupService } from "../../../services/facworkgroup.service";
 
 @Component({
@@ -23,6 +23,7 @@ export class CommentsComponent implements OnInit {
   private grpHasComments: boolean = true;
   private commFlagMap = MpCommentFlag;
   private hasChanges: boolean = false;
+  private viewOnly: boolean = true;
 
   constructor(private route: ActivatedRoute,
     private location: Location,
@@ -34,6 +35,9 @@ export class CommentsComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
+    this.facWorkGroupService.readOnly$.subscribe(ro => {
+      this.viewOnly = ro;
+    });
     this.ctx.fetchActiveWgSpComments(this.members[0].courseId, this.members[0].workGroupId).then(_ => this.activate());
   }
 
@@ -55,6 +59,8 @@ export class CommentsComponent implements OnInit {
     }
 
     this.selectedAuthor = this.memsWithComments[0];
+
+    this.viewOnly = (this.selectedAuthor.workGroup.mpSpStatus === MpSpStatus.underReview) ? false : true;
 
     if (this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
         this.facWorkGroupService.commentsComplete(false);
@@ -127,7 +133,7 @@ export class CommentsComponent implements OnInit {
 
   save() {
     this.ctx.commit().then(fulfilled => {
-      this.snackBar.open('Comment Flags Saved!', 'Dismiss', { duration: 2000});
+      this.snackBar.open('Comment Flags Saved!', 'Dismiss', {duration: 2000});
       if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
         this.facWorkGroupService.commentsComplete(true);
       }

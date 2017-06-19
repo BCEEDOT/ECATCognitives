@@ -8,9 +8,10 @@
         <div fxFlex="100" class="text-center">
           {{wgName}} - {{workGroup.mpSpStatus}}
         </div>
-        <div fxFlex="20">  
-          <button md-raised-button (click)="this.publishFlight()" *ngIf="workGroup.mpSpStatus === 'Reviewed'">Publish</button>
-          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === 'Published'">{{reviewBtnText}}</button>
+        <div fxFlex>
+          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === statusMap.Published">{{reviewBtnText}}</button>
+          <!--TODO: Remove this button-->
+          <button md-raised-button (click)="this.publish()" [disabled]="workGroup.mpSpStatus !== statusMap.reviewed">Publish</button>
         </div>
       </md-card-title>
       <md-tab-group md-stretch-tabs>

@@ -41,13 +41,13 @@
       <p>{{selectedComment?.commentText}}</p>
     </md-card-content>
     <md-card-actions>
-      <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()">Appropriate</button>
-      <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()">Inappropriate</button>
+      <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.appr">Appropriate</button>
+      <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.inappr">Inappropriate</button>
     </md-card-actions>
   </md-card>
 </md-card-content>
 <md-divider></md-divider>
 <md-card-actions fxLayout="row" fxLayoutAlign="end">
-  <button md-raised-button (click)="this.discard()" [disabled]="!hasChanges">Discard</button>
-  <button md-raised-button (click)="this.save()" [disabled]="!hasChanges">Save</button>
+  <button md-raised-button (click)="this.discard()" [disabled]="!hasChanges || viewOnly">Discard</button>
+  <button md-raised-button (click)="this.save()" [disabled]="!hasChanges || viewOnly">Save</button>
 </md-card-actions>

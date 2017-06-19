@@ -35,6 +35,7 @@ export class EvaluateComponent implements OnInit {
   paramCourseId: number;
   private wgName: string;
   private reviewBtnText: string = 'Review';
+  private statusMap = MpSpStatus;
 
   assessComplete: boolean;
   stratComplete: boolean;
@@ -245,5 +246,21 @@ export class EvaluateComponent implements OnInit {
         }
       });
     }
+  }
+
+  //TODO: Remove this... for internal testing only
+  publish() {
+    this.dialogService.openConfirm({
+      message: 'Are you sure you want to publish?',
+      title: 'Publish Flight'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed){
+        this.workGroup.mpSpStatus = MpSpStatus.published;
+        this.ctx.commit().then(success => {
+          this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
+          this.activate();
+        })
+      }
+    })
   }
 }
