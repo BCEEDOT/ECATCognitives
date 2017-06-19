@@ -36,10 +36,18 @@ export class FacultyComponent implements OnInit {
       this.activate();
     });
 
-    // this.facWorkGroupService.onListView$.subscribe(value => {
-    //   this.onListView = value;
-    // });
+     this.facWorkGroupService.onListView$.subscribe(value => {
+       this.onListView = value;
+    });
 
+  }
+
+  setActiveCourse(course: Course): void {
+    this.activeCourse = course;
+    this.activeCourseId = this.activeCourse.id;
+
+    this.router.navigate(['list', this.activeCourseId], { relativeTo: this.route });
+    
   }
 
   activate(force?: boolean): void {

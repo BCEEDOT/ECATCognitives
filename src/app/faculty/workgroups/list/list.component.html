@@ -1,9 +1,10 @@
 <md-card class="width">
-  <td-chips [items]="filteredStrings" (add)="add($event)" [debounce]="500" (remove)="remove($event)" [(ngModel)]="stringsModel"
-    placeholder="Click to filter by flight" (inputChange)="filterStrings($event)" requireMatch>
-  </td-chips>
-  <md-list>
-    <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="replace" tdLoadingType="circle">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="replace" tdLoadingType="circle">
+    <td-chips [items]="filteredStrings" (add)="add($event)" [debounce]="500" (remove)="remove($event)" [(ngModel)]="stringsModel"
+      placeholder="Click to filter by flight" (inputChange)="filterStrings($event)" requireMatch>
+    </td-chips>
+    <md-list>
+
       <ng-template let-workGroup let-last="last" ngFor [ngForOf]="workGroups">
         <div #row fxLayout="row" fxLayoutGap="20px" (mouseover)="row.options = true" (mouseout)="row.options = false">
           <md-list-item fxFlex="30">
@@ -35,6 +36,7 @@
         </div>
         <md-divider *ngIf="!last"></md-divider>
       </ng-template>
-    </ng-template>
-  </md-list>
+
+    </md-list>
+  </ng-template>
 </md-card>

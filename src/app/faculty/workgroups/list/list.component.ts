@@ -33,31 +33,29 @@ export class ListComponent implements OnInit {
 
   options: boolean = false;
 
-  constructor(private route: ActivatedRoute, private loadingService: TdLoadingService, 
-  private facWorkGroupService: FacWorkgroupService, private facultyDataContext: FacultyDataContextService) {
-    //this.course$ = this.route.data.pluck('course');
+  constructor(private route: ActivatedRoute, private loadingService: TdLoadingService,
+    private facWorkGroupService: FacWorkgroupService, private facultyDataContext: FacultyDataContextService) {
 
-    this.route.params.subscribe(params => {
-      this.paramCourseId = +params['crsId'];
-    });
   }
 
   ngOnInit(): void {
 
-    // this.course$.subscribe((course: Course) => {
-    //   this.course = course;
-    //   this.activate();
-    // });
-
-    this.isLoading = true;
-
-    this.facultyDataContext.getActiveCourse(this.paramCourseId).then((course: Course) => {
-      this.course = course;
-      this.activate();
-    })
 
 
+    this.facWorkGroupService.onListView(true);
 
+    this.route.params.subscribe(params => {
+      this.paramCourseId = +params['crsId'];
+      this.isLoading = true;
+
+      this.facultyDataContext.getActiveCourse(this.paramCourseId).then((course: Course) => {
+
+        this.course = course;
+        this.activate();
+        this.isLoading = false;
+      });
+
+    });
 
   }
 
@@ -72,13 +70,21 @@ export class ListComponent implements OnInit {
         grpName[g.groupNumber] = null;
       });
 
+      this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+        if (wgA.mpCategory < wgB.mpCategory) return -1;
+        if (wgA.mpCategory > wgB.mpCategory) return 1;
+        if (+wgA.groupNumber < +wgB.groupNumber) return -1;
+        if (+wgA.groupNumber > +wgB.groupNumber) return 1;
+
+        return 0;
+
+      });
+
       this.strings = Object.keys(grpName)
         .sort((a: any, b: any) => a - b)
         .map(grpNum => `Flight ${grpNum}`);
 
       this.filteredStrings = this.strings;
-
-      this.isLoading = false;
 
     }
 

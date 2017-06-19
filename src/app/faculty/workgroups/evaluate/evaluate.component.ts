@@ -20,7 +20,6 @@ import { FacultyDataContextService } from "../../services/faculty-data-context.s
 })
 export class EvaluateComponent implements OnInit {
 
-
   showComments: boolean = false;
   wgStatus: string = "tc-red-900";
   assessStatusIcon: string;
@@ -77,6 +76,9 @@ export class EvaluateComponent implements OnInit {
       this.commentsComplete = cc;
       this.commentStatusIcon = (this.commentsComplete) ? "check_box" : "indeterminate_check_box";
     });
+
+    this.facWorkGroupService.onListView(false);
+
   }
 
   activate() {

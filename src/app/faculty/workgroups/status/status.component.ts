@@ -11,7 +11,7 @@ import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";
 import { FacultyDataContextService } from "../../services/faculty-data-context.service";
 import { GlobalService } from "../../../core/services/global.service";
 import { MpSpStatus } from "../../../core/common/mapStrings";
-
+import { FacWorkgroupService } from "../../services/facworkgroup.service";
 interface CrseStudExtended extends CrseStudentInGroup {
     check: {
         isSelfDone: boolean,
@@ -46,7 +46,8 @@ export class StatusComponent implements OnInit {
     private dialogService: TdDialogService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location) {
+    private location: Location,
+    private facWorkGroupService: FacWorkgroupService) {
       this.workGroup$ = route.data.pluck('workGroup');
     }
 
@@ -55,6 +56,8 @@ export class StatusComponent implements OnInit {
       this.workGroup = wg;
       this.activate();
     });
+
+    this.facWorkGroupService.onListView(false);
   }
 
   activate() {
