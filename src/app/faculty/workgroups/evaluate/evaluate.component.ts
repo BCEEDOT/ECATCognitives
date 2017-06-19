@@ -67,14 +67,17 @@ export class EvaluateComponent implements OnInit {
     this.facWorkGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
       this.assessStatusIcon = (this.assessComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
     this.facWorkGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
       this.stratStatusIcon = (this.stratComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
     this.facWorkGroupService.commentsComplete$.subscribe(cc => {
       this.commentsComplete = cc;
       this.commentStatusIcon = (this.commentsComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
 
     this.facWorkGroupService.onListView(false);
@@ -133,6 +136,30 @@ export class EvaluateComponent implements OnInit {
       case MpSpStatus.reviewed:
         this.reviewBtnText = 'Re-review';
         this.canReview = true;
+        this.showComments = true;
+        break;
+      case MpSpStatus.published:
+        this.canReview = false;
+        this.showComments = true;
+        break;
+    }
+  }
+
+  canReviewCheck() {
+    switch (this.workGroup.mpSpStatus) {
+      case MpSpStatus.created:
+      case MpSpStatus.open:
+        this.canReview = this.workGroup.canPublish;
+        break;
+      case MpSpStatus.underReview:
+        if (this.assessComplete && this.stratComplete && this.commentsComplete) {
+          this.canReview = true;
+        } else {
+          this.canReview = false;
+        }
+        break;
+      case MpSpStatus.reviewed:
+        this.canReview = true;
         break;
       case MpSpStatus.published:
         this.canReview = false;
@@ -151,11 +178,11 @@ export class EvaluateComponent implements OnInit {
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.open:
-          message = 'All students have all assessments and strats complete. Check group status screen for more information.';
+          message = 'All students must have all assessments and strats complete. Check group status screen for more information.';
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.underReview:
-          message = 'You must complete all assessments and strats on all students and review all comments before marking your review as complete.'
+          message = 'You must complete and save all assessments and strats on all students and flag and save all comments before marking your review as complete.'
           title = 'Cannot Complete Review';
           break;
         case MpSpStatus.published:

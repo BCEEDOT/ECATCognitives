@@ -22,6 +22,7 @@ export class CommentsComponent implements OnInit {
   private selectedComment: StudSpComment;
   private grpHasComments: boolean = true;
   private commFlagMap = MpCommentFlag;
+  private hasChanges: boolean = false;
 
   constructor(private route: ActivatedRoute,
     private location: Location,
@@ -46,17 +47,24 @@ export class CommentsComponent implements OnInit {
         this.memsWithComments.push(mem);
       }
     });
-    this.selectedAuthor = this.memsWithComments[0];
-    if (this.selectedAuthor.workGroup.spComments.length === 0){
+
+    if(this.memsWithComments.length === 0) {
       this.grpHasComments = false;
       this.facWorkGroupService.commentsComplete(true);
       return;
     }
 
-    if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
-        this.facWorkGroupService.commentsComplete(true);
+    this.selectedAuthor = this.memsWithComments[0];
+
+    if (this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
+        this.facWorkGroupService.commentsComplete(false);
     } else {
-      this.facWorkGroupService.commentsComplete(false);
+      this.hasChanges = this.selectedAuthor.workGroup.spComments.some(com => com.flag.entityAspect.entityState.isAddedModifiedOrDeleted());
+      if (this.hasChanges){
+        this.facWorkGroupService.commentsComplete(false);
+      } else {
+        this.facWorkGroupService.commentsComplete(true);
+      }
     }
 
     this.changeAuthor(this.selectedAuthor);
@@ -90,6 +98,8 @@ export class CommentsComponent implements OnInit {
     this.selectedAuthor['numRemaining'] = this.selectedAuthor.authorOfComments.filter(com => com.flag.mpFaculty === null).length;
     this.selectedAuthor['apprFlags'] = this.selectedAuthor.authorOfComments.filter(com => com.flag.mpFaculty === MpCommentFlag.appr).length;
     this.selectedAuthor['inapprFlags'] = this.selectedAuthor.authorOfComments.filter(com => com.flag.mpFaculty === MpCommentFlag.inappr).length;
+
+    this.hasChanges = this.selectedAuthor.workGroup.spComments.some(com => com.flag.entityAspect.entityState.isAddedModifiedOrDeleted());
   }
 
   massSetAll(){

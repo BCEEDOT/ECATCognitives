@@ -1,55 +1,53 @@
-<md-card>
-  <md-card-title *ngIf="!grpHasComments">This group did not leave any comments.</md-card-title>
-  <md-card-content *ngIf="grpHasComments">
-    <md-list fxFlex="25">
-      <md-list-item>AUTHORS</md-list-item>
-      <md-list-item *ngFor="let author of memsWithComments" [ngClass]="{'selected': this.selectedAuthor == author }" (click)="this.changeAuthor(author)">
-        <span>{{author?.rankName}}</span>
+<md-card-title *ngIf="!grpHasComments">This group did not leave any comments.</md-card-title>
+<md-card-content *ngIf="grpHasComments">
+  <md-list fxFlex="25">
+    <md-list-item>AUTHORS</md-list-item>
+    <md-list-item *ngFor="let author of memsWithComments" [ngClass]="{'selected': this.selectedAuthor == author }" (click)="this.changeAuthor(author)">
+      <span>{{author?.rankName}}</span>
+      <span fxFlex></span>
+      <span *ngIf="author.numRemaining > 0"><md-icon>flag</md-icon>{{author?.numRemaining}} </span>
+      <span *ngIf="author.apprFlags > 0"><md-icon class="tc-green-700">done</md-icon>{{author?.apprFlags}} </span>
+      <span *ngIf="author.inapprFlags > 0"><md-icon class="tc-red-700">highlight_off</md-icon>{{author?.inapprFlags}}</span>
+    </md-list-item>
+  </md-list>
+  <span fxFlex="2"></span>
+  <md-list fxFlex="20">
+    <md-list-item>
+      <button md-raised-button [md-menu-trigger-for]="menu" class="selected" fxFlex="stretch">Mass Flag<md-icon style="color:white">expand_more</md-icon></button>
+      <span></span>
+      <md-menu #menu="mdMenu">
+        <button md-menu-item (click)="massSetAll()">Set All</button>
+        <button md-menu-item (click)="massResetAll()">Reset All</button>
+        <md-divider></md-divider>
+        <button md-menu-item (click)="massSetAuthor()">Set Selected Author's</button>
+        <button md-menu-item (click)="massResetAuthor()">Reset Selected Author's</button>
+      </md-menu>
+    </md-list-item>
+    <md-list-item>RECIPIENTS</md-list-item>
+    <md-list-item *ngFor="let comment of authoredComments" [ngClass]="{'selected': this.selectedComment == comment }" (click)="this.selectedComment = comment">
+      <span>{{comment?.recipient?.rankName}}</span>
+      <span fxFlex></span>
+      <md-icon [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.icon}}</md-icon>
+    </md-list-item>
+  </md-list>
+  <span fxFlex="2"></span>
+  <md-card fxFlex="50" style="align-self: flex-start">
+    <md-card-content>
+      <div fxLayout="row">
+        <span class="md-subhead">Comment Type: {{selectedComment?.requestAnonymity ? 'Anonymous' : 'Signed'}}</span>
         <span fxFlex></span>
-        <span *ngIf="author.numRemaining > 0"><md-icon>flag</md-icon>{{author?.numRemaining}} </span>
-        <span *ngIf="author.apprFlags > 0"><md-icon class="tc-green-700">done</md-icon>{{author?.apprFlags}} </span>
-        <span *ngIf="author.inapprFlags > 0"><md-icon class="tc-red-700">highlight_off</md-icon>{{author?.inapprFlags}}</span>
-      </md-list-item>
-    </md-list>
-    <span fxFlex="2"></span>
-    <md-list fxFlex="20">
-      <md-list-item>
-        <button md-raised-button [md-menu-trigger-for]="menu" class="selected" fxFlex="stretch">Mass Flag<md-icon style="color:white">expand_more</md-icon></button>
-        <span></span>
-        <md-menu #menu="mdMenu">
-          <button md-menu-item (click)="massSetAll()">Set All</button>
-          <button md-menu-item (click)="massResetAll()">Reset All</button>
-          <md-divider></md-divider>
-          <button md-menu-item (click)="massSetAuthor()">Set Selected Author's</button>
-          <button md-menu-item (click)="massResetAuthor()">Reset Selected Author's</button>
-        </md-menu>
-      </md-list-item>
-      <md-list-item>RECIPIENTS</md-list-item>
-      <md-list-item *ngFor="let comment of authoredComments" [ngClass]="{'selected': this.selectedComment == comment }" (click)="this.selectedComment = comment">
-        <span>{{comment?.recipient?.rankName}}</span>
-        <span fxFlex></span>
-        <md-icon [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.icon}}</md-icon>
-      </md-list-item>
-    </md-list>
-    <span fxFlex="2"></span>
-    <md-card fxFlex="50">
-      <md-card-content>
-        <div fxLayout="row">
-          <span class="md-subhead">Comment Type: {{selectedComment?.requestAnonymity ? 'Anonymous' : 'Signed'}}</span>
-          <span fxFlex></span>
-          <span class="md-subhead">Last Modified: {{selectedComment?.displayDate}}</span>
-        </div>
-        <p>{{selectedComment?.commentText}}</p>
-      </md-card-content>
-      <md-card-actions>
-        <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()">Appropriate</button>
-        <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()">Inappropriate</button>
-      </md-card-actions>
-    </md-card>
-  </md-card-content>
-  <md-divider></md-divider>
-  <md-card-actions fxLayout="row" fxLayoutAlign="end">
-    <button md-raised-button (click)="this.discard()">Discard</button>
-    <button md-raised-button (click)="this.save()">Save</button>
-  </md-card-actions>
-</md-card>
+        <span class="md-subhead">Last Modified: {{selectedComment?.displayDate}}</span>
+      </div>
+      <p>{{selectedComment?.commentText}}</p>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()">Appropriate</button>
+      <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()">Inappropriate</button>
+    </md-card-actions>
+  </md-card>
+</md-card-content>
+<md-divider></md-divider>
+<md-card-actions fxLayout="row" fxLayoutAlign="end">
+  <button md-raised-button (click)="this.discard()" [disabled]="!hasChanges">Discard</button>
+  <button md-raised-button (click)="this.save()" [disabled]="!hasChanges">Save</button>
+</md-card-actions>
