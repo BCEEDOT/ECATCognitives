@@ -46,7 +46,7 @@ export class EvaluateComponent implements OnInit {
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
     private dialogService: TdDialogService,
-    private ctx: FacultyDataContextService,
+    private facultyDataContext: FacultyDataContextService,
     private snackBar: MdSnackBar
   ) {
 
@@ -239,7 +239,7 @@ export class EvaluateComponent implements OnInit {
         if (confirmed) {
           this.workGroup.mpSpStatus = setTo;
           this.facWorkGroupService.readOnly(setReadOnly);
-          this.ctx.commit().then(success => {
+          this.facultyDataContext.commit().then(success => {
             this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
             this.activate();
           })
@@ -256,7 +256,7 @@ export class EvaluateComponent implements OnInit {
     }).afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed){
         this.workGroup.mpSpStatus = MpSpStatus.published;
-        this.ctx.commit().then(success => {
+        this.facultyDataContext.commit().then(success => {
           this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
           this.activate();
         })

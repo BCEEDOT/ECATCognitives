@@ -1,0 +1,30 @@
+<div class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card>
+      <md-card-title>
+        <div fxFlex>
+          <button md-raised-button (click)="this.location.back()">Back</button>
+        </div>
+        <div fxFlex="100" class="text-center">
+          {{workGroupName}} - Results
+        </div>
+      </md-card-title>
+      <md-tab-group md-stretch-tabs>
+        <md-tab>
+          <ng-template md-tab-label>
+            
+            Assessment Overview
+            
+          </ng-template>
+          <assess-overview [membersResults]="membersResults"></assess-overview>
+        </md-tab>
+        <md-tab>
+          <ng-template md-tab-label>
+            Strat Overview
+          </ng-template>
+          <strat-overview [membersResults]="membersResults"></strat-overview>
+        </md-tab>
+      </md-tab-group>
+    </md-card>
+  </ng-template>
+</div>

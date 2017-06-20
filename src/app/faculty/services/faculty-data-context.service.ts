@@ -1,17 +1,33 @@
 import { Injectable } from '@angular/core';
 import {
-  EntityManager, NamingConvention, DataService, DataType, MetadataStore,
-  EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, QueryResult,
+  config,
+  DataProperty,
+  DataService,
+  DataServiceOptions,
+  DataType,
+  EntityManager,
+  EntityQuery,
+  EntityType,
+  MetadataStore,
+  NamingConvention,
+  NavigationProperty,
+  promises,
+  QueryResult,
 } from 'breeze-client';
+import { any } from 'codelyzer/util/function';
 
 import { BaseDataContext } from '../../shared/services';
-import { Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag, FacStratResponse, StudSpComment } from "../../core/entities/faculty";
+import {
+  Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag,
+  FacStratResponse, StudSpComment, CrseStudentInGroup, SpInstrument, SpInventory
+} from "../../core/entities/faculty";
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
 import { MpEntityType, MpCommentFlag } from '../../core/common/mapStrings';
 import { DataContext } from '../../app-constants';
 import { GlobalService, ILoggedInUser } from '../../core/services/global.service';
+import { LoggerService } from "../../shared/services/logger.service";
 
 @Injectable()
 export class FacultyDataContextService extends BaseDataContext {
@@ -51,7 +67,7 @@ export class FacultyDataContextService extends BaseDataContext {
     },
   };
 
-  constructor(emProvider: EmProviderService, private global: GlobalService) {
+  constructor(emProvider: EmProviderService, private global: GlobalService, private logger: LoggerService) {
     super(DataContext.Faculty, emProvider);
   }
 
@@ -240,6 +256,7 @@ export class FacultyDataContextService extends BaseDataContext {
         workGroupId: groupId
       }) as FacStratResponse;
   }
+
   fetchActiveWgSpComments(courseId: number, groupId: number, forceRefresh?: boolean): Promise<Array<StudSpComment>> {
     let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
     let activeWgComments = spComments.filter(com => com.workGroupId === groupId);
@@ -271,5 +288,144 @@ export class FacultyDataContextService extends BaseDataContext {
       return comments;
     }
   }
+
+  fetchGrpMemsWithSpResults(courseId: number, groupId: number, forcedRefresh?: boolean): Promise<Array<CrseStudentInGroup> | Promise<void>> {
+    const that = this;
+
+    let workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, groupId) as WorkGroup;
+
+    const resultCached = this.manager.getEntities(MpEntityType.crseStudInGrp) as Array<CrseStudentInGroup>;
+
+    if (resultCached) {
+      const members = resultCached.filter(gm => gm.workGroupId === groupId && gm.courseId === courseId);
+      if (members && members.length !== 0) {
+        const cachedInstrument = that.manager.getEntityByKey(MpEntityType.spInstr, workGroup.assignedSpInstrId) as SpInstrument;
+        const cachedInventory = cachedInstrument.inventoryCollection as Array<SpInventory>;
+        cachedInventory
+          .forEach(inv => {
+            inv.resetResult();
+            //inv.workGroup = workGroup;
+          });
+        console.log('Retrieved workgroup result from the local cache', resultCached, false);
+
+        return Promise.resolve(members);
+      }
+    }
+
+    const params: any = { courseId: courseId, workGroupId: groupId };
+    let query: any = EntityQuery.from(this.facultyApiResource.wgResult.resource).withParameters(params);
+
+    const studentResults = <Promise<CrseStudentInGroup[]>>this.manager.executeQuery(query)
+      .then(activeWgResultResponse)
+      .catch(this.queryFailed);
+
+    function activeWgResultResponse(data: QueryResult): Array<CrseStudentInGroup> {
+
+      workGroup = data.results[0] as WorkGroup;
+
+      if (!workGroup.groupMembers || workGroup.groupMembers.length === 0) {
+        console.log('No published data was found for this workGroup');
+
+        const queryError: any = {
+          errorMessage: 'No published data was found for this workgroup'
+        }
+
+        Promise.reject(queryError);
+      }
+
+      console.log('Fetched course student in groups result from the remote data store', workGroup.groupMembers, false);
+
+      return workGroup.groupMembers;
+    }
+
+    const promise1 = studentResults;
+    const promise2 = this.fetchSpInstrument(workGroup.assignedSpInstrId, forcedRefresh);
+    const promise3 = this.fetchActiveWgSpComments(courseId, groupId, forcedRefresh);
+    const promise4 = this.fetchActiveWgFacComments(courseId, groupId, forcedRefresh);
+    return Promise.all([promise1, promise2, promise3, promise4]).then((results: Array<any>) => {
+      const instrument = results[1] as SpInstrument;
+      const inventory = instrument.inventoryCollection as Array<SpInventory>;
+      inventory
+        .forEach(inv => {
+          inv.resetResult();
+        });
+      return results[0];
+    });
+  }
+
+  fetchSpInstrument(instrumentId: number, forceRefresh?: boolean): Promise<SpInstrument | Promise<void>> {
+    const that = this;
+    let instrument: SpInstrument;
+
+    instrument = this.manager.getEntityByKey(MpEntityType.spInstr, instrumentId) as SpInstrument;
+
+    if (instrument) {
+
+      if (instrument.inventoryCollection && instrument.inventoryCollection.length > 0) {
+        console.log('Instrument loaded from local cache', instrument, false);
+        return Promise.resolve(instrument);
+      }
+    }
+
+    const params: any = { instrumentId: instrumentId }
+    let query: any = EntityQuery.from(this.facultyApiResource.instrument.resource).withParameters(params);
+
+    return <Promise<SpInstrument>>this.manager.executeQuery(query)
+      .then(fetchActiveCrseReponse)
+      .catch(this.queryFailed);
+
+    function fetchActiveCrseReponse(data: QueryResult) {
+
+      instrument = data.results[0] as SpInstrument;
+
+      if (!instrument) {
+        const error: any = {
+          errorMessage: 'An active instrument was not received from the server.'
+        }
+        console.log('Query succeeded, but the course membership did not return a result', data, false);
+        return Promise.reject(error) as any;
+      }
+
+      console.log('Instrument loaded from remote data source', instrument, false);
+      return instrument;
+    }
+  }
+
+  fetchActiveWgFacComments(courseId: number, groupId: number, forceRefresh?: boolean): Promise<Array<FacSpComment> | Promise<void>> {
+
+    const that = this;
+    let facComments: Array<FacSpComment>;
+
+    const allFacComments = this.manager.getEntities(MpEntityType.facSpComment) as Array<FacSpComment>;
+
+    if (allFacComments) {
+      facComments = allFacComments.filter(comment => comment.courseId === courseId && comment.workGroupId === groupId);
+
+      if (facComments && facComments.length > 0) {
+        console.log('Retrieved SpComments from local cache', facComments, false);
+        return Promise.resolve(facComments);
+      }
+    }
+
+    const params: any = { courseId: courseId, workGroupId: groupId };
+    let query: any = EntityQuery.from(this.facultyApiResource.wgComment.resource).withParameters(params);
+
+    return <Promise<FacSpComment[]>>this.manager.executeQuery(query)
+      .then(fetchActiveWgFacCommentResponse)
+      .catch(this.queryFailed);
+
+
+    function fetchActiveWgFacCommentResponse(data: QueryResult): Array<FacSpComment> {
+      facComments = data.results as Array<FacSpComment>;
+      if (!facComments || facComments.length === 0) {
+        return null;
+      }
+
+      console.log('Retrieved SpComment for remote data source', facComments, false);
+      return facComments;
+    }
+  }
+
+
 
 }

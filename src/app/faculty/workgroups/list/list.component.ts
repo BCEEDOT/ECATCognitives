@@ -10,6 +10,7 @@ import 'rxjs/add/operator/pluck';
 import { Course, WorkGroup } from '../../../core/entities/faculty';
 import { FacultyDataContextService } from '../../services/faculty-data-context.service';
 import { FacWorkgroupService } from '../../services/facworkgroup.service';
+import { MpSpStatus } from "../../../core/common/mapStrings";
 
 
 @Component({
@@ -30,6 +31,7 @@ export class ListComponent implements OnInit {
   course: Course;
   isLoading: boolean = true;
   paramCourseId: number;
+  private statusMap = MpSpStatus;
 
   options: boolean = false;
 
@@ -39,8 +41,6 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
 
     this.facWorkGroupService.onListView(true);
 
@@ -78,6 +78,16 @@ export class ListComponent implements OnInit {
 
         return 0;
 
+      });
+
+      this.workGroups.forEach((wg: WorkGroup) => {
+        let statusText = '';
+        if (wg.mpSpStatus === MpSpStatus.published) {
+          statusText = 'Review Evaluation'
+        } else {
+          statusText = 'Evaluate'
+        }
+        wg['statusText'] = statusText;
       });
 
       this.strings = Object.keys(grpName)

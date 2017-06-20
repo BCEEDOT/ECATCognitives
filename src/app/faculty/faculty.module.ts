@@ -15,6 +15,9 @@ import { StratComponent } from './workgroups/evaluate/strat/strat.component';
 import { CommentsComponent } from './workgroups/evaluate/comments/comments.component';
 import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
 import { FacWorkgroupService } from "./services/facworkgroup.service";
+import { ResultsComponent } from './workgroups/results/results.component';
+import { AssessOverviewComponent } from './workgroups/results/assess-overview/assess-overview.component';
+import { StratOverviewComponent } from './workgroups/results/strat-overview/strat-overview.component';
 
 @NgModule({
   imports: [
@@ -32,6 +35,9 @@ import { FacWorkgroupService } from "./services/facworkgroup.service";
     AssessComponent,
     StratComponent,
     CommentsComponent,
+    ResultsComponent,
+    AssessOverviewComponent,
+    StratOverviewComponent,
   ], 
   providers: [
     FacultyAuthGuardService,
