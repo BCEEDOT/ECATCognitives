@@ -1,29 +1,30 @@
-<md-card class="width">
-  <md-card-title>
-    <button md-raised-button (click)="this.location.back()">Back</button>
-    <span fxFlex="100" class="text-center">{{wgName}} Status</span>
-    <span fxFlex></span>
-    <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review</button>
-    <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
-  </md-card-title>
-  <md-divider></md-divider>
-  <md-card-content>
-    <md-list>
-      <md-list-item>
-        <span fxFlex="45"></span>
-        <span fxFlex="10" class="text-center">SELF</span>
-        <span fxFlex="10" class="text-center">PEER</span>
-        <span fxFlex="10" class="text-center">STRATS</span>
-        <span fxFlex="15" class="text-center">COMMENTS</span>
-        <span fxFlex="20" class="text-center">RESPONSE AGGREGATES</span>
-      </md-list-item>
-      <md-list-item *ngFor="let student of members">
-        <span fxFlex="45">{{student.rankName}}</span>
-        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.isSelfDone">check</md-icon><md-icon *ngIf="!student.check.isSelfDone">clear</md-icon></span>
-        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.sp.isDone">check</md-icon><md-icon *ngIf="!student.check.sp.isDone" mdTooltip={{student.check.sp.count}} mdTooltipPosition="above">clear</md-icon></span>
-        <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.strat.isDone">check</md-icon><md-icon *ngIf="!student.check.strat.isDone" mdTooltip={{student.check.strat.count}} mdTooltipPosition="above">clear</md-icon></span>
-        <span fxFlex="15" class="text-center">{{student.numberOfAuthorComments}}</span>
-        <span fxFlex="20" class="text-center">
+<div class="width">
+  <md-card>
+    <md-card-title>
+      <button md-raised-button (click)="this.location.back()">Back</button>
+      <span fxFlex="100" class="text-center">{{wgName}} Status</span>
+      <span fxFlex></span>
+      <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'">Review</button>
+      <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+    </md-card-title>
+    <md-divider></md-divider>
+    <md-card-content>
+      <md-list>
+        <md-list-item>
+          <span fxFlex="45"></span>
+          <span fxFlex="10" class="text-center">SELF</span>
+          <span fxFlex="10" class="text-center">PEER</span>
+          <span fxFlex="10" class="text-center">STRATS</span>
+          <span fxFlex="15" class="text-center">COMMENTS</span>
+          <span fxFlex="20" class="text-center">RESPONSE AGGREGATES</span>
+        </md-list-item>
+        <md-list-item *ngFor="let student of members">
+          <span fxFlex="45">{{student.rankName}}</span>
+          <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.isSelfDone">check</md-icon><md-icon *ngIf="!student.check.isSelfDone">clear</md-icon></span>
+          <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.sp.isDone">check</md-icon><md-icon *ngIf="!student.check.sp.isDone" mdTooltip={{student.check.sp.count}} mdTooltipPosition="above">clear</md-icon></span>
+          <span fxFlex="10" class="text-center"><md-icon *ngIf="student.check.strat.isDone">check</md-icon><md-icon *ngIf="!student.check.strat.isDone" mdTooltip={{student.check.strat.count}} mdTooltipPosition="above">clear</md-icon></span>
+          <span fxFlex="15" class="text-center">{{student.numberOfAuthorComments}}</span>
+          <span fxFlex="20" class="text-center">
           <ngx-charts-bar-horizontal-stacked
             [view]="[150, 50]"
             [scheme]="chartColors"
@@ -33,7 +34,8 @@
             *ngIf="student.hasChartData">
           </ngx-charts-bar-horizontal-stacked>
         </span>
-      </md-list-item>
-    </md-list>
-  </md-card-content>
-</md-card>
+        </md-list-item>
+      </md-list>
+    </md-card-content>
+  </md-card>
+</div>
