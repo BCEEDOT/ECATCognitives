@@ -119,6 +119,7 @@ export class EvaluateComponent implements OnInit {
       case MpSpStatus.open:
         this.reviewBtnText = 'Review';
         this.canReview = this.workGroup.canPublish;
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
@@ -137,6 +138,7 @@ export class EvaluateComponent implements OnInit {
         }
         if (this.canReview) { this.canReview = !commentIncomplete; }
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
+        this.facWorkGroupService.readOnly(false);
 
         break;
       case MpSpStatus.reviewed:

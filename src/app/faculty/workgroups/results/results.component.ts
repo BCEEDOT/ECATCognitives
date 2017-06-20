@@ -5,7 +5,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Subject } from 'rxjs/Subject';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MdSnackBar } from "@angular/material";
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 
@@ -33,6 +33,7 @@ export class ResultsComponent implements OnInit {
     private route: ActivatedRoute,
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
+    private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private facultyDataContext: FacultyDataContextService,
     private snackBar: MdSnackBar
@@ -43,6 +44,8 @@ export class ResultsComponent implements OnInit {
     this.facWorkGroupService.onListView(false);
     this.isLoading = true;
 
+    this.loadingService.register('isLoading');
+
     this.route.params.subscribe(params => {
       this.paramWorkGroupId = +params['wrkGrpId'];
       this.paramCourseId = +params['crsId'];
@@ -52,6 +55,7 @@ export class ResultsComponent implements OnInit {
       .then((results: CrseStudentInGroup[]) => {
         this.membersResults = results;
         this.activate();
+        this.loadingService.resolve('isLoading');
         this.isLoading = false;
       });
 

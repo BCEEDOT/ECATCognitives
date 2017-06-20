@@ -27,7 +27,7 @@
           <ngx-charts-bar-horizontal-stacked
             [view]="[150, 50]"
             [scheme]="chartColors"
-            [results]="student.chartData"
+            [results]="student.statusOfStudent.gaveBreakOutChartData"
             [showGridLines]="false"
             (select)="onSelect($event)"
             *ngIf="student.hasChartData">
