@@ -32,7 +32,7 @@ export class SpInventory extends EntityBase {
    private commentText: string;
    itemResponses: SpResponse[] | FacSpResponse[];
    workGroup: WorkGroup;
-   /// </code>
+   
 
    get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
@@ -385,6 +385,6 @@ export class SpInventory extends EntityBase {
         };
         return 0;
     }
-
+/// </code>
 }
 
