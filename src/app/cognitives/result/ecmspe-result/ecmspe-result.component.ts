@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
+import * as _ from "lodash";
+
+import { CogEcmspeResult } from "../../../core/entities/user";
+import { CogResultsService } from "../../services/cog-results.service";
 
 @Component({
   selector: 'ecmspe-result',
@@ -7,9 +12,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EcmspeResultComponent implements OnInit {
 
-  constructor() { }
+
+  protected ecmspeResult: CogEcmspeResult;
+
+  constructor(private cogResultsService: CogResultsService, private router: Router) { };
 
   ngOnInit() {
+    this.cogResultsService.cogEcmspeResult$.subscribe(res => {
+      this.ecmspeResult = res;
+    });
+
+
+    if (_.isEmpty(this.ecmspeResult)) {
+        this.router.navigate(['/cognitives']);
+    }
   }
 
 }

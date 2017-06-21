@@ -1,3 +1,219 @@
-<p>
-  ecmspe-result works!
-</p>
+<ng-template tdLoading="userIsLoaded">
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxFlex="100">
+            <h3>Electronic Conflict Management Style Preference Estimator (e-CMSPE) Results</h3>
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Introduction</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            This report displays your score for each of the five conflict management styles<sup>1</sup>, class and population
+            averages, and your percentile rank among the class and the general population. This information will help you
+            identify your leadership strengths and areas for improvement concerning your use of conflict management styles.
+            Gaining an understanding of which styles you prefer can help you become an even more effective leader by capitalizing
+            on your strengths and by focusing on development needs, experiences, assignments and training and educational
+            opportunities to help overcome weaknesses.
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Understanding Your Results: What Does Your Estimate Mean?</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            The score next to each style indicates the strength of your preference for using that particular style. The higher the number,
+            the stronger your preference.
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Accommodate:
+        </div>
+        <div fxFlex="20">
+            {{ecmspeResult.accommodate}}
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Avoid:
+        </div>
+        <div fxFlex="20">
+            {{ecmspeResult.avoid}}
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Collaborate:
+        </div>
+        <div fxFlex="20">
+            {{ecmspeResult.collaborate}}
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Compete:
+        </div>
+        <div fxFlex="20">
+            {{ecmspeResult.compete}}
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Compromise:
+        </div>
+        <div fxFlex="20">
+            {{ecmspeResult.compromise}}
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            <sup>1</sup> Averages are derived from all users who have taken the e-CMSPE as of the date of this report.
+        </div>
+    </div>
+    <hr>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Accommodation</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            This style involves giving sacrificing your own goals, or giving into the wishes of the other party to mitigate or even eliminate
+            the conflict. People who prefer this style use phrases like: "Whatever you want is fine with me.”
+            <br /><br /> When you are involved in a conflict situation where you have stake in the outcome, then this style
+            may be appropriate. However, if this style is the only one you utilize, then you would be wise to learn how to
+            use the other styles to become more effective in handling situations involving conflict.
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Avoidance</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            This style involves behaviors that either ignore or refuse to engage in the conflict. Although some consider this a negative
+            style because the people using it demonstrate little or no concern for the interests of the parties involved,
+            including their own. However, there are times when this style is appropriate and/or prudent. For example, it
+            is appropriate when the relationship between parties is short-term or when the issue is not important. It is
+            also appropriate when you need more information or facts to make a decision. It is prudent to use this style
+            when a situation has the potential to escalate to violence.
+            <br /><br /> Some examples of negative avoidance behaviors include:
+            <ul>
+                <li>Saying the issue isn't important enough to spend time on or to do the topic justice</li>
+                <li>Saying things to gloss over differences so they never are discussed</li>
+                <li>Focusing on details to the exclusion of the real issues</li>
+                <li>Using evasive remarks to avoid sensitive topic or to shift away from a topic</li>
+                <li>Joking to distract from the real issues in a conflict</li>
+            </ul>
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Collaboration</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            Collaboration or win/win occurs when all parties cooperatively work together until a mutually agreeable solution is found.
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Competition</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            A win/lose style that some consider negative because party using this style solves the problem at the cost of the other party's
+            goals or feelings. However, there are times when this style is appropriate. For example, when you know you are
+            right, or when the stakes are too high and/or the situation too critical and/or the relationship is not important
+            enough to use collaboration.
+            <br /><br /> Some examples of negative competitive behaviors include:
+            <ul>
+                <li>Lying, concealing one's own goals and/or interests</li>
+                <li>Verbal attacks, while pushing one’s own agenda</li>
+                <li>Being hostile toward other party (or at least pretending to be)</li>
+            </ul>
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Compromise</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            Compromise is a give and take of resources. The classic compromise in negotiating is to "split the difference" between two
+            positions. When using compromise, each person fails to achieve her or his original goal.
+            <br /><br /> Beyond one's overall style for behavior during a conflict, other matters of individual style also
+            affect perceptions during conflicts. For example, we each have a preferred style of thinking (problem-solving,
+            decision-making, and managing change). When there is a cognitive gap between your preferred style and the other
+            person’s style, conflict is almost inevitable. Just by becoming aware of your preferred style of conflict management,
+            you have taken a giant step forward in your ability to mitigate or even prevent conflict.
+            <br /><br /> Although differences in style contribute to conflict, so does either party’s degree of verbal aggressiveness,
+            listening behaviors, and other nonverbal or linguistic characteristics.
+            <br /><br /> An effective leader is one who prefer collaboration, but also recognizes that timing or conditions
+            may not always allow for collaboration. In these situations, the skillful leader is adept at matching the right
+            style of conflict management to the situation and in a civilized, do not harm manner.
+            <br /><br /> Most people develop a patterned response to conflict based on their interactions with other while
+            growing up. Your patterned response may fit some situations well, but may be ineffective or even destructive
+            in other circumstances. Therefore, the goal of this instrument and corresponding lesson is to increase your awareness
+            of your own patterns to help you recognize that you have choices in how to respond to conflict and, as a result,
+            reflect on and improve your responses. Since each style has a preferred way of interacting with others in conflict,
+            your newfound awareness can greatly assist you in meeting the needs of the people you live and work with (subordinates,
+            peers, supervisors, family, and community).
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Value of Different Conflict Management Styles</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            No style is ideal in general, as complex problem solving and creative endeavors require a diversity of Conflict Management
+            Styles for success overall.
+        </div>
+    </div>
+    <!-- -->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Estimating Your Conflict Management Style Preference</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            The e-CMSPE was developed by Mr. Rich Rafferty and Dr. Stephen Harris at the Barnes Center for Enlisted Education, United
+            States Air Force. It provides only a general estimate of your preferred style of conflict management. A more
+            specific and psychometrically accurate evaluation of your conflict management style preference can be obtained
+            through any number of fee-based instruments. The Thomas Kilmann Conflict Mode Instrument, which is considered
+            the gold standard is available on a pay-per-use basis.
+        </div>
+    </div>
+</ng-template>

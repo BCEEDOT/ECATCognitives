@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EcmspeAssessComponent } from './ecmspe-assess.component';
+import { EsalbecmspeAssessComponent } from './esalbecmspe-assess.component';
 
-describe('EcmspeAssessComponent', () => {
-  let component: EcmspeAssessComponent;
-  let fixture: ComponentFixture<EcmspeAssessComponent>;
+describe('EsalbecmspeAssessComponent', () => {
+  let component: EsalbecmspeAssessComponent;
+  let fixture: ComponentFixture<EsalbecmspeAssessComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EcmspeAssessComponent ]
+      declarations: [ EsalbecmspeAssessComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EcmspeAssessComponent);
+    fixture = TestBed.createComponent(EsalbecmspeAssessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

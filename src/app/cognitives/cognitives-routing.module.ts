@@ -4,6 +4,7 @@ import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 import { UserAuthGuard } from '../core/services/user-auth-guard.service';
 import { CognitivesComponent } from './cognitives.component';
 import { UserDataContext } from "../core/services/data/user-data-context.service";
+import { AssessComponent } from './assess/assess.component';
 import { ResultComponent } from './result/result.component';
 
 
@@ -17,6 +18,10 @@ const cognitivesRoutes: Routes = [
   {
     path: 'cognitive/result/:cogId',
     component: ResultComponent,
+  },
+  {
+    path: 'cognitive/assess/:cogId',
+    component: AssessComponent,
   }
 
 

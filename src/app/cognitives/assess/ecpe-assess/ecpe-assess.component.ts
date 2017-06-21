@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-ecpe-assess',
+  selector: 'ecpe-assess',
   templateUrl: './ecpe-assess.component.html',
   styleUrls: ['./ecpe-assess.component.scss']
 })

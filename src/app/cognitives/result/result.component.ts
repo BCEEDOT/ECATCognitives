@@ -10,8 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ResultComponent implements OnInit {
 
-
-
   private cogResultId: string;
 
   constructor(
@@ -21,13 +19,6 @@ export class ResultComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit() {
-    
   }
-
-
-
-
 }

@@ -1,3 +1,75 @@
-<p>
-  assess works!
-</p>
+<td-layout-nav logo="assets:covalent">
+
+  <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+    <span fxFlex></span>
+    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+      <md-icon>chrome_reader_mode</md-icon>
+    </a>
+    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+      <md-icon svgIcon="assets:github"></md-icon>
+    </a>
+  </div>
+
+  <md-card [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
+
+    <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center" class="pad-sm">
+      <b><!--{{cogAssess.cogName}}--> Ricky Cogs</b>
+    </div>
+
+    <hr>
+    
+   <!-- <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" id="instructions" *ngIf="cogAssess.showInstructions"></div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" *ngIf="!cogAssess.showInstructions">
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" ></div>-->
+
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+      <div>
+        <!--mathces compnent varialbe -->
+       <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
+        <esalbecmspe-assess *ngSwitchCase="2"> </esalbecmspe-assess>
+        <etmpre-assess *ngSwitchCase="3"> </etmpre-assess>
+      </div>
+    </div>
+<!-- 
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+      <div fxFlex *ngIf="esalbResult" class="pad-left-md">
+        <button md-raised-button color="primary" (click)="cogAssess.changePrevious()" [disabled]="cogAssess.currentPage == 1">Previous</button>
+        <p class="test-sm">Item {{cogAssess.currentPage}} of {{cogAssess.pagers.length}}</p>
+        <button md-raised-button color="primary" (click)="cogAssess.changeNext()" [disabled]="cogAssess.currentPage == cogAssess.pagers.length">Next</button>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+      <div fxFlex  class="pad-left-md">
+        <button md-raised-button color="primary" *ngIf="!cogAssess.showInstructions" (click)="cogAssess.showInstructions = !cogAssess.showInstructions">Show Instructions</button>
+        <button md-raised-button color="primary" *ngIf="cogAssess.showInstructions" (click)="cogAssess.showInstructions = !cogAssess.showInstructions">Next</button>
+        <button md-raised-button color="primary" *ngIf="!cogAssess.showInstructions" (click)="cogAssess.cancel()">Cancel</button>
+
+      </div>
+    </div>-->
+
+  </md-card>
+
+</td-layout-nav>
+-->
+
+<!--
+<div class="modal-footer">
+    <div class="row p-15">
+        <button class="btn btn-link" ng-if="!cogAssess.showInstructions" ng-click="cogAssess.showInstructions = !cogAssess.showInstructions" style="float:left">Show Instructions</button>
+        <button class="btn btn-link" type="button" ng-if="cogAssess.showInstructions" ng-click="cogAssess.showInstructions = !cogAssess.showInstructions">
+            Continue Assessment
+        </button>
+        <button class="btn btn-link"    
+                type="button"
+                ng-if="cogAssess.readyToSave && !cogAssess.showInstructions"
+                ng-click="cogAssess.save()">
+            Complete Assessment
+        </button>
+        <button class="btn btn-link" type="button" ng-if="!cogAssess.showInstructions" ng-click="cogAssess.cancel()">
+            Cancel
+        </button>
+    </div>
+</div>
+-->

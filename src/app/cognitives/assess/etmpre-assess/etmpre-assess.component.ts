@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-etmpre-assess',
+  selector: 'etmpre-assess',
   templateUrl: './etmpre-assess.component.html',
   styleUrls: ['./etmpre-assess.component.scss']
 })
