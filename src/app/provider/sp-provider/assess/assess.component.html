@@ -1,0 +1,49 @@
+<div tabindex="0" class="flex-container" (keydown.ArrowLeft)="onLeftArrow($event)" (keydown.ArrowRight)="onRightArrow($event)">
+  <md-card>
+    <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory?.responseForAssessee?.assessee?.rankName}}</md-card-title>
+    <md-card-title *ngIf="isSelf">Self Assessment</md-card-title>
+    <md-divider></md-divider>
+    <md-card-content>
+      <p>With regards to displaying the behavior <span style="color: #3e6d92">{{activeInventory.behavior}}</span> how effective {{perspective}}?</p>
+      <button md-icon-button mdTooltip="Mark As (Not) Displayed" mdTooltipPosition="below" [md-menu-trigger-for]="menu" [disabled]="viewOnly" style="float: left">
+        <md-icon>more_vert</md-icon>
+      </button>
+      <span></span>
+      <md-menu #menu="mdMenu">
+        <button md-menu-item *ngIf="!activeInventory.behaveDisplayed" (click)="activeInventory.behaveDisplayed=true; saveCheck()">Displayed</button>
+        <button md-menu-item *ngIf="activeInventory.behaveDisplayed" (click)="activeInventory.behaveDisplayed=false; saveCheck()">Not Displayed</button>
+      </md-menu>
+      <span></span>
+      <div *ngIf="activeInventory.behaveDisplayed">
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.ie; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.ie}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.ie">Ineffective</button>
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.e; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.e}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.e">Effective</button>
+        <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.he; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.he}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.he">Highly Effective</button>
+        <span></span>
+        <div style="float:right">
+          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.alw; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.alw}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.alw">Always</button>
+          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.usl; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.usl}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.usl">Usually</button>
+        </div>
+      </div>
+      <div *ngIf="!activeInventory.behaveDisplayed">
+        <p class="text-center">NOT DISPLAYED</p>
+      </div>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</button>
+      <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id"  (click)="nextInv()">Next</button>
+      <div style="float: right">
+        <button md-raised-button *ngIf="viewOnly" (click)="cancel()">Exit</button>
+        <button md-raised-button *ngIf="!viewOnly" (click)="cancel()">Cancel</button>
+        <button md-raised-button *ngIf="!viewOnly" [disabled]="!canSave" (click)="save()">Save</button>
+      </div>
+    </md-card-actions>
+  </md-card>
+  <span></span>
+  <md-nav-list>
+    <h4>Behaviors</h4>
+    <a md-list-item class="md-2-line" *ngFor="let inventory of inventories" (click)="activeInventory=inventory; saveCheck()" [ngClass]="{'inv-selected': activeInventory.id===inventory.id}">
+      <p md-line class="md-title" style="color: #3e6d92">{{getShortBehavior(inventory)}}</p>
+      <p md-line [class]="inventory.responseForAssessee.mpItemResponse">{{getResponseString(inventory)}}</p>
+    </a>
+  </md-nav-list>
+</div>

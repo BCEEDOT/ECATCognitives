@@ -6,9 +6,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class WorkGroupService {
 
     workGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
+    isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     workGroup(workGroup: WorkGroup) {
         this.workGroup$.next(workGroup);
+    }
+
+    isLoading(isLoading: boolean) {
+        this.isLoading$.next(isLoading);
     }
 
 }

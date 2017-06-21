@@ -1,4 +1,4 @@
-<td-layout-nav logo="assets:covalent">
+<td-layout-nav logo="assets:covalent" toolbarTitle="Assessment Center">
   <div td-toolbar-content layout="row" layout-align="center center" flex>
     <span flex></span>
     <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
@@ -20,22 +20,21 @@
           </button>
       </md-menu>
 
-      <button md-icon-button [mdMenuTriggerFor]="menu">
-  <md-icon>menu</md-icon>
-</button>
-      <md-menu #menu="mdMenu">
-        <button *ngFor="let course of courses" md-menu-item>
+      <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
+        <md-icon>menu</md-icon>
+      </button>
+      <md-menu #menu="mdMenu" x-position="before" class="before">
+        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
           {{course.displayName}}
           </button>
       </md-menu>
       <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
     </div>
   </div>
-
   <router-outlet></router-outlet>
 </td-layout-nav>
-
-
-<a md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['add']">
-  <md-icon>add</md-icon>
-</a>
+<div>
+  <a md-fab color="accent" class="mat-fab-bottom-right" (click)="assessCompare()">
+    <md-icon>show_chart</md-icon>
+  </a>
+</div>

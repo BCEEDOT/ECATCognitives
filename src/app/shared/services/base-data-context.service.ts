@@ -6,7 +6,7 @@ import { EmProviderService } from '../../core/services/em-provider.service';
 import { DataContext } from '../../app-constants';
 
 
-@Injectable()
+//@Injectable()
 export class BaseDataContext {
 
     private static shelveSets = {};
@@ -40,7 +40,7 @@ export class BaseDataContext {
     }
 
     protected queryFailed(error: any) {
-        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Uknown Reason'}`;
+        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Unknown Reason'}`;
         return Promise.reject(msg);
     }
 
@@ -67,7 +67,7 @@ export class BaseDataContext {
     //This is save changes
     commit(): Promise<any> {
         //let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
-        console.log(this.getChanges());
+        //console.log(this.getChanges());
         //return <any>this.manager.saveChanges(null, saveOptions)
         return <any>this.manager.saveChanges()
             .then((saveResult) => {

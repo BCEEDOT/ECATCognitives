@@ -1,6 +1,5 @@
-import { mixingMultiProvidersWithRegularProvidersError } from '@angular/core/src/di/reflective_errors';
 import { MpSpStatus } from '../core/common/mapStrings';
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
@@ -8,10 +7,13 @@ import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/cor
 import { Observable } from 'rxjs/Observable';
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
+import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { Course, WorkGroup } from "../core/entities/student";
 import { WorkGroupService } from "./services/workgroup.service";
 import { StudentDataContext } from "./services/student-data-context.service"
+import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -28,9 +30,12 @@ export class StudentComponent implements OnInit {
   courses$: Observable<Course[]>;
   courses: Course[];
   workGroups: WorkGroup[];
+  activeCourse: Course;
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
+
+  dialogRef: MdDialogRef<AssessCompareDialog>;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -40,7 +45,8 @@ export class StudentComponent implements OnInit {
     private snackBarService: MdSnackBar,
     public media: TdMediaService,
     private workGroupService: WorkGroupService,
-    private studentDataContext: StudentDataContext) {
+    private studentDataContext: StudentDataContext,
+    public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
 
     this.courses$ = route.data.pluck('assess');
   }
@@ -49,16 +55,17 @@ export class StudentComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  refreshFromServer() {
+    this.setActiveCourse(this.activeCourse, true);
+  }
+
   ngOnInit(): void {
-    // broadcast to all listener observables when loading the page
-    //this.media.broadcast();
+
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
-      console.log(this.courses);
       this.activate();
     });
-
 
   }
 
@@ -71,42 +78,88 @@ export class StudentComponent implements OnInit {
     });
 
     this.courses.forEach(course => course['displayName'] = `${course.classNumber}: ${course.name}`);
-    let activeCourse: Course;
-    activeCourse = this.courses[0];
-    this.workGroups = activeCourse.workGroups;
+    this.activeCourse = this.courses[0];
+    this.activeCourseId = this.activeCourse.id;
+    
+    let activeWorkgroup = this.setupWorkGroups(this.activeCourse);
+    
+    this.setActiveWorkGroup(activeWorkgroup, force);
+  }
+
+  assessCompare(): void {
+
+    this.dialogRef = this.dialog.open(AssessCompareDialog, {
+      disableClose: false,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '950px',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: ''
+      },
+      data: {
+        workGroup: this.activeWorkGroup
+      }
+    });
+
+  }
+
+  private setupWorkGroups(course: Course): WorkGroup {
+    this.workGroups = this.activeCourse.workGroups;
 
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
       if (wgA.mpCategory < wgB.mpCategory) return 1;
       if (wgA.mpCategory > wgB.mpCategory) return -1;
       return 0;
-    })
+    });
 
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
-    //this.activeCourseId = this.studentDataContext.activeCourseId = activeCourse.id;
-    this.activeCourseId = activeCourse.id;
+
     let activeWorkgroup = this.workGroups[0];
 
-    this.setActiveWorkGroup(activeWorkgroup, force);
+    return activeWorkgroup;
+    
+  } 
+
+  private setActiveCourse(course: Course, force?: boolean): void {
+
+    this.workGroupService.isLoading(true);
+
+    this.studentDataContext.fetchActiveCourse(course.id, force)
+      .then(course => {
+        this.activeCourse = course as Course;
+        let activeWorkGroup = this.setupWorkGroups(this.activeCourse);
+        this.activeCourseId = this.activeCourse.id;
+        this.setActiveWorkGroup(activeWorkGroup, force);
+      }).catch(error => {
+        console.log('There was an error retriving the active course');
+      })
   }
 
+
   private setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
+
+    this.workGroupService.isLoading(true);
 
     const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
 
     this.studentDataContext.fetchActiveWorkGroup(workGroupId, false).then(workGroup => {
       this.activeWorkGroup = workGroup as WorkGroup;
-    })
+      this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
 
-    this.grpDisplayName = `${workGroup.mpCategory}: ${workGroup.customName || workGroup.defaultName}`;
-    this.activeWorkGroup = workGroup;
-    const resultsPublished = workGroup.mpSpStatus !== MpSpStatus.open;
+      const resultsPublished = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
 
-    //this.studentDataContext.activeGroupId = workGroupId;
-    this.workGroupService.workGroup(workGroup);
+      this.workGroupService.workGroup(this.activeWorkGroup);
 
-    if (!force) {
-      resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
-    }
+      if (!force) {
+        resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
+      }
+    });
+
+
   }
 
 

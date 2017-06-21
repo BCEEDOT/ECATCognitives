@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
       }
     }, (error: any) => {
       this.loadingService.resolve();
-      this.snackBar.open(error, 'Close', { duration: 3000 });
+      this.snackBar.open(error, 'Close', { duration: 2000 });
       console.log(error);
     });
   }

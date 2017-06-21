@@ -16,6 +16,7 @@ import {
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LoggerService } from "./services/logger.service";
 
 @NgModule({
     imports: [
@@ -35,7 +36,6 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 
     ],
     declarations: [
-
     ],
     exports: [
         FlexLayoutModule,
@@ -50,9 +50,11 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule,
         CovalentHighlightModule,
         CovalentMarkdownModule,
-        NgxChartsModule
+        NgxChartsModule,
     ],
-    providers: []
+    providers: [
+        LoggerService
+    ]
 })
 
 export class SharedModule { }
