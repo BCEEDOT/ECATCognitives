@@ -18,6 +18,9 @@ import { FacWorkgroupService } from "./services/facworkgroup.service";
 import { ResultsComponent } from './workgroups/results/results.component';
 import { AssessOverviewComponent } from './workgroups/results/assess-overview/assess-overview.component';
 import { StratOverviewComponent } from './workgroups/results/strat-overview/strat-overview.component';
+import { ResultsDetailsComponent } from './workgroups/results/results-details/results-details.component';
+import { BehaviorsComponent } from './workgroups/results/results-details/behaviors/behaviors.component';
+import { ResultsCommentsComponent } from './workgroups/results/results-details/comments/comments.component';
 
 @NgModule({
   imports: [
@@ -38,6 +41,9 @@ import { StratOverviewComponent } from './workgroups/results/strat-overview/stra
     ResultsComponent,
     AssessOverviewComponent,
     StratOverviewComponent,
+    ResultsDetailsComponent,
+    BehaviorsComponent,
+    ResultsCommentsComponent,
   ], 
   providers: [
     FacultyAuthGuardService,

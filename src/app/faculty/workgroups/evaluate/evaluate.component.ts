@@ -259,6 +259,9 @@ export class EvaluateComponent implements OnInit {
         this.facultyDataContext.commit().then(success => {
           this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
           this.activate();
+        }, reject => {
+          this.workGroup.mpSpStatus = MpSpStatus.reviewed;
+          this.dialogService.openAlert({message: 'Something went wrong, group not published', title: 'Save Failure'})
         })
       }
     })

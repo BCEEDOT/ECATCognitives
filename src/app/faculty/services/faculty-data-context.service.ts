@@ -304,7 +304,7 @@ export class FacultyDataContextService extends BaseDataContext {
         cachedInventory
           .forEach(inv => {
             inv.resetResult();
-            //inv.workGroup = workGroup;
+            inv.workGroup = workGroup;
           });
         console.log('Retrieved workgroup result from the local cache', resultCached, false);
 

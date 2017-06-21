@@ -1,0 +1,13 @@
+<md-list>
+  <md-list-item>
+    <span fxFlex="25">AUTHOR</span>
+    <span fxFlex="75">COMMENT</span>
+  </md-list-item>
+  <md-list-item *ngFor="let comment of student.recipientOfComments">
+    <span fxFlex="25">{{comment.author.rankName}}</span>
+    <span fxFlex="75">
+      Comment Type: {{(comment.requestAnonymity) ? 'Anonymous' : 'Signed'}} 
+      <p>{{comment.commentText}}</p>
+    </span>
+  </md-list-item>
+</md-list>
