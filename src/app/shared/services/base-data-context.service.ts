@@ -40,7 +40,7 @@ export class BaseDataContext {
     }
 
     protected queryFailed(error: any) {
-        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Uknown Reason'}`;
+        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Unknown Reason'}`;
         return Promise.reject(msg);
     }
 

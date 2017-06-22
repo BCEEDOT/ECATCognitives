@@ -1,0 +1,25 @@
+<div style="padding-bottom:1%">
+  <md-list>
+    <md-list-item>
+      <span fxFlex="50">BEHAVIOR</span>
+      <span fxFlex="15">SELF</span>
+      <span fxFlex="15" style="padding-left: 2%">PEERS</span>
+      <span fxFlex="15">INSTRUCTOR</span>
+    </md-list-item>
+    <md-list-item *ngFor="let inv of inventories">
+      <span fxFlex="50">{{inv.behavior}}</span>
+      <span fxFlex="15">{{inv.behaveResultForStudent[student.studentId].selfOutcome}}</span>
+      <span fxFlex="15">
+        <ngx-charts-bar-horizontal-stacked
+            [view]="[150, 50]"
+            [scheme]="chartColors"
+            [results]="inv.behaveResultForStudent[student.studentId].receivedBo"
+            [showGridLines]="false"
+            (select)="onSelect($event)">
+        </ngx-charts-bar-horizontal-stacked>
+        <!--a (click)="behaviorDetails(inv)"><md-icon style="padding-top:5%">open_in_new</md-icon></a-->
+      </span>
+      <span fxFlex="15">{{inv.behaveResultForStudent[student.studentId].facOutcome}}</span>
+    </md-list-item>
+  </md-list>
+</div>

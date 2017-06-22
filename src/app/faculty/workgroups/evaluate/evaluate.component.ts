@@ -46,7 +46,7 @@ export class EvaluateComponent implements OnInit {
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
     private dialogService: TdDialogService,
-    private ctx: FacultyDataContextService,
+    private facultyDataContext: FacultyDataContextService,
     private snackBar: MdSnackBar
   ) {
 
@@ -116,9 +116,14 @@ export class EvaluateComponent implements OnInit {
 
     switch (this.workGroup.mpSpStatus) {
       case MpSpStatus.created:
+        this.reviewBtnText = 'Review';
+        this.canReview = false;
+        this.facWorkGroupService.readOnly(true);
+        break;
       case MpSpStatus.open:
         this.reviewBtnText = 'Review';
         this.canReview = this.workGroup.canPublish;
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
@@ -137,7 +142,9 @@ export class EvaluateComponent implements OnInit {
         }
         if (this.canReview) { this.canReview = !commentIncomplete; }
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
+        this.facWorkGroupService.readOnly(false);
 
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.reviewed:
         this.reviewBtnText = 'Re-review';
@@ -239,7 +246,7 @@ export class EvaluateComponent implements OnInit {
         if (confirmed) {
           this.workGroup.mpSpStatus = setTo;
           this.facWorkGroupService.readOnly(setReadOnly);
-          this.ctx.commit().then(success => {
+          this.facultyDataContext.commit().then(success => {
             this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
             this.activate();
           })
@@ -256,9 +263,12 @@ export class EvaluateComponent implements OnInit {
     }).afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed){
         this.workGroup.mpSpStatus = MpSpStatus.published;
-        this.ctx.commit().then(success => {
+        this.facultyDataContext.commit().then(success => {
           this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
           this.activate();
+        }, reject => {
+          this.workGroup.mpSpStatus = MpSpStatus.reviewed;
+          this.dialogService.openAlert({message: 'Something went wrong, group not published', title: 'Save Failure'})
         })
       }
     })

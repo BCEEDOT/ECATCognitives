@@ -89,6 +89,7 @@ export class CrseStudentInGroup extends EntityBase {
 
     protected sop: any;
     protected sos: any;
+    protected rfs: any;
 
    get rankName(): string {
         let _salutation: string;
@@ -246,17 +247,18 @@ export class CrseStudentInGroup extends EntityBase {
         let cummScore = 0;
         let gaveCummScore = 0;
         const missingItems = [];
+        const gaveStrats = [];
         let composite = null;
         let gaveComposite = null;
         const facResponses = this.workGroup.facSpResponses;
         const facComments = this.workGroup.facSpComments;
         const facStats = this.workGroup.facStratResponses;
-        const bo = {//: ecat.entity.ext.ISpStatusBreakOut = {
-            HE: null,
-            IE: null,
-            E: null,
-            ND: null
-        };
+        // const facBreakOut = {//: ecat.entity.ext.ISpStatusBreakOut = {
+        //     HE: null,
+        //     IE: null,
+        //     E: null,
+        //     ND: null
+        // };
 
         const gaveBo = {//: ecat.entity.ext.ISpGaveStatusBreakOut = {
             gaveHE: null,
@@ -277,41 +279,42 @@ export class CrseStudentInGroup extends EntityBase {
 
         const knownReponse = mp.MpSpItemResponse;
 
-        spResponses.forEach(response => {
 
-            switch (response.mpItemResponse) {
-            case knownReponse.iea:
-                bo.IE += 1;
-                cummScore += 0;
-                break;
-            case knownReponse.ieu:
-                bo.IE += 1;
-                cummScore += 1;
-                break;
-            case knownReponse.nd:
-                cummScore += 2;
-                bo.ND += 1;
-                break;
-            case knownReponse.eu:
-                cummScore += 3;
-                bo.E += 1;
-                break;
-            case knownReponse.ea:
-                cummScore += 4;
-                bo.E += 1;
-                break;
-            case knownReponse.heu:
-                cummScore += 5;
-                bo.HE += 1;
-                break;
-            case knownReponse.hea:
-                cummScore += 6;
-                bo.HE += 1;
-                break;
-            default:
-                break;
-            }
-        });
+        // facSpResponses.forEach(response => {
+
+        //     switch (response.mpItemResponse) {
+        //     case knownReponse.iea:
+        //         facBreakOut.IE += 1;
+        //         cummScore += 0;
+        //         break;
+        //     case knownReponse.ieu:
+        //         facBreakOut.IE += 1;
+        //         cummScore += 1;
+        //         break;
+        //     case knownReponse.nd:
+        //         cummScore += 2;
+        //         facBreakOut.ND += 1;
+        //         break;
+        //     case knownReponse.eu:
+        //         cummScore += 3;
+        //         facBreakOut.E += 1;
+        //         break;
+        //     case knownReponse.ea:
+        //         cummScore += 4;
+        //         facBreakOut.E += 1;
+        //         break;
+        //     case knownReponse.heu:
+        //         cummScore += 5;
+        //         facBreakOut.HE += 1;
+        //         break;
+        //     case knownReponse.hea:
+        //         cummScore += 6;
+        //         facBreakOut.HE += 1;
+        //         break;
+        //     default:
+        //         break;
+        //     }
+        // });
 
         if (this.workGroup.assignedSpInstr) {
             this.workGroup
@@ -328,13 +331,13 @@ export class CrseStudentInGroup extends EntityBase {
             composite = Math.round(composite);
         }
 
-        const { HE, E, IE, ND } = bo;
+        // const { HE, E, IE, ND } = bo;
 
-        const chartData = [];
-        chartData.push({ name: 'Highly Effective', value: HE });
-        chartData.push({ name: 'Effective', value: E });
-        chartData.push({ name: 'Not Displayed', value: ND });
-        chartData.push({ name: 'Ineffective', value: IE });
+        // const facChartData = [];
+        // facChartData.push({ name: 'Highly Effective', value: HE });
+        // facChartData.push({ name: 'Effective', value: E });
+        // facChartData.push({ name: 'Not Displayed', value: ND });
+        // facChartData.push({ name: 'Ineffective', value: IE });
         
         // chartData.push({ label: 'Highly Effective', data: HE, color: '#00308F' });
         // chartData.push({ label: 'Effective', data: E, color: '#00AA58' });
@@ -347,6 +350,14 @@ export class CrseStudentInGroup extends EntityBase {
         let totalE = 0;
         let totalIe = 0;
         let totalNd = 0;
+
+        const user = this.workGroup.groupMembers.filter(mem => mem.studentId === this.studentId)[0];
+
+        user.assessorStratResponse.forEach(asr => {
+            gaveStrats[asr.assesseePersonId.toString()] = asr.stratPosition;
+        })
+
+
 
         const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== this.studentId);
 
@@ -415,15 +426,18 @@ export class CrseStudentInGroup extends EntityBase {
         // gaveChartData.push({ label: 'Ineffective', data: gaveIE, color: '#AA0000' });
         // gaveChartData.push({ label: 'Not Display', data: gaveND, color: '#AAAAAA' });
 
+        const gaveBreakOutChartData = [{ "name": "% Given", "series": gaveChartData }];
+
         this.sos =  {
             assessComplete: missingItems.length === 0,
             stratComplete: stratComplete,
             hasComment: hasComment,
             missingAssessItems: missingItems,
-            breakout: bo,
+            gaveStratTo: gaveStrats,
+            //facBreakout: facBreakOut,
             gaveBreakOut: gaveBo,
-            breakOutChartData: chartData,
-            gaveBreakOutChartData: gaveChartData,
+            breakOutChartData: gaveChartData,
+            gaveBreakOutChartData: gaveBreakOutChartData,
             compositeScore: composite,
             gaveCompositeScore: gaveComposite,
             stratedPosition: stratedPosition
@@ -432,7 +446,7 @@ export class CrseStudentInGroup extends EntityBase {
         return this.sos;
     }
 
-    /**private updateResult(): ecat.entity.ext.IStudentDetailResult {
+    updateResult(): any {
         const counts = {
             h: this.spResult.breakOut.highEffA + this.spResult.breakOut.highEffU,
             e: this.spResult.breakOut.effA + this.spResult.breakOut.effU,
@@ -440,42 +454,41 @@ export class CrseStudentInGroup extends EntityBase {
             nd: this.spResult.breakOut.notDisplay
         }
         
-        this._resultForStud.breakOutReceived = [];
-        this._resultForStud.breakOutReceived.push({
-            label: `Highly Effective [${counts.h}]`,
-            color: '#00308F',
-            data: counts.h  
+        this.resultForStudent.breakOutReceived = [];
+        this.resultForStudent.breakOutReceived.push({
+            name: 'Highly Effective',
+            value: counts.h
         });
-        this._resultForStud.breakOutReceived.push({
-            label: `Effective [${counts.e}]`,
-            color: '#00AA58',
-            data: counts.e
+        this.resultForStudent.breakOutReceived.push({
+            name: 'Effective',
+            value: counts.e
         });
-        this._resultForStud.breakOutReceived.push({
-            label: `Ineffective [${counts.i}]`,
-            color: '#AA0000',
-            data: counts.i
+        this.resultForStudent.breakOutReceived.push({
+            name: 'ineffective',
+            value: counts.i
         });
-        this._resultForStud.breakOutReceived.push({
-            label: `Not Displayed [${counts.nd}]`,
-            color: '#AAAAAA',
-            data: counts.nd
+        this.resultForStudent.breakOutReceived.push({
+            name: 'Not Displayed',
+            value: counts.nd
         });
 
-        this._resultForStud.outcome = this.spResult.mpAssessResult;
-        this._resultForStud.finalStrat = this.stratResult.finalStratPosition;
-        this._resultForStud.compositeScore = this.spResult.compositeScore;
-        return this._resultForStud;
+        this.resultForStudent.breakOutReceivedChartData = [ { "name": "% Recieved", "series": this.resultForStudent.breakOutReceived }];
+
+
+        this.resultForStudent.outcome = this.spResult.mpAssessResult;
+        this.resultForStudent.finalStrat = this.stratResult.finalStratPosition;
+        this.resultForStudent.compositeScore = this.spResult.compositeScore;
+        return this.resultForStudent;
     }
     
-    get resultForStudent(): ecat.entity.ext.IStudentDetailResult {
+    get resultForStudent(): any {
         if (!this.spResult) return null;
-        if (this._resultForStud) return this._resultForStud
-        this._resultForStud = {} as any;
+        if (this.rfs) return this.rfs
+        this.rfs = {} as any;
         return this.updateResult();
-    }*/
+    }
 
-    static initializer(entity: CrseStudentInGroup) { }
+    //static initializer(entity: CrseStudentInGroup) { }
    /// </code>
 
 }

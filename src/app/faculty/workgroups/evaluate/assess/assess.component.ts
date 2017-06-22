@@ -1,8 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { WorkGroup, CrseStudentInGroup } from "../../../../core/entities/faculty";
-import { SpProviderService } from "../../../../provider/sp-provider/sp-provider.service";
-import { FacWorkgroupService } from "../../../services/facworkgroup.service";
+import { MpCommentType } from '../../../../core/common/mapStrings';
+import { CrseStudentInGroup, WorkGroup } from '../../../../core/entities/faculty';
+import { SpProviderService } from '../../../../provider/sp-provider/sp-provider.service';
+import { FacWorkgroupService } from '../../../services/facworkgroup.service';
 
 @Component({
   selector: 'assess',
@@ -49,10 +50,15 @@ export class AssessComponent implements OnInit {
       }
       gm['commentText'] = commentText;
       gm['assessText'] = assessText;
+
+      console.log(gm['commentText'] );
+      console.log(gm['assessText']);
     });
 
     if (!this.groupMembers.some(mem => mem.statusOfStudent.assessComplete === false)){
       this.facWorkGroupService.assessComplete(true);
+    } else {
+      this.facWorkGroupService.assessComplete(false);
     }
   }
 

@@ -74,11 +74,11 @@ export class StatusComponent implements OnInit {
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
 
-      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.value > 0);
+      gm['hasChartData'] = gm.statusOfStudent.breakOutChartData.some(cd => cd.value > 0);
 
-      if (gm['hasChartData']) {
-        gm['chartData'] = [ { "name": "% Given", "series": gm.statusOfStudent.gaveBreakOutChartData }];
-      }
+      // if (gm['hasChartData']) {
+      //   gm.updateStatusOfStudent();
+      // }
 
       gm.check = {
         isSelfDone: isSelfDone,
