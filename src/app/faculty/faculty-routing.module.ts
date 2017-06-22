@@ -12,6 +12,7 @@ import { EvaluateComponent } from './workgroups/evaluate/evaluate.component';
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
 import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
+import { ResultsDetailsComponent } from "./workgroups/results/results-details/results-details.component";
 
 const facultyRoutes: Routes = [
   {
@@ -61,7 +62,10 @@ const facultyRoutes: Routes = [
           {
             path: 'list/:crsId/results/:wrkGrpId',
             component: ResultsComponent,
-    
+          },
+          {
+            path: 'list/:crsId/results/:wrkGrpId/details/:stuId',
+            component: ResultsDetailsComponent,
           },
           // {
           //   path: '',

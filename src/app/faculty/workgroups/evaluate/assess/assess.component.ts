@@ -57,6 +57,8 @@ export class AssessComponent implements OnInit {
 
     if (!this.groupMembers.some(mem => mem.statusOfStudent.assessComplete === false)){
       this.facWorkGroupService.assessComplete(true);
+    } else {
+      this.facWorkGroupService.assessComplete(false);
     }
   }
 

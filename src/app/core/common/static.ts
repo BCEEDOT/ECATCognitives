@@ -248,17 +248,17 @@ export class EcLocalDataService {
     static prettifyItemResponse(itemResponse: string): string {
         switch (itemResponse) {
         case 'IEA':
-            return 'Always: Ineffective';
+            return 'Always Ineffective';
         case 'IEU':
-            return 'Usually: Ineffective';
+            return 'Usually Ineffective';
         case 'EA':
-            return 'Always: Effective';
+            return 'Always Effective';
         case 'EU':
-            return 'Usually: Effective';
+            return 'Usually Effective';
         case 'HEU':
-            return 'Usually: Highly Effective';
+            return 'Usually Highly Effective';
         case 'HEA':
-            return 'Always: Highly Effective';
+            return 'Always Highly Effective';
         case 'ND':
             return 'Not Displayed';
         default:

@@ -9,7 +9,7 @@
           {{wgName}} - {{workGroup.mpSpStatus}}
         </div>
         <div fxFlex>
-          <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === statusMap.Published">{{reviewBtnText}}</button>
+          <button md-raised-button *ngIf="workGroup.mpSpStatus === statusMap.open || workGroup.mpSpStatus === statusMap.underReview || workGroup.mpSpStatus === statusMap.reviewed" (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === statusMap.created">{{reviewBtnText}}</button>
           <!--TODO: Remove this button-->
           <button md-raised-button (click)="this.publish()" [disabled]="workGroup.mpSpStatus !== statusMap.reviewed">Publish</button>
         </div>
@@ -18,22 +18,22 @@
         <md-tab>
           <ng-template md-tab-label>
             Assess
-            <md-icon [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
+            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
           </ng-template>
           <assess [members]="members"></assess>
         </md-tab>
         <md-tab>
           <ng-template md-tab-label>
             Strat
-            <md-icon [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
+            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
           </ng-template>
           <strat [members]="members"></strat>
         </md-tab>
         <md-tab [disabled]="!showComments">
           <ng-template md-tab-label>
             Review Comments
-            <md-icon *ngIf="!showComments">lock</md-icon>
-            <md-icon *ngIf="showComments" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
+            <md-icon *ngIf="!showComments && workGroup.mpSpStatus !== statusMap.published">lock</md-icon>
+            <md-icon *ngIf="showComments && workGroup.mpSpStatus !== statusMap.published" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
           </ng-template>
           <comments [members]="members"></comments>
         </md-tab>
@@ -42,5 +42,5 @@
   </ng-template>
 </div>
 <a style="z-index: 9999;" md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['../../status', workGroupId]">
-  <md-icon>add</md-icon>
+  <md-icon>show_chart</md-icon>
 </a>

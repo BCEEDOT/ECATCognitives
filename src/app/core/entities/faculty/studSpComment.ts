@@ -27,7 +27,13 @@ export class StudSpComment extends EntityBase {
    workGroup: WorkGroup;
 
    /// <code> Place custom code between <code> tags
-   
+
+   get shortText(): string {
+    if (this.commentText && this.commentText.length > 250){
+        return this.commentText.substring(0, 250) + ' [...]';
+    }
+    return null;
+   }
    /// </code>
 
 }
