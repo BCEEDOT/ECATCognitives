@@ -18,6 +18,7 @@ import { FacWorkgroupService } from "./services/facworkgroup.service";
 import { ResultsComponent } from './workgroups/results/results.component';
 import { AssessOverviewComponent } from './workgroups/results/assess-overview/assess-overview.component';
 import { StratOverviewComponent } from './workgroups/results/strat-overview/strat-overview.component';
+import { MyhighlightDirective } from './directives/myhighlight.directive';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { StratOverviewComponent } from './workgroups/results/strat-overview/stra
     ResultsComponent,
     AssessOverviewComponent,
     StratOverviewComponent,
+    MyhighlightDirective,
   ], 
   providers: [
     FacultyAuthGuardService,
