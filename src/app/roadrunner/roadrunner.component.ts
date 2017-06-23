@@ -34,6 +34,7 @@ export class RoadrunnerComponent implements OnInit {
   flightsModel: string[] = [];
   flightDisplayed: string = 'All Flights';
   firstFilter: boolean = true;
+  count: number = 0;
 
   dateFormat = new Intl.DateTimeFormat('en-US');
 
@@ -127,6 +128,7 @@ export class RoadrunnerComponent implements OnInit {
 
     if (edit.signOut) {
       edit.prevSignOut = true;
+      this.count = this.count + 1;
     }
 
     edit.signOut = !edit.signOut;
@@ -180,6 +182,7 @@ export class RoadrunnerComponent implements OnInit {
         console.log(this.roadRunnerInfos)
 
         if (this.roadRunnerInfos.length > 0) {
+          //var count = 0;
           for (let info of this.roadRunnerInfos) {
             var templocation = info.location;
 
@@ -189,8 +192,15 @@ export class RoadrunnerComponent implements OnInit {
             console.log(arrayOfLocation);
 
             info['splitLocation'] = arrayOfLocation;
-          }
 
+            if(info.prevSignOut){
+              this.count = this.count +1;
+            }
+
+
+
+          }
+          console.log(this.count);
           console.log(this.roadRunnerInfos)
 
         }

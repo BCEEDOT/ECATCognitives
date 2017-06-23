@@ -125,7 +125,8 @@
     </div>
 
     <div *ngIf="roadRunnerInfos.length === 0">
-      <h2>You have no locations loaded</h2>
+      
+      <span class="md-title">You have no locations to sign out to</span>
     </div>
 
     </md-list>
@@ -143,7 +144,10 @@
     </md-toolbar>
 
     <md-list class="will-load">
-
+    <div *ngIf="roadRunnerInfos.length === 0 || count === 0">
+      
+      <span class="md-title">You have not signed in from any locations</span>
+    </div>
       <div *ngIf="roadRunnerInfos.length > 0">
 
         <ng-template let-rData let-last="last" ngFor [ngForOf]="roadRunnerInfos">

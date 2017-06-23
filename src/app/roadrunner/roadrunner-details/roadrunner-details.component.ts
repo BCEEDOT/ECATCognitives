@@ -26,11 +26,16 @@ export class RoadrunnerDetailsComponent implements OnInit {
     startCheck: boolean = false;
     endCheck: boolean = false;
     touch: boolean = true;
-    minDate = new Date();
+    minDate = new Date(2017,0,1);
+    maxDate = new Date(2020,0,1);
+    clone: boolean = false;
 
 
     dateForm: FormGroup;
 
+        // $mdDateLocaleProvider.formatDate = function(date) {
+    //   return moment(date).format('MM/DD/YYYY');
+    // };
 
     constructor(private roadRunnerService: RoadrunnerService,
         private userDataContext: UserDataContext,
@@ -85,7 +90,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
                 this.tempEvent = this.oneEvent;
 
                 this.oneEvent = this.userDataContext.addRoadRunner();
-
+                this.clone = true;
                 var today = new Date();
                 this.oneEvent.location = this.tempEvent.location;
                 this.oneEvent.phoneNumber = this.tempEvent.phoneNumber;

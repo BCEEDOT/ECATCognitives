@@ -16,7 +16,9 @@
         <md-toolbar>
           <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
 
-            <span class="md-title">Edit the following content</span>
+            <span *ngIf="checkNew === 'New'" class="md-title">Create a location</span>
+            <span *ngIf="!(checkNew === 'New')" class="md-title">Edit the location</span>
+
 
           </div>
         </md-toolbar>
@@ -41,14 +43,14 @@
           </div>
           <div>
             <div layout-gt-xs="row" layout-margin>
-
+<!--value="{{oneEvent.leaveDate}}"-->
               <md-input-container flex>
-                <input mdInput #leaveForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="leave" value="{{oneEvent.leaveDate}}"
+                <input mdInput [min]="minDate" [max]="maxDate" #leaveForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="leave" 
                   [(ngModel)]="oneEvent.leaveDate" placeholder="Leave Date" required/>
                 <button mdSuffix [mdDatepickerToggle]="leave"></button>
 
               </md-input-container>
-              <md-datepicker #leave [touchUi]="touch"></md-datepicker>
+              <md-datepicker #leave [touchUi]="touch" [startAt]="oneEvent.leaveDate"></md-datepicker>
             </div>
 
             <div layout-gt-xs="row" layout-margin>
@@ -56,12 +58,12 @@
               <md-input-container flex>
 
                 <button mdSuffix [mdDatepickerToggle]="return"></button>
-                <input mdInput [min]="oneEvent.leaveDate" #returnForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="return"
-                  placeholder="Return Date" value="{{oneEvent.returnDate}}" [(ngModel)]="oneEvent.returnDate" required/>
+                <input mdInput [min]="oneEvent.leaveDate" [max]="maxDate" #returnForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="return"
+                  placeholder="Return Date"  [(ngModel)]="oneEvent.returnDate" required/>
                 <md-error *ngIf="returnForm.hasError('mdDatepickerMin')">Please select date after your leave date!</md-error>
 
               </md-input-container>
-              <md-datepicker #return [touchUi]="touch"></md-datepicker>
+              <md-datepicker #return [touchUi]="touch" [startAt]="oneEvent.returnDate"></md-datepicker>
             </div>
           </div>
         </md-list>
@@ -73,7 +75,7 @@
           <span style="padding-right:10px;">
         <button md-raised-button color="primary" [disabled]="!roadRunnerForm.valid || !leaveForm.valid || !returnForm.valid"(click)="save()">Save</button>
         </span>
-          <button md-raised-button color="primary" (click)="delete()">Delete</button>
+          <button md-raised-button color="primary" *ngIf="!(checkNew === 'New') && !clone" (click)="delete()">Delete</button>
         </div>
       </form>
     </div>
