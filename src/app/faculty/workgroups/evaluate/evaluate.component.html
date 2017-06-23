@@ -1,0 +1,46 @@
+<div class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card>
+      <md-card-title>
+        <div fxFlex>
+          <button md-raised-button (click)="this.location.back()">Back</button>
+        </div>
+        <div fxFlex="100" class="text-center">
+          {{wgName}} - {{workGroup.mpSpStatus}}
+        </div>
+        <div fxFlex>
+          <button md-raised-button *ngIf="workGroup.mpSpStatus === statusMap.open || workGroup.mpSpStatus === statusMap.underReview || workGroup.mpSpStatus === statusMap.reviewed" (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === statusMap.created">{{reviewBtnText}}</button>
+          <!--TODO: Remove this button-->
+          <button md-raised-button (click)="this.publish()" [disabled]="workGroup.mpSpStatus !== statusMap.reviewed">Publish</button>
+        </div>
+      </md-card-title>
+      <md-tab-group md-stretch-tabs>
+        <md-tab>
+          <ng-template md-tab-label>
+            Assess
+            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
+          </ng-template>
+          <assess [members]="members"></assess>
+        </md-tab>
+        <md-tab>
+          <ng-template md-tab-label>
+            Strat
+            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
+          </ng-template>
+          <strat [members]="members"></strat>
+        </md-tab>
+        <md-tab [disabled]="!showComments">
+          <ng-template md-tab-label>
+            Review Comments
+            <md-icon *ngIf="!showComments && workGroup.mpSpStatus !== statusMap.published">lock</md-icon>
+            <md-icon *ngIf="showComments && workGroup.mpSpStatus !== statusMap.published" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
+          </ng-template>
+          <comments [members]="members"></comments>
+        </md-tab>
+      </md-tab-group>
+    </md-card>
+  </ng-template>
+</div>
+<a style="z-index: 9999;" md-fab color="accent" class="mat-fab-bottom-right" [routerLink]="['../../status', workGroupId]">
+  <md-icon>show_chart</md-icon>
+</a>

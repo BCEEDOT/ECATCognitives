@@ -16,24 +16,21 @@ import { SpProviderService } from "../../../provider/sp-provider/sp-provider.ser
 export class AssessComponent implements OnInit, OnChanges {
 
   activeWorkGroup: WorkGroup;
-  user: CrseStudentInGroup
-  peers: Array<CrseStudentInGroup>;
+  user: CrseStudentInGroup;
+  peers: CrseStudentInGroup[];
   userId: number;
-  isLoading: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProdiver: SpProviderService) {
-
-      this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
   }
 
   @Input() workGroup: WorkGroup;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.activate();
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     this.activate();
   }
 
@@ -46,18 +43,15 @@ export class AssessComponent implements OnInit, OnChanges {
     this.activeWorkGroup.groupMembers.forEach(gm => {
       gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'mode_edit' : 'add';
       gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'mode_edit' : 'add';
-      //gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
+      // gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
     });
 
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
 
-    this.workGroupService.isLoading(false);
-
-
   }
 
-  comment(recipient: CrseStudentInGroup){
-    this.spProdiver.loadComment(recipient);
+  comment(recipient: CrseStudentInGroup): any {
+    this.spProvider.loadComment(recipient);
   }
 
 }

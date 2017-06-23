@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MdDialogRef, MD_DIALOG_DATA } from '@angular/material'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
+import { MdSnackBar } from '@angular/material';
 
 import { SpProviderService } from "../sp-provider.service";
 import { StudSpComment } from '../../../core/entities/student';
@@ -8,6 +9,7 @@ import { FacSpComment } from '../../../core/entities/faculty';
 import { MpSpStatus } from "../../../core/common/mapStrings";
 import { GlobalService } from "../../../core/services/global.service";
 import { StudentDataContext } from "../../../student/services/student-data-context.service";
+import { FacultyDataContextService } from "../../../faculty/services/faculty-data-context.service";
 
 @Component({
   selector: 'app-comment',
@@ -21,7 +23,9 @@ export class CommentDialog implements OnInit {
   private commentLoad: string = 'CommentLoading';
   private viewOnly: boolean = true;
 
-  constructor(private ctx: StudentDataContext, //| FacultyDataContext,
+  constructor(private studentDataContext: StudentDataContext,
+    private facultyDataContext: FacultyDataContextService,
+    private snackBarService: MdSnackBar,
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private global: GlobalService,
@@ -30,6 +34,7 @@ export class CommentDialog implements OnInit {
 
   ngOnInit() {
     this.comment = this.data.comment as StudSpComment | FacSpComment;
+    console.log(this.comment);
     this.isStudent = this.global.persona.value.isStudent;
 
     if (this.isStudent) {
@@ -40,7 +45,12 @@ export class CommentDialog implements OnInit {
     }
   }
 
-  save() {
+  save(snackBarText?: string) {
+
+    if (!snackBarText) {
+      snackBarText= 'Success, Comment Saved!';
+    }
+
     if (!this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() && !this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
       this.dialogService.openAlert({
         message: 'You have no changes to save.',
@@ -49,44 +59,91 @@ export class CommentDialog implements OnInit {
       return;
     }
 
-    if(this.viewOnly){
+    if (this.viewOnly) {
       this.dialogService.openAlert({
         message: 'Group is not in open status.',
         title: 'Cannot Save',
       });
       return;
     }
-    
+
     this.loadingService.register(this.commentLoad);
 
-    this.ctx.commit()
-      .then(result => {
-        this.loadingService.resolve(this.commentLoad);
-        this.dialogRef.close();
-      })
-      .catch(result => {
+    if (this.isStudent) {
+
+      this.studentDataContext.commit()
+        .then(result => {
+          this.loadingService.resolve(this.commentLoad);
+          this.snackBarService.open(snackBarText, 'Dismiss', { duration: 2000 })
+          this.dialogRef.close();
+        })
+        .catch(result => {
           this.loadingService.resolve(this.commentLoad);
           this.dialogService.openAlert({
-          message: 'Your changes were not saved, please try again.',
-          title: 'Save Error.',
-        });
-      })
+            message: 'Your changes were not saved, please try again.',
+            title: 'Save Error.',
+          });
+        })
+    } else {
+      this.facultyDataContext.commit()
+        .then(result => {
+          this.loadingService.resolve(this.commentLoad);
+          this.snackBarService.open(snackBarText, 'Dismiss', { duration: 2000 })
+          this.dialogRef.close();
+        })
+        .catch(result => {
+          this.loadingService.resolve(this.commentLoad);
+          this.dialogService.openAlert({
+            message: 'Your changes were not saved, please try again.',
+            title: 'Save Error.',
+          });
+        })
+    }
+  }
+
+  delete() {
+    if (this.comment.entityAspect.entityState.isAdded()) {
+      this.cancel();
+      return;
+    }
+
+    this.dialogService.openConfirm({
+      message: 'Are you sure you want to delete this comment?',
+      title: 'Delete Comment',
+      acceptButton: 'Yes',
+      cancelButton: 'No'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.comment.flag.entityAspect.setDeleted();
+        this.comment.entityAspect.setDeleted();
+        this.save('Success, Comment Deleted');
+      }
+    });
   }
 
   cancel() {
-    if (this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() || this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()){
-      this.dialogService.openConfirm({
-        message: 'Are you sure you want to cancel and discard your changes?',
-        title: 'Unsaved Changed',
-        acceptButton: 'Yes',
-        cancelButton: 'No'
-      }).afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed){
-          this.comment.flag.entityAspect.rejectChanges();
-          this.comment.entityAspect.rejectChanges();
-          this.dialogRef.close();
-        }
-      });
+    
+    if (this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() || this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
+      if (this.comment.commentText === null || this.comment.flag === null) {
+        this.comment.flag.entityAspect.rejectChanges();
+        this.comment.entityAspect.rejectChanges();
+        this.dialogRef.close();
+      } else {
+      
+        this.dialogService.openConfirm({
+          message: 'Are you sure you want to cancel and discard your changes?',
+          title: 'Unsaved Changed',
+          acceptButton: 'Yes',
+          cancelButton: 'No'
+        }).afterClosed().subscribe((confirmed: boolean) => {
+          if (confirmed) {
+            this.comment.flag.entityAspect.rejectChanges();
+            this.comment.entityAspect.rejectChanges();
+            this.dialogRef.close();
+          }
+        });
+      }
+      
     } else {
       this.dialogRef.close();
     }

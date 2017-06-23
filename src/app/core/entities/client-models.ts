@@ -29,6 +29,16 @@ export interface IStudentApiResources extends IApiResources {
     wgResult: IApiResource;
 }
 
+export interface IFacultyApiResources extends IApiResources {
+    initCourses: IApiResource;
+    course: IApiResource;
+    workGroup: IApiResource;
+    instrument: IApiResource;
+    wgComment: IApiResource;
+    wgResult: IApiResource;
+    currentWorkGroup: IApiResource;
+}
+
 export interface IMilPayGrade {
     civ: { designator: string };
     fn: { designator: string };
@@ -65,7 +75,7 @@ export interface IStudSpInventory extends EntityBase, student.SpInventory {
    isDisplayed: boolean;
    behavior: string;
    //instrument: SpInstrument;
-   itemResponses: student.SpResponse[];
+   //itemResponses: student.SpResponse[];
 }
 
 export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
@@ -75,5 +85,5 @@ export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
    isDisplayed: boolean;
    behavior: string;
    //instrument: SpInstrument;
-   itemResponses: faculty.SpResponse[];
+   //itemResponses: faculty.FacSpResponse[];
 }

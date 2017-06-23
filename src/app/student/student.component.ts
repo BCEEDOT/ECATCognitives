@@ -64,7 +64,6 @@ export class StudentComponent implements OnInit {
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
-      console.log(this.courses);
       this.activate();
     });
 
@@ -115,7 +114,7 @@ export class StudentComponent implements OnInit {
       if (wgA.mpCategory < wgB.mpCategory) return 1;
       if (wgA.mpCategory > wgB.mpCategory) return -1;
       return 0;
-    })
+    });
 
     this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
 

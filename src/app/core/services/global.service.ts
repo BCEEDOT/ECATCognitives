@@ -15,7 +15,7 @@ export interface ILoggedInUser {
 @Injectable()
 export class GlobalService {
 
-  userDataContextActivated: BehaviorSubject<Boolean> = new BehaviorSubject(false);
+  userDataContextActivated: BehaviorSubject<boolean> = new BehaviorSubject(false);
   persona: BehaviorSubject<ILoggedInUser> = new BehaviorSubject({} as ILoggedInUser);
 
   user(user: ILoggedInUser) {
