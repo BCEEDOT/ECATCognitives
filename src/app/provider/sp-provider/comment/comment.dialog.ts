@@ -122,25 +122,28 @@ export class CommentDialog implements OnInit {
   }
 
   cancel() {
-    if (this.comment.commentText === null || this.comment.flag === null) {
-      this.comment.flag.entityAspect.rejectChanges();
-      this.comment.entityAspect.rejectChanges();
-      this.dialogRef.close();
-    }
-
+    
     if (this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() || this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
-      this.dialogService.openConfirm({
-        message: 'Are you sure you want to cancel and discard your changes?',
-        title: 'Unsaved Changed',
-        acceptButton: 'Yes',
-        cancelButton: 'No'
-      }).afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed) {
-          this.comment.flag.entityAspect.rejectChanges();
-          this.comment.entityAspect.rejectChanges();
-          this.dialogRef.close();
-        }
-      });
+      if (this.comment.commentText === null || this.comment.flag === null) {
+        this.comment.flag.entityAspect.rejectChanges();
+        this.comment.entityAspect.rejectChanges();
+        this.dialogRef.close();
+      } else {
+      
+        this.dialogService.openConfirm({
+          message: 'Are you sure you want to cancel and discard your changes?',
+          title: 'Unsaved Changed',
+          acceptButton: 'Yes',
+          cancelButton: 'No'
+        }).afterClosed().subscribe((confirmed: boolean) => {
+          if (confirmed) {
+            this.comment.flag.entityAspect.rejectChanges();
+            this.comment.entityAspect.rejectChanges();
+            this.dialogRef.close();
+          }
+        });
+      }
+      
     } else {
       this.dialogRef.close();
     }
