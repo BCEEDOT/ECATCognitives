@@ -34,6 +34,7 @@ export class CommentDialog implements OnInit {
 
   ngOnInit() {
     this.comment = this.data.comment as StudSpComment | FacSpComment;
+    console.log(this.comment);
     this.isStudent = this.global.persona.value.isStudent;
 
     if (this.isStudent) {
@@ -44,7 +45,12 @@ export class CommentDialog implements OnInit {
     }
   }
 
-  save() {
+  save(snackBarText?: string) {
+
+    if (!snackBarText) {
+      snackBarText= 'Success, Comment Saved!';
+    }
+
     if (!this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() && !this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
       this.dialogService.openAlert({
         message: 'You have no changes to save.',
@@ -63,14 +69,12 @@ export class CommentDialog implements OnInit {
 
     this.loadingService.register(this.commentLoad);
 
-    
-
     if (this.isStudent) {
 
       this.studentDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.commentLoad);
-          this.snackBarService.open("Success, Comment Saved!", 'Dismiss', {duration: 2000})
+          this.snackBarService.open(snackBarText, 'Dismiss', { duration: 2000 })
           this.dialogRef.close();
         })
         .catch(result => {
@@ -84,7 +88,7 @@ export class CommentDialog implements OnInit {
       this.facultyDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.commentLoad);
-          this.snackBarService.open("Success, Comment Saved!", 'Dismiss', {duration: 2000})
+          this.snackBarService.open(snackBarText, 'Dismiss', { duration: 2000 })
           this.dialogRef.close();
         })
         .catch(result => {
@@ -98,26 +102,32 @@ export class CommentDialog implements OnInit {
   }
 
   delete() {
-    if (this.comment.entityAspect.entityState.isAdded()){
+    if (this.comment.entityAspect.entityState.isAdded()) {
       this.cancel();
       return;
     }
 
     this.dialogService.openConfirm({
-        message: 'Are you sure you want to delete this comment?',
-        title: 'Delete Comment',
-        acceptButton: 'Yes',
-        cancelButton: 'No'
-      }).afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed) {
-          this.comment.flag.entityAspect.setDeleted();
-          this.comment.entityAspect.setDeleted();
-          this.save();
-        }
-      });
+      message: 'Are you sure you want to delete this comment?',
+      title: 'Delete Comment',
+      acceptButton: 'Yes',
+      cancelButton: 'No'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.comment.flag.entityAspect.setDeleted();
+        this.comment.entityAspect.setDeleted();
+        this.save('Success, Comment Deleted');
+      }
+    });
   }
 
   cancel() {
+    if (this.comment.commentText === null || this.comment.flag === null) {
+      this.comment.flag.entityAspect.rejectChanges();
+      this.comment.entityAspect.rejectChanges();
+      this.dialogRef.close();
+    }
+
     if (this.comment.entityAspect.entityState.isAddedModifiedOrDeleted() || this.comment.flag.entityAspect.entityState.isAddedModifiedOrDeleted()) {
       this.dialogService.openConfirm({
         message: 'Are you sure you want to cancel and discard your changes?',

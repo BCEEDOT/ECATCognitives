@@ -11,7 +11,7 @@
   <md-card>
     <md-card-title>
       <div fxFlex>
-        <button md-raised-button (click)="this.location.back()">Back</button>
+        <button md-raised-button [routerLink]="['../..']">Back</button>
       </div>
       <div fxFlex="100" class="text-center">
         {{workGroupName}} - Results

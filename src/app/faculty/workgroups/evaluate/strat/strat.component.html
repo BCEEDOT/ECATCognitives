@@ -39,7 +39,8 @@
   <md-divider></md-divider>
 
   <md-card-actions fxLayout="row" fxLayoutAlign="end">
-    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
-    <button md-raised-button color="accent" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+    <button md-raised-button color="accent" type="button" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()">Save</button>
+    
   </md-card-actions>
 </md-list>
