@@ -17,10 +17,11 @@
       <h3 md-line> {{peer?.rankName}} </h3>
       <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
           <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{peer?.assessText}}</md-icon> Assessment</button>
-        </span>
+      </span>
       <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button (click)="comment(peer)"><md-icon>{{peer?.commentText}}</md-icon> Comment</button>
-        </span>
+           <button md-button *ngIf="peer?.commentText !== 'not_interested'"  (click)="comment(peer)"><md-icon>{{peer?.commentText}}</md-icon> Comment</button>
+          <span class="pad-left-sm" *ngIf="peer?.commentText === 'not_interested'"><md-icon>{{peer?.commentText}}</md-icon> Comment</span>
+      </span>
       <span flex></span>
     </md-list-item>
     <md-divider *ngIf="!last" md-inset></md-divider>
