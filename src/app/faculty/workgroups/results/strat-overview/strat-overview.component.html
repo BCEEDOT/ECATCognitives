@@ -5,7 +5,7 @@
       <thead>
         <tr>
           <th></th>
-          <th *ngFor="let memberResult of membersResults; let i=index; let odd=odd;">
+          <th *ngFor="let memberResult of membersResults; let i=index; let odd=odd;" [ngClass]="{'selected': hovered === memberResult.studentId}">
             <span class="md-caption">{{memberResult?.rankName}}</span>
           </th>
 
@@ -14,19 +14,19 @@
       <tbody>
         <tr *ngFor="let memberResult of membersResults;">
           <td class="md-caption">{{memberResult?.rankName}}</td>
-          <td align="center" *ngFor="let studentId of studentIds;" #td>
+          <td align="center" *ngFor="let studentId of studentIds;" #td [ngClass]="{'selected': hovered === studentId}" (mouseover)="hovered = studentId" (mouseout)="hovered = null">
             {{memberResult?.statusOfStudent.gaveStratTo[studentId]}}
           </td>
         </tr>
         <tr>
           <td class="md-caption">Instructor</td>
-          <td *ngFor="let studentId of studentIds;">
+          <td *ngFor="let studentId of studentIds;" [ngClass]="{'selected': hovered === studentId}" (mouseover)="hovered = studentId" (mouseout)="hovered = null">
             {{facultyStrat[studentId]}}
           </td>
         </tr>
         <tr>
           <td class="md-button">Final Strat</td>
-          <td *ngFor="let studentId of studentIds;">
+          <td *ngFor="let studentId of studentIds;" [ngClass]="{'selected': hovered === studentId}" (mouseover)="hovered = studentId" (mouseout)="hovered = null">
             {{finalStrat[studentId]}}
           </td>
         </tr>

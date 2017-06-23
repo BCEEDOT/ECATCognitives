@@ -28,7 +28,7 @@ export class StratOverviewComponent implements OnInit {
   studentIds: number[] = [];
   facultyStrat: number[] = [];
   finalStrat: number[] = [];
-
+  hovered: number;
 
   constructor() { }
 

@@ -40,6 +40,7 @@ export class StatusComponent implements OnInit {
   private wgName: string;
   //private facIncomplete: boolean = false;
   private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
+  private statusMap = MpSpStatus;
 
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,
