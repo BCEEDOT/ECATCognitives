@@ -41,6 +41,7 @@ import { ResultsCommentsComponent } from './workgroups/results/results-details/c
     CommentsComponent,
     ResultsComponent,
     AssessOverviewComponent,
+    StratOverviewComponent,
     MyhighlightDirective,
     ResultsDetailsComponent,
     BehaviorsComponent,

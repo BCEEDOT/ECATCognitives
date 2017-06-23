@@ -299,16 +299,18 @@ export class FacultyDataContextService extends BaseDataContext {
     if (resultCached) {
       const members = resultCached.filter(gm => gm.workGroupId === groupId && gm.courseId === courseId);
       if (members && members.length !== 0) {
-        const cachedInstrument = that.manager.getEntityByKey(MpEntityType.spInstr, workGroup.assignedSpInstrId) as SpInstrument;
-        const cachedInventory = cachedInstrument.inventoryCollection as Array<SpInventory>;
-        cachedInventory
-          .forEach(inv => {
-            inv.resetResult();
-            inv.workGroup = workGroup;
-          });
-        console.log('Retrieved workgroup result from the local cache', resultCached, false);
+        if (members.some(member => member.stratResult !== null)) {
+          const cachedInstrument = that.manager.getEntityByKey(MpEntityType.spInstr, workGroup.assignedSpInstrId) as SpInstrument;
+          const cachedInventory = cachedInstrument.inventoryCollection as Array<SpInventory>;
+          cachedInventory
+            .forEach(inv => {
+              inv.resetResult();
+              inv.workGroup = workGroup;
+            });
+          console.log('Retrieved workgroup result from the local cache', resultCached, false);
 
-        return Promise.resolve(members);
+          return Promise.resolve(members);
+        }
       }
     }
 

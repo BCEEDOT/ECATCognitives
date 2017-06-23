@@ -11,7 +11,7 @@ export class AssessOverviewComponent implements OnInit {
 
   @Input() membersResults: CrseStudentInGroup[];
 
-  private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
+  chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
 
   constructor() { }
 
