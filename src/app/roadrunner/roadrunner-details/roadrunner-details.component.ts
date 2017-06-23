@@ -4,11 +4,11 @@ import { UserDataContext } from "../../core/services/data/user-data-context.serv
 import { RoadRunner } from "../../core/entities/user";
 import { Router } from '@angular/router';
 
+import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-    //selector: 'roadrunner-details',
     templateUrl: './roadrunner-details.component.html',
     styleUrls: ['./roadrunner-details.component.scss']
 
@@ -23,18 +23,34 @@ export class RoadrunnerDetailsComponent implements OnInit {
     id: number;
     checkNew: string;
     isNew: boolean;
+    startCheck: boolean = false;
+    endCheck: boolean = false;
+    touch: boolean = true;
+    minDate = new Date();
+
+
+    dateForm: FormGroup;
+
 
     constructor(private roadRunnerService: RoadrunnerService,
         private userDataContext: UserDataContext,
         private route: ActivatedRoute,
-        //private global: GlobalService,   
-        private router: Router) {
+        private router: Router,
+    ) {
 
     }
 
-    ngOnInit() {
 
-        //this.getInfo();
+    checkDates(date: Date, type: number) {
+
+        if (type === 0) {
+            console.log('this is the start date ', date);
+        } else if (type === 1) {
+            console.log('this is the return date', date);
+        }
+
+    }
+    ngOnInit() {
 
         this.roadRunnerService.roadRunnerData.subscribe((road) => {
             console.log("roadrunner update")
@@ -46,15 +62,6 @@ export class RoadrunnerDetailsComponent implements OnInit {
         this.checkNew = (this.route.snapshot.params['id']);
 
         console.log(this.checkNew);
-
-        // if (this.isNewString === 'New') {
-        //     this.isNew = false;
-        // } else {
-        //     this.isNew = true;
-        // }
-
-
-        //console.log(this.isNew);
         if (this.checkNew === "New") {
             console.log('new event');
             this.oneEvent = this.userDataContext.addRoadRunner();
@@ -74,23 +81,20 @@ export class RoadrunnerDetailsComponent implements OnInit {
             this.oneEvent = this.event.find(single => single.id === this.id);
             console.log(this.oneEvent);
 
-            if(this.oneEvent.prevSignOut === true){
+            if (this.oneEvent.prevSignOut === true) {
                 this.tempEvent = this.oneEvent;
-                
+
                 this.oneEvent = this.userDataContext.addRoadRunner();
 
                 var today = new Date();
                 this.oneEvent.location = this.tempEvent.location;
                 this.oneEvent.phoneNumber = this.tempEvent.phoneNumber;
                 this.oneEvent.leaveDate = today;
-            this.oneEvent.returnDate = today;
-               //var today = new Date();
-
-
+                this.oneEvent.returnDate = today;
 
 
             }
-            //this.oneEvent = this.roadRunnerService.roadRunnerData.value.roadrunner;
+
         }
     }
 
@@ -110,19 +114,17 @@ export class RoadrunnerDetailsComponent implements OnInit {
                 this.router.navigate(['roadrunnerStudent/']);
             })
 
-        
     }
 
-
-    delete(){
+    delete() {
 
         this.oneEvent.entityAspect.setDeleted();
 
         this.userDataContext.commit()
-        .then((res) =>{
-            console.log('check roadrunner database');
-            this.router.navigate(['roadrunnerStudent/']);
-        })
+            .then((res) => {
+                console.log('check roadrunner database');
+                this.router.navigate(['roadrunnerStudent/']);
+            })
 
     }
 

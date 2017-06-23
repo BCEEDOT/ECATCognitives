@@ -24,14 +24,14 @@ export class RoadrunnerComponent implements OnInit {
   people: Person[] = [];
   persona: ILoggedInUser = <ILoggedInUser>{};
   courses: Course[] = [];
-  //private courses: Array<ecat.entity.ICourse>;
-  //protected workGroups: Array<ecat.entity.IWorkGroup> = [];
   workGroups: WorkGroup[] = [];
   activeCourseId: number;
   allStudents: boolean = true;
   studentsOut: IStudentOut[] = [];
   allStudentsOut: IStudentOut [] = [];
   flights: string[]= [];
+  stringAllFlights: string[] = [];
+  flightsModel: string[] = [];
   flightDisplayed: string = 'All Flights';
   firstFilter: boolean = true;
 
@@ -56,16 +56,6 @@ export class RoadrunnerComponent implements OnInit {
     { name: 'contactNumber', label: 'Contact Number', sortable: false }
   ]
 
-  // firstName: outAdd.person.firstName,
-  // lastName: outAdd.person.lastName,
-  // leaveDate: outAdd.leaveDate,
-  // returnDate: outAdd.returnDate,
-  // location: outAdd.location,
-  // flight: gm.workGroup.defaultName,
-  // contactNumber: outAdd.phoneNumber
-
-
-
   roadRunnerLoading = 'roadRunnerLoading';
 
   constructor(private titleService: Title,
@@ -81,55 +71,57 @@ export class RoadrunnerComponent implements OnInit {
   ) { }
 
 
-  //   roadRunnerInfos: RoadRunner [];
-  //   people: Person[] = [];
-  //   persona: ILoggedInUser = <ILoggedInUser>{};
-  //   courses: Course[] = [];
-  // //private courses: Array<ecat.entity.ICourse>;
-  // //protected workGroups: Array<ecat.entity.IWorkGroup> = [];
-  //   workGroups: Array<IWorkGroup> = [];
-  //   activeCourseId: number;
 
   goBack(route: string): void {
     this.router.navigate(['/']);
   }
-  // add(flight): void{
-  //   //this.studentsOut = this.allStudentsOut;
-  //   var that = this;
-  //   if(flight === "All Flights"){
-  //     this.studentsOut = this.allStudentsOut;
-  //   }else{
-  //     var temp = this.allStudentsOut.filter(flt => flt.flight === flight);
-  //     if(temp != null){
-        
-  //       that.studentsOut = this.allStudentsOut.filter(flt => flt.flight === flight);
-  //       this.firstFilter = false;
-  //     }else{
-  //     var temp = this.allStudentsOut.filter(flt => flt.flight === flight);
-  //       if(temp != null){
-  //     temp.forEach(tp => {that.studentsOut.push(tp)});
-  //       }
-  //   //this.studentsOut.push(temp);
-  //     }
-  // }
-  
-  //   this.flightDisplayed = flight;
-  //   console.log(that.studentsOut);
-  //   console.log('filter has been hit')
-  // }
 
-  filter(flight): void{
-    //this.studentsOut = this.allStudentsOut;
-    if(flight === "All Flights"){
-      this.studentsOut = this.allStudentsOut;
-    }else{
-    this.studentsOut = this.allStudentsOut.filter(flt => flt.flight === flight);
-  }
+
+  filterFlights(value: string): void{
+    this.flights = this.stringAllFlights.filter((item: any) =>{
+      
+        return item.toLowerCase().indexOf(value.toLowerCase()) > -1;
+      
+       
+         
+    }).filter((filteredItem: any) =>{
+      return this.flightsModel ? this.flightsModel.indexOf(filteredItem)< 0: true;
+    });
   
-    this.flightDisplayed = flight;
-    console.log(this.studentsOut);
-    console.log('filter has been hit')
   }
+   add(): void{
+     this.studentsOut = this.allStudentsOut.filter(stu =>{
+       let match = false;
+
+       this.flightsModel.forEach(item => {
+         let temp = stu.flight;
+         if(temp === item){
+           match = true;
+         }
+       });
+       return match;
+     });
+
+     console.log(this.studentsOut);
+   }
+
+   remove(): void{
+     if(this.flightsModel.length > 0){
+     this.studentsOut = this.allStudentsOut.filter(stu =>{
+       let match = false;
+
+       this.flightsModel.forEach(item => {
+         let temp = stu.flight;
+         if(temp === item){
+           match = true;
+         }
+       });
+       return match;
+     });
+     } else{
+       this.studentsOut = this.allStudentsOut
+     }
+   }
 
   signOut(edit): void {
 
@@ -163,9 +155,8 @@ export class RoadrunnerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    //this.media.broadcast();
+
     this.titleService.setTitle('RoadRunner');
-    //this.loadingService.register(this.roadRunnerLoading);
     this.loadUsers();
 
     this.global.persona.subscribe((user) => {
@@ -176,58 +167,6 @@ export class RoadrunnerComponent implements OnInit {
         this.pullProperData();
       }
     });
-
-    // if(this.persona.isStudent){
-    //   this.getRoadRunnerInfo();
-    //   this.roadRunnerService.roadRunnerData.subscribe((road)=>{
-    //     console.log("roadrunner update")
-    //     this.roadRunnerInfos = road;
-    //     console.log(this.roadRunnerInfos)
-
-    //     if (this.roadRunnerInfos.length > 0){
-    //       for (let info of this.roadRunnerInfos){
-    //           var templocation = info.location;
-
-    //           console.log(templocation)
-    //           console.log(info.id)
-    //         var arrayOfLocation = templocation.split("\n");
-    //         console.log(arrayOfLocation);
-
-    //         info['splitLocation'] = arrayOfLocation;
-    //       }
-
-    //     console.log(this.roadRunnerInfos)
-
-    //     }
-    //     //Trying to break up the locations
-
-    //     //var templocation = this.roadRunnerInfos[1].location;
-
-    //     //console.log(templocation)
-    //   //var arrayOfLocation = templocation.split("\n");
-    //   //console.log(arrayOfLocation);
-
-
-    //           // this.inventoryList.forEach(item => {
-    //           //     item.responseForAssessee.entityAspect.rejectChanges();
-    //           //     item['isChanged'] = false;
-    //           //     if (item['showBehavior']) { this.closeEditAssessItem(item, false) }
-    //           // });
-
-    //   })
-
-
-    //   console.log("App on init is firing");
-
-    // }
-
-
-    // check if this is a student then call the correct service to pull data
-    // if (this.persona.isStudent) {
-    //   console.log("ROADRUNNER STUDENT");
-
-    // }
-
 
   }
 
@@ -258,7 +197,6 @@ export class RoadrunnerComponent implements OnInit {
       })
     }
     else {
-      //get instructor stuff
       this.loadingService.register(this.roadRunnerLoading);
       this.facultyDataContext.initCourses()
         .then((courses: Course[]) => {
@@ -273,8 +211,12 @@ export class RoadrunnerComponent implements OnInit {
 
           this.activeCourseId = courses[0].id;
 
+          this.flightDisplayed = (courses[0].academyId + courses[0].classNumber)
+          
+
           console.log(this.courses);
           console.log(this.activeCourseId);
+          console.log(this.flightDisplayed);
 
           this.facultyDataContext.fetchRoadRunnerWorkGroups(this.activeCourseId)
             .then(initFacultyResponse)
@@ -286,24 +228,10 @@ export class RoadrunnerComponent implements OnInit {
           
         });
 
-
-
-      // this.dCtx.faculty.initFacCourses(force)
-      //     .then((courses: Array<ecat.entity.ICourse>) => {
-      //         this.courses = courses;
-      //         this.activeCourseId = courses[0].id;
-      //        *don't think I need this Part* this.dCtx.faculty.activeCourseId = this.activeCourseId;
-
-      //         this.dCtx.faculty.fetchRoadRunnerWorkGroups(force)
-      //             .then(initFacultyResponse)
-      //             .catch(initError);
-      //     });
-
     }
 
     function initFacultyResponse(wkGroups: WorkGroup[]) {
-
-      //this.loadingService.resolve(this.roadRunnerLoading);
+      
       var currentWroups = wkGroups;
       that.workGroups = currentWroups;
       that.all();
@@ -322,8 +250,6 @@ export class RoadrunnerComponent implements OnInit {
 
     const that = this;
     var memsAdd: IStudentOut[] = [];
-    //this.selFlight = 'All Flights';
-    //var flights: string[];
 
     console.log(this.workGroups);
     this.flights.push('All Flights');
@@ -356,6 +282,8 @@ export class RoadrunnerComponent implements OnInit {
     this.flights = this.flights.filter(function(elem, index,self){
       return index == self.indexOf(elem);
     })
+
+    this.stringAllFlights = this.flights;
 
     console.log(this.flights);
     this.loadingService.resolve(this.roadRunnerLoading);
@@ -401,42 +329,3 @@ interface IStudentOut {
 
 }
 
-// @Component({
-//   selector: 'dialog-example',
-//   templateUrl: './roadrunner.dialog.html',
-//   //clickOutsideToClose: false
-// })
-
-// export class DialogComponent { }
-
-
-  //userData: any[];
-
-//  columns: ITdDataTableColumn[] = [
-//     { name: 'location', label: 'Location', sortable: true },
-//     { name: 'phoneNumber', label: 'Contact Number', sortable: false },
-//     { name: 'LeaveDate', label: 'Start', sortable: true },
-//     { name: 'ReturnDate', label: 'End', sortable: true },
-//     { name: 'id', label: "" }
-//   ]
-
-  // sort(sortEvent: ITdDataTableSortChangeEvent): void {
-  //   this.sortBy = sortEvent.name;
-  //   this.sortOrder = sortEvent.order;
-  //   this.filter();
-
-  // }
-
-  // filter(): void {
-  //   let newData: any[] = this.userData;
-  //   newData = this._dataTableService.filterData(newData, this.searchTerm, true);
-  //   this.filteredTotal = newData.length;
-  //   newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
-  //   newData = this._dataTableService.pageData(newData, this.fromRow, this.currentPage * this.pageSize);
-  //   this.filteredData = newData;
-  // }
-
-
-
-  //filteredData: any[] = this.userData;
-  //filteredTotal: number = this.userData.length;

@@ -12,6 +12,9 @@ import { RoadrunnerDetailsComponent } from'./roadrunner-details/roadrunner-detai
 //import { DatePickerModule } from 'angular-material-datepicker';
 //import { DialogComponent } from "./roadrunner.dialog.component";
 import {MaterialModule, MdNativeDateModule} from'@angular/material';
+
+import {ReactiveFormsModule, FormsModule} from "@angular/forms"
+
 @NgModule({
     imports: [
         RoadrunnerRoutingModule,
@@ -19,6 +22,8 @@ import {MaterialModule, MdNativeDateModule} from'@angular/material';
         CovalentExpansionPanelModule,
         MdNativeDateModule,
         MaterialModule,
+        ReactiveFormsModule,
+        FormsModule,
   //      MaterialModule.forRoot(),
   //      DatepickerModule,
   //      DatePickerModule,
