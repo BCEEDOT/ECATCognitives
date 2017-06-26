@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GroupManagementComponent } from './group-management.component';
+import { ManageGroupsetComponent } from './manage-groupset.component';
 
-describe('GroupManagementComponent', () => {
-  let component: GroupManagementComponent;
-  let fixture: ComponentFixture<GroupManagementComponent>;
+describe('ManageGroupsetComponent', () => {
+  let component: ManageGroupsetComponent;
+  let fixture: ComponentFixture<ManageGroupsetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupManagementComponent ]
+      declarations: [ ManageGroupsetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GroupManagementComponent);
+    fixture = TestBed.createComponent(ManageGroupsetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

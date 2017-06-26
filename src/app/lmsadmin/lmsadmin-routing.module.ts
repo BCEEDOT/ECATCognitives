@@ -3,13 +3,16 @@ import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
 
 import { LmsadminAuthGuardService } from './services/lmsadmin-auth-guard.service';
 import { LmsadminDataContextService } from './services/lmsadmin-data-context.service';
-import { GroupManagementComponent } from './group-management/group-management.component';
-import { CoursesComponent } from './group-management/courses/courses.component';
-import { GroupsComponent } from './group-management/groups/groups.component';
+import { CoursesComponent } from './courses/courses.component';
+import { GroupSetsComponent } from './group-sets/group-sets.component';
+import { ManageGroupsetComponent } from './group-sets/manage-groupset/manage-groupset.component';
 import { LmsadminComponent } from "./lmsadmin.component";
+import { CourseEnrollComponent } from "./courses/course-enroll/course-enroll.component";
+import { ConfigGroupsetComponent } from "./group-sets/config-groupset/config-groupset.component";
+import { CourseInfoComponent } from "./courses/course-info/course-info.component";
 
 const lmsadminRoutes: Routes = [
-  {
+  { 
     path: 'lmsadmin',
     component: LmsadminComponent,
     // Check if role is ISA, spin up ISA Data Context
@@ -21,31 +24,33 @@ const lmsadminRoutes: Routes = [
         canActivateChild: [LmsadminAuthGuardService],
         resolve: { courses: 'isaCoursesResolver' },
         children: [
-        //   {
-        //     path: ':crsId/enrollments',
-        //     component: CourseEnrollmentsComponent,
-        //     resolve: { course: 'lmsCourseResolver' }
-        //   },
+          {
+            path: ':crsId/enrollments',
+            component: CourseEnrollComponent,
+            //resolve: { course: 'lmsCourseResolver' }
+          },
+          {
+            path: ':crsId/info',
+            component: CourseInfoComponent,
+            //resolve: { course: 'lmsCourseResolver' }
+          },
+          {
+            path: ':crsId/groupsets',
+            component: GroupSetsComponent,
+            //resolve: { course: 'lmsCourseResolver' }
+          },
+          {
+            path: ':crsId/groupsets/:catId/manage',
+            component: ManageGroupsetComponent,
+            //resolve: { course: 'lmsCourseResolver' }
+          },
+          {
+            path: ':crsId/groupsets/:catId/config',
+            component: ConfigGroupsetComponent,
+            //resolve: { course: 'lmsCourseResolver' }
+          },
         ]
-      },
-      {
-        path: 'groups',
-        component: GroupManagementComponent,
-        canActivateChild: [LmsadminAuthGuardService],
-        resolve: { groups: 'isaGroupsResolver' },
-        children: [
-        //   {
-        //     path: ':crsId/sets',
-        //     component: CourseEnrollmentsComponent,
-        //     resolve: { course: 'lmsCourseResolver' }
-        //   },
-        //   {
-        //     path: ':crsId/sets/:catId/manage',
-        //     component: CourseEnrollmentsComponent,
-        //     resolve: { course: 'lmsCourseResolver' }
-        //   },
-        ]
-      },
+      }
     ]
   }
 ]
