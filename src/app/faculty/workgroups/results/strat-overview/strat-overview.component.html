@@ -4,6 +4,11 @@
     <table id="table" class="table table-hover table-mc-light-blue">
       <thead>
         <tr>
+          <th *ngFor="let num of studentIds.slice(0, (studentIds.length / 2));"></th>
+          <th>Ratees</th>
+          <th *ngFor="let num of studentIds.slice(0, (studentIds.length / 2));"></th>
+        </tr>
+        <tr>
           <th></th>
           <th *ngFor="let memberResult of membersResults; let i=index; let odd=odd;" [ngClass]="{'selected': hovered === memberResult.studentId}">
             <span class="md-caption">{{memberResult?.rankName}}</span>

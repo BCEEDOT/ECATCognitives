@@ -255,6 +255,14 @@ export class EvaluateComponent implements OnInit {
     }
   }
 
+  refreshData() {
+    this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true).then(data => {
+      this.workGroup = data;
+      this.facWorkGroupService.facWorkGroup(this.workGroup);
+      this.activate();
+    })
+  }
+
   //TODO: Remove this... for internal testing only
   publish() {
     this.dialogService.openConfirm({

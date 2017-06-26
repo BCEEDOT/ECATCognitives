@@ -118,7 +118,7 @@ export class FacultyDataContextService extends BaseDataContext {
 
     courses = this.manager.getEntities(MpEntityType.course) as Course[];
 
-    if (courses.length > 0) {
+    if (courses.length > 0 && !forceRefresh) {
       console.log('Courses loaded from local cache');
       return Promise.resolve(courses);
     }
@@ -261,7 +261,7 @@ export class FacultyDataContextService extends BaseDataContext {
     let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
     let activeWgComments = spComments.filter(com => com.workGroupId === groupId);
 
-    if (activeWgComments.length > 0) {
+    if (activeWgComments.length > 0 && !forceRefresh) {
       console.log('WorkGroup loaded from local cache');
       return Promise.resolve(activeWgComments);
     }
@@ -296,7 +296,7 @@ export class FacultyDataContextService extends BaseDataContext {
 
     const resultCached = this.manager.getEntities(MpEntityType.crseStudInGrp) as Array<CrseStudentInGroup>;
 
-    if (resultCached) {
+    if (resultCached && !forcedRefresh) {
       const members = resultCached.filter(gm => gm.workGroupId === groupId && gm.courseId === courseId);
       if (members && members.length !== 0) {
         if (members.some(member => member.stratResult !== null)) {

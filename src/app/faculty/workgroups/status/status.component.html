@@ -1,7 +1,7 @@
 <div class="width">
   <md-card>
     <md-card-title>
-      <button md-raised-button (click)="this.location.back()">Back</button>
+      <button md-raised-button [routerLink]="['../..']">Back</button>
       <span fxFlex="100" class="text-center">{{wgName}} Status</span>
       <span fxFlex></span>
       <button md-raised-button (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" *ngIf="workGroup.mpSpStatus !== statusMap.created && workGroup.mpSpStatus !== statusMap.published">Review</button>
@@ -32,6 +32,7 @@
             [showGridLines]="false"
             *ngIf="student.hasChartData">
           </ngx-charts-bar-horizontal-stacked>
+          <span *ngIf="!student.hasChartData">No Data</span>
         </span>
         </md-list-item>
       </md-list>

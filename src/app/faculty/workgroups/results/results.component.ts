@@ -74,4 +74,12 @@ export class ResultsComponent implements OnInit {
 
   }
 
+  refreshData(){
+    this.facultyDataContext.fetchGrpMemsWithSpResults(this.paramCourseId, this.paramWorkGroupId, true)
+      .then((results: CrseStudentInGroup[]) => {
+        this.membersResults = results;
+        this.activate();
+      });
+  }
+
 }

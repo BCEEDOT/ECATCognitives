@@ -16,6 +16,8 @@
       <div fxFlex="100" class="text-center">
         {{workGroupName}} - Results
       </div>
+      <span fxFlex></span>
+      <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
     </md-card-title>
     <md-tab-group md-stretch-tabs>
       <md-tab>
