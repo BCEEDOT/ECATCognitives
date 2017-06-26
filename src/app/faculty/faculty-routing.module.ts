@@ -27,21 +27,11 @@ const facultyRoutes: Routes = [
         // Get the students courses
         resolve: { courses: 'coursesResolver' },
         children: [
-          // {
-          //   path: '',
-          //   component: AssessComponent,
-          //   //Set active course and workgroup. Determine if results are published for active group. 
-          // },
 
           {
             path: 'list/:crsId',
             // set to most recent course, allow student to switch between courses.
             component: ListComponent,
-            // children: [
-            //   { path: 'sp', component: SpComponent},
-            //   { path: 'comment', component: CommentComponent}
-            // ]
-            //resolve: { course: 'courseResolver' },
           },
           {
             path: 'list/:crsId/status/:wrkGrpId',
@@ -67,11 +57,11 @@ const facultyRoutes: Routes = [
             path: 'list/:crsId/results/:wrkGrpId/details/:stuId',
             component: ResultsDetailsComponent,
           },
-          // {
-          //   path: '',
-          //   component: StudentComponent,
-          //   resolve: { assess: 'assessmentResolver'},
-          //}
+          {
+            path: '',
+            component: FacultyComponent,
+            resolve: { courses: 'coursesResolver' },
+          }
 
         ]
       }
