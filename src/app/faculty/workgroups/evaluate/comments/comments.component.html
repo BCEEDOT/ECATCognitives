@@ -1,16 +1,16 @@
 <md-card-title *ngIf="!grpHasComments">This group did not leave any comments.</md-card-title>
 <md-card-content *ngIf="grpHasComments">
-  <md-list fxFlex="25">
+  <md-list fxFlex="30">
     <md-list-item>AUTHORS</md-list-item>
     <md-list-item *ngFor="let author of memsWithComments" [ngClass]="{'selected': this.selectedAuthor == author }" (click)="this.changeAuthor(author)">
       <span>{{author?.rankName}}</span>
       <span fxFlex></span>
-      <span *ngIf="author.numRemaining > 0"><md-icon>flag</md-icon>{{author?.numRemaining}} </span>
-      <span *ngIf="author.apprFlags > 0"><md-icon class="tc-green-700">done</md-icon>{{author?.apprFlags}} </span>
-      <span *ngIf="author.inapprFlags > 0"><md-icon class="tc-red-700">highlight_off</md-icon>{{author?.inapprFlags}}</span>
+      <span *ngIf="author.numRemaining > 0" class="md-caption pad-right-xs"><md-icon>flag</md-icon>{{author?.numRemaining}} </span>
+      <span *ngIf="author.apprFlags > 0" class="md-caption pad-right-xs"><md-icon class="tc-green-700">done</md-icon>{{author?.apprFlags}} </span>
+      <span *ngIf="author.inapprFlags > 0" class="md-caption"><md-icon class="tc-red-700">highlight_off</md-icon>{{author?.inapprFlags}}</span>
     </md-list-item>
   </md-list>
-  <span fxFlex="2"></span>
+  <span fxFlex=".1"></span>
   <md-list fxFlex="20">
     <md-list-item>
       <button md-raised-button [md-menu-trigger-for]="menu" class="selected" fxFlex="stretch" [disabled]="viewOnly">Mass Flag<md-icon style="color:white">expand_more</md-icon></button>
@@ -30,7 +30,7 @@
       <md-icon [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.icon}}</md-icon>
     </md-list-item>
   </md-list>
-  <span fxFlex="2"></span>
+  <span fxFlex=".5"></span>
   <md-card fxFlex="50" style="align-self: flex-start">
     <md-card-content>
       <div fxLayout="row">
