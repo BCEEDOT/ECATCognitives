@@ -81,10 +81,14 @@
 
             <div class="example-button-row" >
               <span style="padding-right:10px;">
-                    <button md-raised-button color="primary" [routerLink]="[rrData.id]" >View/Edit</button>
-                  </span>
-              <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign Out</button>
+                <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut && !rrData?.signedOutSomewhere" md-raised-button color="primary" (click)="signOut(rrData)">Sign Out</button>
               <button *ngIf="rrData?.signOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign In</button>
+              </span>
+                    <button *ngIf="rrData?.signedOutSomewhere && !rrData?.signedOut" style="justify-content: center;" md-raised-button color="primary" [routerLink]="[rrData.id]" >View/Edit</button>
+                    <button *ngIf="!rrData?.signedOutSomewhere || rrData?.signedOut" md-raised-button color="primary" [routerLink]="[rrData.id]" >View/Edit</button>
+                  <!--</span>
+              <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut && !rrData?.signedOutSomewhere" md-raised-button color="primary" (click)="signOut(rrData)">Sign Out</button>
+              <button *ngIf="rrData?.signOut" md-raised-button color="primary" (click)="signOut(rrData)">Sign In</button>-->
             </div>
             
             </md-list-item>
@@ -104,7 +108,7 @@
                   <a md-icon-button  color="primary" [routerLink]="[rrData.id]">
                     <md-icon >edit</md-icon>
                   </a>
-                  <a *ngIf="!rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">
+                  <a *ngIf="!rrData?.signOut && !rrData?.prevSignOut && !rrData?.signedOutSomewhere" md-icon-button  color="primary" (click)="signOut(rrData)">
                     <md-icon >directions_run</md-icon>
                   </a>
                   <a *ngIf="rrData?.signOut" md-icon-button  color="primary" (click)="signOut(rrData)">

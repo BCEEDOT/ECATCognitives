@@ -35,6 +35,7 @@ export class RoadrunnerComponent implements OnInit {
   flightDisplayed: string = 'All Flights';
   firstFilter: boolean = true;
   count: number = 0;
+  signedOut: boolean = false;
 
   dateFormat = new Intl.DateTimeFormat('en-US');
 
@@ -126,9 +127,23 @@ export class RoadrunnerComponent implements OnInit {
 
   signOut(edit): void {
 
+    // if (edit.signOut === false){
+    //   this.signedOut = true;
+    // }
+
     if (edit.signOut) {
       edit.prevSignOut = true;
       this.count = this.count + 1;
+            this.roadRunnerInfos.forEach(element => {
+                element['signedOutSomewhere'] = false;
+              });  
+    } else {
+
+      
+
+      this.roadRunnerInfos.forEach(element => {
+                element['signedOutSomewhere'] = true;
+              });   
     }
 
     edit.signOut = !edit.signOut;
@@ -138,6 +153,8 @@ export class RoadrunnerComponent implements OnInit {
         this.loadingService.resolve(this.roadRunnerLoading);
         console.log('check roadrunner database');
       })
+this.roadRunnerInfos.sort((x, y) => { if (y.signOut === true) return 1; });
+
 
     console.log(edit);
   }
@@ -195,6 +212,15 @@ export class RoadrunnerComponent implements OnInit {
 
             if(info.prevSignOut){
               this.count = this.count +1;
+            }
+
+            if(info.signOut){
+
+              this.roadRunnerInfos.sort((x, y) => { if (y.signOut === true) return 1; });
+
+              this.roadRunnerInfos.forEach(element => {
+                element['signedOutSomewhere'] = true;
+              });                      
             }
 
 
