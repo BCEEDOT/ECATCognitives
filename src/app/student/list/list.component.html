@@ -21,7 +21,7 @@
           <ng-template md-tab-label>Assessment</ng-template>
           <assess [workGroup]="activeWorkGroup"></assess>
         </md-tab>
-        <md-tab>
+        <md-tab [disabled]="readOnly">
           <ng-template md-tab-label>Stratification</ng-template>
           <strat [workGroup]="activeWorkGroup"></strat>
         </md-tab>

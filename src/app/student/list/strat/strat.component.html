@@ -23,11 +23,13 @@
       </div>
     </div>
     <div fxFlex="10" *ngIf="!readOnly">
-      <span *ngIf="user.stratIsValid">
-            Valid
-        </span>
+      <span *ngIf="isPristine()">
+        <span *ngIf="user.stratIsValid">
+              Valid
+          </span>
       <span *ngIf="!user.stratIsValid">
-           <span mdTooltip="{{user.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
+            <span mdTooltip="{{user.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
+      </span>
       </span>
     </div>
     <div fxFlex="25" *ngIf="readOnly">
@@ -51,11 +53,13 @@
         </div>
       </div>
       <div fxFlex="10" *ngIf="!readOnly">
-        <span *ngIf="peer.stratIsValid">
-            Valid
+        <span *ngIf="isPristine()">
+          <span *ngIf="peer.stratIsValid">
+              Valid
+            </span>
+          <span *ngIf="!peer.stratIsValid">
+            <span mdTooltip="{{peer.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
           </span>
-        <span *ngIf="!peer.stratIsValid">
-           <span mdTooltip="{{peer.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
         </span>
       </div>
       <div fxFlex="25" *ngIf="readOnly">
