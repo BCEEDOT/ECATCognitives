@@ -14,6 +14,8 @@
     </md-card>
 
     <md-card *ngIf="user?.hasAcknowledged">
+      <td-message *ngIf="readOnly" label="This Group is currently Under-Review or awaiting Publication" color="accent" icon="error">
+      </td-message>
       <md-tab-group md-stretch-tabs>
         <md-tab>
           <ng-template md-tab-label>Assessment</ng-template>

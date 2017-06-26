@@ -43,7 +43,7 @@ export class AssessComponent implements OnInit, OnChanges {
   activate() {
 
     this.activeWorkGroup = this.workGroup;
-    this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open
+    this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
     const userId = this.global.persona.value.person.personId;
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.user.updateStatusOfPeer();

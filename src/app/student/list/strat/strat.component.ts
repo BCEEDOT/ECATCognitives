@@ -8,6 +8,7 @@ import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
 import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
 import { StudentDataContext } from "../../services/student-data-context.service"
+import { MpSpStatus } from "../../../core/common/mapStrings";
 
 @Component({
   selector: 'strat',
@@ -22,6 +23,7 @@ export class StratComponent implements OnInit, OnChanges {
   errorMessage: string;
   groupCount: number;
   userId: number;
+  readOnly: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar,
@@ -43,7 +45,7 @@ export class StratComponent implements OnInit, OnChanges {
 
   activate() {
     this.activeWorkGroup = this.workGroup;
-
+    this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
     this.groupCount = this.activeWorkGroup.groupMembers.length;
     const userId = this.global.persona.value.person.personId;
 
