@@ -44,4 +44,21 @@ export class ResultsDetailsComponent implements OnInit {
       });
   }
 
+  refreshData() {
+    let courseId = this.selStudent.courseId;
+    let workGroupId = this.selStudent.workGroupId;
+    let studId = this.selStudent.studentId;
+
+    this.facultyDataContext.fetchGrpMemsWithSpResults(courseId, workGroupId, true)
+      .then((results: CrseStudentInGroup[]) => {
+        this.groupMems = results.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
+          if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
+          if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
+          return 0;
+        });;
+        this.selStudent = this.groupMems.filter(mem => mem.studentId === studId)[0];
+        this.isLoading = false;
+      });
+  }
+
 }

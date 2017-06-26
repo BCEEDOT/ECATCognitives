@@ -1,18 +1,25 @@
 <h4 md-dialog-title>Comment for {{comment?.recipient?.rankName}}</h4>
 <md-dialog-content>
   <md-input-container class="md-block">
-      <textarea mdInput placeholder="Comment (3000 characters max)" [(ngModel)]="comment.commentText" maxlength="3000" rows="15" cols="75" [disabled]="viewOnly" #commentText="ngModel"></textarea>
-    </md-input-container>
+    <textarea mdInput placeholder="Comment (3000 characters max)" [(ngModel)]="comment.commentText" maxlength="3000" rows="15"
+      cols="75" [disabled]="viewOnly" #commentText="ngModel"></textarea>
+  </md-input-container>
 </md-dialog-content>
 <md-dialog-actions>
   <div flex="50">
-    <button md-raised-button (click)="comment.requestAnonymity=true; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==true" [ngClass]="{'btn-selected': comment.requestAnonymity===true}" *ngIf="isStudent">Anonymous</button>
-    <button md-raised-button (click)="comment.requestAnonymity=false; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==false" [ngClass]="{'btn-selected': comment.requestAnonymity===false}" *ngIf="isStudent">Named</button>
+    <button md-raised-button (click)="comment.requestAnonymity=true; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==true"
+      [ngClass]="{'btn-selected': comment.requestAnonymity===true}" *ngIf="isStudent">Anonymous</button>
+    <button md-raised-button (click)="comment.requestAnonymity=false; commentText.control.markAsDirty()" [disabled]="viewOnly && comment.requestAnonymity!==false"
+      [ngClass]="{'btn-selected': comment.requestAnonymity===false}" *ngIf="isStudent">Named</button>
   </div>
   <span flex="30"></span>
-  <div flex="65">
+  <div flex="35" *ngIf="comment.entityAspect.entityState.isAdded()">
     <button md-raised-button (click)="cancel()">Cancel</button>
+    <button md-raised-button [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
+  </div>
+  <div flex="65" *ngIf="!comment.entityAspect.entityState.isAdded()">
     <button md-raised-button [disabled]="viewOnly" (click)="delete()">Delete</button>
+    <button md-raised-button (click)="cancel()">Cancel</button>
     <button md-raised-button [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
   </div>
 </md-dialog-actions>

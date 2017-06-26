@@ -28,7 +28,7 @@ export class StratOverviewComponent implements OnInit {
   studentIds: number[] = [];
   facultyStrat: number[] = [];
   finalStrat: number[] = [];
-
+  hovered: number;
 
   constructor() { }
 
@@ -41,6 +41,7 @@ export class StratOverviewComponent implements OnInit {
     });
 
     this.membersResults.forEach(member => {
+      member.updateStatusOfStudent();
       this.finalStrat[member.studentId.toString()] = member.stratResult.finalStratPosition;
       this.facultyStrat[member.studentId.toString()] = member.facultyStrat.stratPosition;
       this.studentIds.push(member.studentId);
