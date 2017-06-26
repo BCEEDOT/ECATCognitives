@@ -12,7 +12,6 @@ import { ProfileStudent } from './ProfileStudent';
 /// <code-import> Place custom imports between <code-import> tags
 import { EcLocalDataService } from "../../common/static"
 import * as mp from "../../common/mapStrings"
-/// </code-import>
 
 interface ICrseStudInGrpStatus {
     assessComplete: boolean;
@@ -22,6 +21,7 @@ interface ICrseStudInGrpStatus {
     missingAssessItems: Array<number>;
     hasComment: boolean;
 }
+/// </code-import>
 
 export class CrseStudentInGroup extends EntityBase {
     // Generated code. Do not place code below this line.

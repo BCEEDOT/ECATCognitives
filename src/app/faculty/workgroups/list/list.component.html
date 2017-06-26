@@ -1,0 +1,46 @@
+<md-card class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="replace" tdLoadingType="circle">
+    <td-chips [items]="filteredStrings" (add)="add($event)" [debounce]="500" (remove)="remove($event)" [(ngModel)]="stringsModel"
+      placeholder="Click to filter by flight" (inputChange)="filterStrings($event)" requireMatch>
+    </td-chips>
+    <md-list>
+
+      <ng-template let-workGroup let-last="last" ngFor [ngForOf]="workGroups">
+        <div #row fxLayout="row" fxLayoutGap="20px" (mouseover)="row.options = true" (mouseout)="row.options = false">
+          <md-list-item fxFlex="30">
+            <h3 class="md-subhead tc-grey-700"> {{workGroup?.mpCategory}}</h3>
+          </md-list-item>
+          <md-list-item fxFlex="30">
+            <h3 class="md-subhead"> Flight {{workGroup?.groupNumber}}</h3>
+          </md-list-item>
+          <md-list-item fxFlex="30">
+            <h3 class="md-subhead"> {{workGroup?.mpSpStatus}}</h3>
+          </md-list-item>
+          <div fxFlex="10">
+            <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
+              <button md-menu-item [routerLink]="['evaluate/' + workGroup.workGroupId]"> 
+                <md-icon> assessment </md-icon>
+                <span class="md-subhead"> {{workGroup?.statusText}} </span>
+              </button>
+              <button *ngIf="workGroup.mpSpStatus !== statusMap.published" md-menu-item [routerLink]="['status/' + workGroup.workGroupId]"> 
+                <md-icon> check_circle </md-icon>
+                <span class="md-subhead"> Status </span>
+              </button>
+              <button *ngIf="workGroup.mpSpStatus === statusMap.published" md-menu-item [routerLink]="['results/' + workGroup.workGroupId]"> 
+                <md-icon> data_usage </md-icon>
+                <span class="md-subhead"> Results </span>
+              </button>
+            </md-menu>
+
+            <button md-icon-button [mdMenuTriggerFor]="appMenu">
+            <md-icon>more_vert</md-icon>
+          </button>
+          </div>
+
+        </div>
+        <md-divider *ngIf="!last"></md-divider>
+      </ng-template>
+
+    </md-list>
+  </ng-template>
+</md-card>

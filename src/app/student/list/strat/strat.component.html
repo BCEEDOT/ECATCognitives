@@ -1,71 +1,72 @@
-<ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+<md-list>
+  <md-list-item>
+    <span fxFlex="60"></span>
+    <span fxFlex="15" class="pad-left md-body-1 tc-grey-500">Strat</span>
+    <span fxFlex="15" class="pad-left md-body-1 tc-grey-500"><span *ngIf="!readOnly">Proposed Change</span></span>
+    <span fxFlex="10"></span>
+  </md-list-item>
+  <md-divider></md-divider>
+  <!--<md-list class="will-load">-->
+  <md-list-item>
+    <md-icon md-list-avatar>person</md-icon>
+    <h3 md-line>{{user?.rankName}}</h3>
+    <div fxFlex="10">
+      <h3 md-line>{{user?.statusOfPeer[user?.studentId].stratedPosition}}</h3>
+    </div>
 
-  <md-list>
-    <md-list-item>
-      <span fxFlex="60"></span>
-      <span fxFlex="15" class="pad-left md-body-1 tc-grey-500">Strat</span>
-      <span fxFlex="15" class="pad-left md-body-1 tc-grey-500">Proposed Change</span>
-      <span fxFlex="10"></span>
-    </md-list-item>
-    <md-divider></md-divider>
-    <!--<md-list class="will-load">-->
+    <div fxFlex="15" *ngIf="!readOnly">
+      <div layout-margin>
+        <md-input-container>
+          <input mdInput [(ngModel)]="user.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid(); isPristine()" name="proposedUserStrat"
+            min="1" max="{{groupCount}}" type="number">
+        </md-input-container>
+      </div>
+    </div>
+    <div fxFlex="10" *ngIf="!readOnly">
+      <span *ngIf="user.stratIsValid">
+            Valid
+        </span>
+      <span *ngIf="!user.stratIsValid">
+           <span mdTooltip="{{user.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
+      </span>
+    </div>
+    <div fxFlex="25" *ngIf="readOnly">
+    </div>
+  </md-list-item>
+  <md-divider class="bgc-dark-orange-500" md-inset></md-divider>
+  <ng-template let-peer let-last="last" ngFor [ngForOf]="peers">
     <md-list-item>
       <md-icon md-list-avatar>person</md-icon>
-      <h3 md-line>{{user?.rankName}}</h3>
+      <h3 md-line>{{peer?.rankName}}</h3>
       <div fxFlex="10">
-        <h3 md-line>{{user?.statusOfPeer[user?.studentId].stratedPosition}}</h3>
+        <h3 md-line>{{user?.statusOfPeer[peer?.studentId].stratedPosition}}</h3>
       </div>
 
-      <div fxFlex="15">
+      <div fxFlex="15" *ngIf="!readOnly">
         <div layout-margin>
           <md-input-container>
-            <input mdInput [(ngModel)]="user.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid(); isPristine()" name="proposedUserStrat"
-              min="1" max="{{groupCount}}" type="number">
+            <input mdInput peerStratForm="ngModel" [(ngModel)]="peer.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid(); isPristine()"
+              name="proposedPeerStrat" min="1" max="{{groupCount}}" type="number">
           </md-input-container>
         </div>
       </div>
-      <div fxFlex="10">
-          <span *ngIf="user.stratIsValid">
-            Valid
-        </span>
-          <span *ngIf="!user.stratIsValid">
-           <span mdTooltip="{{user.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
-          </span>
-      </div>
-    </md-list-item>
-    <md-divider class="bgc-dark-orange-500" md-inset></md-divider>
-    <ng-template let-peer let-last="last" ngFor [ngForOf]="peers">
-      <md-list-item>
-        <md-icon md-list-avatar>person</md-icon>
-        <h3 md-line>{{peer?.rankName}}</h3>
-        <div fxFlex="10">
-          <h3 md-line>{{user?.statusOfPeer[peer?.studentId].stratedPosition}}</h3>
-        </div>
-
-        <div fxFlex="15">
-          <div layout-margin>
-            <md-input-container>
-              <input mdInput peerStratForm="ngModel" [(ngModel)]="peer.proposedStratPosition" (ngModelChange)="evaluateStrat(); isValid(); isPristine()"
-                name="proposedPeerStrat" min="1" max="{{groupCount}}" type="number">
-            </md-input-container>
-          </div>
-        </div>
-        <div fxFlex="10">
-            <span *ngIf="peer.stratIsValid">
+      <div fxFlex="10" *ngIf="!readOnly">
+        <span *ngIf="peer.stratIsValid">
             Valid
           </span>
-            <span *ngIf="!peer.stratIsValid">
+        <span *ngIf="!peer.stratIsValid">
            <span mdTooltip="{{peer.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
-            </span>
-        </div>
+        </span>
+      </div>
+      <div fxFlex="25" *ngIf="readOnly">
+      </div>
 
-      </md-list-item>
-    </ng-template>
-  </md-list>
-  <md-divider></md-divider>
+    </md-list-item>
+  </ng-template>
+</md-list>
+<md-divider></md-divider>
 
-  <md-list-item layout="row" layout-align="end" layout-margin>
-    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
-    <button md-raised-button color="accent" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
-  </md-list-item>
-</ng-template>
+<md-list-item layout="row" layout-align="end" layout-margin>
+  <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
+  <button md-raised-button color="accent" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+</md-list-item>

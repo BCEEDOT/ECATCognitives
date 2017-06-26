@@ -6,7 +6,10 @@ import {
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
-import { Course, WorkGroup, SpResult, CrseStudentInGroup, SpResponse, StudSpComment, StudSpCommentFlag, StratResponse } from '../../core/entities/student';
+import {
+    Course, WorkGroup, SpResult, CrseStudentInGroup,
+    SpResponse, StudSpComment, StudSpCommentFlag, StratResponse, SpInventory
+} from '../../core/entities/student';
 import { IStudentApiResources, IStudSpInventory } from "../../core/entities/client-models";
 import { MpEntityType, MpCommentFlag } from "../../core/common/mapStrings";
 import { DataContext } from '../../app-constants';
@@ -243,6 +246,7 @@ export class StudentDataContext extends BaseDataContext {
                 spResponse = this.manager.createEntity(MpEntityType.spResponse, key) as SpResponse;
             }
 
+            inv.resetAssess();
             inv.responseForAssessee = spResponse;
             return inv;
         });
@@ -251,7 +255,7 @@ export class StudentDataContext extends BaseDataContext {
     getComment(courseId: number, workGroupId: number, recipientId: number): StudSpComment {
         let userId = this.global.persona.value.person.personId;
 
-        if (!courseId || !workGroupId || !recipientId){
+        if (!courseId || !workGroupId || !recipientId) {
             return null;
         }
 
@@ -283,6 +287,60 @@ export class StudentDataContext extends BaseDataContext {
         let flag = this.manager.createEntity(MpEntityType.spCommentFlag, newFlag) as StudSpCommentFlag;
         returnedComment.flag = flag;
         return returnedComment;
+    }
+
+    fetchWgResult(workGroupId: number): Promise<SpResult | Promise<void>> {
+        const that = this;
+        let workGroup: WorkGroup;
+        let inventory: Array<SpInventory>;
+
+
+        const cachedResult = this.manager.getEntities(MpEntityType.spResult) as Array<SpResult>;
+
+
+        workGroup = that.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+        inventory = workGroup.assignedSpInstr.inventoryCollection;
+        const result = cachedResult.filter(cr => cr.workGroupId === workGroupId)[0];
+        if (result) {
+            inventory.forEach(item => {
+                item.resetResult();
+                item.spResult = result;
+                return item;
+            });
+            return Promise.resolve(result);
+        }
+
+
+        const params = { wgId: workGroupId, addInstrument: false };
+
+        let query = EntityQuery.from(this.studentApiResources.wgResult.resource)
+            .withParameters(params);
+
+        return <Promise<SpResult>>this.manager.executeQuery(query)
+            .then(getWgSpResultResponse)
+            .catch(this.queryFailed);
+
+        function getWgSpResultResponse(data: QueryResult): SpResult {
+            const result = data.results[0] as SpResult;
+            if (!result) {
+                const queryError: any = {
+                    errorMessage: 'No sp result was returned from the server',
+                }
+                return Promise.reject(queryError) as any;
+            }
+            workGroup = that.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+
+            inventory = workGroup.assignedSpInstr.inventoryCollection;
+            if (!inventory) {
+                return Promise.reject('Then required inventory for this result was not in the returned set;') as any;
+            }
+            inventory.forEach(item => {
+                item.resetResult();
+                item.spResult = result;
+                return item;
+            });
+            return result;
+        }
     }
 
 }

@@ -9,6 +9,7 @@ import { Course, WorkGroup, CrseStudentInGroup, SpInstrument } from "../../core/
 import { WorkGroupService } from "../services/workgroup.service";
 import { GlobalService } from "../../core/services/global.service"
 import { StudentDataContext } from "../services/student-data-context.service";
+import { MpSpStatus } from "../../core/common/mapStrings";
 
 
 @Component({
@@ -18,7 +19,6 @@ import { StudentDataContext } from "../services/student-data-context.service";
 })
 export class ListComponent implements OnInit {
 
-  
   lastCloseResult: string;
   actionsAlignment: string;
   user: CrseStudentInGroup;
@@ -27,6 +27,8 @@ export class ListComponent implements OnInit {
   activeWorkGroup$: Observable<WorkGroup>;
   paramWorkGroupId: number;
   paramCourseId: number;
+  isLoading: boolean = false;
+  readOnly: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
@@ -42,16 +44,17 @@ export class ListComponent implements OnInit {
 
     });
 
+    this.workGroupService.isLoading$.subscribe(value => {
+      this.isLoading = value;
+    })
+
   }
 
   ngOnInit() {
-
     this.activeWorkGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
       this.activate();
     });
-
-    
   }
 
   private activate(force?: boolean): void {
@@ -59,7 +62,8 @@ export class ListComponent implements OnInit {
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
-    console.log(this.user);
+    this.readOnly = this.workGroupService.workGroup$.value.mpSpStatus !== MpSpStatus.open
+    this.workGroupService.isLoading(false);
 
   }
 

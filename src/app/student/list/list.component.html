@@ -1,26 +1,32 @@
-<md-card *ngIf="!user?.hasAcknowledged">
-  <md-card-title>Instructions</md-card-title>
-  <md-divider></md-divider>
-  <md-card-content>
-    <div [innerHTML]="instructions"></div>
-  </md-card-content>
-  <md-divider></md-divider>
-  <md-card-actions>
-    <button md-button color="primary" class="text-upper" (click)="user.hasAcknowledged=true;">I AGREE</button>
-    <button md-button class="text-upper">Cancel</button>
-  </md-card-actions>
-</md-card>
+<div class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card *ngIf="!user?.hasAcknowledged">
+      <md-card-title>Instructions</md-card-title>
+      <md-divider></md-divider>
+      <md-card-content>
+        <div [innerHTML]="instructions"></div>
+      </md-card-content>
+      <md-divider></md-divider>
+      <md-card-actions>
+        <button md-button color="primary" class="text-upper" (click)="user.hasAcknowledged=true;">I AGREE</button>
+        <button md-button class="text-upper">Cancel</button>
+      </md-card-actions>
+    </md-card>
 
-<md-card *ngIf="user?.hasAcknowledged">
-  <md-tab-group md-stretch-tabs>
-    <md-tab>
-      <ng-template md-tab-label>Assessment</ng-template>
-      <assess [workGroup]="activeWorkGroup" (assessCompare)="assessCompare()"></assess>
-    </md-tab>
-    <md-tab>
-      <ng-template md-tab-label>Stratification</ng-template>
-      <strat [workGroup]="activeWorkGroup" (assessCompare)="assessCompare()"></strat>
-    </md-tab>
-  </md-tab-group>
+    <md-card *ngIf="user?.hasAcknowledged">
+      <td-message *ngIf="readOnly" label="This Group is currently Under-Review or awaiting Publication" color="accent" icon="error">
+      </td-message>
+      <md-tab-group md-stretch-tabs>
+        <md-tab>
+          <ng-template md-tab-label>Assessment</ng-template>
+          <assess [workGroup]="activeWorkGroup"></assess>
+        </md-tab>
+        <md-tab>
+          <ng-template md-tab-label>Stratification</ng-template>
+          <strat [workGroup]="activeWorkGroup"></strat>
+        </md-tab>
+      </md-tab-group>
 
-</md-card>
+    </md-card>
+  </ng-template>
+</div>

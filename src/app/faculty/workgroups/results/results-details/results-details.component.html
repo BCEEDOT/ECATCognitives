@@ -1,0 +1,31 @@
+<div class="width">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card>
+      <md-card-title>
+        <div>
+          <button md-raised-button [routerLink]="['../..']">Back</button>
+        </div>
+        <div fxFlex="100" class="text-center">
+          {{selStudent?.rankName}} - Result Details
+        </div>
+        <span fxFlex></span>
+        <button md-raised-button [md-menu-trigger-for]="menu" class="selected">Select Student<md-icon style="color:white">expand_more</md-icon></button>
+        <span></span>
+        <md-menu #menu="mdMenu">
+          <button *ngFor="let mem of groupMems" md-menu-item (click)="selStudent = mem">{{mem.rankName}}</button>
+        </md-menu>
+        <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+      </md-card-title>
+      <md-tab-group md-stretch-tabs>
+        <md-tab>
+          <ng-template md-tab-label>Behaviors</ng-template>
+          <results-behaviors *ngIf="selStudent" [student]="selStudent"></results-behaviors>
+        </md-tab>
+        <md-tab>
+          <ng-template md-tab-label>Comments</ng-template>
+          <results-comments *ngIf="selStudent" [student]="selStudent"></results-comments>
+        </md-tab>
+      </md-tab-group>
+    </md-card>
+  </ng-template>
+</div>

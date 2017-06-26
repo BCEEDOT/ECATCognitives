@@ -1,12 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
+import { MdSnackBar } from '@angular/material';
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';
 
 import { StudentDataContext } from "../../../student/services/student-data-context.service";
+import { FacultyDataContextService } from "../../../faculty/services/faculty-data-context.service";
 import { IStudSpInventory, IFacSpInventory } from '../../../core/entities/client-models'
 import { MpSpItemResponse, MpSpStatus } from '../../../core/common/mapStrings'
 import { SpEffectLevel, SpFreqLevel } from '../../../core/common/mapEnum'
@@ -27,40 +29,46 @@ export class AssessComponent implements OnInit {
   private activeInventory: IStudSpInventory | IFacSpInventory;
   private canSave: boolean = false;
   private respEnum = {
-        he: SpEffectLevel.HighlyEffective,
-        e: SpEffectLevel.Effective,
-        ie: SpEffectLevel.Ineffective,
-        usl: SpFreqLevel.Usually,
-        alw: SpFreqLevel.Always
-    };
+    he: SpEffectLevel.HighlyEffective,
+    e: SpEffectLevel.Effective,
+    ie: SpEffectLevel.Ineffective,
+    usl: SpFreqLevel.Usually,
+    alw: SpFreqLevel.Always
+  };
   private assessLoad: string = 'AssessLoading';
   private viewOnly: boolean = true;
 
-  constructor(private ctx: StudentDataContext, //| FacultyDataContext, 
+  constructor(private studentDataContext: StudentDataContext,
+    private facultyDataContext: FacultyDataContextService,
     private dialogService: TdDialogService,
     private loadingService: TdLoadingService,
-    private global: GlobalService, 
+    private global: GlobalService,
+    private router: Router,
     private route: ActivatedRoute,
-    private location: Location) { 
-      this.inventories$ = route.data.pluck('inventories');
-    }
+    private snackBarService: MdSnackBar,
+    private location: Location) {
+
+    this.inventories$ = route.data.pluck('inventories');
+
+  }
 
   ngOnInit() {
     this.inventories$.subscribe(invs => {
       this.inventories = invs;
+      console.log(this.inventories);
     });
 
     this.inventories.sort((a, b) => {
-      if (a.displayOrder < b.displayOrder){ return -1; }
-      if (a.displayOrder > b.displayOrder){ return 1; }
+      if (a.displayOrder < b.displayOrder) { return -1; }
+      if (a.displayOrder > b.displayOrder) { return 1; }
       return 0;
     });
 
     this.isStudent = this.global.persona.value.isStudent;
     this.isSelf = this.inventories[0].responseForAssessee.assessee.studentProfile.person.personId === this.global.persona.value.person.personId;
 
-    if (this.isStudent){
-      if (this.isSelf){
+    if (this.isStudent) {
+      if (this.isSelf) {
         this.perspective = 'were you';
       } else {
         this.perspective = 'was your peer';
@@ -78,25 +86,33 @@ export class AssessComponent implements OnInit {
       this.viewOnly = this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.open && this.activeInventory.responseForAssessee.workGroup.mpSpStatus !== MpSpStatus.underReview;
     }
   }
-  
-  previousInv(){
+
+  onLeftArrow(event: Event) {
+    this.previousInv();
+  }
+
+  onRightArrow(event: Event) {
+    this.nextInv();
+  }
+
+  previousInv() {
     let prev = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder - 1));
     this.activeInventory = prev;
     this.saveCheck();
   }
 
-  nextInv(){
+  nextInv() {
     let next = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder + 1));
     this.activeInventory = next;
     this.saveCheck();
   }
 
-  saveCheck(){
-    if (!this.viewOnly){
+  saveCheck() {
+    if (!this.viewOnly) {
       let changes = this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted());
       let validResps = this.inventories.every(inv => inv.responseForAssessee.mpItemResponse !== null);
 
-      if (changes && validResps){
+      if (changes && validResps) {
         this.canSave = true;
       } else {
         this.canSave = false;
@@ -104,15 +120,22 @@ export class AssessComponent implements OnInit {
     }
   }
 
-  cancel(){
-    if (this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted())){
+  cancel() {
+
+    if (!this.inventories.some(inv => inv.behaviorEffect !== null || inv.behaviorFreq !== null)) {
+      this.inventories.forEach(inv => inv.rejectChanges());
+      this.router.navigate(['../../'], { relativeTo: this.route })
+    }
+
+
+    if (this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted())) {
       this.dialogService.openConfirm({
         message: 'Are you sure you want to cancel and discard your changes?',
         title: 'Unsaved Changed',
         acceptButton: 'Yes',
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed){
+        if (confirmed) {
           this.inventories.forEach(inv => inv.rejectChanges());
           this.location.back();
         }
@@ -122,8 +145,8 @@ export class AssessComponent implements OnInit {
     }
   }
 
-  save(){
-    if (this.viewOnly){
+  save() {
+    if (this.viewOnly) {
       this.dialogService.openAlert({
         message: 'Group is not in open status',
         title: 'Cannot Save',
@@ -132,47 +155,64 @@ export class AssessComponent implements OnInit {
     }
 
     this.loadingService.register(this.assessLoad);
-    this.ctx.commit()
-      .then(result => {
-        this.loadingService.resolve(this.assessLoad);
-        this.location.back();
-      })
-      .catch(result => {
-        this.loadingService.resolve(this.assessLoad);
-        this.dialogService.openAlert({
-          message: 'Your changes were not saved, please try again.',
-          title: 'Save Error',
-        });
-      })
+    if (this.isStudent) {
+      this.studentDataContext.commit()
+        .then(result => {
+          this.loadingService.resolve(this.assessLoad);
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', { duration: 2000 })
+          this.location.back();
+        })
+        .catch(result => {
+          this.loadingService.resolve(this.assessLoad);
+          this.dialogService.openAlert({
+            message: 'Your changes were not saved, please try again.',
+            title: 'Save Error',
+          });
+        })
+    } else {
+      this.facultyDataContext.commit()
+        .then(result => {
+          this.loadingService.resolve(this.assessLoad);
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', { duration: 2000 })
+          this.location.back();
+        })
+        .catch(result => {
+          this.loadingService.resolve(this.assessLoad);
+          this.dialogService.openAlert({
+            message: 'Your changes were not saved, please try again.',
+            title: 'Save Error',
+          });
+        })
+    }
   }
 
   getResponseString(inv: IStudSpInventory | IFacSpInventory): string {
-      switch (inv.responseForAssessee.mpItemResponse) {
-        case MpSpItemResponse.iea:
-          return 'Always Ineffective';
-        case MpSpItemResponse.ieu:
-          return 'Usually Ineffective';
-        case MpSpItemResponse.nd:
-          return 'Not Displayed';
-        case MpSpItemResponse.eu:
-          return 'Usually Effective';
-        case MpSpItemResponse.ea:
-          return 'Always Effective';
-        case MpSpItemResponse.heu:
-          return 'Usually Highly Effective';
-        case MpSpItemResponse.hea:
-          return 'Always Highly Effective';
-        default:
-          return '';
-        }
+    switch (inv.responseForAssessee.mpItemResponse) {
+      case MpSpItemResponse.iea:
+        return 'Always Ineffective';
+      case MpSpItemResponse.ieu:
+        return 'Usually Ineffective';
+      case MpSpItemResponse.nd:
+        return 'Not Displayed';
+      case MpSpItemResponse.eu:
+        return 'Usually Effective';
+      case MpSpItemResponse.ea:
+        return 'Always Effective';
+      case MpSpItemResponse.heu:
+        return 'Usually Highly Effective';
+      case MpSpItemResponse.hea:
+        return 'Always Highly Effective';
+      default:
+        return '';
     }
+  }
 
-    getShortBehavior(inv: IStudSpInventory | IFacSpInventory): string {
-      if (inv.behavior.length > 35){
-        return inv.behavior.substring(0, 32) + '...';
-      } else {
-        return inv.behavior;
-      }
+  getShortBehavior(inv: IStudSpInventory | IFacSpInventory): string {
+    if (inv.behavior.length > 35) {
+      return inv.behavior.substring(0, 32) + '...';
+    } else {
+      return inv.behavior;
     }
+  }
 
 }

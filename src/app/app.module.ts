@@ -10,6 +10,7 @@ import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
 import { UsersModule } from "./users/users.module";
 import { StudentModule } from "./student/student.module";
+import { FacultyModule } from "./faculty/faculty.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
 import { ProfileModule } from "./profile/profile.module";
 import { AppComponent } from './app.component';
@@ -34,6 +35,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     SharedModule,
     CoreModule,
     BrowserModule,
+    FacultyModule,
     UsersModule,
     StudentModule,
     ProfileModule,
@@ -55,7 +57,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 })
 export class AppModule {
   constructor(router: Router) {
-   
+
     console.log('Routes', JSON.stringify(router.config, undefined, 2));
   }
 

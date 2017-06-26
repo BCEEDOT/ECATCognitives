@@ -7,6 +7,9 @@ import * as mapEnum from '../../common/mapEnum';
 import * as mapStrings from '../../common/mapStrings'
 import * as staticData from '../../common/static'
 import { SpResult } from './SpResult';
+import { FacSpResponse } from "./FacSpResponse";
+import { WorkGroup } from "./WorkGroup";
+import { CrseStudentInGroup } from "./CrseStudentInGroup";
 /// </code-import>
 
 export class SpInventory extends EntityBase {
@@ -19,15 +22,17 @@ export class SpInventory extends EntityBase {
    modifiedById: number;
    modifiedDate: Date;
    instrument: SpInstrument;
-   itemResponses: SpResponse[];
 
    /// <code> Place custom code between <code> tags
    private displayed = true;
    private freqLevel: mapEnum.SpFreqLevel = null;
    private effLevel: mapEnum.SpEffectLevel = null;
    private resultBreakout: any;
+   private facSpResultForStudent: any;
    private commentText: string;
-   /// </code>
+   itemResponses: SpResponse[] | FacSpResponse[];
+   workGroup: WorkGroup;
+   
 
    get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
@@ -37,16 +42,16 @@ export class SpInventory extends EntityBase {
         this.responseForAssessee.entityAspect.rejectChanges();
         this.effLevel = null;
         this.freqLevel = null;
-        this.behaveDisplayed = this.behaveDisplayed;
-        if (this.behaveDisplayed === true) {
-            this.calculateItemResponse();
-        }
+        this.behaveDisplayed = true;//this.behaveDisplayed;
+        // if (this.behaveDisplayed === true) {
+        //     this.calculateItemResponse();
+        // }
     }
 
     resetAssess(): void {
         this.effLevel = null;
         this.freqLevel = null;
-        this.behaveDisplayed = true;
+        this.displayed = true;
         this.responseForAssessee = null;
     }
 
@@ -55,8 +60,7 @@ export class SpInventory extends EntityBase {
     }
 
     spResult: SpResult;
-
-    responseForAssessee: SpResponse;
+    responseForAssessee: FacSpResponse = null;
 
     get behaviorFreq(): mapEnum.SpFreqLevel {
         if (!this.responseForAssessee) {
@@ -119,7 +123,7 @@ export class SpInventory extends EntityBase {
             return null;
         }
         if (!this.responseForAssessee.mpItemResponse) {
-            return this.behaveDisplayed;
+            return this.displayed;
         }
         return this.responseForAssessee.mpItemResponse !== mapStrings.MpSpItemResponse.nd;
     }
@@ -131,7 +135,8 @@ export class SpInventory extends EntityBase {
         if (behaveDisplayed) {
             this.freqLevel = this.effLevel = null;
             this.responseForAssessee.mpItemResponse = null;
-            this.compositeScore;
+            this.calculateItemResponse();
+            //this.compositeScore;
         } else {
             this.responseForAssessee.mpItemResponse = mapStrings.MpSpItemResponse.nd;
             this.responseForAssessee.itemModelScore = mapEnum.CompositeModelScore.nd;
@@ -203,64 +208,183 @@ export class SpInventory extends EntityBase {
         return null;
     }
 
-    // get resultBreakOut(): any {
-    //     if (this.resultBreakOut) {
-    //         return this.resultBreakOut;
-    //     }
+    resetResults(): void {
+        this.facSpResultForStudent = null;
+    }
 
-    //     if (!this.spResult) {
-    //         return null;
-    //     }
+    //get behaveResultForStudent(): ecat.entity.ext.IBehaveResultForStud {
+    get behaveResultForStudent(): any {
+        if (this.facSpResultForStudent) return this.facSpResultForStudent;
+        if (!this.workGroup) return null;
 
-    //     const breakOut = {
-    //         selfResult: '',
-    //         peersResult: '',
-    //         facultyResult: '',
-    //         peerBoChart: []
-    //     }
+        const groupMembers = this.workGroup.groupMembers.sort(this.sortPeersByLastName);
+        const facResponseForThisItem = this.workGroup.facSpResponses.filter(response => response.inventoryItemId === this.id);
 
-    //     //TODO: 
-    //     //const responsesForItem = this.spResult.sanitizedResponses.filter(response => response.inventoryItemId === this.id);
+        groupMembers.forEach((gm, gmIdx, gmArray) => {
+            const current = {} as any;
+            const givenBo = {
+                ['IEA']: 0,
+                ['IEU']: 0,
+                ['ND']: 0,
+                ['EU']: 0,
+                ['EA']: 0,
+                ['HEU']: 0,
+                ['HEA']: 0
+            };
+            const receivedBo = {
+                ['Highly Effective']: 0,
+                ['Effective']: 0,
+                ['Not Displayed']: 0,
+                ['Ineffective']: 0
+            };
+            // const receivedBo = {
+            //     ['IEA']: 0,
+            //     ['IEU']: 0,
+            //     ['ND']: 0,
+            //     ['EU']: 0,
+            //     ['EA']: 0,
+            //     ['HEU']: 0,
+            //     ['HEA']: 0
+            // };
+            //const selfBo = {};
+            const givenResp = [];
+            const rcvdResp = [];
 
-    //     const compositeBreakOut = {};
+            gm.assesseeSpResponses
+                .filter(response => response.inventoryItemId === this.id &&
+                    response.assesseePersonId === response.assessorPersonId)
+                .forEach(response => {
+                    // if (selfBo[response.mpItemResponse]) selfBo[response.mpItemResponse] += 1;
+                    // if (!selfBo[response.mpItemResponse]) selfBo[response.mpItemResponse] = 1;
+                    current.selfOutcome = staticData.EcLocalDataService.prettifyItemResponse(response.mpItemResponse);
+                });
 
-    //     /*responsesForItem
-    //         .filter(response => !response.isSelfResponse)
-    //         .forEach(response => {
-    //             if (compositeBreakOut[response.mpItemResponse]) {
-    //                 compositeBreakOut[response.mpItemResponse] += 1;
-    //             } else {
-    //                 compositeBreakOut[response.mpItemResponse] = 1;
-    //             }
-    //         });*/
+            gm.assesseeSpResponses
+                .filter(response => response.inventoryItemId === this.id &&
+                    response.assesseePersonId !== response.assessorPersonId)
+                .forEach(response => {
+                    rcvdResp.push({ name: response.assessor.studentProfile.person.lastName, itemResp: response.mpItemResponse, score: response.itemModelScore, color: '#000000' });
+                    // if (receivedBo[response.mpItemResponse]) receivedBo[response.mpItemResponse] += 1;
+                    // if (!receivedBo[response.mpItemResponse]) receivedBo[response.mpItemResponse] = 1;
+                    switch (response.itemModelScore) {
+                        case mapEnum.CompositeModelScore.iea:
+                        case mapEnum.CompositeModelScore.ieu:
+                            if(receivedBo['Ineffective']) {receivedBo['Ineffective'] += 1};
+                            if(!receivedBo['Ineffective']) {receivedBo['Ineffective'] = 1};
+                            break;
+                        case mapEnum.CompositeModelScore.nd:
+                            if(receivedBo['Not Displayed']) {receivedBo['Not Displayed'] += 1};
+                            if(!receivedBo['Not Displayed']) {receivedBo['Not Displayed'] = 1};
+                            break;
+                        case mapEnum.CompositeModelScore.eu:
+                        case mapEnum.CompositeModelScore.ea:
+                                if(receivedBo['Effective']) {receivedBo['Effective'] += 1};
+                            if(!receivedBo['Effective']) {receivedBo['Effective'] = 1};
+                            break;
+                        case mapEnum.CompositeModelScore.heu:
+                        case mapEnum.CompositeModelScore.hea:
+                            if(receivedBo['Highly Effective']) {receivedBo['Highly Effective'] += 1};
+                            if(!receivedBo['Highly Effective']) {receivedBo['Highly Effective'] = 1};
+                            break;
+                    }
+                });
 
-    //     const dataSet = [];
+            gm.assessorSpResponses
+                .filter(response => response.inventoryItemId === this.id &&
+                    response.assesseePersonId !== response.assessorPersonId)
+                .forEach(response => {
+                    givenResp.push({ name: response.assessee.studentProfile.person.lastName, itemResp: response.mpItemResponse, score: response.itemModelScore, color: '#000000' });
+                    if (givenBo[response.mpItemResponse]) givenBo[response.mpItemResponse] += 1;
+                    if (!givenBo[response.mpItemResponse]) givenBo[response.mpItemResponse] = 1;
 
-    //     for (let bo in compositeBreakOut) {
-    //         if (compositeBreakOut.hasOwnProperty(bo)) {
-    //             if (bo === 'IEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AA0000' });
-    //             if (bo === 'IEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#FE6161' });
-    //             if (bo === 'ND') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AAAAAA' });
-    //             if (bo === 'EA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00AA58' });
-    //             if (bo === 'EU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#73FFBB' });
-    //             if (bo === 'HEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00308F' });
-    //             if (bo === 'HEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#7CA8FF' });
-    //         }
-    //     }
+                });
 
-    //     //TODO: fix staticData stuff, default class export doesn't seem to be working
-    //     breakOut.peerBoChart = dataSet;
-    //     //breakOut.peersResult = staticData.breakDownCalculation(compositeBreakOut);
+            const facResponse = facResponseForThisItem.filter(response => response.assesseePersonId === gm.studentId)[0];
+            // current.selfOutcome = _staticDs.breakDownCalculation(selfBo);
+            // current.gvnOutcome = _staticDs.breakDownCalculation(givenBo);
+            // current.rcvdOutcome = _staticDs.breakDownCalculation(receivedBo);
+            current.facOutcome = (facResponse) ? staticData.EcLocalDataService.prettifyItemResponse(facResponse.mpItemResponse) : 'Not Assessed';
 
-    //     //const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
-    //     //const facResponse = (this.spResult.facultyResponses) ? //this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
+            givenResp.forEach(resp => {
+                switch (resp.itemResp) {
+                    case 'IEA': resp.color = '#AA0000'; break;
+                    case 'IEU': resp.color = '#FE6161'; break;
+                    case 'ND': resp.color = '#AAAAAA'; break;
+                    case 'EA': resp.color = '#00AA58'; break;
+                    case 'EU': resp.color = '#73FFBB'; break;
+                    case 'HEA': resp.color = '#00308F'; break;
+                    case 'HEU': resp.color = '#7CA8FF'; break;
+                }
+            });
+            rcvdResp.forEach(resp => {
+                switch (resp.itemResp) {
+                    case 'IEA': resp.color = '#AA0000'; break;
+                    case 'IEU': resp.color = '#FE6161'; break;
+                    case 'ND': resp.color = '#AAAAAA'; break;
+                    case 'EA': resp.color = '#00AA58'; break;
+                    case 'EU': resp.color = '#73FFBB'; break;
+                    case 'HEA': resp.color = '#00308F'; break;
+                    case 'HEU': resp.color = '#7CA8FF'; break;
+                }
+            });
 
-    //     //breakOut.selfResult = staticData.prettifyItemResponse(selfResponse.mpItemResponse);
-    //     //breakOut.facultyResult = (facResponse) ? staticData.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
-       
-    //     this.resultBreakout = breakOut;
-    //     return breakOut;
-    // }
+            current.respByBehav = {
+                gvnResp: givenResp,
+                rcvdResp: rcvdResp
+            }
 
+            const recDataset = [];
+
+            for (let bo in receivedBo) {
+                if (receivedBo.hasOwnProperty(bo)) {
+                    recDataset.push({ name: bo, value: receivedBo[bo] });
+                    // if (bo === 'IEA') recDataset.push({ data: receivedBo[bo], label: bo, color: '#AA0000' });
+                    // if (bo === 'IEU') recDataset.push({ data: receivedBo[bo], label: bo, color: '#FE6161' });
+                    // if (bo === 'ND') recDataset.push({ data: receivedBo[bo], label: bo, color: '#AAAAAA' });
+                    // if (bo === 'EA') recDataset.push({ data: receivedBo[bo], label: bo, color: '#00AA58' });
+                    // if (bo === 'EU') recDataset.push({ data: receivedBo[bo], label: bo, color: '#73FFBB' });
+                    // if (bo === 'HEA') recDataset.push({ data: receivedBo[bo], label: bo, color: '#00308F' });
+                    // if (bo === 'HEU') recDataset.push({ data: receivedBo[bo], label: bo, color: '#7CA8FF' });
+                }
+            }
+            //current.receivedBo = recDataset;
+            current.receivedBo = [ { "name": "# Recieved", "series": recDataset }];
+
+            const gvnDataset = [];
+
+            for (let bo in givenBo) {
+                if (givenBo.hasOwnProperty(bo)) {
+                    gvnDataset.push({ name: bo, value: givenBo[bo] });
+                    // if (bo === 'IEA') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#AA0000' });
+                    // if (bo === 'IEU') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#FE6161' });
+                    // if (bo === 'ND') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#AAAAAA' });
+                    // if (bo === 'EA') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#00AA58' });
+                    // if (bo === 'EU') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#73FFBB' });
+                    // if (bo === 'HEA') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#00308F' });
+                    // if (bo === 'HEU') gvnDataset.push({ data: givenBo[bo], label: bo, color: '#7CA8FF' });
+                }
+            }
+            current.givenBo = [ { "name": "# Given", "series": gvnDataset }];
+
+            if (this.facSpResultForStudent) {
+                this.facSpResultForStudent[gm.studentId] = current;
+            } else {
+                this.facSpResultForStudent = {} as any;
+                this.facSpResultForStudent[gm.studentId] = current;
+            }
+        });
+        return this.facSpResultForStudent;
+    };
+
+    private sortPeersByLastName(a: CrseStudentInGroup, b: CrseStudentInGroup) {
+        if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) return -1;
+        if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) return 1;
+        if (a.studentProfile.person.lastName === b.studentProfile.person.lastName) {
+            if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) return -1;
+            if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) return 1;
+        };
+        return 0;
+    }
+/// </code>
 }
 
