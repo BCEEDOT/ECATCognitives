@@ -6,6 +6,7 @@ import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/st
 import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
 import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
+import { MpSpStatus } from "../../../core/common/mapStrings";
 
 
 @Component({
@@ -19,6 +20,11 @@ export class AssessComponent implements OnInit, OnChanges {
   user: CrseStudentInGroup;
   peers: CrseStudentInGroup[];
   userId: number;
+  readOnly: boolean = false;
+  color = 'accent';
+  checked = false;
+  disabled = false;
+  stratToggle: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
@@ -37,13 +43,29 @@ export class AssessComponent implements OnInit, OnChanges {
   activate() {
 
     this.activeWorkGroup = this.workGroup;
+    this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
     const userId = this.global.persona.value.person.personId;
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.user.updateStatusOfPeer();
     this.activeWorkGroup.groupMembers.forEach(gm => {
-      gm['assessText'] = (this.user.statusOfPeer[gm.studentId].assessComplete) ? 'mode_edit' : 'add';
-      gm['commentText'] = (this.user.statusOfPeer[gm.studentId].hasComment) ? 'mode_edit' : 'add';
+      const hasComment = this.user.statusOfPeer[gm.studentId].hasComment;
+      const assessComplete = this.user.statusOfPeer[gm.studentId].assessComplete;
+      let commentText = '';
+      let assessText = '';
+
+      if (this.readOnly) {
+        commentText = hasComment ? 'comment' : 'not_interested';
+        assessText = assessComplete ? 'view_list' : 'None';
+      } else {
+        commentText = hasComment ? 'mode_edit' : 'add';
+        assessText = assessComplete ? 'mode_edit' : 'add';
+      }
+
       // gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
+
+      gm['commentText'] = commentText;
+      gm['assessText'] = assessText;
+
     });
 
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
@@ -51,7 +73,7 @@ export class AssessComponent implements OnInit, OnChanges {
   }
 
   comment(recipient: CrseStudentInGroup): any {
-    this.spProvider.loadComment(recipient);
+    this.spProvider.loadComment(recipient).subscribe(() => { this.activate() });
   }
 
 }
