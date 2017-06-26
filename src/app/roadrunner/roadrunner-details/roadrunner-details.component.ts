@@ -3,6 +3,9 @@ import { RoadrunnerService } from '../services/roadrunner.service';
 import { UserDataContext } from "../../core/services/data/user-data-context.service";
 import { RoadRunner } from "../../core/entities/user";
 import { Router } from '@angular/router';
+import { MdSnackBar } from '@angular/material';
+
+import * as _ from "lodash"; 
 
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -37,16 +40,23 @@ export class RoadrunnerDetailsComponent implements OnInit {
         private userDataContext: UserDataContext,
         private route: ActivatedRoute,
         private router: Router,
+        private snackBarService: MdSnackBar,
     ) {
 
     }
 
     ngOnInit() {
 
+        //if(_.isEmpty(this.roadRunnerService))
+
         this.roadRunnerService.roadRunnerData.subscribe((road) => {
             console.log("roadrunner update")
             this.event = road;
         })
+
+        if(_.isEmpty(this.event)){
+            this.router.navigate(['roadrunnerStudent/']);
+        }
 
         this.checkNew = (this.route.snapshot.params['id']);
 
@@ -74,6 +84,8 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
             }
         }
+
+        //if(_.isEmpty(this.roadRunnerService))
     }
 
     cancel() {
@@ -89,6 +101,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
         this.userDataContext.commit()
             .then((res) => {
                 console.log('check roadrunner database');
+                this.snackBarService.open('Roadrunner Data Saved', 'Dismiss');
                 this.router.navigate(['roadrunnerStudent/']);
             })
     }

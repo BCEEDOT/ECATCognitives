@@ -249,7 +249,7 @@ export class RoadrunnerComponent implements OnInit {
 
     const that = this;
     var memsAdd: IStudentOut[] = [];
-    this.flights.push('All Flights');
+    //this.flights.push('All Flights');
 
     this.workGroups.forEach(wg => wg.groupMembers.forEach(gm => {
       let outAdd = gm.studentProfile.person.roadRunnerAddresses.filter(rra => rra.signOut === true)[0];
