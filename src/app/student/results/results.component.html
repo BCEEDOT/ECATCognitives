@@ -9,11 +9,6 @@
 
 <div class="width" *ngIf="!isLoading">
   <md-card>
-    <md-card-title>
-      <div fxFlex="100" class="text-center">
-        <!--{{workGroupName}} - Results-->
-      </div>
-    </md-card-title>
     <md-tab-group md-stretch-tabs>
       <md-tab>
         <ng-template md-tab-label>
@@ -25,14 +20,13 @@
         <ng-template md-tab-label>
           Behaviors
         </ng-template>
-        <h2>Behaviors</h2>
-        <!--<strat-overview [membersResults]="membersResults"></strat-overview>-->
+        <behaviors [memberResults]="memberResults"></behaviors>
       </md-tab>
       <md-tab>
         <ng-template md-tab-label>
           Comments
         </ng-template>
-        <!--<strat-overview [membersResults]="membersResults"></strat-overview>-->
+        <comments [memberResults]="memberResults"></comments>
       </md-tab>
     </md-tab-group>
   </md-card>

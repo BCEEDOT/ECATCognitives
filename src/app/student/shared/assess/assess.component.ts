@@ -21,6 +21,10 @@ export class AssessComponent implements OnInit, OnChanges {
   peers: CrseStudentInGroup[];
   userId: number;
   readOnly: boolean = false;
+  color = 'accent';
+  checked = false;
+  disabled = false;
+  stratToggle: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {

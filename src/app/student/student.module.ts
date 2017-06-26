@@ -13,6 +13,8 @@ import { AssessComponent } from './shared/assess/assess.component';
 import { WorkGroupService } from "./services/workgroup.service";
 import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
 import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
+import { BehaviorsComponent } from './results/behaviors/behaviors.component';
+import { CommentsComponent } from './results/comments/comments.component';
 
 @NgModule({
     imports: [
@@ -28,6 +30,8 @@ import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
         ResultsComponent,
         AssessComponent,
         AssessCompareDialog,
+        BehaviorsComponent,
+        CommentsComponent,
     ],
     exports: [],
     providers: [

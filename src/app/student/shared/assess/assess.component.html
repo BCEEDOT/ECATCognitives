@@ -1,10 +1,22 @@
 <md-list>
+  <md-list-item *ngIf="readOnly">
+    <div flex="90">
+    </div>
+    <div flex="20">
+      <md-slide-toggle class="example-margin" [(ngModel)]="stratToggle" [color]="color" [checked]="checked" [disabled]="disabled">
+        {{(stratToggle) ? 'Hide' : 'Show'}} Strats
+      </md-slide-toggle>
+    </div>
+  </md-list-item>
+
   <md-list-item>
     <md-icon md-list-avatar>person</md-icon>
     <h3 md-line> {{user?.rankName}} </h3>
-    <span flex="20" *ngIf="readOnly">
-          {{user?.statusOfPeer[user?.studentId].stratedPosition}}
-      </span>
+    <div flex="20" *ngIf="readOnly">
+      <div *ngIf="stratToggle">
+        <span class="md-title">{{user?.statusOfPeer[user?.studentId].stratedPosition}}</span>
+      </div>
+    </div>
     <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
         <button md-button [routerLink]="['assess/' + user.studentId]"><md-icon>{{user?.assessText}}</md-icon> Assessment </button>
         </span>
@@ -16,9 +28,11 @@
     <md-list-item>
       <md-icon md-list-avatar>person</md-icon>
       <h3 md-line> {{peer?.rankName}} </h3>
-      <span flex="20" *ngIf="readOnly">
-          {{user?.statusOfPeer[peer?.studentId].stratedPosition}}
-      </span>
+      <div flex="20" *ngIf="readOnly">
+        <div *ngIf="stratToggle">
+          <span class="md-title">{{user?.statusOfPeer[peer?.studentId].stratedPosition}}</span>
+        </div>
+      </div>
       <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
           <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{peer?.assessText}}</md-icon> Assessment</button>
       </span>
