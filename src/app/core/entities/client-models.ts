@@ -39,6 +39,11 @@ export interface IFacultyApiResources extends IApiResources {
     currentWorkGroup: IApiResource;
 }
 
+export interface ILmsAdminApiResources extends IApiResources {
+    allCoures: IApiResource;
+    allGroups: IApiResource;
+}
+
 export interface IMilPayGrade {
     civ: { designator: string };
     fn: { designator: string };

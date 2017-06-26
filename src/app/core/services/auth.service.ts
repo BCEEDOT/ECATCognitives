@@ -107,7 +107,7 @@ export class AuthService implements IHttpInterceptor {
     if (loggedInUser.mpInstituteRole === MpInstituteRole.faculty) {
       user.isFaculty = true;
       user.isStudent = false;
-      user.isLmsAdmin = false;
+      user.isLmsAdmin = accessToken.role.some(role => role = 'ISA');
     }
 
     this.global.user(user);
@@ -124,6 +124,7 @@ export class AuthService implements IHttpInterceptor {
       this.emProvider.clear(DataContext.User);
       this.emProvider.clear(DataContext.Student);
       this.emProvider.clear(DataContext.Faculty);
+      this.emProvider.clear(DataContext.LmsAdmin);
     }
     // this.emProvider.clear(DataContext.User);
     // this.emProvider.clear(DataContext.Student);

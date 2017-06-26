@@ -5,6 +5,7 @@
         <!--<a md-list-item routerLink="/users" (click)="layout.close()"><md-icon>people</md-icon>Users</a>-->
         <a *ngIf="isStudent" md-list-item routerLink="/student/assessment" (click)="layout.close()"><md-icon>assessment</md-icon>Assessment Center</a>
         <a *ngIf="isFaculty" md-list-item routerLink="/faculty/workgroups" (click)="layout.close()"><md-icon>people</md-icon>Workgroup Center</a>
+        <a *ngIf="isLmsAdmin" md-list-item routerLink="/lmsadmin/courses" (click)="layout.close()"><md-icon>security</md-icon>Instructional System Admin</a>
     </md-nav-list>
     <md-nav-list td-navigation-drawer-menu>
       <a md-list-item routerLink="/profile" (click)="layout.close()"><md-icon>account_circle</md-icon>Profile</a>
