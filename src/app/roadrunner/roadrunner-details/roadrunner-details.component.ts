@@ -26,16 +26,12 @@ export class RoadrunnerDetailsComponent implements OnInit {
     startCheck: boolean = false;
     endCheck: boolean = false;
     touch: boolean = true;
-    minDate = new Date(2017,0,1);
-    maxDate = new Date(2020,0,1);
+    minDate = new Date(2017, 0, 1);
+    maxDate = new Date(2020, 0, 1);
     clone: boolean = false;
 
 
     dateForm: FormGroup;
-
-        // $mdDateLocaleProvider.formatDate = function(date) {
-    //   return moment(date).format('MM/DD/YYYY');
-    // };
 
     constructor(private roadRunnerService: RoadrunnerService,
         private userDataContext: UserDataContext,
@@ -45,46 +41,25 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
     }
 
-
-    checkDates(date: Date, type: number) {
-
-        if (type === 0) {
-            console.log('this is the start date ', date);
-        } else if (type === 1) {
-            console.log('this is the return date', date);
-        }
-
-    }
     ngOnInit() {
 
         this.roadRunnerService.roadRunnerData.subscribe((road) => {
             console.log("roadrunner update")
             this.event = road;
-            console.log(this.event)
         })
-        console.log(this.event);
 
         this.checkNew = (this.route.snapshot.params['id']);
 
-        console.log(this.checkNew);
         if (this.checkNew === "New") {
-            console.log('new event');
             this.oneEvent = this.userDataContext.addRoadRunner();
-
             var today = new Date();
             this.oneEvent.leaveDate = today;
             this.oneEvent.returnDate = today;
 
-            console.log(this.oneEvent);
-
         } else {
             this.id = (+this.route.snapshot.params['id']);
             this.event = this.event.filter(single => single.id === this.id);
-            console.log(this.event);
-            console.log(this.id);
-
             this.oneEvent = this.event.find(single => single.id === this.id);
-            console.log(this.oneEvent);
 
             if (this.oneEvent.prevSignOut === true) {
                 this.tempEvent = this.oneEvent;
@@ -97,9 +72,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
                 this.oneEvent.leaveDate = today;
                 this.oneEvent.returnDate = today;
 
-
             }
-
         }
     }
 
@@ -118,7 +91,6 @@ export class RoadrunnerDetailsComponent implements OnInit {
                 console.log('check roadrunner database');
                 this.router.navigate(['roadrunnerStudent/']);
             })
-
     }
 
     delete() {
@@ -130,7 +102,6 @@ export class RoadrunnerDetailsComponent implements OnInit {
                 console.log('check roadrunner database');
                 this.router.navigate(['roadrunnerStudent/']);
             })
-
     }
 
 }
