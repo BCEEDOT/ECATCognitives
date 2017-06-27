@@ -13,6 +13,7 @@ import { AssessComponent } from '../provider/sp-provider/assess/assess.component
 import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
 import { ResultsDetailsComponent } from "./workgroups/results/results-details/results-details.component";
+import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 
 const facultyRoutes: Routes = [
   {
@@ -41,13 +42,15 @@ const facultyRoutes: Routes = [
           {
             path: 'list/:crsId/evaluate/:wrkGrpId',
             component: EvaluateComponent,
-            resolve: { workGroup: 'facWorkGroupResolver' }
+            resolve: { workGroup: 'facWorkGroupResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
           },
 
           {
             path: 'list/:crsId/evaluate/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
-            resolve: { inventories: 'facSpAssessResolver' }
+            resolve: { inventories: 'facSpAssessResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
           },
           {
             path: 'list/:crsId/results/:wrkGrpId',
