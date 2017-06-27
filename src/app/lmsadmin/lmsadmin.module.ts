@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 //import { CommonModule } from '@angular/common';
+import { CovalentPagingModule } from '@covalent/core';
 import { CoursesComponent } from './courses/courses.component';
 import { LmsAdminRoutingModule } from "./lmsadmin-routing.module";
 import { SharedModule } from "../shared/shared.module";
@@ -18,6 +19,7 @@ import { CourseInfoComponent } from './courses/course-info/course-info.component
     LmsAdminRoutingModule,
     EntityFacultyModule,
     SharedModule,
+    CovalentPagingModule,
   ],
   declarations: [
     LmsadminComponent,
@@ -30,7 +32,7 @@ import { CourseInfoComponent } from './courses/course-info/course-info.component
   ],
   providers: [
     LmsadminAuthGuardService,
-    LmsadminDataContextService,
+    LmsadminDataContextService
   ]
 })
 export class LmsadminModule { }

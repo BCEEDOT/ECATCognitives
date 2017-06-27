@@ -23,34 +23,32 @@ const lmsadminRoutes: Routes = [
         component: CoursesComponent,
         canActivateChild: [LmsadminAuthGuardService],
         resolve: { courses: 'isaCoursesResolver' },
-        children: [
-          {
-            path: ':crsId/enrollments',
-            component: CourseEnrollComponent,
-            //resolve: { course: 'lmsCourseResolver' }
-          },
-          {
-            path: ':crsId/info',
-            component: CourseInfoComponent,
-            //resolve: { course: 'lmsCourseResolver' }
-          },
-          {
-            path: ':crsId/groupsets',
-            component: GroupSetsComponent,
-            //resolve: { course: 'lmsCourseResolver' }
-          },
-          {
-            path: ':crsId/groupsets/:catId/manage',
-            component: ManageGroupsetComponent,
-            //resolve: { course: 'lmsCourseResolver' }
-          },
-          {
-            path: ':crsId/groupsets/:catId/config',
-            component: ConfigGroupsetComponent,
-            //resolve: { course: 'lmsCourseResolver' }
-          },
-        ]
-      }
+      },
+      {
+        path: 'courses/:crsId/enrollments',
+        component: CourseEnrollComponent,
+        //resolve: { course: 'lmsCourseResolver' }
+      },
+      {
+        path: 'courses/:crsId/info',
+        component: CourseInfoComponent,
+        //resolve: { course: 'lmsCourseResolver' }
+      },
+      {
+        path: 'courses/:crsId/groupsets',
+        component: GroupSetsComponent,
+        //resolve: { course: 'lmsCourseResolver' }
+      },
+      {
+        path: 'courses/:crsId/groupsets/:catId/manage',
+        component: ManageGroupsetComponent,
+        //resolve: { course: 'lmsCourseResolver' }
+      },
+      {
+        path: 'courses/:crsId/groupsets/:catId/config',
+        component: ConfigGroupsetComponent,
+        //resolve: { course: 'lmsCourseResolver' }
+      },
     ]
   }
 ]

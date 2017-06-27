@@ -22,6 +22,14 @@ export class LmsadminDataContextService extends BaseDataContext {
       returnedEntityType: MpEntityType.workGroup,
       resource: 'GetAllGroups',
     },
+    allCourseMembers: {
+      returnedEntityType: MpEntityType.course,
+      resource: 'GetAllCourseMembers',
+    },
+    allGroupMembers: {
+      returnedEntityType: MpEntityType.workGroup,
+      resource: 'GetGroupMembers',
+    }
   };
 
   constructor(emProvider: EmProviderService, private global: GlobalService, private logger: LoggerService) { 
@@ -38,7 +46,6 @@ export class LmsadminDataContextService extends BaseDataContext {
       return Promise.resolve(courses);
     }
 
-    const api: any = this.lmsAdminApiResource;
     let query: any = EntityQuery.from(this.lmsAdminApiResource.allCoures.resource);
 
     return <Promise<Array<Course>>>this.manager.executeQuery(query)
@@ -67,8 +74,8 @@ export class LmsadminDataContextService extends BaseDataContext {
       return Promise.resolve(groups);
     }
 
-    const api: any = this.lmsAdminApiResource;
-    let query: any = EntityQuery.from(this.lmsAdminApiResource.allGroups.resource);
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.allGroups.resource).withParameters(params);
 
     return <Promise<Array<WorkGroup>>>this.manager.executeQuery(query)
       .then(allGroupsResp)
@@ -82,6 +89,32 @@ export class LmsadminDataContextService extends BaseDataContext {
       if (groups && groups.length > 0){
         console.log('Groups loaded from remote store', groups, false);
         return groups;
+      }
+    }
+  }
+
+  fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course>{
+    let course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
+    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh){
+      console.log('Retrieved course members from local cache', course, false);
+      return Promise.resolve(course);
+    }
+
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.allCourseMembers.resource).withParameters(params);
+
+    return <Promise<Course>>this.manager.executeQuery(query)
+      .then(allCourseMemsResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve course members' + e);
+        return Promise.reject(e);
+      });
+
+    function allCourseMemsResp(data: QueryResult){
+      course = data.results[0] as Course;
+      if (course.students.length > 0 && course.faculty.length > 1){
+        console.log('Course members loaded from remote store', course, false);
+        return course;
       }
     }
   }
