@@ -14,7 +14,7 @@ const cognitivesRoutes: Routes = [
     component: CognitivesComponent,
     canActivate: [UserAuthGuard],
     resolve: { results: 'resultsResolver' },
-  }, 
+  },
   {
     path: 'cognitive/result/:cogId',
     component: ResultComponent,
@@ -22,13 +22,16 @@ const cognitivesRoutes: Routes = [
   {
     path: 'cognitive/assess/:cogId',
     component: AssessComponent,
+    resolve: { assess: 'assessResolver' }
   }
-
-
 ];
 
 export function resultsResolver(userDataContext: UserDataContext) {
   return (route: ActivatedRouteSnapshot) => userDataContext.getCogResults(true);
+}
+
+export function assessResolver(userDataContext: UserDataContext) {
+  return (route: ActivatedRouteSnapshot) => userDataContext.getCogInst(+route.params['cogId']);
 }
 
 @NgModule({
@@ -39,9 +42,14 @@ export function resultsResolver(userDataContext: UserDataContext) {
     RouterModule
   ],
   providers:
-  [{
-    provide: 'resultsResolver', useFactory: resultsResolver, deps: [UserDataContext]
-  }]
+  [
+    {
+      provide: 'resultsResolver', useFactory: resultsResolver, deps: [UserDataContext]
+    },
+    {
+      provide: 'assessResolver', useFactory: assessResolver, deps: [UserDataContext]
+    }
+  ]
 })
 
 export class CognitivesRoutingModule { }

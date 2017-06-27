@@ -13,22 +13,22 @@
   <md-card [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
 
     <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center" class="pad-sm">
-      <b><!--{{cogAssess.cogName}}--> Ricky Cogs</b>
+      <b>{{cogInstrument.id}}</b>
     </div>
-
-    <hr>
+    <hr>        
     
    <!-- <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" id="instructions" *ngIf="cogAssess.showInstructions"></div>
 
     <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" *ngIf="!cogAssess.showInstructions">
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" ></div>-->
+    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" ></div> -->
 
     <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
-      <div>
+      <div fxFlex>
         <!--mathces compnent varialbe -->
-       <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
+        <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
         <esalbecmspe-assess *ngSwitchCase="2"> </esalbecmspe-assess>
-        <etmpre-assess *ngSwitchCase="3"> </etmpre-assess>
+        <esalbecmspe-assess *ngSwitchCase="3"> </esalbecmspe-assess>
+        <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
       </div>
     </div>
 <!-- 
@@ -52,24 +52,3 @@
   </md-card>
 
 </td-layout-nav>
--->
-
-<!--
-<div class="modal-footer">
-    <div class="row p-15">
-        <button class="btn btn-link" ng-if="!cogAssess.showInstructions" ng-click="cogAssess.showInstructions = !cogAssess.showInstructions" style="float:left">Show Instructions</button>
-        <button class="btn btn-link" type="button" ng-if="cogAssess.showInstructions" ng-click="cogAssess.showInstructions = !cogAssess.showInstructions">
-            Continue Assessment
-        </button>
-        <button class="btn btn-link"    
-                type="button"
-                ng-if="cogAssess.readyToSave && !cogAssess.showInstructions"
-                ng-click="cogAssess.save()">
-            Complete Assessment
-        </button>
-        <button class="btn btn-link" type="button" ng-if="!cogAssess.showInstructions" ng-click="cogAssess.cancel()">
-            Cancel
-        </button>
-    </div>
-</div>
--->

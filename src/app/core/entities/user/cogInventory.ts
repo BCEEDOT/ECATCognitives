@@ -1,5 +1,6 @@
 import { EntityBase } from '../EntityBase';
 import { CogInstrument } from './CogInstrument';
+import { CogResponse } from "./cogResponse";
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -22,7 +23,7 @@ export class CogInventory extends EntityBase {
    instrument: CogInstrument;
 
    /// <code> Place custom code between <code> tags
-   
+   cogResponse: CogResponse
    /// </code>
 
 }

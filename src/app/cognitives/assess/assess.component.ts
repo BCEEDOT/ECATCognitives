@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/pluck';
+
+import { CogInstrument } from "../../core/entities/user";
+
 
 @Component({
   selector: 'app-assess',
@@ -9,95 +14,31 @@ import { ActivatedRoute } from '@angular/router';
 export class AssessComponent implements OnInit {
 
   private cogAssessId: string;
+  cogInstrument: CogInstrument[];
+  cogInstrument$: Observable<CogInstrument[]>;
 
   constructor(
     private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
       this.cogAssessId = params['cogId'];
     });
+    
+    this. cogInstrument$ = route.data.pluck('assess')
   }
 
   ngOnInit() {
+    this. cogInstrument$.subscribe(res => {
+        this.cogInstrument = res;
+        this.activate();
+    })
+
+  }
+
+  activate(): void {
+      console.log(this.cogInstrument);
   }
 
 }
-
-/*    takeAssess(selType: string): void {
-            let assessModalOption: angular.ui.bootstrap.IModalSettings = {
-                controller: cogAssess.controllerId,
-                controllerAs: 'cogAssess',
-                bindToController: true,
-                keyboard: false,
-                backdrop: 'static',
-                templateUrl: '@[appCore]/feature/cog/assess.html'
-            };
-    
-            //let prevAttempt = (this[`${type}Result`]) ? this[`${type}Result`].attempt : 0;
-            var prevAttempt: number;
-            switch (selType) {
-                case _mp.MpCogInstrumentType.ecpe:
-                    prevAttempt = (this.ecpeResult) ? this.ecpeResult.attempt : 0;
-                    assessModalOption.resolve = {
-                        cogType: function () { return selType },
-                        prevAttempt: function () { return prevAttempt }
-                    }
-    
-                    this.$uim.open(assessModalOption).result.then(res => {
-                        if (res !== null) {
-                            this.ecpeResult = res;
-                            this.calcEcpeResult();
-                            $('<style>#ecpeGraph:after{left:' + this.ecpeLine + '%}</style>').appendTo('head');
-                            this.activeView = this.view.ecpe;
-                        }
-                    });
-                    break;
-                case _mp.MpCogInstrumentType.etmpre:
-                    prevAttempt = (this.etmpreResult) ? this.etmpreResult.attempt : 0;
-                    assessModalOption.resolve = {
-                        cogType: function () { return selType },
-                        prevAttempt: function () { return prevAttempt }
-                    }
-    
-                    this.$uim.open(assessModalOption).result.then(res => {
-                        if (res !== null) {
-                            this.etmpreResult = res;
-                            this.activeView = this.view.etmpre;
-                        }
-                    });
-                    break;
-                case _mp.MpCogInstrumentType.esalb:
-                    prevAttempt = (this.esalbResult) ? this.esalbResult.attempt : 0;
-                    assessModalOption.resolve = {
-                        cogType: function () { return selType },
-                        prevAttempt: function () { return prevAttempt }
-                    }
-    
-                    this.$uim.open(assessModalOption).result.then(res => {
-                        if (res !== null) {
-                            this.esalbResult = res;
-                            this.activeView = this.view.esalb;
-                        }
-                    });
-                    break;
-                case _mp.MpCogInstrumentType.ecmspe:
-                    prevAttempt = (this.ecmspeResult) ? this.ecmspeResult.attempt : 0;
-                    assessModalOption.resolve = {
-                        cogType: function () { return selType },
-                        prevAttempt: function () { return prevAttempt }
-                    }
-    
-                    this.$uim.open(assessModalOption).result.then(res => {
-                        if (res !== null) {
-                            this.ecmspeResult = res;
-                            this.activeView = this.view.ecmspe;
-                        }
-                    });
-                    break;
-                default:
-                    return null;
-            }
-        }*/
-
 
 /*import * as _mpe from 'core/common/mapEnum'
 import * as _mp from 'core/common/mapStrings'

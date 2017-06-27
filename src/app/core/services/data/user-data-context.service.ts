@@ -6,9 +6,9 @@ import {
 
 import { BaseDataContext } from '../../../shared/services';
 import { EmProviderService } from '../em-provider.service';
-import { Person, ProfileStudent, ProfileFaculty, CogResponse, CogInstrument, RoadRunner } from '../../entities/user';
+import { Person, ProfileStudent, ProfileFaculty, CogResponse, CogInstrument, RoadRunner, CogInventory } from '../../entities/user';
 import { IUserApiResources } from "../../entities/client-models";
-import { MpEntityType, MpInstituteRole } from "../../common/mapStrings";
+import { MpEntityType, MpInstituteRole, MpCogInstrumentType } from "../../common/mapStrings";
 import { DataContext } from '../../../app-constants';
 import { GlobalService } from "../global.service";
 
@@ -96,8 +96,8 @@ export class UserDataContext extends BaseDataContext {
     //TODO: Delete before going to production. Test method only
     getUsers(): Promise<Person[]> {
 
-       let query = EntityQuery.from('getusers');
-       
+        let query = EntityQuery.from('getusers');
+
 
         return <Promise<Person[]>>this.manager.executeQuery(query)
             .then(res => {
@@ -125,7 +125,7 @@ export class UserDataContext extends BaseDataContext {
 
     getCogResults(all: boolean, force?: boolean): Promise<Array<any>> {
 
-         let query = EntityQuery.from(this.userApiResources.cogResults.resource).withParameters({force: force, all: all});
+        let query = EntityQuery.from(this.userApiResources.cogResults.resource).withParameters({ force: force, all: all });
 
         return <Promise<Array<any>>>this.manager.executeQuery(query)
             .then(res => {
@@ -136,6 +136,66 @@ export class UserDataContext extends BaseDataContext {
                 console.log('Did not retrieve CogRespones' + e);
                 return Promise.reject(e);
             });
+    }
+
+    getCogInst(cogId: number):
+        Promise<Array<CogInstrument> | Promise<void>> {
+
+        let cogType = '';
+
+        switch (cogId) {
+            case 1:
+                cogType = MpCogInstrumentType.ecpe
+                break;
+            case 2:
+                cogType = MpCogInstrumentType.esalb
+                break;
+            case 3:
+                cogType = MpCogInstrumentType.ecmspe
+                break;
+            case 4:
+                cogType = MpCogInstrumentType.etmpre
+                break;
+        }
+
+        let query = EntityQuery.from(this.userApiResources.cogInst.resource).withParameters({ type: cogType });
+
+        return <Promise<Array<CogInstrument>>>this.manager.executeQuery(query)
+            .then(res => {
+                console.log('getCogInst is querying the server for: ' + cogType);
+                return res.results;
+            })
+            .catch(e => {
+                console.log('Did not retrieve CogInstrument: ' + e);
+                return Promise.reject(e);
+            });
+/*
+        return <Promise<Array<CogInstrument>>>this.manager.executeQuery(query)
+            .then()
+            .catch(this.queryFailed);
+
+        function getCogInstResponse(result: QueryResult): Array<CogInventory> {
+
+            const cogInst = result.results[0] as CogInstrument;
+
+            if (!cogInst) {
+                return null;
+            }
+
+            //isLoaded.cogInst[type] = true;
+            console.log('Retrieved cognitive instrument from remote cache', cogInst, false);
+            const inventoryList = cogInst.inventoryCollection as Array<CogInventory>;
+            const personId = that.global.persona.value.person.personId;
+
+            return inventoryList.map((item: CogInventory) => {
+                const key = { personId: personId, cogInventoryId: item.id, attempt: (prevAttempt + 1) };
+
+                let cogResponse = that.manager.createEntity(MpEntityType.cogResponse, key) as CogResponse;
+                item.cogResponse = cogResponse;
+
+                return item;
+            }) as Array<CogInventory>;
+        }*/
     }
 
 }

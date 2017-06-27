@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 
-import { CogEcmspeResult, CogEcpeResult, CogEsalbResult, CogEtmpreResult } from "../core/entities/user";
+import { CogEcmspeResult, CogEcpeResult, CogEsalbResult, CogEtmpreResult, CogInstrument } from "../core/entities/user";
 import { GlobalService } from "../core/services/global.service";
 import { UserDataContext } from "../core/services/data/user-data-context.service";
 import { CogResultsService } from "./services/cog-results.service";
