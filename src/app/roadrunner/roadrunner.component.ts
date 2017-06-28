@@ -34,7 +34,6 @@ export class RoadrunnerComponent implements OnInit {
   flightDisplayed: string = 'All Flights';
   firstFilter: boolean = true;
   count: number = 0;
-  //this.roadRunnerService.count(this.count);
   signedOut: boolean = false;
 
   dateFormat = new Intl.DateTimeFormat('en-US');
@@ -42,8 +41,6 @@ export class RoadrunnerComponent implements OnInit {
 
   columns: ITdDataTableColumn[] = [
     { name: 'flight', label: 'Flight', sortable: true },
-    //{ name: 'firstName', label: 'First Name', sortable: false },
-    // { name: 'lastName', label: 'Last Name', sortable: true },
     { name: 'name', label: 'Name' },
     { name: 'location', label: 'Location', sortable: false },
     { name: 'leaveDate', label: 'Leave Date', sortable: true, format: date => this.dateFormat.format(date) },
@@ -153,16 +150,6 @@ export class RoadrunnerComponent implements OnInit {
 
   }
 
-  // clone(edit) {
-  //   let newAddress = this.userDataContext.addRoadRunner();
-  //   newAddress.location = edit.location;
-  //   newAddress.phoneNumber = edit.phoneNumber;
-  //   newAddress.prevSignOut = false;
-
-  //   this.roadRunnerInfos.push(newAddress);
-
-  // }
-
   ngOnInit(): void {
 
     this.titleService.setTitle('RoadRunner');
@@ -170,24 +157,12 @@ export class RoadrunnerComponent implements OnInit {
     
     this.activate();
 
-    // this.global.persona.subscribe((user) => {
-    //   //console.log("User has been updated in app Component")
-    //   this.persona = user;
-
-    //   if (this.persona != null) {
-    //     this.activate();
-    //   }
-    // });
-
   }
 
   activate(): void {
     var that = this;
     if (this.persona.isStudent) {
-      //this.getRoadRunnerInfo();
-
-      //this.roadRunnerService.getRoadRunnerInfo()
-this.loadingService.register(this.roadRunnerLoading);
+      this.loadingService.register(this.roadRunnerLoading);
       this.userDataContext.getRoadRunnerInfos(true)
         .then((roadRunnerData: RoadRunner[]) => {
           this.roadRunnerService.count(this.count);
@@ -269,7 +244,6 @@ this.loadingService.register(this.roadRunnerLoading);
 
     const that = this;
     var memsAdd: IStudentOut[] = [];
-    //this.flights.push('All Flights');
 
     this.workGroups.forEach(wg => wg.groupMembers.forEach(gm => {
       let outAdd = gm.studentProfile.person.roadRunnerAddresses.filter(rra => rra.signOut === true)[0];

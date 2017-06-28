@@ -41,15 +41,6 @@ export class UserAuthGuard implements CanActivate {
     }
   }
 
-  // canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-  //   return this.canActivate(route, state);
-  // }
-
-  // canLoad(route: Route): boolean {
-  //   let url = `/${route.path}`;
-
-  //   return this.activate(url);
-  // }
 
   activate(url: string): boolean {
     //TODO: Rewrite this to handle errors better

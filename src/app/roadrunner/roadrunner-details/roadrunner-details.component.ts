@@ -47,8 +47,6 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
     ngOnInit() {
 
-        //if(_.isEmpty(this.roadRunnerService))
-
         this.roadRunnerService.roadRunnerData$.subscribe((roadRunnerData: RoadRunner[]) => {
             console.log("roadrunner update")
             this.event = roadRunnerData;
@@ -84,16 +82,11 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
             }
         }
-
-        //if(_.isEmpty(this.roadRunnerService))
     }
 
     cancel() {
 
         this.oneEvent.entityAspect.rejectChanges();
-        // this.roadRunnerService.roadRunnerData.value.rejectChanges();
-        //this.roadRunnerService.roadRunnerData.value.entityAspect.rejectChanges();
-        //this.userDataContext.Entry(this.event).Reload();
         this.router.navigate(['roadrunnerStudent/']);
     }
 

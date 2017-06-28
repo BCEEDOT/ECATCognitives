@@ -20,7 +20,6 @@ const RoadrunnerRoutes: Routes = [
   {
     path: 'roadrunnerStudent/:id',
     component: RoadrunnerDetailsComponent
-    //resolve: { rr: rrResolver}
   } 
 ];
 @NgModule({

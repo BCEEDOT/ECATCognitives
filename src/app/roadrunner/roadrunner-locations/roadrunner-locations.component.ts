@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-// import { CovalentMessageModule } from '@covalent/core';
+
 import { RoadRunner } from "../../core/entities/user";
 import { RoadrunnerService } from '../services/roadrunner.service';
 
-//import { RoadrunnerComponent } from '../roadrunner.component';
+
 
 @Component({
   selector: 'roadrunner-locations',
@@ -28,27 +28,5 @@ export class RoadrunnerLocationsComponent implements OnInit {
   signOutButton(location:RoadRunner){
     this.signOut.emit(location);
   }
-  //   signOut(edit): void {
 
-  //   if (edit.signOut) {
-  //     edit.prevSignOut = true;
-  //     this.count = this.count + 1;
-  //     this.roadRunnerInfos.forEach(element => {
-  //       element['signedOutSomewhere'] = false;
-  //     });
-  //   } else {
-  //     this.roadRunnerInfos.forEach(element => {
-  //       element['signedOutSomewhere'] = true;
-  //     });
-  //   }
-
-  //   edit.signOut = !edit.signOut;
-  //   this.loadingService.register(this.roadRunnerLoading);
-  //   this.userDataContext.commit()
-  //     .then((res) => {
-  //       this.loadingService.resolve(this.roadRunnerLoading);
-  //     })
-  //   this.roadRunnerInfos.sort((x, y) => { if (y.signOut === true) return 1; });
-
-  // }
 }

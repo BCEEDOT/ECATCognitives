@@ -43,9 +43,8 @@
           </div>
           <div>
             <div layout-gt-xs="row" layout-margin>
-<!--value="{{oneEvent.leaveDate}}"-->
               <md-input-container flex>
-                <input mdInput [min]="minDate" [max]="maxDate" #leaveForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="leave" 
+                <input mdInput [min]="minDate" [max]="maxDate" #leaveForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="leave"
                   [(ngModel)]="oneEvent.leaveDate" placeholder="Leave Date" required/>
                 <button mdSuffix [mdDatepickerToggle]="leave"></button>
 
@@ -59,7 +58,7 @@
 
                 <button mdSuffix [mdDatepickerToggle]="return"></button>
                 <input mdInput [min]="oneEvent.leaveDate" [max]="maxDate" #returnForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="return"
-                  placeholder="Return Date"  [(ngModel)]="oneEvent.returnDate" required/>
+                  placeholder="Return Date" [(ngModel)]="oneEvent.returnDate" required/>
                 <md-error *ngIf="returnForm.hasError('mdDatepickerMin')">Please select date after your leave date!</md-error>
 
               </md-input-container>

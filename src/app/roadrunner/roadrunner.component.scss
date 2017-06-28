@@ -30,29 +30,18 @@
   width: 100%;
   text-align: center;
   margin-top: -20px; /* Note, this must be half the font size */
-  //color: $light;
+
 }
 
 
 .example-button-row {
   display: flex;
-  //align-items: center;
   justify-content: flex-end;
-  
-  //justify-content: space-between;
-  //justify-content:space-around;
 }
 
-// .highlight{
-//   color: black;
-// }
+
 
 .md-title{
   display:flex;
   justify-content: center;
 }
-// md-select{
-//   display: flex;
-//   padding-right: 20px;
-//     justify-content: flex-end
-// }
