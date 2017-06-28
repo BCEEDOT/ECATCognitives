@@ -138,9 +138,9 @@ export class UserDataContext extends BaseDataContext {
             });
     }
 
-    getCogInst(cogId: number):
-        Promise<Array<CogInstrument> | Promise<void>> {
+    getCogInst(cogId: number): Promise<Array<CogInventory> | Promise<void>> {
 
+        let that = this;
         let cogType = '';
 
         switch (cogId) {
@@ -160,18 +160,8 @@ export class UserDataContext extends BaseDataContext {
 
         let query = EntityQuery.from(this.userApiResources.cogInst.resource).withParameters({ type: cogType });
 
-        return <Promise<Array<CogInstrument>>>this.manager.executeQuery(query)
-            .then(res => {
-                console.log('getCogInst is querying the server for: ' + cogType);
-                return res.results;
-            })
-            .catch(e => {
-                console.log('Did not retrieve CogInstrument: ' + e);
-                return Promise.reject(e);
-            });
-/*
-        return <Promise<Array<CogInstrument>>>this.manager.executeQuery(query)
-            .then()
+        return <Promise<Array<CogInventory>>>this.manager.executeQuery(query)
+            .then(getCogInstResponse)
             .catch(this.queryFailed);
 
         function getCogInstResponse(result: QueryResult): Array<CogInventory> {
@@ -188,14 +178,14 @@ export class UserDataContext extends BaseDataContext {
             const personId = that.global.persona.value.person.personId;
 
             return inventoryList.map((item: CogInventory) => {
-                const key = { personId: personId, cogInventoryId: item.id, attempt: (prevAttempt + 1) };
+                const key = { personId: personId, cogInventoryId: item.id, attempt: (1) };
 
                 let cogResponse = that.manager.createEntity(MpEntityType.cogResponse, key) as CogResponse;
-                item.cogResponse = cogResponse;
+                item.response = cogResponse;
 
                 return item;
             }) as Array<CogInventory>;
-        }*/
+        }
     }
 
 }

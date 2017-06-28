@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';
 
-import { CogInstrument } from "../../core/entities/user";
-import { CogAssessService } from "../services/cog-assess.service";
+import { CogInstrument } from '../../core/entities/user';
+import { CogInventory } from '../../core/entities/user/cogInventory';
+import { CogAssessService } from '../services/cog-assess.service';
 
 
 @Component({
@@ -15,9 +16,9 @@ import { CogAssessService } from "../services/cog-assess.service";
 export class AssessComponent implements OnInit {
 
     cogAssessId: string;
-    cogInstrument$: Observable<CogInstrument[]>;
+    cogInventories$: Observable<CogInventory[]>;
     showInstructions: boolean = true;
-    cogInstrument: CogInstrument[];
+    cogInventories: CogInventory[];
 
     constructor(
         private route: ActivatedRoute, private cogAssessService: CogAssessService) {
@@ -26,13 +27,14 @@ export class AssessComponent implements OnInit {
             this.cogAssessId = params['cogId'];
         });
 
-        this.cogInstrument$ = route.data.pluck('assess')
+        this.cogInventories$ = route.data.pluck('assess')
     }
 
     ngOnInit() {
-        this.cogInstrument$.subscribe((cogInstrument: CogInstrument[]) => {
-            this.cogAssessService.cogInstrument(cogInstrument);
-            this.cogInstrument = cogInstrument;
+        this.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
+            this.cogAssessService.cogInventories(cogInventories);
+            this.cogInventories = cogInventories;
+            console.log(this.cogInventories);
         })
 
 

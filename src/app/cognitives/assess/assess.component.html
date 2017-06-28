@@ -10,34 +10,37 @@
     </a>
   </div>
 
-  <md-card>
-    <md-card-title>E-CPE - Electronic Cognitive Preferense Estimator</md-card-title>
-    <md-divider></md-divider>
+  <div class="width">
+    <md-card>
+      <md-card-title>E-CPE - Electronic Cognitive Preferense Estimator</md-card-title>
+      <md-divider></md-divider>
 
-    <md-card-content *ngIf="showInstructions">
-      <div [innerHTML]="cogInstrument[0].cogInstructions"></div>
-    </md-card-content>
-    <md-card-content *ngIf="!showInstructions">
-      <div [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
-        <!--matches component variable -->
-        <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
-        <esalbecmspe-assess *ngSwitchCase="2"> </esalbecmspe-assess>
-        <esalbecmspe-assess *ngSwitchCase="3"> </esalbecmspe-assess>
-        <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
-      </div>
-    </md-card-content>
+      <md-card-content *ngIf="showInstructions">
+        <div [innerHTML]="cogInventories[0].instrument.cogInstructions"></div>
+      </md-card-content>
+      <md-card-content *ngIf="!showInstructions">
+        <div [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
+          <!--matches component variable -->
+          <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
+          <esalbecmspe-assess *ngSwitchCase="2"> </esalbecmspe-assess>
+          <esalbecmspe-assess *ngSwitchCase="3"> </esalbecmspe-assess>
+          <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
+        </div>
+      </md-card-content>
 
-    <md-divider></md-divider>
-    <md-card-actions *ngIf="showInstructions">
-      <button md-button color="primary" (click)="showInstructions = false">Continue Assessment</button>
-    </md-card-actions>
+      <md-divider></md-divider>
+      <md-card-actions *ngIf="showInstructions">
+        <button md-button color="primary" (click)="showInstructions = false">Continue Assessment</button>
+      </md-card-actions>
 
-    <md-card-actions *ngIf="!showInstructions">
-      <button md-button color="primary" (click)="showInstructions = true">Show Instructions</button>
-      <button md-button color="primary">Complete Assessment</button>
-      <button md-button color="primary">Cancel</button>
-    </md-card-actions>
+      <md-card-actions fxLayout="row" *ngIf="!showInstructions">
+        <button md-button color="primary" (click)="showInstructions = true">Show Instructions</button>
+        <div fxFlex></div>
+        <button md-button color="primary">Cancel</button>
+        <button md-button color="primary">Complete Assessment</button>
+      </md-card-actions>
 
-  </md-card>
+    </md-card>
+  </div>
 
 </td-layout-nav>

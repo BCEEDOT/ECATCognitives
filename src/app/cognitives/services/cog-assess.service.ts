@@ -6,13 +6,13 @@ import { CogInstrument, CogInventory } from "../../core/entities/user";
 @Injectable()
 export class CogAssessService {
 
-  cogInstrument$: BehaviorSubject<CogInstrument[]> = new BehaviorSubject({} as CogInstrument[]);
+  cogInventories$: BehaviorSubject<CogInventory[]> = new BehaviorSubject({} as CogInventory[]);
   cogActiveInventory$: BehaviorSubject<CogInventory> = new BehaviorSubject({} as CogInventory);
 
   constructor() { }
 
-  cogInstrument(cogInstrument: CogInstrument[]) {
-    this.cogInstrument$.next(cogInstrument);
+  cogInventories(cogInventories: CogInventory[]) {
+    this.cogInventories$.next(cogInventories);
   }
 
   cogActiveInventory(cogActiveInventory: CogInventory) {
@@ -20,13 +20,13 @@ export class CogAssessService {
   }
 
   previousInventory() {
-    let prev = this.cogInstrument$.value[0].inventoryCollection.find(inv => inv.displayOrder === (this.cogActiveInventory$.value.displayOrder - 1));
+    let prev = this.cogInventories$.value.find(inv => inv.displayOrder === (this.cogActiveInventory$.value.displayOrder - 1));
     this.cogActiveInventory(prev);
     //this.saveCheck();
   }
 
   nextInventory() {
-    let next = this.cogInstrument$.value[0].inventoryCollection.find(inv => inv.displayOrder === (this.cogActiveInventory$.value.displayOrder + 1));
+    let next = this.cogInventories$.value.find(inv => inv.displayOrder === (this.cogActiveInventory$.value.displayOrder + 1));
     this.cogActiveInventory(next);
     //this.saveCheck();
   }

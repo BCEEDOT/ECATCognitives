@@ -1,28 +1,32 @@
 <div>
     <div>
-        <div class="row p-b-5" *ngIf="!activeInventory.isReversed">
-            <div class="col-sm-5 text-left p-l-10">
-                {{activeInventory.adaptiveDescription}}
+        <div fxLayout="column">
+            <div *ngIf="!activeInventory.isReversed">
+                <div fxFlex="40" class="md-caption">
+                    {{activeInventory.adaptiveDescription}}
+                </div>
+                <div fxFlex="20"></div>
+                <div fxFlex="40" class="md-caption text-right">
+                    {{activeInventory.innovativeDescription}}
+                </div>
             </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-5 text-right p-r-10">
-                {{activeInventory.innovativeDescription}}
+            <div *ngIf="activeInventory.isReversed">
+                <div fxFlex="40" class="md-caption">
+                    {{activeInventory.innovativeDescription}}
+                </div>
+                <div fxFlex="20"></div>
+                <div fxFlex="40" class="md-caption text-right">
+                    {{activeInventory.adaptiveDescription}}
+                </div>
             </div>
         </div>
-        <div class="row p-b-5" *ngIf="activeInventory.isReversed">
-            <div class="col-sm-5 text-left p-l-10">
-                {{activeInventory.innovativeDescription}}
-            </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-5 text-right p-r-10">
-                {{activeInventory.adaptiveDescription}}
-            </div>
-        </div>
-        <!--<div class="row hidden-xs" style="padding-left: 7px; padding-right: 3px;">
-            <svg height="50" width="563">
-                <polygon points="{{svg1x}},{{svg1y}} {{svg2x}},{{svg2y}} {{svg3x}},{{svg3y}}" fill="#365F7F"></polygon>
+        <div class="pad-top-sm" style="padding-left: 0px; padding-right: 0px;">
+            <svg height="50" width="560">
+                <svg:polygon [attr.points]="points" fill="#365F7F">
+                    </polygon>
+                    <!--<polygon [attr.points]="{{svg1x}},{{svg1y}} {{svg2x}},{{svg2y}} {{svg3x}},{{svg3y}}" fill="#365F7F"></polygon>-->
             </svg>
-        </div>-->
+        </div>
         <!--<div class="row p-b-20 p-r-15 p-l-15">
             <div cog-slider
                     id="slider"
@@ -30,10 +34,16 @@
                     cogType="ecpe"
                     ng-click="cogAssess.activeInvent.isChanged=true"></div>
         </div>-->
+        <md-slider color="primary" (input)="slide($event.value)" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000" tickInterval="1">
+        </md-slider>
+
+       
+
     </div>
-        
-    <div>
-        <button md-raised-button color="primary" [disabled]="activeInventory.id===inventories[0].id"  (click)="previousInventory();">Previous</button>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <button md-raised-button color="primary" [disabled]="activeInventory.id===inventories[0].id" (click)="previousInventory();">Previous</button>
+        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.id}} of {{inventories.length}} </p>
         <button md-raised-button color="primary" [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInventory();">Next</button>
     </div>
 </div>
