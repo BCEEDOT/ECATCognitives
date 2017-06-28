@@ -41,12 +41,24 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export class RoadrunnerService{
 
-roadRunnerLoading = 'roadRunnerLoading';
+//roadRunnerLoading = 'roadRunnerLoading';
 
-roadRunnerData:  BehaviorSubject<RoadRunner[]> = new BehaviorSubject({} as RoadRunner[]);
+roadRunnerData$:  BehaviorSubject<RoadRunner[]> = new BehaviorSubject({} as RoadRunner[]);
 
-road(road: RoadRunner[]){
-    this.roadRunnerData.next(road);
+count$:  BehaviorSubject<number> = new BehaviorSubject(0);
+signedOut$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+
+roadRunnerData(roadRunnerData: RoadRunner[]){
+    this.roadRunnerData$.next(roadRunnerData);
+}
+
+count(count: number){
+    this.count$.next(count);
+}
+
+signedOut(signedOut: boolean){
+  this.signedOut$.next(signedOut);
 }
       //persona: BehaviorSubject<ILoggedInUser> = new BehaviorSubject({} as ILoggedInUser);
 
@@ -54,43 +66,44 @@ road(road: RoadRunner[]){
   //  this.persona.next(user);
  // }
 
-roadInfo = this.roadRunnerData.value;
+//roadInfo = this.roadRunnerData.value;
 
 
 
 
 
  //= [];
-constructor(private loadingService: TdLoadingService, private userDataContext: UserDataContext){
+// constructor(private loadingService: TdLoadingService, private userDataContext: UserDataContext){
 
-}
+// }
 
-getRoadRunnerInfo(): void {
-//getRoadRunnerInfo(): void{
-//this.loadRoadRunnerInfo();
+// getRoadRunnerInfo(): Promise<RoadRunner[]> {
+// //getRoadRunnerInfo(): void{
+// //this.loadRoadRunnerInfo();
 
-    this.loadingService.register(this.roadRunnerLoading);
-    this.userDataContext.getRoadRunnerInfos()
-      .then((roadRunnerData) => {
-        this.road(roadRunnerData);
-        this.loadingService.resolve(this.roadRunnerLoading);
+//     this.loadingService.register(this.roadRunnerLoading);
+//     this.userDataContext.getRoadRunnerInfos()
+//       .then((roadRunnerData) => {
+//         //this.roadRunnerData(roadRunnerData);
+//         return 
+//         this.loadingService.resolve(this.roadRunnerLoading);
         
-        console.log(this.roadRunnerData.value);
-        //return Promise.resolve(this.roadRunnerData);
-      })
-      .catch(e => {
-        this.loadingService.resolve(this.roadRunnerLoading);
-        console.log('error getting roadrunner info');
-        console.log(e);
-      })
+//         //console.log(this.roadRunnerData.value);
+//         //return Promise.resolve(this.roadRunnerData);
+//       })
+//       .catch(e => {
+//         this.loadingService.resolve(this.roadRunnerLoading);
+//         console.log('error getting roadrunner info');
+//         console.log(e);
+//       })
 
-}
+// }
 
 
-addRoadRunner(){
-  const newAddress = this
-}
- getOneRoadRunnerInfo(id:number){
+// addRoadRunner(){
+//   const newAddress = this
+// }
+ //getOneRoadRunnerInfo(id:number){
 
     //  this.loadingService.register('roadrunnerdata.list');
     //  this.userDataContext.getRoadRunnerInfos()
@@ -106,9 +119,9 @@ addRoadRunner(){
     //     console.log('error getting roadrunner info');
     //      console.log(e);
     //    })
-console.log(this.roadInfo)
-   return this.roadInfo;
- }
+// console.log(this.roadInfo)
+//    return this.roadInfo;
+//  }
 
 
 
@@ -142,7 +155,7 @@ console.log(this.roadInfo)
 
     //     return USERDATA.find(data => data.id ==-id)
     // }
-}
+//}
 
 
 //  const USERDATA: any[] = [
@@ -194,3 +207,4 @@ console.log(this.roadInfo)
 
 //   ]
 
+}

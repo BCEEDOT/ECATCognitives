@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 //import { MaterialModule } from '@angular/material';
 //import { DatepickerModule } from 'angular2-material-datepicker';
 
-import { CovalentExpansionPanelModule } from '@covalent/core';
+import { CovalentExpansionPanelModule, CovalentMessageModule } from '@covalent/core';
 import { SharedModule } from "../shared/shared.module";
 import { RoadrunnerComponent } from "./roadrunner.component";
 import { RoadrunnerRoutingModule } from "./roadrunner-routing.module";
@@ -13,7 +13,9 @@ import { RoadrunnerDetailsComponent } from'./roadrunner-details/roadrunner-detai
 //import { DialogComponent } from "./roadrunner.dialog.component";
 import {MaterialModule, MdNativeDateModule} from'@angular/material';
 
-import {ReactiveFormsModule, FormsModule} from "@angular/forms"
+import {ReactiveFormsModule, FormsModule} from "@angular/forms";
+import { RoadrunnerCompletedComponent } from './roadrunner-completed/roadrunner-completed.component';
+import { RoadrunnerLocationsComponent } from './roadrunner-locations/roadrunner-locations.component'
 
 @NgModule({
     imports: [
@@ -24,6 +26,7 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms"
         MaterialModule,
         ReactiveFormsModule,
         FormsModule,
+        CovalentMessageModule,
   //      MaterialModule.forRoot(),
   //      DatepickerModule,
   //      DatePickerModule,
@@ -33,6 +36,8 @@ import {ReactiveFormsModule, FormsModule} from "@angular/forms"
         RoadrunnerComponent,
  //       DialogComponent,
         RoadrunnerDetailsComponent,
+ RoadrunnerCompletedComponent,
+ RoadrunnerLocationsComponent,
         
     ],
     exports: [

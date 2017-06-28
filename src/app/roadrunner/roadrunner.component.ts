@@ -34,6 +34,7 @@ export class RoadrunnerComponent implements OnInit {
   flightDisplayed: string = 'All Flights';
   firstFilter: boolean = true;
   count: number = 0;
+  //this.roadRunnerService.count(this.count);
   signedOut: boolean = false;
 
   dateFormat = new Intl.DateTimeFormat('en-US');
@@ -123,16 +124,22 @@ export class RoadrunnerComponent implements OnInit {
   }
 
   signOut(edit): void {
-
+    
     if (edit.signOut) {
       edit.prevSignOut = true;
       this.count = this.count + 1;
+      this.roadRunnerService.count(this.count);
       this.roadRunnerInfos.forEach(element => {
         element['signedOutSomewhere'] = false;
+        this.signedOut = false;
+        this.roadRunnerService.signedOut(this.signedOut);
       });
     } else {
       this.roadRunnerInfos.forEach(element => {
         element['signedOutSomewhere'] = true;
+        this.signedOut = true;
+                this.roadRunnerService.signedOut(this.signedOut);
+
       });
     }
 
@@ -146,66 +153,79 @@ export class RoadrunnerComponent implements OnInit {
 
   }
 
-  clone(edit) {
-    let newAddress = this.userDataContext.addRoadRunner();
-    newAddress.location = edit.location;
-    newAddress.phoneNumber = edit.phoneNumber;
-    newAddress.prevSignOut = false;
+  // clone(edit) {
+  //   let newAddress = this.userDataContext.addRoadRunner();
+  //   newAddress.location = edit.location;
+  //   newAddress.phoneNumber = edit.phoneNumber;
+  //   newAddress.prevSignOut = false;
 
-    this.roadRunnerInfos.push(newAddress);
+  //   this.roadRunnerInfos.push(newAddress);
 
-  }
+  // }
 
   ngOnInit(): void {
 
     this.titleService.setTitle('RoadRunner');
-    this.loadUsers();
+    this.persona = this.global.persona.value;
+    
+    this.activate();
 
-    this.global.persona.subscribe((user) => {
-      console.log("User has been updated in app Component")
-      this.persona = user;
+    // this.global.persona.subscribe((user) => {
+    //   //console.log("User has been updated in app Component")
+    //   this.persona = user;
 
-      if (this.persona != null) {
-        this.pullProperData();
-      }
-    });
+    //   if (this.persona != null) {
+    //     this.activate();
+    //   }
+    // });
 
   }
 
-  pullProperData(): void {
+  activate(): void {
     var that = this;
     if (this.persona.isStudent) {
-      this.getRoadRunnerInfo();
-      this.roadRunnerService.roadRunnerData.subscribe((road) => {
-        console.log("roadrunner update")
-        this.roadRunnerInfos = road;
+      //this.getRoadRunnerInfo();
 
+      //this.roadRunnerService.getRoadRunnerInfo()
+this.loadingService.register(this.roadRunnerLoading);
+      this.userDataContext.getRoadRunnerInfos(true)
+        .then((roadRunnerData: RoadRunner[]) => {
+          this.roadRunnerService.count(this.count);
+          this.roadRunnerService.signedOut(this.signedOut);
+          this.loadingService.resolve(this.roadRunnerLoading);
+          this.roadRunnerService.roadRunnerData(roadRunnerData);
+          console.log("roadrunner update")
+          this.roadRunnerInfos = roadRunnerData;
 
-        if (this.roadRunnerInfos.length > 0) {
+          if (this.roadRunnerInfos.length > 0) {
 
-          for (let info of this.roadRunnerInfos) {
-            var templocation = info.location;
-            var arrayOfLocation = templocation.split("\n");
+            for (let info of this.roadRunnerInfos) {
+              var templocation = info.location;
+              var arrayOfLocation = templocation.split("\n");
 
-            info['splitLocation'] = arrayOfLocation;
+              info['splitLocation'] = arrayOfLocation;
 
-            if (info.prevSignOut) {
-              this.count = this.count + 1;
-            }
+              if (info.prevSignOut) {
+                this.count = this.count + 1;
+                this.roadRunnerService.count(this.count);
+              }
 
-            if (info.signOut) {
+              if (info.signOut) {
 
-              this.roadRunnerInfos.sort((x, y) => { if (y.signOut === true) return 1; });
+                this.roadRunnerInfos.sort((x, y) => { if (y.signOut === true) return 1; });
 
-              this.roadRunnerInfos.forEach(element => {
-                element['signedOutSomewhere'] = true;
-              });
+                this.roadRunnerInfos.forEach(element => {
+                  element['signedOutSomewhere'] = true;
+                  this.signedOut = true;
+                          this.roadRunnerService.signedOut(this.signedOut);
+
+                });
+              }
+
             }
 
           }
-
-        }
-      })
+        })
     }
     else {
       this.loadingService.register(this.roadRunnerLoading);
@@ -281,29 +301,6 @@ export class RoadrunnerComponent implements OnInit {
     this.loadingService.resolve(this.roadRunnerLoading);
 
   }
-
-
-
-  getRoadRunnerInfo(): void {
-
-    this.roadRunnerService.getRoadRunnerInfo()
-    this.roadRunnerInfos = this.roadRunnerService.roadRunnerData.value;
-
-  }
-
-  loadUsers(): void {
-
-    this.userDataContext.getUsers()
-      .then((people) => {
-        this.people = people;
-      })
-      .catch(e => {
-        console.log('error getting users');
-        console.log(e);
-      })
-
-  }
-
 
 }
 

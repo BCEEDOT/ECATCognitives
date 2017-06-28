@@ -49,9 +49,9 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
         //if(_.isEmpty(this.roadRunnerService))
 
-        this.roadRunnerService.roadRunnerData.subscribe((road) => {
+        this.roadRunnerService.roadRunnerData$.subscribe((roadRunnerData: RoadRunner[]) => {
             console.log("roadrunner update")
-            this.event = road;
+            this.event = roadRunnerData;
         })
 
         if(_.isEmpty(this.event)){
