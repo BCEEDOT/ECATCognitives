@@ -1,5 +1,12 @@
 <md-card>
   <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="replace" tdLoadingType="circle">
+    <md-card-title>
+      <div fxFlex="100" class="text-center">
+        ISA Home - Course List
+      </div>
+      <span fxFlex></span>
+      <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+    </md-card-title>
     <md-card-content>
       <md-list>
         <md-list-item>

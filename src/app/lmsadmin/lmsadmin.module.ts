@@ -4,7 +4,7 @@ import { CovalentPagingModule } from '@covalent/core';
 import { CoursesComponent } from './courses/courses.component';
 import { LmsAdminRoutingModule } from "./lmsadmin-routing.module";
 import { SharedModule } from "../shared/shared.module";
-import { EntityFacultyModule } from "../core/entities/faculty";
+import { EntityLmsadminModule } from "../core/entities/lmsadmin";
 import { LmsadminAuthGuardService } from "./services/lmsadmin-auth-guard.service";
 import { LmsadminDataContextService } from "./services/lmsadmin-data-context.service";
 import { LmsadminComponent } from './lmsadmin.component';
@@ -17,7 +17,7 @@ import { CourseInfoComponent } from './courses/course-info/course-info.component
 @NgModule({
   imports: [
     LmsAdminRoutingModule,
-    EntityFacultyModule,
+    EntityLmsadminModule,
     SharedModule,
     CovalentPagingModule,
   ],

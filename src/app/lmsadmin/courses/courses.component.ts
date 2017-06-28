@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
 
-import { Course } from "../../core/entities/faculty";
+import { Course } from "../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../services/lmsadmin-data-context.service";
 import { GlobalService } from "../../core/services/global.service";
 
@@ -34,6 +34,13 @@ export class CoursesComponent implements OnInit {
     this.courses.forEach(course => {
       course['displayStart'] = course.startDate.toDateString();
       course['displayGrad'] = course.gradDate.toDateString();
+    })
+  }
+
+  refreshData() {
+    this.ctx.fetchAllCourses(true).then(data => {
+      this.courses = data;
+      this.activate();
     })
   }
 

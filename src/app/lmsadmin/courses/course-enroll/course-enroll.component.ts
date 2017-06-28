@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { IPageChangeEvent } from "@covalent/core";
 
-import { Course, StudentInCourse, FacultyInCourse } from "../../../core/entities/faculty";
+import { Course, StudentInCourse, FacultyInCourse } from "../../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
 
 @Component({
@@ -30,6 +30,7 @@ export class CourseEnrollComponent implements OnInit {
   }
 
   activate(){
+    //this sort doesn't seem to be actually sorting on firstname properly
     this.course.students.sort((a: StudentInCourse, b: StudentInCourse) => {
       if (a.student.person.lastName < b.student.person.lastName) return -1;
       if (a.student.person.lastName > b.student.person.lastName) return 1;
@@ -51,6 +52,13 @@ export class CourseEnrollComponent implements OnInit {
     });
 
     this.studentsPage = this.course.students.slice(0,50);
+  }
+
+  refreshData(){
+    this.lmsadminDataContextService.fetchAllCourseMembers(this.course.id, true).then((course: Course) => {
+      this.course = course;
+      this.activate();
+    });
   }
 
   change(event: IPageChangeEvent): void {

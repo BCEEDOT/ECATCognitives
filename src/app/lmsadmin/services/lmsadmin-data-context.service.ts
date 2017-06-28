@@ -8,7 +8,7 @@ import { LoggerService } from "../../shared/services/logger.service";
 import { DataContext } from "../../app-constants";
 import { ILmsAdminApiResources } from '../../core/entities/client-models';
 import { MpEntityType } from '../../core/common/mapStrings';
-import { Course, WorkGroup } from "../../core/entities/faculty";
+import { Course, WorkGroup, WorkGroupModel } from "../../core/entities/lmsadmin";
 
 @Injectable()
 export class LmsadminDataContextService extends BaseDataContext {
@@ -19,8 +19,12 @@ export class LmsadminDataContextService extends BaseDataContext {
       resource: 'GetAllCourses',
     },
     allGroups: {
-      returnedEntityType: MpEntityType.workGroup,
+      returnedEntityType: MpEntityType.course,
       resource: 'GetAllGroups',
+    },
+    courseModels: {
+      returnedEntityType: MpEntityType.unk,
+      resource: 'GetCourseModels',
     },
     allCourseMembers: {
       returnedEntityType: MpEntityType.course,
@@ -64,6 +68,30 @@ export class LmsadminDataContextService extends BaseDataContext {
     }
   }
 
+  fetchCourseModels(courseId: number, forcedRefresh?: boolean): Promise<Array<WorkGroupModel>> {
+    let models: Array<WorkGroupModel>;
+    //can't be sure we have all the models unless we have gone to the server for them before
+    //i think we have to go back to the serve for this every time unless we set up an "isLoaded" thing again
+
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.courseModels.resource).withParameters(params);
+
+    return <Promise<Array<WorkGroupModel>>>this.manager.executeQuery(query)
+      .then(courseModelsResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve group models' + e);
+        Promise.reject(e);
+      })
+
+    function courseModelsResp(data: QueryResult) {
+      models = data.results as Array<WorkGroupModel>;
+      if (models.length > 0) {
+        console.log('Group models loaded from remote store', models, false);
+        return models;
+      }
+    }
+  }
+
   fetchAllGroups(courseId: number, forcedRefresh?: boolean): Promise<Array<WorkGroup>> {
     let groups: Array<WorkGroup>;
 
@@ -85,7 +113,9 @@ export class LmsadminDataContextService extends BaseDataContext {
       });
 
     function allGroupsResp(data: QueryResult){
-      groups = data.results as Array<WorkGroup>;
+      course = data.results[0] as Course;
+      groups = course.workGroups;
+
       if (groups && groups.length > 0){
         console.log('Groups loaded from remote store', groups, false);
         return groups;

@@ -7,7 +7,7 @@ import { ILoggedInUser, GlobalService } from "../../core/services/global.service
 import { AuthService } from "../../core/services/auth.service";
 import { AuthUtilityService } from "../../core/services/auth-utility.service";
 import { EmProviderService } from "../../core/services/em-provider.service";
-import { FacultyRegistrationHelper } from "../../core/entities/faculty/regHelper";
+import { LmsadminRegistrationHelper } from "../../core/entities/lmsadmin/regHelper";
 import { DataContext, ResourceEndPoint } from "../../app-constants";
 
 @Injectable()
@@ -19,7 +19,7 @@ export class LmsadminAuthGuardService implements CanActivate, CanActivateChild{
     private router: Router,
     private authUtility: AuthUtilityService,
     private emProvider: EmProviderService,
-    private regHelper: FacultyRegistrationHelper,
+    private regHelper: LmsadminRegistrationHelper,
     private global: GlobalService) { 
       this.global.persona.subscribe((data) => {
       this.persona = data;

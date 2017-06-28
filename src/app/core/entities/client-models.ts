@@ -42,6 +42,7 @@ export interface IFacultyApiResources extends IApiResources {
 export interface ILmsAdminApiResources extends IApiResources {
     allCoures: IApiResource;
     allGroups: IApiResource;
+    courseModels: IApiResource;
     allCourseMembers: IApiResource;
     allGroupMembers: IApiResource;
 }

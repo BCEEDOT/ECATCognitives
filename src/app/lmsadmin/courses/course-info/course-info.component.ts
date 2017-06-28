@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MdSnackBar } from "@angular/material";
 import { TdDialogService } from "@covalent/core";
 
-import { Course } from "../../../core/entities/faculty";
+import { Course } from "../../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
 
 @Component({
