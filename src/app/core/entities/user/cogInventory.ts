@@ -23,7 +23,7 @@ export class CogInventory extends EntityBase {
    instrument: CogInstrument;
 
    /// <code> Place custom code between <code> tags
-   cogResponse: CogResponse
+   response: CogResponse
    /// </code>
 
 }

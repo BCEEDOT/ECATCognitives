@@ -10,44 +10,33 @@
     </a>
   </div>
 
-  <md-card [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
+  <md-card>
+    <md-card-title>E-CPE - Electronic Cognitive Preferense Estimator</md-card-title>
+    <md-divider></md-divider>
 
-    <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center" class="pad-sm">
-      <b>{{cogInstrument.id}}</b>
-    </div>
-    <hr>        
-    
-   <!-- <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" id="instructions" *ngIf="cogAssess.showInstructions"></div>
-
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" *ngIf="!cogAssess.showInstructions">
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm" ></div> -->
-
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
-      <div fxFlex>
-        <!--mathces compnent varialbe -->
+    <md-card-content *ngIf="showInstructions">
+      <div [innerHTML]="cogInstrument[0].cogInstructions"></div>
+    </md-card-content>
+    <md-card-content *ngIf="!showInstructions">
+      <div [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
+        <!--matches component variable -->
         <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
         <esalbecmspe-assess *ngSwitchCase="2"> </esalbecmspe-assess>
         <esalbecmspe-assess *ngSwitchCase="3"> </esalbecmspe-assess>
         <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
       </div>
-    </div>
-<!-- 
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
-      <div fxFlex *ngIf="esalbResult" class="pad-left-md">
-        <button md-raised-button color="primary" (click)="cogAssess.changePrevious()" [disabled]="cogAssess.currentPage == 1">Previous</button>
-        <p class="test-sm">Item {{cogAssess.currentPage}} of {{cogAssess.pagers.length}}</p>
-        <button md-raised-button color="primary" (click)="cogAssess.changeNext()" [disabled]="cogAssess.currentPage == cogAssess.pagers.length">Next</button>
-      </div>
-    </div>
+    </md-card-content>
 
-    <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
-      <div fxFlex  class="pad-left-md">
-        <button md-raised-button color="primary" *ngIf="!cogAssess.showInstructions" (click)="cogAssess.showInstructions = !cogAssess.showInstructions">Show Instructions</button>
-        <button md-raised-button color="primary" *ngIf="cogAssess.showInstructions" (click)="cogAssess.showInstructions = !cogAssess.showInstructions">Next</button>
-        <button md-raised-button color="primary" *ngIf="!cogAssess.showInstructions" (click)="cogAssess.cancel()">Cancel</button>
+    <md-divider></md-divider>
+    <md-card-actions *ngIf="showInstructions">
+      <button md-button color="primary" (click)="showInstructions = false">Continue Assessment</button>
+    </md-card-actions>
 
-      </div>
-    </div>-->
+    <md-card-actions *ngIf="!showInstructions">
+      <button md-button color="primary" (click)="showInstructions = true">Show Instructions</button>
+      <button md-button color="primary">Complete Assessment</button>
+      <button md-button color="primary">Cancel</button>
+    </md-card-actions>
 
   </md-card>
 

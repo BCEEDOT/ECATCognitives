@@ -32,7 +32,6 @@ export class CognitivesComponent implements OnInit {
     cogResults$: Observable<Array<any>>;
     cogResults: Array<any>;
 
-
     protected view = {
         list: CogViews.List,
         ecpe: CogViews.ECPE,
@@ -43,15 +42,12 @@ export class CognitivesComponent implements OnInit {
 
     protected cogType = _mp.MpCogInstrumentType;
 
-
     constructor(private titleService: Title,
         private route: ActivatedRoute,
         private router: Router,
         private loadingService: TdLoadingService,
-        private dialogService: TdDialogService,
         private snackBarService: MdSnackBar,
         private userDataContext: UserDataContext,
-        public media: TdMediaService,
         private global: GlobalService,
         private cogResultsService: CogResultsService) {
 
