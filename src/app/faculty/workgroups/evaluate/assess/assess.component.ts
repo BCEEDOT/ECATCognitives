@@ -51,12 +51,12 @@ export class AssessComponent implements OnInit {
       gm['commentText'] = commentText;
       gm['assessText'] = assessText;
 
-      console.log(gm['commentText'] );
-      console.log(gm['assessText']);
     });
 
     if (!this.groupMembers.some(mem => mem.statusOfStudent.assessComplete === false)){
       this.facWorkGroupService.assessComplete(true);
+    } else {
+      this.facWorkGroupService.assessComplete(false);
     }
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 
@@ -43,6 +43,7 @@ export class AssessComponent implements OnInit {
     private dialogService: TdDialogService,
     private loadingService: TdLoadingService,
     private global: GlobalService,
+    private router: Router,
     private route: ActivatedRoute,
     private snackBarService: MdSnackBar,
     private location: Location) {
@@ -120,6 +121,13 @@ export class AssessComponent implements OnInit {
   }
 
   cancel() {
+
+    if (!this.inventories.some(inv => inv.behaviorEffect !== null || inv.behaviorFreq !== null)) {
+      this.inventories.forEach(inv => inv.rejectChanges());
+      this.router.navigate(['../../'], { relativeTo: this.route })
+    }
+
+
     if (this.inventories.some(inv => inv.responseForAssessee.entityAspect.entityState.isAddedModifiedOrDeleted())) {
       this.dialogService.openConfirm({
         message: 'Are you sure you want to cancel and discard your changes?',
@@ -151,7 +159,7 @@ export class AssessComponent implements OnInit {
       this.studentDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.assessLoad);
-          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', {duration: 2000})
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', { duration: 2000 })
           this.location.back();
         })
         .catch(result => {
@@ -165,7 +173,7 @@ export class AssessComponent implements OnInit {
       this.facultyDataContext.commit()
         .then(result => {
           this.loadingService.resolve(this.assessLoad);
-          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', {duration: 2000})
+          this.snackBarService.open("Success, Asessment Saved!", 'Dismiss', { duration: 2000 })
           this.location.back();
         })
         .catch(result => {

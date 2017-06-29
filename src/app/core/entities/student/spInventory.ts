@@ -10,24 +10,25 @@ import { SpResult } from './SpResult';
 /// </code-import>
 
 export class SpInventory extends EntityBase {
-   // Generated code. Do not place code below this line.
-   id: number;
-   instrumentId: number;
-   displayOrder: number;
-   isDisplayed: boolean;
-   behavior: string;
-   instrument: SpInstrument;
+    // Generated code. Do not place code below this line.
+    id: number;
+    instrumentId: number;
+    displayOrder: number;
+    isDisplayed: boolean;
+    behavior: string;
+    instrument: SpInstrument;
 
-   /// <code> Place custom code between <code> tags
-   private displayed = true;
-   private freqLevel: mapEnum.SpFreqLevel = null;
-   private effLevel: mapEnum.SpEffectLevel = null;
-   private resultBreakout: any;
-   private commentText: string;
-   itemResponses: SpResponse[];
-   /// </code>
+    /// <code> Place custom code between <code> tags
+    private displayed = true;
+    private freqLevel: mapEnum.SpFreqLevel = null;
+    private effLevel: mapEnum.SpEffectLevel = null;
+    private resultBreakout: any;
+    private commentText: string;
+    itemResponses: SpResponse[];
+    memberResultBreakOut: any;
+    /// </code>
 
-   get compositeScore(): number {
+    get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
     };
 
@@ -35,7 +36,7 @@ export class SpInventory extends EntityBase {
         this.responseForAssessee.entityAspect.rejectChanges();
         this.effLevel = null;
         this.freqLevel = null;
-        this.behaveDisplayed = true;//this.behaveDisplayed;
+        this.displayed = true;//this.behaveDisplayed;
         // if (this.behaveDisplayed === true) {
         //     this.calculateItemResponse();
         // }
@@ -50,6 +51,7 @@ export class SpInventory extends EntityBase {
 
     resetResult(): void {
         this.resultBreakout = null;
+        this.memberResultBreakOut = null;
     }
 
     spResult: SpResult;
@@ -188,75 +190,77 @@ export class SpInventory extends EntityBase {
 
     }
 
-    // get behaviorEllipse(): string {
-    //     if (this.behavior) {
-    //         return this.behavior.substr(0, 50);
-    //     }
-    //     return null;
-    // }
+    get behaviorEllipse(): string {
+        if (this.behavior) {
+            return this.behavior.substr(0, 50);
+        }
+        return null;
+    }
 
     // get abbrivateText(): string {
     //     if (this.commentText) return this.commentText.substr(30);
     //     return null;
     // }
 
-    // get resultBreakOut(): any {
-    //     if (this.resultBreakOut) {
-    //         return this.resultBreakOut;
-    //     }
+    get resultBreakOut(): any {
+        if (this.memberResultBreakOut) {
+            return this.memberResultBreakOut;
+        }
 
-    //     if (!this.spResult) {
-    //         return null;
-    //     }
+        if (!this.spResult) {
+            return null;
+        }
 
-    //     const breakOut = {
-    //         selfResult: '',
-    //         peersResult: '',
-    //         facultyResult: '',
-    //         peerBoChart: []
-    //     }
+        const breakOut = {
+            selfResult: '',
+            peersResult: '',
+            facultyResult: '',
+            peerBoChart: []
+        }
 
-    //     const responsesForItem = this.spResult.sanitizedResponses.filter(response => response.inventoryItemId === this.id);
+        const responsesForItem = this.spResult.sanitizedResponses.filter(response => response.inventoryItemId === this.id);
 
-    //     const compositeBreakOut = {};
+        const compositeBreakOut = {};
 
-    //     responsesForItem
-    //         .filter(response => !response.isSelfResponse)
-    //         .forEach(response => {
-    //             if (compositeBreakOut[response.mpItemResponse]) {
-    //                 compositeBreakOut[response.mpItemResponse] += 1;
-    //             } else {
-    //                 compositeBreakOut[response.mpItemResponse] = 1;
-    //             }
-    //         });
+        responsesForItem
+            .filter(response => !response.isSelfResponse)
+            .forEach(response => {
+                if (compositeBreakOut[response.mpItemResponse]) {
+                    compositeBreakOut[response.mpItemResponse] += 1;
+                } else {
+                    compositeBreakOut[response.mpItemResponse] = 1;
+                }
+            });
 
-    //     const dataSet = [];
+        const dataSet = [];
 
-    //     for (let bo in compositeBreakOut) {
-    //         if (compositeBreakOut.hasOwnProperty(bo)) {
-    //             if (bo === 'IEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AA0000' });
-    //             if (bo === 'IEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#FE6161' });
-    //             if (bo === 'ND') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#AAAAAA' });
-    //             if (bo === 'EA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00AA58' });
-    //             if (bo === 'EU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#73FFBB' });
-    //             if (bo === 'HEA') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#00308F' });
-    //             if (bo === 'HEU') dataSet.push({ data: compositeBreakOut[bo], label: bo, color: '#7CA8FF' });
-    //         }
-    //     }
+        for (let bo in compositeBreakOut) {
+            if (compositeBreakOut.hasOwnProperty(bo)) {
 
-    //     //TODO: fix staticData stuff, default class export doesn't seem to be working
-    //     breakOut.peerBoChart = dataSet;
-    //     breakOut.peersResult = staticData.breakDownCalculation(compositeBreakOut);
 
-    //     const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
-    //     const facResponse = (this.spResult.facultyResponses) ? this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
+                if (bo === 'IEA') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'IEU') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'ND') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'EA') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'EU') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'HEA') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+                if (bo === 'HEU') dataSet.push({ name: bo, value: compositeBreakOut[bo] });
+            }
+        }
 
-    //     breakOut.selfResult = staticData.prettifyItemResponse(selfResponse.mpItemResponse);
-    //     breakOut.facultyResult = (facResponse) ? staticData.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
+        //TODO: fix staticData stuff, default class export doesn't seem to be working
+        breakOut.peerBoChart = dataSet;
+        breakOut.peersResult = staticData.EcLocalDataService.breakDownCalculation(compositeBreakOut);
 
-    //     this.resultBreakout = breakOut;
-    //     return breakOut;
-    // }
+        const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
+        const facResponse = (this.spResult.facultyResponses) ? this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
+
+        breakOut.selfResult = staticData.EcLocalDataService.prettifyItemResponse(selfResponse.mpItemResponse);
+        breakOut.facultyResult = (facResponse) ? staticData.EcLocalDataService.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
+
+        this.memberResultBreakOut = breakOut;
+        return breakOut;
+    }
 
 }
 

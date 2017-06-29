@@ -27,11 +27,13 @@
         </div>
       </div>
       <div fxFlex="10" *ngIf="!readOnly">
-        <span *ngIf="member.stratIsValid">
-            Valid
+        <span *ngIf="isPristine()">
+          <span *ngIf="member.stratIsValid">
+              Valid
+            </span>
+          <span *ngIf="!member.stratIsValid">
+            <span mdTooltip="{{member.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
           </span>
-        <span *ngIf="!member.stratIsValid">
-           <span mdTooltip="{{member.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
         </span>
       </div>
     </md-list-item>
@@ -39,7 +41,8 @@
   <md-divider></md-divider>
 
   <md-card-actions fxLayout="row" fxLayoutAlign="end">
-    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
-    <button md-raised-button color="accent" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+    <button md-raised-button color="accent" type="button" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+    <button md-raised-button color="accent" type="button" [disabled]="isValid()" (click)="saveChanges()">Save</button>
+
   </md-card-actions>
 </md-list>

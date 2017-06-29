@@ -247,6 +247,7 @@ export class CrseStudentInGroup extends EntityBase {
         let cummScore = 0;
         let gaveCummScore = 0;
         const missingItems = [];
+        const gaveStrats = [];
         let composite = null;
         let gaveComposite = null;
         const facResponses = this.workGroup.facSpResponses;
@@ -277,6 +278,7 @@ export class CrseStudentInGroup extends EntityBase {
         const hasComment = facComments.some(comment => comment.recipientPersonId === this.studentId);
 
         const knownReponse = mp.MpSpItemResponse;
+
 
         // facSpResponses.forEach(response => {
 
@@ -348,6 +350,14 @@ export class CrseStudentInGroup extends EntityBase {
         let totalE = 0;
         let totalIe = 0;
         let totalNd = 0;
+
+        const user = this.workGroup.groupMembers.filter(mem => mem.studentId === this.studentId)[0];
+
+        user.assessorStratResponse.forEach(asr => {
+            gaveStrats[asr.assesseePersonId.toString()] = asr.stratPosition;
+        })
+
+
 
         const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== this.studentId);
 
@@ -423,6 +433,7 @@ export class CrseStudentInGroup extends EntityBase {
             stratComplete: stratComplete,
             hasComment: hasComment,
             missingAssessItems: missingItems,
+            gaveStratTo: gaveStrats,
             //facBreakout: facBreakOut,
             gaveBreakOut: gaveBo,
             breakOutChartData: gaveChartData,

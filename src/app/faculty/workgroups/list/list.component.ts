@@ -83,7 +83,7 @@ export class ListComponent implements OnInit {
       this.workGroups.forEach((wg: WorkGroup) => {
         let statusText = '';
         if (wg.mpSpStatus === MpSpStatus.published) {
-          statusText = 'Review Evaluation'
+          statusText = 'Evaluations'
         } else {
           statusText = 'Evaluate'
         }

@@ -17,8 +17,7 @@
             [view]="[150, 50]"
             [scheme]="chartColors"
             [results]="memberResult?.statusOfStudent?.gaveBreakOutChartData"
-            [showGridLines]="false"
-            (select)="onSelect($event)">
+            [showGridLines]="false">
           </ngx-charts-bar-horizontal-stacked>
         </span>
       <span fxFlex="20" class="text-center">
@@ -26,11 +25,10 @@
             [view]="[150, 50]"
             [scheme]="chartColors"
             [results]="memberResult?.resultForStudent?.breakOutReceivedChartData"
-            [showGridLines]="false"
-            (select)="onSelect($event)">
+            [showGridLines]="false">
           </ngx-charts-bar-horizontal-stacked>
         </span>
-      <a fxFlex="10" [routerLink]="">
+      <a fxFlex="10" [routerLink]="['details/' + memberResult.studentId]">
         <md-icon md-list-icon>open_in_new</md-icon>
       </a>
     </md-list-item>

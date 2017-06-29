@@ -116,6 +116,10 @@ export class EvaluateComponent implements OnInit {
 
     switch (this.workGroup.mpSpStatus) {
       case MpSpStatus.created:
+        this.reviewBtnText = 'Review';
+        this.canReview = false;
+        this.facWorkGroupService.readOnly(true);
+        break;
       case MpSpStatus.open:
         this.reviewBtnText = 'Review';
         this.canReview = this.workGroup.canPublish;
@@ -140,6 +144,7 @@ export class EvaluateComponent implements OnInit {
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
         this.facWorkGroupService.readOnly(false);
 
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.reviewed:
         this.reviewBtnText = 'Re-review';
@@ -250,6 +255,14 @@ export class EvaluateComponent implements OnInit {
     }
   }
 
+  refreshData() {
+    this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true).then(data => {
+      this.workGroup = data;
+      this.facWorkGroupService.facWorkGroup(this.workGroup);
+      this.activate();
+    })
+  }
+
   //TODO: Remove this... for internal testing only
   publish() {
     this.dialogService.openConfirm({
@@ -261,6 +274,9 @@ export class EvaluateComponent implements OnInit {
         this.facultyDataContext.commit().then(success => {
           this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
           this.activate();
+        }, reject => {
+          this.workGroup.mpSpStatus = MpSpStatus.reviewed;
+          this.dialogService.openAlert({message: 'Something went wrong, group not published', title: 'Save Failure'})
         })
       }
     })
