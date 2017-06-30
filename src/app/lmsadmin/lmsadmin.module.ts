@@ -13,6 +13,7 @@ import { ManageGroupsetComponent } from './group-sets/manage-groupset/manage-gro
 import { CourseEnrollComponent } from './courses/course-enroll/course-enroll.component';
 import { ConfigGroupsetComponent } from './group-sets/config-groupset/config-groupset.component';
 import { CourseInfoComponent } from './courses/course-info/course-info.component';
+import { LmsadminWorkgroupService } from "./services/lmsadmin-workgroup.service";
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { CourseInfoComponent } from './courses/course-info/course-info.component
   ],
   providers: [
     LmsadminAuthGuardService,
-    LmsadminDataContextService
+    LmsadminDataContextService,
+    LmsadminWorkgroupService
   ]
 })
 export class LmsadminModule { }

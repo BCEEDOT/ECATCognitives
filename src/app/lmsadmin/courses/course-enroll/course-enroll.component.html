@@ -12,7 +12,7 @@
     <md-tab-group md-stretch-tabs>
       <md-tab>
         <ng-template md-tab-label>Students</ng-template>
-        <span fxFlex="100" class="text-center" *ngIf="course?.students.length === 0">No student enrollments for this course in ECAT.</span>
+        <span fxFlex="100" class="text-center pad-top-xl md-title" *ngIf="course?.students.length === 0">No student enrollments for this course in ECAT.</span>
         <div *ngIf="course?.students.length > 0">
           <td-paging-bar #pagingBar pageLinkCount="10" [initialPage]="1" [firstLast]="true" [total]="course?.students.length" (change)="change($event)">
             <span td-paging-bar-label hide-xs>Row per page:</span>
@@ -38,7 +38,7 @@
       </md-tab>
       <md-tab>
         <ng-template md-tab-label>Faculty</ng-template>
-        <span fxFlex="100" class="text-center" *ngIf="course?.students.length === 0">No faculty enrollments for this course in ECAT.</span>
+        <span fxFlex="100" class="text-center pad-top-xl md-title" *ngIf="course?.faculty.length === 0">No Faculty enrollments for this course in ECAT.</span>
         <div *ngIf="course?.faculty.length > 0">
           <md-list>
             <md-list-item>

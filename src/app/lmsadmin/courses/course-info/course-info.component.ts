@@ -12,7 +12,7 @@ import { LmsadminDataContextService } from "../../services/lmsadmin-data-context
   styleUrls: ['./course-info.component.scss']
 })
 export class CourseInfoComponent implements OnInit {
-  course: Course;
+  course: Course = {} as Course;
 
   constructor(private lmsadminDataContextService: LmsadminDataContextService,
     private router: Router,

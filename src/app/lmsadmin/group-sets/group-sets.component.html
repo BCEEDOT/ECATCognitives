@@ -7,6 +7,7 @@
     <span fxFlex></span>
     <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
   </md-card-title>
+  <md-divider></md-divider>
   <md-card-content>
     <md-list>
       <md-list-item>
@@ -24,11 +25,11 @@
         <span fxFlex="10">
           <div>
             <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
-              <button md-menu-item [routerLink]="[model.mpWgCategory + '/config']" *ngIf="model.status === testStatus.await && model.id !== catMap.bc1"> 
+              <button md-menu-item [routerLink]="[model.mpWgCategory + '/config']" *ngIf="model.status === testStatus.await && model.mpWgCategory !== catMap.bc1"> 
                 <md-icon> group_add </md-icon>
                 <span class="md-subhead"> Create </span>
               </button>
-              <button md-menu-item (click)="pollLmsGroups()" *ngIf="model.status === testStatus.await && model.id === catMap.bc1"> 
+              <button md-menu-item (click)="pollLmsGroups()" *ngIf="model.status === testStatus.await && model.mpWgCategory === catMap.bc1"> 
                 <md-icon> group_add </md-icon>
                 <span class="md-subhead"> Poll LMS </span>
               </button>

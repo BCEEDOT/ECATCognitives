@@ -1,3 +1,57 @@
-<p>
-  manage-groupset works!
-</p>
+<md-sidenav-container fullscreen>
+  <md-sidenav #sidenav mode="side" opened="true" style="width:257px;border-right:1px solid #ccc">
+    <div flex class="md-content ">
+      <md-nav-list>
+        <td-expansion-panel label="Unassigned" [disabled]="disabled">
+          <a md-list-item *ngFor="let num of numbers">
+            <md-icon>insert_emoticon</md-icon>Student {{num}}</a>
+        </td-expansion-panel>
+        <td-expansion-panel label="Changes" [disabled]="disabled">
+          <a md-list-item *ngFor="let num of numbers">
+            Shorble, Joe moved from Flight 1 to Flight 2</a>
+        </td-expansion-panel>
+      </md-nav-list>
+    </div>
+  </md-sidenav>
+  <div fxLayout="row" class="pad-top-sm pad-right-sm" fxLayoutAlign="end center">
+    <div>
+      <md-slide-toggle>Expand All</md-slide-toggle>
+    </div>
+  </div>
+  <!-- ng content or router would go here -->
+  <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap>
+    <div fxFlex="25%" *ngFor="let num of numbers">
+      <md-card>
+        <td-expansion-panel label="flight {{num}}" [disabled]="disabled">
+          <td-expansion-summary>
+            <div fxLayout="row" class="bgc-grey-50 pad-left-sm pad-top-sm">
+              <span class="pad-left-sm" fxFlex>Eagle</span>
+              <span fxFlex="25" class="md-subhead"><md-icon>edit</md-icon></span>
+            </div>
+          </td-expansion-summary>
+          <md-divider></md-divider>
+          <md-card-content>
+            <p class="md-caption">Student 1</p>
+            <p class="md-caption">Student 2</p>
+            <p class="md-caption">Student 3</p>
+            <p class="md-caption">Student 4</p>
+            <p class="md-caption">Student 5</p>
+            <p class="md-caption">Student 6</p>
+            <p class="md-caption">Student 7</p>
+            <p class="md-caption">Student 8</p>
+            <p class="md-caption">Student 9</p>
+            <p class="md-caption">Student 10</p>
+          </md-card-content>
+        </td-expansion-panel>
+      </md-card>
+    </div>
+
+  </div>
+</md-sidenav-container>
+<a md-fab color="accent" class="mat-fab-bottom-right fixed fab-pad">
+  <md-icon>add</md-icon>
+</a>
+
+<!--
+© 2017 Teradata. All rights reserved.
+-->

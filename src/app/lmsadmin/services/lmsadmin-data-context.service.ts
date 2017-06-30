@@ -144,8 +144,12 @@ export class LmsadminDataContextService extends BaseDataContext {
       course = data.results[0] as Course;
       if (course.students.length > 0 && course.faculty.length > 1){
         console.log('Course members loaded from remote store', course, false);
-        return course;
       }
+
+      console.log('No members in course');
+      return course;
+
+
     }
   }
 

@@ -1,4 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from "@angular/router";
+import { MdSnackBar } from "@angular/material";
+import { TdDialogService } from "@covalent/core";
+
+import { LmsadminWorkgroupService } from "../../services/lmsadmin-workgroup.service";
+import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
+import { WorkGroupModel, Course, WorkGroup } from "../../../core/entities/lmsadmin";
+import { MpSpStatus, MpGroupCategory } from "../../../core/common/mapStrings";
 
 @Component({
   selector: 'app-manage-groupset',
@@ -7,9 +15,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ManageGroupsetComponent implements OnInit {
 
-  constructor() { }
+  workGroups: WorkGroup[];
+  numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  disabled = false;
+
+  constructor(private lmsadminDataContext: LmsadminDataContextService,
+    private lmsadminWorkGroupService: LmsadminWorkgroupService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialogService: TdDialogService,
+    private snackBar: MdSnackBar) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      let workGroupCategory: string = params['catId'];
+      this.workGroups = this.lmsadminWorkGroupService.workGroupModels$.value.filter(workGroup => workGroup.mpWgCategory === workGroupCategory)[0].workGroups;
+      this.activate();
+    });
+    
+  }
+
+  activate(): void {
+    
   }
 
 }

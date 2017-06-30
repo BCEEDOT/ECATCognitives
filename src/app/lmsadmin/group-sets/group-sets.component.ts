@@ -6,6 +6,7 @@ import { TdDialogService } from "@covalent/core";
 import { LmsadminDataContextService } from "../services/lmsadmin-data-context.service";
 import { WorkGroupModel, Course, WorkGroup } from "../../core/entities/lmsadmin";
 import { MpSpStatus, MpGroupCategory } from "../../core/common/mapStrings";
+import { LmsadminWorkgroupService } from "../services/lmsadmin-workgroup.service";
 
 @Component({
   selector: 'app-group-sets',
@@ -16,6 +17,7 @@ import { MpSpStatus, MpGroupCategory } from "../../core/common/mapStrings";
 export class GroupSetsComponent implements OnInit {
   wgModels: Array<WorkGroupModel>;
   course: Course;
+  courses: Course[];
   testStatus = {
     await: 'Awaiting Creation',
     created: 'Created',
@@ -26,6 +28,7 @@ export class GroupSetsComponent implements OnInit {
   catMap = MpGroupCategory;
   
   constructor(private lmsadminDataContext: LmsadminDataContextService, 
+   private lmsadminWorkGroupService: LmsadminWorkgroupService,
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
@@ -34,17 +37,22 @@ export class GroupSetsComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       let courseId: number = +params['crsId'];
-      this.lmsadminDataContext.fetchCourseModels(courseId).then((models: Array<WorkGroupModel>) => {
-        this.wgModels = models;
+      let promise1 = this.lmsadminDataContext.fetchCourseModels(courseId);
+      let promise2 = this.lmsadminDataContext.fetchAllCourses(false);
+
+      Promise.all([promise1, promise2]).then(res => {
+        this.wgModels = res[0];
+        this.courses = res[1];
+        this.course = this.courses.filter(course => course.id === courseId)[0];
+        this.lmsadminWorkGroupService.workGroupModels(this.wgModels);
         this.activate();
-      });
+      })
     })
+
   }
 
   activate(){
-    //need to get the course some other way since new courses won't have any groups
-    //set up a resolver? a service with a behaviorsubject? call the dataContext?
-    this.course = this.wgModels[0].workGroups[0].course;
+       
     this.wgModels.forEach(mdl => {
       if (mdl.workGroups.some(grp => grp.mpSpStatus === MpSpStatus.created)) {
         mdl['status'] = this.testStatus.created;
@@ -107,6 +115,7 @@ export class GroupSetsComponent implements OnInit {
   }
 
   refreshData() {
+    //Todo Rewire to match oninit
     let courseId = this.wgModels[0].workGroups[0].courseId;
     this.lmsadminDataContext.fetchCourseModels(courseId, true).then((models: Array<WorkGroupModel>) => {
         this.wgModels = models;
