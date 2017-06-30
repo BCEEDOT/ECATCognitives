@@ -13,6 +13,7 @@ import { AssessComponent } from '../provider/sp-provider/assess/assess.component
 import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
 import { ResultsDetailsComponent } from "./workgroups/results/results-details/results-details.component";
+import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 
 const facultyRoutes: Routes = [
   {
@@ -27,21 +28,11 @@ const facultyRoutes: Routes = [
         // Get the students courses
         resolve: { courses: 'coursesResolver' },
         children: [
-          // {
-          //   path: '',
-          //   component: AssessComponent,
-          //   //Set active course and workgroup. Determine if results are published for active group. 
-          // },
 
           {
             path: 'list/:crsId',
             // set to most recent course, allow student to switch between courses.
             component: ListComponent,
-            // children: [
-            //   { path: 'sp', component: SpComponent},
-            //   { path: 'comment', component: CommentComponent}
-            // ]
-            //resolve: { course: 'courseResolver' },
           },
           {
             path: 'list/:crsId/status/:wrkGrpId',
@@ -51,13 +42,15 @@ const facultyRoutes: Routes = [
           {
             path: 'list/:crsId/evaluate/:wrkGrpId',
             component: EvaluateComponent,
-            resolve: { workGroup: 'facWorkGroupResolver' }
+            resolve: { workGroup: 'facWorkGroupResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
           },
 
           {
             path: 'list/:crsId/evaluate/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
-            resolve: { inventories: 'facSpAssessResolver' }
+            resolve: { inventories: 'facSpAssessResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
           },
           {
             path: 'list/:crsId/results/:wrkGrpId',
@@ -67,11 +60,11 @@ const facultyRoutes: Routes = [
             path: 'list/:crsId/results/:wrkGrpId/details/:stuId',
             component: ResultsDetailsComponent,
           },
-          // {
-          //   path: '',
-          //   component: StudentComponent,
-          //   resolve: { assess: 'assessmentResolver'},
-          //}
+          {
+            path: '',
+            component: FacultyComponent,
+            resolve: { courses: 'coursesResolver' },
+          }
 
         ]
       }

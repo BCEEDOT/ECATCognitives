@@ -22,6 +22,7 @@ import { MyhighlightDirective } from './directives/myhighlight.directive';
 import { ResultsDetailsComponent } from './workgroups/results/results-details/results-details.component';
 import { BehaviorsComponent } from './workgroups/results/results-details/behaviors/behaviors.component';
 import { ResultsCommentsComponent } from './workgroups/results/results-details/comments/comments.component';
+import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { ResultsCommentsComponent } from './workgroups/results/results-details/c
   ], 
   providers: [
     FacultyAuthGuardService,
+    FacultySaveChangesGuard,
     FacultyDataContextService,
     FacWorkgroupService
   ], 

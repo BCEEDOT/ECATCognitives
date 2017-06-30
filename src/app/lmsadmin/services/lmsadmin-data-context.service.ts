@@ -14,7 +14,7 @@ import { Course, WorkGroup, WorkGroupModel } from "../../core/entities/lmsadmin"
 export class LmsadminDataContextService extends BaseDataContext {
 
   private lmsAdminApiResource: ILmsAdminApiResources = {
-    allCoures: {
+    allCourses: {
       returnedEntityType: MpEntityType.course,
       resource: 'GetAllCourses',
     },
@@ -50,7 +50,7 @@ export class LmsadminDataContextService extends BaseDataContext {
       return Promise.resolve(courses);
     }
 
-    let query: any = EntityQuery.from(this.lmsAdminApiResource.allCoures.resource);
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.allCourses.resource);
 
     return <Promise<Array<Course>>>this.manager.executeQuery(query)
       .then(allCoursesResp)

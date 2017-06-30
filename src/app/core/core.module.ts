@@ -11,6 +11,7 @@ import { AuthUtilityService } from './services/auth-utility.service';
 import { EntityUserModule } from "./entities/user/user-entity.module";
 import { GlobalService } from "./services/global.service";
 import { UserDataContext } from './services/data/user-data-context.service'
+import { UserSaveChangesGuard } from "./services/user-savechangesguard.service";
 
 // ATTENTION: Never import this module into a lazy loaded module. Only import into app module.
 @NgModule({
@@ -24,6 +25,7 @@ import { UserDataContext } from './services/data/user-data-context.service'
         UserDataContext,
         EmProviderService,
         UserAuthGuard,
+        UserSaveChangesGuard,
         AuthService,
         AuthUtilityService,
         GlobalService,

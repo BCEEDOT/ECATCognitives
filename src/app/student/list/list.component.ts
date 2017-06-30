@@ -9,6 +9,7 @@ import { Course, WorkGroup, CrseStudentInGroup, SpInstrument } from "../../core/
 import { WorkGroupService } from "../services/workgroup.service";
 import { GlobalService } from "../../core/services/global.service"
 import { StudentDataContext } from "../services/student-data-context.service";
+import { MpSpStatus } from "../../core/common/mapStrings";
 
 
 @Component({
@@ -27,6 +28,7 @@ export class ListComponent implements OnInit {
   paramWorkGroupId: number;
   paramCourseId: number;
   isLoading: boolean = false;
+  readOnly: boolean = false;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
@@ -60,7 +62,7 @@ export class ListComponent implements OnInit {
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
-
+    this.readOnly = this.workGroupService.workGroup$.value.mpSpStatus !== MpSpStatus.open
     this.workGroupService.isLoading(false);
 
   }

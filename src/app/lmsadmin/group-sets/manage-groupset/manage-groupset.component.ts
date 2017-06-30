@@ -18,6 +18,7 @@ export class ManageGroupsetComponent implements OnInit {
   workGroups: WorkGroup[];
   numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   disabled = false;
+  allExpanded: boolean = false;
 
   constructor(private lmsadminDataContext: LmsadminDataContextService,
     private lmsadminWorkGroupService: LmsadminWorkgroupService,
@@ -30,6 +31,15 @@ export class ManageGroupsetComponent implements OnInit {
     this.route.params.subscribe(params => {
       let workGroupCategory: string = params['catId'];
       this.workGroups = this.lmsadminWorkGroupService.workGroupModels$.value.filter(workGroup => workGroup.mpWgCategory === workGroupCategory)[0].workGroups;
+      this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+        if (+wgA.groupNumber < +wgB.groupNumber) return -1;
+        if (+wgA.groupNumber > +wgB.groupNumber) return 1;
+      return 0;
+    });
+
+    this.workGroups.forEach(workGroup => {
+      workGroup['isExpanded'] = false;
+    })
       this.activate();
     });
     
@@ -37,6 +47,18 @@ export class ManageGroupsetComponent implements OnInit {
 
   activate(): void {
     
+  }
+
+  expandOrCollapseAll() {
+    if (this.allExpanded) {
+      this.workGroups.forEach(workGroup => {
+        workGroup['isExpanded'] = true; 
+      });
+    } else {
+      this.workGroups.forEach(workGroup => {
+        workGroup['isExpanded'] = false; 
+      });
+    }
   }
 
 }
