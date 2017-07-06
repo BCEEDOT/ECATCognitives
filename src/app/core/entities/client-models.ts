@@ -45,6 +45,7 @@ export interface ILmsAdminApiResources extends IApiResources {
     courseModels: IApiResource;
     allCourseMembers: IApiResource;
     allGroupMembers: IApiResource;
+    allGroupSetMembers: IApiResource;
 }
 
 export interface IMilPayGrade {

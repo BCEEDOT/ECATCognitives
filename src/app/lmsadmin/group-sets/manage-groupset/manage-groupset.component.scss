@@ -8,3 +8,12 @@
 .material-icons.mat-icon{
     @include md-icon-size(18px);
 }
+
+.ex-moved {
+    background-color: blueviolet;
+}
+
+.ex-over {
+    background-color: yellow;
+}
+

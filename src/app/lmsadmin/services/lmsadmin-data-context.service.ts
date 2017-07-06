@@ -33,19 +33,23 @@ export class LmsadminDataContextService extends BaseDataContext {
     allGroupMembers: {
       returnedEntityType: MpEntityType.workGroup,
       resource: 'GetGroupMembers',
+    },
+    allGroupSetMembers: {
+      returnedEntityType: MpEntityType.workGroup,
+      resource: 'GetAllGroupSetMembers',
     }
   };
 
-  constructor(emProvider: EmProviderService, private global: GlobalService, private logger: LoggerService) { 
+  constructor(emProvider: EmProviderService, private global: GlobalService, private logger: LoggerService) {
     super(DataContext.LmsAdmin, emProvider)
   }
 
-  fetchAllCourses(forcedRefresh?: boolean): Promise<Array<Course>>{
+  fetchAllCourses(forcedRefresh?: boolean): Promise<Array<Course>> {
     let courses: Array<Course>;
 
     courses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
 
-    if (courses.length > 0 && !forcedRefresh){
+    if (courses.length > 0 && !forcedRefresh) {
       console.log('Courses loaded from local cache');
       return Promise.resolve(courses);
     }
@@ -61,7 +65,7 @@ export class LmsadminDataContextService extends BaseDataContext {
 
     function allCoursesResp(data: QueryResult): Array<Course> {
       courses = data.results as Array<Course>;
-      if (courses && courses.length > 0){
+      if (courses && courses.length > 0) {
         console.log('Courses loaded from remote store', courses, false);
         return courses;
       }
@@ -112,20 +116,20 @@ export class LmsadminDataContextService extends BaseDataContext {
         return Promise.reject(e);
       });
 
-    function allGroupsResp(data: QueryResult){
+    function allGroupsResp(data: QueryResult) {
       course = data.results[0] as Course;
       groups = course.workGroups;
 
-      if (groups && groups.length > 0){
+      if (groups && groups.length > 0) {
         console.log('Groups loaded from remote store', groups, false);
         return groups;
       }
     }
   }
 
-  fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course>{
+  fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course> {
     let course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
-    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh){
+    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
       console.log('Retrieved course members from local cache', course, false);
       return Promise.resolve(course);
     }
@@ -140,9 +144,9 @@ export class LmsadminDataContextService extends BaseDataContext {
         return Promise.reject(e);
       });
 
-    function allCourseMemsResp(data: QueryResult){
+    function allCourseMemsResp(data: QueryResult) {
       course = data.results[0] as Course;
-      if (course.students.length > 0 && course.faculty.length > 1){
+      if (course.students.length > 0 && course.faculty.length > 1) {
         console.log('Course members loaded from remote store', course, false);
       }
 
@@ -153,4 +157,46 @@ export class LmsadminDataContextService extends BaseDataContext {
     }
   }
 
+  fetchAllGroupSetMembers(courseId, categoryId, forceRefresh?: boolean): Promise<Array<WorkGroup> | Promise<void>> {
+    const self = this;
+
+    let groups = this.manager.getEntities(MpEntityType.workGroup) as Array<WorkGroup>;
+
+    //TODO: Add check if GroupSetMembers has already been retrieved from the server. 
+
+    // if (groups) {
+
+    //   groups.forEach(group => {
+        
+    //   })
+
+    //   console.log('GroupSet memberships loaded from local cache', false);
+    //   return Promise.resolve(groups);
+    // }
+
+    const params: any = { courseId: courseId, categoryId: categoryId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.allGroupSetMembers.resource).withParameters(params);
+
+
+    return <Promise<Array<WorkGroup>>>this.manager.executeQuery(query)
+      .then(getAllGroupSetMembers)
+      .catch((e: Event) => {
+        console.log('Did not retrieve groupset members' + e);
+        return Promise.reject(e);
+      });
+
+    function getAllGroupSetMembers(groupSetMembersResult: QueryResult) {
+
+      groups = groupSetMembersResult.results as WorkGroup[];
+
+      groups.forEach(group => {
+        if (group.groupMembers.length < 1) {
+          console.log('group has no members - ' + group.defaultName);
+        }
+      })
+
+      return groups;
+
+    }
+  }
 }

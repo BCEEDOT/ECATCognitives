@@ -42,7 +42,7 @@ const lmsadminRoutes: Routes = [
       {
         path: 'courses/:crsId/groupsets/:catId/manage',
         component: ManageGroupsetComponent,
-        //resolve: { course: 'lmsCourseResolver' }
+        resolve: { groupSetMembers: 'isaGroupSetMembersResolver' }
       },
       {
         path: 'courses/:crsId/groupsets/:catId/config',
@@ -61,6 +61,10 @@ export function isaGroupsResolver(lmsadminDataContext: LmsadminDataContextServic
   return (route: ActivatedRouteSnapshot) => lmsadminDataContext.fetchAllGroups(+route.params['crsId']);
 }
 
+export function isaGroupSetMembersResolver(lmsadminDataContext: LmsadminDataContextService) {
+  return (route: ActivatedRouteSnapshot) => lmsadminDataContext.fetchAllGroupSetMembers(+route.params['crsId'], route.params['catId']);
+}
+
 @NgModule({
   imports: [
     RouterModule.forChild(lmsadminRoutes)
@@ -74,6 +78,9 @@ export function isaGroupsResolver(lmsadminDataContext: LmsadminDataContextServic
     },
     {
       provide: 'isaGroupsResolver', useFactory: isaGroupsResolver, deps: [LmsadminDataContextService]
+    },
+    {
+      provide: 'isaGroupSetMembersResolver', useFactory: isaGroupSetMembersResolver, deps: [LmsadminDataContextService]
     }
   ]
 })
