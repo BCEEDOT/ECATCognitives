@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/pluck';
 
 import { Course } from "../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../services/lmsadmin-data-context.service";
