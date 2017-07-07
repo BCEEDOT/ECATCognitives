@@ -5,12 +5,13 @@ import { TdDialogService } from "@covalent/core";
 import { EntityAction } from 'breeze-client';
 import 'rxjs/add/operator/pluck';
 import { Observable } from "rxjs/Observable";
+import { Subject } from "rxjs/Subject";
 import { DragulaService } from "ng2-dragula";
 
-import { LmsadminWorkgroupService } from "../../services/lmsadmin-workgroup.service";
-import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
-import { WorkGroupModel, Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/lmsadmin";
-import { MpSpStatus, MpGroupCategory } from "../../../core/common/mapStrings";
+import { MpEntityType, MpGroupCategory, MpSpStatus } from '../../../core/common/mapStrings';
+import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../core/entities/lmsadmin';
+import { LmsadminDataContextService } from '../../services/lmsadmin-data-context.service';
+import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
 
 @Component({
   selector: 'app-manage-groupset',
@@ -23,9 +24,10 @@ export class ManageGroupsetComponent implements OnInit {
 
   workGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
-  unassignedStudents: CrseStudentInGroup[];
+  changes = [];
+  unassignedStudents: CrseStudentInGroup[] = [];
+  flights: number[] = [];
   workGroupCategory: string;
-  changes: Changes[] = [];
   numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   disabled = false;
   allExpanded: boolean = false;
@@ -66,26 +68,32 @@ export class ManageGroupsetComponent implements OnInit {
 
     this.lmsadminDataContext.entityChanged.subscribe(value => {
 
-      console.log(value);
       let action = value.entityAction;
 
       if (action === EntityAction.PropertyChange) {
         var entity = value.entity;
         var propertyName = value.args.propertyName;
-        var newValue =value.args.newValue;
+        var newValue = value.args.newValue;
         var oldValue = value.args.oldValue;
 
         if (newValue === entity.entityAspect.originalValues.workGroupId) {
           console.log("HEY DUDE THEY CHANGED IT BACK REJECT THAT CHANGE FOOOOOOL!!!!");
+          entity.entityAspect.rejectChanges();
         }
-        console.log(newValue);
-        console.log(oldValue);
 
-        console.log(entity);
-        console.log(propertyName);
+        this.changes = this.lmsadminDataContext.getChanges();
+
+        //this.changes = this.changes.filter(change => change.entityAspect.entity.toString() === MpEntityType.crseStudInGrp);
+
+        this.changes.forEach(change => {
+          if (change.entityAspect.entity instanceof CrseStudentInGroup) {
+            console.log('You are a course student in group');
+          }
+
+        });
+
+
       }
-
-
 
     })
   }
@@ -102,7 +110,13 @@ export class ManageGroupsetComponent implements OnInit {
 
   activate(): void {
 
+
+
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
+
+    this.getFlightNames();
+
+
 
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
       if (+wgA.groupNumber < +wgB.groupNumber) return -1;
@@ -115,6 +129,18 @@ export class ManageGroupsetComponent implements OnInit {
     });
 
     console.log(this.workGroups);
+
+  }
+
+  getFlightNames(): void {
+    this.workGroups.forEach(wg => {
+      this.flights[wg.workGroupId.toString()] = wg.defaultName;
+
+    })
+
+
+    console.log(this.flights);
+
 
   }
 
@@ -173,26 +199,37 @@ export class ManageGroupsetComponent implements OnInit {
 
   trackChanges(args): void {
     let [e, target, source] = args;
-    // console.log(args);
+    console.log(args);
     let studentId = args[0].id;
+    let studentName = args[0].innerText;
     let toGroupId = args[1].id;
+    let toGroupName = this.flights[toGroupId];
     let fromGroupId = args[2].id;
+    console.log(studentName);
     console.log('Student id - ' + args[0].id);
     console.log('Student went to -' + args[1].id);
     console.log('Student is from -' + args[2].id);
 
-    this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.push(
+    if (toGroupId) {
 
-      this.workGroups.filter(wg => wg.workGroupId === +fromGroupId)[0].groupMembers.filter(gm => gm.studentId === +studentId)[0]);
+      this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.push(
+        this.workGroups.filter(wg => wg.workGroupId === +fromGroupId)[0].groupMembers.filter(gm => gm.studentId === +studentId)[0]);
+    } else {
+      this.unassignedStudents.push(this.workGroups.filter(wg => wg.workGroupId === +fromGroupId)[0].groupMembers.filter(gm => gm.studentId === +studentId)[0]);
+    }
 
-    let toGroup = this.workGroups.filter(wg => wg.workGroupId === +toGroupId).slice();
-    let fromGroup = this.workGroups.filter(wg => wg.workGroupId === +fromGroupId).slice();
-    let studentFrom = fromGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
-    let studentTo = toGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
+    // let toGroup = this.workGroups.filter(wg => wg.workGroupId === +toGroupId).slice();
+    // let fromGroup = this.workGroups.filter(wg => wg.workGroupId === +fromGroupId).slice();
+    // let studentFrom = fromGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
+    // let studentTo = toGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
     // console.log(toGroup);
     // console.log(fromGroup);
     // console.log(studentFrom);
     // console.log(studentTo);
+
+
+
+    this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 })
 
     console.log(this.lmsadminDataContext.getChanges());
     console.log(this.lmsadminDataContext.hasChanges());
@@ -208,15 +245,15 @@ export class ManageGroupsetComponent implements OnInit {
 
 }
 
-export class Changes {
+// export class Changes {
 
-  student: CrseStudentInGroup;
-  from: WorkGroup;
-  to: WorkGroup;
+//   student: CrseStudentInGroup;
+//   from: number;
+//   to: number;
 
-  constructor(student: CrseStudentInGroup, from: WorkGroup, to: WorkGroup) {
-    this.student = student;
-    this.from = from;
-    this.to = to;
-  }
-}
+//   constructor(student: CrseStudentInGroup, from: number, to: number) {
+//     this.student = student;
+//     this.from = from;
+//     this.to = to;
+//   }
+// }
