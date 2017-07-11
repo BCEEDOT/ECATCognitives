@@ -47,24 +47,21 @@ export class ManageGroupsetComponent implements OnInit {
     });
 
     dragulaService.drag.subscribe((value) => {
-      console.log(`drag: ${value[0]}`);
+      // console.log(`drag: ${value[0]}`);
       this.onDrag(value.slice(1));
     });
     dragulaService.drop.subscribe((value) => {
-      console.log(`drop: ${value[0]}`);
+      // console.log(`drop: ${value[0]}`);
       this.onDrop(value.slice(1));
     });
     dragulaService.over.subscribe((value) => {
-      console.log(`over: ${value[0]}`);
+      // console.log(`over: ${value[0]}`);
       this.onOver(value.slice(1));
     });
     dragulaService.out.subscribe((value) => {
-      console.log(`out: ${value[0]}`);
+      // console.log(`out: ${value[0]}`);
       this.onOut(value.slice(1));
     });
-
-    //TODO: Subscribe to the entityChanged event if the original value matches the old changed value reject the change.
-    //http://breeze.github.io/doc-js/lap-changetracking.html
 
     this.lmsadminDataContext.entityChanged.subscribe(value => {
 
@@ -77,21 +74,23 @@ export class ManageGroupsetComponent implements OnInit {
         var oldValue = value.args.oldValue;
 
         if (newValue === entity.entityAspect.originalValues.workGroupId) {
-          console.log("HEY DUDE THEY CHANGED IT BACK REJECT THAT CHANGE FOOOOOOL!!!!");
           entity.entityAspect.rejectChanges();
         }
 
-        this.changes = this.lmsadminDataContext.getChanges();
-
-        //this.changes = this.changes.filter(change => change.entityAspect.entity.toString() === MpEntityType.crseStudInGrp);
-
-        this.changes.forEach(change => {
-          if (change.entityAspect.entity instanceof CrseStudentInGroup) {
-            console.log('You are a course student in group');
+        if (propertyName === "isDeleted" && oldValue) {
+          if (!entity.entityAspect.originalValues.workGroupId) {
+            entity.entityAspect.rejectChanges();
           }
+        }
 
-        });
+        // this.changes = this.lmsadminDataContext.getChanges();
 
+        // this.changes.forEach(change => {
+        //   if (change.entityAspect.entity instanceof CrseStudentInGroup) {
+        //   }
+        // });
+
+        this.changes = this.lmsadminDataContext.getChanges();
 
       }
 
@@ -108,15 +107,27 @@ export class ManageGroupsetComponent implements OnInit {
 
   }
 
+  undoChange(change: CrseStudentInGroup) {
+    let workGroupId: number;
+    if (change.isDeleted) {
+      if (change.entityAspect.originalValues.workGroupId) {
+        workGroupId = change.entityAspect.originalValues.workGroupId;
+      } else {
+        workGroupId = change.workGroupId;
+      }
+      this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
+      this.workGroups.filter(wg => wg.workGroupId === workGroupId)[0].groupMembers.push(change);
+    }
+    change.entityAspect.rejectChanges();
+    this.changes = this.lmsadminDataContext.getChanges();
+
+
+  }
+
   activate(): void {
-
-
-
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
 
     this.getFlightNames();
-
-
 
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
       if (+wgA.groupNumber < +wgB.groupNumber) return -1;
@@ -128,8 +139,6 @@ export class ManageGroupsetComponent implements OnInit {
       workGroup['isExpanded'] = false;
     });
 
-    console.log(this.workGroups);
-
   }
 
   getFlightNames(): void {
@@ -137,10 +146,6 @@ export class ManageGroupsetComponent implements OnInit {
       this.flights[wg.workGroupId.toString()] = wg.defaultName;
 
     })
-
-
-    console.log(this.flights);
-
 
   }
 
@@ -156,8 +161,16 @@ export class ManageGroupsetComponent implements OnInit {
     }
   }
 
+  reset(): void {
+    console.log(this.lmsadminDataContext.getChanges());
+    console.log(this.dragulaService.find("bag-one"));
+    // this.lmsadminDataContext.rollback();
+    // console.log(this.lmsadminDataContext.getChanges());
+  }
+
   save(): void {
     console.log(this.workGroups);
+    console.log(this.unassignedStudents);
   }
 
   private hasClass(el: any, name: string) {
@@ -199,61 +212,52 @@ export class ManageGroupsetComponent implements OnInit {
 
   trackChanges(args): void {
     let [e, target, source] = args;
-    console.log(args);
     let studentId = args[0].id;
     let studentName = args[0].innerText;
     let toGroupId = args[1].id;
-    let toGroupName = this.flights[toGroupId];
+    let toGroupName: string;
     let fromGroupId = args[2].id;
-    console.log(studentName);
-    console.log('Student id - ' + args[0].id);
-    console.log('Student went to -' + args[1].id);
-    console.log('Student is from -' + args[2].id);
 
-    if (toGroupId) {
-
-      this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.push(
-        this.workGroups.filter(wg => wg.workGroupId === +fromGroupId)[0].groupMembers.filter(gm => gm.studentId === +studentId)[0]);
+    if (toGroupId === fromGroupId) {
+      let student = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
+        return gm.studentId === +studentId
+      });
+      student.entityAspect.rejectChanges();
+      this.changes = this.lmsadminDataContext.getChanges();
     } else {
-      this.unassignedStudents.push(this.workGroups.filter(wg => wg.workGroupId === +fromGroupId)[0].groupMembers.filter(gm => gm.studentId === +studentId)[0]);
+
+      if (toGroupId === "unassigned") {
+        toGroupName = 'Unassigned';
+
+        let unAssignedStudent = this.unassignedStudents.find((gm) => {
+          return gm.studentId === +studentId;
+        })
+
+        unAssignedStudent.isDeleted = true;
+
+      } else {
+        toGroupName = this.flights[toGroupId].toString();
+      }
+
+      if (fromGroupId === "unassigned") {
+
+        let assignedStudent = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
+          return gm.studentId === +studentId
+        })
+
+        if (assignedStudent.isDeleted) {
+
+          assignedStudent.isDeleted = false;
+          this.changes = this.lmsadminDataContext.getChanges();
+        }
+
+      }
+
+      this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 });
     }
-
-    // let toGroup = this.workGroups.filter(wg => wg.workGroupId === +toGroupId).slice();
-    // let fromGroup = this.workGroups.filter(wg => wg.workGroupId === +fromGroupId).slice();
-    // let studentFrom = fromGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
-    // let studentTo = toGroup[0].groupMembers.filter(gm => gm.studentId === +studentId).slice();
-    // console.log(toGroup);
-    // console.log(fromGroup);
-    // console.log(studentFrom);
-    // console.log(studentTo);
-
-
-
-    this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 })
-
-    console.log(this.lmsadminDataContext.getChanges());
-    console.log(this.lmsadminDataContext.hasChanges());
-
-
-
-
-    // let changedStudent = new Changes(student, fromGroup, toGroup);
-    // this.changes.push(changedStudent);
-    // console.log(this.changes);
-
   }
 
 }
 
-// export class Changes {
 
-//   student: CrseStudentInGroup;
-//   from: number;
-//   to: number;
 
-//   constructor(student: CrseStudentInGroup, from: number, to: number) {
-//     this.student = student;
-//     this.from = from;
-//     this.to = to;
-//   }
-// }
