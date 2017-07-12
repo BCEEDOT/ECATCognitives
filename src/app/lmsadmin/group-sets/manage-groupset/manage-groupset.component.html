@@ -13,10 +13,7 @@
           <div *ngFor="let change of changes" fxLayout="row" fxLayoutAlign="center center">
             <div fxFlexOffset="5%"></div>
             <p class="push-none pad-xs">
-              {{change.rankName}} 
-              moved from <span class="text-lower">
-
-              </span>
+              {{change.changeDescription}}
               </p>
             <a md-icon-button mdTooltip="Click to Undo Change" (click)="undoChange(change)">
               <md-icon>close</md-icon>
@@ -28,7 +25,9 @@
     </div>
   </md-sidenav>
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px" class="pad-right-sm">
-    <td-search-box backIcon="arrow_back" placeholder="Search here" [alwaysVisible]="alwaysVisible" flex></td-search-box>
+    <td-search-box [showUnderline]="true" (search)="search($event)" 
+    (clear)="clear($event)"
+    backIcon="arrow_back" placeholder="Search here" [alwaysVisible]="false" flex></td-search-box>
     <button (click)="save()" type="button" md-raised-button color="accent">Save</button>
     <button (click)="reset()" type="button" md-raised-button color="accent">Reset</button>
     <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" [color]="color" [checked]="checked"
@@ -50,7 +49,7 @@
           <md-card-content>
             <div [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
 
-              <p [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId" (mouseout)="hovered = null"
+              <p [myHighlight]="groupMember.highlighted" [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId" (mouseout)="hovered = null"
                 [id]="groupMember.studentId" *ngFor="let groupMember of workGroup.groupMembers" class="md-caption push-none pad-xs">{{groupMember.rankName}}</p>
 
             </div>

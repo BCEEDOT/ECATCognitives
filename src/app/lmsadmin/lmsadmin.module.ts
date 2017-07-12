@@ -14,6 +14,7 @@ import { CourseEnrollComponent } from './courses/course-enroll/course-enroll.com
 import { ConfigGroupsetComponent } from './group-sets/config-groupset/config-groupset.component';
 import { CourseInfoComponent } from './courses/course-info/course-info.component';
 import { LmsadminWorkgroupService } from "./services/lmsadmin-workgroup.service";
+import { MyHighlightDirective } from './directives/my-highlight.directive';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { LmsadminWorkgroupService } from "./services/lmsadmin-workgroup.service"
     ManageGroupsetComponent, 
     CourseEnrollComponent, 
     ConfigGroupsetComponent, 
-    CourseInfoComponent,
+    CourseInfoComponent, MyHighlightDirective,
   ],
   providers: [
     LmsadminAuthGuardService,

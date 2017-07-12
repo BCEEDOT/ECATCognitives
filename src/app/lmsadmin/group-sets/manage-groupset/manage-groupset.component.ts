@@ -24,6 +24,7 @@ export class ManageGroupsetComponent implements OnInit {
 
   workGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
+  unassigned: string = "unassigned";
   changes = [];
   unassignedStudents: CrseStudentInGroup[] = [];
   flights: number[] = [];
@@ -31,6 +32,7 @@ export class ManageGroupsetComponent implements OnInit {
   numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   disabled = false;
   allExpanded: boolean = false;
+  searchInputTerm: string;
 
   constructor(private lmsadminDataContext: LmsadminDataContextService,
     private dragulaService: DragulaService,
@@ -173,6 +175,72 @@ export class ManageGroupsetComponent implements OnInit {
     console.log(this.unassignedStudents);
   }
 
+  clear(event: string) {
+    this.searchInputTerm = '';
+    this.workGroups.forEach(wg => {
+      wg.groupMembers.forEach(gm => {
+        gm['highlighted'] = false;
+      })
+    })
+
+  }
+
+  search(event: string): void {
+
+    let studentsFound: number = 0;
+
+    this.workGroups.forEach(wg => {
+      let lastNameStudents: CrseStudentInGroup[];
+      let firstNameStudents: CrseStudentInGroup[];
+      wg['isExpanded'] = false;
+
+      lastNameStudents = wg.groupMembers.filter(gm => {
+        return gm.studentProfile.person.lastName.toLowerCase() === event.toLowerCase();
+      });
+      firstNameStudents = wg.groupMembers.filter(gm => {
+        return gm.studentProfile.person.firstName.toLowerCase() === event.toLowerCase();
+      });
+
+      if (lastNameStudents) {
+        studentsFound += lastNameStudents.length;
+
+        lastNameStudents.forEach(student => {
+          let workGroup = this.workGroups.filter(wg => wg.workGroupId === student.workGroupId)[0];
+          workGroup['isExpanded'] = true;
+          student['highlighted'] = true;
+        })
+      }
+
+      if (firstNameStudents) {
+        studentsFound += firstNameStudents.length
+        firstNameStudents.forEach(student => {
+          let workGroup = this.workGroups.filter(wg => wg.workGroupId === student.workGroupId)[0];
+          workGroup['isExpanded'] = true;
+          student['highlighted'] = true;
+        })
+      }
+
+    })
+
+    console.log(studentsFound);
+
+    if (!studentsFound) {
+      this.snackBar.open('No Students found', 'Dismiss', {duration: 3000});
+    }
+
+
+
+    // // let student = this.workGroups[0].groupMembers[0];
+    // // let workGroup = this.workGroups.filter(wg => wg.workGroupId === student.workGroupId)[0];
+    // console.log(workGroup);
+    // workGroup['isExpanded'] = true;
+    // console.log(student);
+    // student['highlighted'] = true;
+    // setTimeout(() => {
+    //     student['highlighted'] = false;
+    //   }, 3000)
+  }
+
   private hasClass(el: any, name: string) {
     return new RegExp('(?:^|\\s+)' + name + '(?:\\s+|$)').test(el.className);
   }
@@ -216,6 +284,7 @@ export class ManageGroupsetComponent implements OnInit {
     let studentName = args[0].innerText;
     let toGroupId = args[1].id;
     let toGroupName: string;
+    let fromGroupName: string;
     let fromGroupId = args[2].id;
 
     if (toGroupId === fromGroupId) {
@@ -226,20 +295,22 @@ export class ManageGroupsetComponent implements OnInit {
       this.changes = this.lmsadminDataContext.getChanges();
     } else {
 
-      if (toGroupId === "unassigned") {
-        toGroupName = 'Unassigned';
+      if (toGroupId === this.unassigned) {
+        toGroupName = this.unassigned;
 
         let unAssignedStudent = this.unassignedStudents.find((gm) => {
           return gm.studentId === +studentId;
         })
 
         unAssignedStudent.isDeleted = true;
+        unAssignedStudent['changeDescription'] = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
 
       } else {
+
         toGroupName = this.flights[toGroupId].toString();
       }
 
-      if (fromGroupId === "unassigned") {
+      if (fromGroupId === this.unassigned) {
 
         let assignedStudent = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
           return gm.studentId === +studentId
@@ -251,10 +322,20 @@ export class ManageGroupsetComponent implements OnInit {
           this.changes = this.lmsadminDataContext.getChanges();
         }
 
+        assignedStudent['changeDescription'] = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
+
+      }
+
+      if (toGroupId !== this.unassigned && fromGroupId !== this.unassigned) {
+        let student = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
+          return gm.studentId === +studentId
+        });
+        student['changeDescription'] = `${student.rankName} moved from ${this.flights[+fromGroupId]} to ${this.flights[+toGroupId]}`;
       }
 
       this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 });
     }
+
   }
 
 }
