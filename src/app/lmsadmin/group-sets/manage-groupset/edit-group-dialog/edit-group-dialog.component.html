@@ -1,0 +1,23 @@
+<md-card-title>Edit Flight</md-card-title>
+<md-list>
+  <form #editGroupForm="ngForm">
+    <md-list-item class="pull-left-md">
+      <md-icon md-list-avatar>description</md-icon>
+      <md-input-container class="pad-left-sm">
+        <input mdInput #defaultName="ngModel" placeholder="Flight Name" [(ngModel)]="workGroup.defaultName" name="defaultName" />
+      </md-input-container>
+    </md-list-item>
+    <md-list-item class="pull-left-md">
+      <md-icon md-list-avatar>description</md-icon>
+      <md-input-container class="pad-left-sm">
+        <input mdInput #customName="ngModel" placeholder="Nickname" [(ngModel)]="workGroup.customName" name="customName" />
+      </md-input-container>
+    </md-list-item>
+  </form>
+</md-list>
+<md-card-actions class="pad-top-sm pad-bottom-none pull-left-sm pull-bottom-none">
+  <div class="pad-left-sm" fxLayout="row" fxLayoutAlign="start center">
+    <button md-raised-button color="accent" type="button" [disabled]="!editGroupForm.valid" (click)="saveStudentProfile()" class="text-upper">Save</button>
+    <button md-raised-button color="accent" type="button" class="text-upper" (click)="dialogRef.close()">Cancel</button>
+  </div>
+</md-card-actions>

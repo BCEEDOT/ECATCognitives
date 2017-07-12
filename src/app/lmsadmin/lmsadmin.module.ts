@@ -15,6 +15,7 @@ import { ConfigGroupsetComponent } from './group-sets/config-groupset/config-gro
 import { CourseInfoComponent } from './courses/course-info/course-info.component';
 import { LmsadminWorkgroupService } from "./services/lmsadmin-workgroup.service";
 import { MyHighlightDirective } from './directives/my-highlight.directive';
+import { EditGroupDialogComponent } from './group-sets/manage-groupset/edit-group-dialog/edit-group-dialog.component';
 
 @NgModule({
   imports: [
@@ -25,17 +26,20 @@ import { MyHighlightDirective } from './directives/my-highlight.directive';
   ],
   declarations: [
     LmsadminComponent,
-    CoursesComponent, 
-    GroupSetsComponent, 
-    ManageGroupsetComponent, 
-    CourseEnrollComponent, 
-    ConfigGroupsetComponent, 
-    CourseInfoComponent, MyHighlightDirective,
+    CoursesComponent,
+    GroupSetsComponent,
+    ManageGroupsetComponent,
+    CourseEnrollComponent,
+    ConfigGroupsetComponent,
+    CourseInfoComponent, MyHighlightDirective, EditGroupDialogComponent
   ],
   providers: [
     LmsadminAuthGuardService,
     LmsadminDataContextService,
     LmsadminWorkgroupService
+  ],
+  entryComponents: [
+    EditGroupDialogComponent
   ]
 })
 export class LmsadminModule { }

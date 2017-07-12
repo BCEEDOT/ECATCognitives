@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { MdSnackBar } from "@angular/material";
 import { TdDialogService } from "@covalent/core";
 import { EntityAction } from 'breeze-client';
 import 'rxjs/add/operator/pluck';
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { DragulaService } from "ng2-dragula";
+import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { MpEntityType, MpGroupCategory, MpSpStatus } from '../../../core/common/mapStrings';
 import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../core/entities/lmsadmin';
 import { LmsadminDataContextService } from '../../services/lmsadmin-data-context.service';
 import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
+import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
 
 @Component({
   selector: 'app-manage-groupset',
@@ -29,10 +31,10 @@ export class ManageGroupsetComponent implements OnInit {
   unassignedStudents: CrseStudentInGroup[] = [];
   flights: number[] = [];
   workGroupCategory: string;
-  numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   disabled = false;
   allExpanded: boolean = false;
   searchInputTerm: string;
+  dialogRef: MdDialogRef<EditGroupDialogComponent>;
 
   constructor(private lmsadminDataContext: LmsadminDataContextService,
     private dragulaService: DragulaService,
@@ -40,7 +42,8 @@ export class ManageGroupsetComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
-    private snackBar: MdSnackBar) {
+    private snackBar: MdSnackBar,
+    public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
 
     this.workGroups$ = route.data.pluck('groupSetMembers');
 
@@ -109,6 +112,25 @@ export class ManageGroupsetComponent implements OnInit {
 
   }
 
+  editGroup(group: WorkGroup): void {
+    this.dialogRef = this.dialog.open(EditGroupDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '300px',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: ''
+      },
+      data: {
+        workGroup: group
+      }
+    });
+  }
+
   undoChange(change: CrseStudentInGroup) {
     let workGroupId: number;
     if (change.isDeleted) {
@@ -146,7 +168,6 @@ export class ManageGroupsetComponent implements OnInit {
   getFlightNames(): void {
     this.workGroups.forEach(wg => {
       this.flights[wg.workGroupId.toString()] = wg.defaultName;
-
     })
 
   }
@@ -164,10 +185,28 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   reset(): void {
-    console.log(this.lmsadminDataContext.getChanges());
-    console.log(this.dragulaService.find("bag-one"));
-    // this.lmsadminDataContext.rollback();
-    // console.log(this.lmsadminDataContext.getChanges());
+
+    if (this.changes.length > 0 || this.unassignedStudents.length > 0) {
+
+      this.dialogService.openConfirm({
+        message: 'Are you sure you want to reset all students to original flights?',
+        title: 'Discard Changes',
+        acceptButton: 'Yes',
+        cancelButton: 'No'
+      }).afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.unassignedStudents.forEach(student => {
+            this.undoChange(student);
+          });
+          this.lmsadminDataContext.rollback();
+          this.changes = this.lmsadminDataContext.getChanges();
+        }
+      });
+
+    } else {
+      this.dialogService.openAlert({ message: 'No changes to discard.', title: 'Discard Changes' });
+    }
+
   }
 
   save(): void {
@@ -222,23 +261,10 @@ export class ManageGroupsetComponent implements OnInit {
 
     })
 
-    console.log(studentsFound);
-
     if (!studentsFound) {
-      this.snackBar.open('No Students found', 'Dismiss', {duration: 3000});
+      this.snackBar.open('No Students found', 'Dismiss', { duration: 3000 });
     }
 
-
-
-    // // let student = this.workGroups[0].groupMembers[0];
-    // // let workGroup = this.workGroups.filter(wg => wg.workGroupId === student.workGroupId)[0];
-    // console.log(workGroup);
-    // workGroup['isExpanded'] = true;
-    // console.log(student);
-    // student['highlighted'] = true;
-    // setTimeout(() => {
-    //     student['highlighted'] = false;
-    //   }, 3000)
   }
 
   private hasClass(el: any, name: string) {
