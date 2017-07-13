@@ -64,7 +64,6 @@ export class StudentComponent implements OnInit {
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
-      console.log(this.courses);
       this.activate();
     });
 
@@ -151,7 +150,7 @@ export class StudentComponent implements OnInit {
       this.activeWorkGroup = workGroup as WorkGroup;
       this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
 
-      const resultsPublished = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
+      const resultsPublished = this.activeWorkGroup.mpSpStatus === MpSpStatus.published;
 
       this.workGroupService.workGroup(this.activeWorkGroup);
 
@@ -159,6 +158,7 @@ export class StudentComponent implements OnInit {
         resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
       }
     });
+
 
 
   }

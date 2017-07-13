@@ -11,7 +11,7 @@ import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";
 import { FacultyDataContextService } from "../../services/faculty-data-context.service";
 import { GlobalService } from "../../../core/services/global.service";
 import { MpSpStatus } from "../../../core/common/mapStrings";
-
+import { FacWorkgroupService } from "../../services/facworkgroup.service";
 interface CrseStudExtended extends CrseStudentInGroup {
     check: {
         isSelfDone: boolean,
@@ -40,13 +40,15 @@ export class StatusComponent implements OnInit {
   private wgName: string;
   //private facIncomplete: boolean = false;
   private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
+  private statusMap = MpSpStatus;
 
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,
     private dialogService: TdDialogService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location) {
+    private location: Location,
+    private facWorkGroupService: FacWorkgroupService) {
       this.workGroup$ = route.data.pluck('workGroup');
     }
 
@@ -55,6 +57,8 @@ export class StatusComponent implements OnInit {
       this.workGroup = wg;
       this.activate();
     });
+
+    this.facWorkGroupService.onListView(false);
   }
 
   activate() {
@@ -71,11 +75,11 @@ export class StatusComponent implements OnInit {
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
 
-      gm['hasChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.value > 0);
+      gm['hasChartData'] = gm.statusOfStudent.breakOutChartData.some(cd => cd.value > 0);
 
-      if (gm['hasChartData']) {
-        gm['chartData'] = [ { "name": "% Given", "series": gm.statusOfStudent.gaveBreakOutChartData }];
-      }
+      // if (gm['hasChartData']) {
+      //   gm.updateStatusOfStudent();
+      // }
 
       gm.check = {
         isSelfDone: isSelfDone,

@@ -20,23 +20,22 @@ import { FacultyDataContextService } from "../../services/faculty-data-context.s
 })
 export class EvaluateComponent implements OnInit {
 
-
   showComments: boolean = false;
   wgStatus: string = "tc-red-900";
   assessStatusIcon: string;
   stratStatusIcon: string;
   commentStatusIcon: string = 'lock';
   canReview: boolean = false;
+  readOnly: boolean = false;
   members: CrseStudentInGroup[];
   workGroup: WorkGroup;
   workGroup$: Observable<WorkGroup>;
   workGroupId: number;
   paramWorkGroupId: number;
   paramCourseId: number;
-  time$: Observable<string> = new Observable<string>();
-  test: string;
   private wgName: string;
   private reviewBtnText: string = 'Review';
+  private statusMap = MpSpStatus;
 
   assessComplete: boolean;
   stratComplete: boolean;
@@ -47,7 +46,7 @@ export class EvaluateComponent implements OnInit {
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
     private dialogService: TdDialogService,
-    private ctx: FacultyDataContextService,
+    private facultyDataContext: FacultyDataContextService,
     private snackBar: MdSnackBar
   ) {
 
@@ -70,18 +69,29 @@ export class EvaluateComponent implements OnInit {
     this.facWorkGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
       this.assessStatusIcon = (this.assessComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
     this.facWorkGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
       this.stratStatusIcon = (this.stratComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
     this.facWorkGroupService.commentsComplete$.subscribe(cc => {
       this.commentsComplete = cc;
       this.commentStatusIcon = (this.commentsComplete) ? "check_box" : "indeterminate_check_box";
+      this.canReviewCheck();
     });
+
+    this.facWorkGroupService.readOnly$.subscribe(status => {
+      this.readOnly = status;
+    })
+
+    this.facWorkGroupService.onListView(false);
+
   }
 
   activate() {
+    //this.facWorkGroupService.readOnly(false);
     this.workGroupId = this.workGroup.workGroupId;
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as CrseStudentInGroup[];
@@ -106,9 +116,14 @@ export class EvaluateComponent implements OnInit {
 
     switch (this.workGroup.mpSpStatus) {
       case MpSpStatus.created:
+        this.reviewBtnText = 'Review';
+        this.canReview = false;
+        this.facWorkGroupService.readOnly(true);
+        break;
       case MpSpStatus.open:
         this.reviewBtnText = 'Review';
         this.canReview = this.workGroup.canPublish;
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
@@ -127,10 +142,38 @@ export class EvaluateComponent implements OnInit {
         }
         if (this.canReview) { this.canReview = !commentIncomplete; }
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
+        this.facWorkGroupService.readOnly(false);
 
+        this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.reviewed:
         this.reviewBtnText = 'Re-review';
+        this.canReview = true;
+        this.showComments = true;
+        this.facWorkGroupService.readOnly(true);
+        break;
+      case MpSpStatus.published:
+        this.canReview = false;
+        this.showComments = true;
+        this.facWorkGroupService.readOnly(true);        
+        break;
+    }
+  }
+
+  canReviewCheck() {
+    switch (this.workGroup.mpSpStatus) {
+      case MpSpStatus.created:
+      case MpSpStatus.open:
+        this.canReview = this.workGroup.canPublish;
+        break;
+      case MpSpStatus.underReview:
+        if (this.assessComplete && this.stratComplete && this.commentsComplete) {
+          this.canReview = true;
+        } else {
+          this.canReview = false;
+        }
+        break;
+      case MpSpStatus.reviewed:
         this.canReview = true;
         break;
       case MpSpStatus.published:
@@ -150,11 +193,11 @@ export class EvaluateComponent implements OnInit {
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.open:
-          message = 'All students have have all assessments and strats complete. Check group status screen for more information.';
+          message = 'All students must have all assessments and strats complete. Check group status screen for more information.';
           title = 'Cannot Review Group';
           break;
         case MpSpStatus.underReview:
-          message = 'You must complete all assessments and strats on all students and review all comments before marking your review as complete.'
+          message = 'You must complete and save all assessments and strats on all students and flag and save all comments before marking your review as complete.'
           title = 'Cannot Complete Review';
           break;
         case MpSpStatus.published:
@@ -173,6 +216,7 @@ export class EvaluateComponent implements OnInit {
 
     } else {
       let setTo;
+      let setReadOnly;
       switch (this.workGroup.mpSpStatus) {
         case MpSpStatus.open:
           message = 'Students will no longer be able to make changes to assessments/comments/strats. \n\n Are you sure you want to place this flight Under Review?';
@@ -183,11 +227,13 @@ export class EvaluateComponent implements OnInit {
           message = 'This will set the group as Reviewed and allow the ISA to Publish results. \n\n Are you sure you are done with your review?';
           title = 'Complete Review';
           setTo = MpSpStatus.reviewed;
+          setReadOnly = true;
           break;
         case MpSpStatus.reviewed:
           message = 'This will set the group back to Under Review so you can change assessments/strats/comment flags. Are you sure you want to re-review?';
           title = 'Re-Review Group';
           setTo = MpSpStatus.underReview;
+          setReadOnly = false;
           break;
       }
 
@@ -199,12 +245,40 @@ export class EvaluateComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.workGroup.mpSpStatus = setTo;
-          this.ctx.commit().then(success => {
-            this.snackBar.open('Group Status Updated!', 'Dismiss');
+          this.facWorkGroupService.readOnly(setReadOnly);
+          this.facultyDataContext.commit().then(success => {
+            this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
             this.activate();
           })
         }
       });
     }
+  }
+
+  refreshData() {
+    this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true).then(data => {
+      this.workGroup = data;
+      this.facWorkGroupService.facWorkGroup(this.workGroup);
+      this.activate();
+    })
+  }
+
+  //TODO: Remove this... for internal testing only
+  publish() {
+    this.dialogService.openConfirm({
+      message: 'Are you sure you want to publish?',
+      title: 'Publish Flight'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed){
+        this.workGroup.mpSpStatus = MpSpStatus.published;
+        this.facultyDataContext.commit().then(success => {
+          this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
+          this.activate();
+        }, reject => {
+          this.workGroup.mpSpStatus = MpSpStatus.reviewed;
+          this.dialogService.openAlert({message: 'Something went wrong, group not published', title: 'Save Failure'})
+        })
+      }
+    })
   }
 }

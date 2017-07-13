@@ -190,7 +190,7 @@ export class EcLocalDataService {
 
     static getSalutation(paygrade: string, component: string, affiliation: string): string {
         const paygradeList = EcLocalDataService.milPaygradeGraft;
-        
+
         if (!paygrade) {
             return "NPG";
         }
@@ -216,17 +216,17 @@ export class EcLocalDataService {
         if (Object.assign(paygradeList[pg]) && paygradeList[pg].designator === paygrade) {
 
             switch (affiliation) {
-            case mp.MpAffiliation.usa:
+                case mp.MpAffiliation.usa:
                     return paygradeList[pg].usa.rankShortName;
-            case mp.MpAffiliation.usaf:
+                case mp.MpAffiliation.usaf:
                     return paygradeList[pg].usaf.rankShortName;
-            case mp.MpAffiliation.usn:
-            case mp.MpAffiliation.uscg:
+                case mp.MpAffiliation.usn:
+                case mp.MpAffiliation.uscg:
                     return paygradeList[pg].usn.rankShortName;
-            case mp.MpAffiliation.usmc:
+                case mp.MpAffiliation.usmc:
                     return paygradeList[pg].usmc.rankShortName;
-            default:
-                return 'Unknown';
+                default:
+                    return 'Unknown';
             }
         }
         return '';
@@ -247,22 +247,22 @@ export class EcLocalDataService {
 
     static prettifyItemResponse(itemResponse: string): string {
         switch (itemResponse) {
-        case 'IEA':
-            return 'Always: Ineffective';
-        case 'IEU':
-            return 'Usually: Ineffective';
-        case 'EA':
-            return 'Always: Effective';
-        case 'EU':
-            return 'Usually: Effective';
-        case 'HEU':
-            return 'Usually: Highly Effective';
-        case 'HEA':
-            return 'Always: Highly Effective';
-        case 'ND':
-            return 'Not Displayed';
-        default:
-            return 'Unknown';
+            case 'IEA':
+                return 'Always Ineffective';
+            case 'IEU':
+                return 'Usually Ineffective';
+            case 'EA':
+                return 'Always Effective';
+            case 'EU':
+                return 'Usually Effective';
+            case 'HEU':
+                return 'Usually Highly Effective';
+            case 'HEA':
+                return 'Always Highly Effective';
+            case 'ND':
+                return 'Not Displayed';
+            default:
+                return 'Unknown';
         }
     }
 
@@ -319,29 +319,29 @@ export class EcLocalDataService {
         const response = Math.round(totalBo / totalCount);
         let itemResponse = '';
         switch (response) {
-        case  mpe.CompositeModelScore.ieu:
+            case mpe.CompositeModelScore.ieu:
                 itemResponse = mp.MpSpItemResponse.ieu;
                 break;
-        case mpe.CompositeModelScore.iea:
-            itemResponse = mp.MpSpItemResponse.iea;
-            break;
-        case mpe.CompositeModelScore.ea:
-            itemResponse = mp.MpSpItemResponse.ea;
-            break;
-        case mpe.CompositeModelScore.eu:
-            itemResponse = mp.MpSpItemResponse.eu;
-            break;
-        case mpe.CompositeModelScore.hea:
-            itemResponse = mp.MpSpItemResponse.hea;
-            break;
-        case mpe.CompositeModelScore.heu:
-            itemResponse = mp.MpSpItemResponse.heu;
-            break;
-        case mpe.CompositeModelScore.nd:
-            itemResponse = mp.MpSpItemResponse.nd;
-            break;
-        default:
-            itemResponse = null;
+            case mpe.CompositeModelScore.iea:
+                itemResponse = mp.MpSpItemResponse.iea;
+                break;
+            case mpe.CompositeModelScore.ea:
+                itemResponse = mp.MpSpItemResponse.ea;
+                break;
+            case mpe.CompositeModelScore.eu:
+                itemResponse = mp.MpSpItemResponse.eu;
+                break;
+            case mpe.CompositeModelScore.hea:
+                itemResponse = mp.MpSpItemResponse.hea;
+                break;
+            case mpe.CompositeModelScore.heu:
+                itemResponse = mp.MpSpItemResponse.heu;
+                break;
+            case mpe.CompositeModelScore.nd:
+                itemResponse = mp.MpSpItemResponse.nd;
+                break;
+            default:
+                itemResponse = null;
         }
 
         return (itemResponse) ? EcLocalDataService.prettifyItemResponse(itemResponse) : 'Out of Range';
@@ -361,24 +361,24 @@ export class EcLocalDataService {
         }
         myResponses.forEach(response => {
             switch (response.itemModelScore) {
-            case mpe.CompositeModelScore.iea:
-                breakdown.iea += 1;
-                break;
-            case mpe.CompositeModelScore.ieu:
-                breakdown.ieu += 1;
-                break;
-            case mpe.CompositeModelScore.eu:
-                breakdown.eu += 1;
-                break;
-            case mpe.CompositeModelScore.ea:
-                breakdown.ea += 1;
-                break;
-            case mpe.CompositeModelScore.heu:
-                breakdown.heu += 1;
-                break;
-            case mpe.CompositeModelScore.hea:
-                breakdown.hea += 1;
-                break;
+                case mpe.CompositeModelScore.iea:
+                    breakdown.iea += 1;
+                    break;
+                case mpe.CompositeModelScore.ieu:
+                    breakdown.ieu += 1;
+                    break;
+                case mpe.CompositeModelScore.eu:
+                    breakdown.eu += 1;
+                    break;
+                case mpe.CompositeModelScore.ea:
+                    breakdown.ea += 1;
+                    break;
+                case mpe.CompositeModelScore.heu:
+                    breakdown.heu += 1;
+                    break;
+                case mpe.CompositeModelScore.hea:
+                    breakdown.hea += 1;
+                    break;
             }
         });
         let precentHighEff = (breakdown.hea + breakdown.heu) / totalCount;
@@ -398,11 +398,11 @@ export class EcLocalDataService {
     }
 
     milPaygradeGraft: cm.IMilPayGrade;
-    
+
     constructor() {
         this.milPaygradeGraft = EcLocalDataService.milPaygradeGraft;
     }
-    
+
     get edLevels(): Array<string> {
         const edlevels = [];
         const lclEdLevel = mp.MpEdLevel;
@@ -509,7 +509,7 @@ export class EcLocalDataService {
         }
         return { user: user, paygradelist: payGradeList };
     }
-    
+
 
 
 }

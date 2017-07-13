@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import {
     CovalentCommonModule, CovalentLayoutModule, CovalentMediaModule, CovalentExpansionPanelModule, CovalentFileModule,
     CovalentStepsModule, CovalentLoadingModule, CovalentDialogsModule, CovalentSearchModule, CovalentPagingModule,
-    CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule
+    CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule, CovalentMessageModule
 } from '@covalent/core';
 import {
     MdButtonModule, MdListModule, MdIconModule, MdCardModule, MdMenuModule, MdInputModule, MdButtonToggleModule,
@@ -16,6 +16,7 @@ import {
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { LoggerService } from "./services/logger.service";
 
 @NgModule({
     imports: [
@@ -47,11 +48,13 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
         CovalentCommonModule, CovalentLayoutModule, CovalentMediaModule, CovalentExpansionPanelModule, CovalentFileModule,
         CovalentStepsModule, CovalentLoadingModule, CovalentDialogsModule, CovalentSearchModule, CovalentPagingModule,
         CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule,
-        CovalentHighlightModule,
+        CovalentHighlightModule, CovalentMessageModule,
         CovalentMarkdownModule,
         NgxChartsModule,
     ],
-    providers: []
+    providers: [
+        LoggerService
+    ]
 })
 
 export class SharedModule { }

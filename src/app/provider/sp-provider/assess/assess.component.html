@@ -1,4 +1,4 @@
-<div class="flex-container">
+<div tabindex="0" class="flex-container" (keydown.ArrowLeft)="onLeftArrow($event)" (keydown.ArrowRight)="onRightArrow($event)">
   <md-card>
     <md-card-title *ngIf="!isSelf">Assessement for {{activeInventory?.responseForAssessee?.assessee?.rankName}}</md-card-title>
     <md-card-title *ngIf="isSelf">Self Assessment</md-card-title>
@@ -30,7 +30,7 @@
     </md-card-content>
     <md-card-actions>
       <button md-raised-button [disabled]="activeInventory.id===inventories[0].id" (click)="previousInv()">Previous</button>
-      <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInv()">Next</button>
+      <button md-raised-button [disabled]="activeInventory.id===inventories[inventories.length - 1].id"  (click)="nextInv()">Next</button>
       <div style="float: right">
         <button md-raised-button *ngIf="viewOnly" (click)="cancel()">Exit</button>
         <button md-raised-button *ngIf="!viewOnly" (click)="cancel()">Cancel</button>

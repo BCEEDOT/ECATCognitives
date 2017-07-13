@@ -7,6 +7,7 @@ import 'rxjs/add/operator/pluck';
 
 import { Course, WorkGroup } from '../core/entities/faculty';
 import { FacultyDataContextService } from './services/faculty-data-context.service';
+import { FacWorkgroupService } from "./services/facworkgroup.service";
 
 @Component({
   templateUrl: './faculty.component.html',
@@ -18,11 +19,13 @@ export class FacultyComponent implements OnInit {
   courses: Course[];
   activeCourse: Course;
   activeCourseId: number;
+  onListView: boolean = true;
 
   constructor(private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
     private facultyDataContext: FacultyDataContextService,
+    private facWorkGroupService: FacWorkgroupService,
   ) {
     this.courses$ = route.data.pluck('courses');
   }
@@ -32,9 +35,24 @@ export class FacultyComponent implements OnInit {
       this.courses = courses;
       this.activate();
     });
+
+     this.facWorkGroupService.onListView$.subscribe(value => {
+       this.onListView = value;
+    });
+
+  }
+
+  setActiveCourse(course: Course): void {
+    this.activeCourse = course;
+    this.activeCourseId = this.activeCourse.id;
+
+    this.router.navigate(['list', this.activeCourseId], { relativeTo: this.route });
+    
   }
 
   activate(force?: boolean): void {
+
+    //this.facWorkGroupService.onListView(true);
 
     this.courses.sort((crseA: Course, crseB: Course) => {
       if (crseA.startDate < crseB.startDate) { return 1; }

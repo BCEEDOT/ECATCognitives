@@ -39,7 +39,7 @@ export class ProfileStudentComponent implements OnInit {
     this.userDataContext.commit()
       .then((res) => {
         this.loadingService.resolve(this.profileLoading);
-        this.snackBarService.open('Student Profile Updated', 'Dismiss');
+        this.snackBarService.open('Student Profile Updated', 'Dismiss', {duration: 2000});
         this.isEditing = false;
       })
       .catch((error) => {

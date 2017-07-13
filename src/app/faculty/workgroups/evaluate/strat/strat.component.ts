@@ -20,6 +20,7 @@ export class StratComponent implements OnInit {
     groupCount: number;
     workGroupId: number;
     courseId: number;
+    readOnly: boolean = false;
 
     constructor(private spProvider: SpProviderService, private facultyDataContext: FacultyDataContextService,
         private dialogService: TdDialogService, private snackBarService: MdSnackBar, private route: ActivatedRoute, private facWorkGroupService: FacWorkgroupService) {
@@ -34,12 +35,19 @@ export class StratComponent implements OnInit {
     @Input() members: CrseStudentInGroup[];
 
     ngOnInit() {
+
+        this.facWorkGroupService.readOnly$.subscribe(status => {
+            this.readOnly = status;
+            this.activate();
+        });
+
         this.activate();
     }
 
     activate() {
         this.groupMembers = this.members;
         this.groupCount = this.groupMembers.length;
+        this.readOnly = this.facWorkGroupService.readOnly$.value;
         this.evaluateStrat(true);
     }
 
@@ -57,7 +65,7 @@ export class StratComponent implements OnInit {
                         gm.stratIsValid = true;
                         gm.proposedStratPosition = undefined;
                     });
-                    this.snackBarService.open('Changes Discarded', 'Dismiss', { duration: 2000 })
+                    this.snackBarService.open('Changes Discarded', 'Dismiss', { duration: 2000 });
                     //this.location.back();
                 }
             });
@@ -125,7 +133,7 @@ export class StratComponent implements OnInit {
                     gm.proposedStratPosition = null;
                 });
             this.facWorkGroupService.stratComplete(true);
-            this.snackBarService.open("Success, Strats Updated!", 'Dismiss')
+            this.snackBarService.open("Success, Strats Updated!", 'Dismiss', { duration: 2000 });
         }).catch((error) => {
             this.dialogService.openAlert({
                 message: 'There was an error saving your changes, please try again.'

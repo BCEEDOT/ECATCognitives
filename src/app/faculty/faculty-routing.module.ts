@@ -10,7 +10,10 @@ import { GlobalService } from '../core/services/global.service';
 import { StatusComponent } from './workgroups/status/status.component'
 import { EvaluateComponent } from './workgroups/evaluate/evaluate.component';
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
+import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
+import { ResultsDetailsComponent } from "./workgroups/results/results-details/results-details.component";
+import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 
 const facultyRoutes: Routes = [
   {
@@ -24,67 +27,63 @@ const facultyRoutes: Routes = [
         canActivateChild: [FacultyAuthGuardService],
         // Get the students courses
         resolve: { courses: 'coursesResolver' },
-            children: [
-              // {
-              //   path: '',
-              //   component: AssessComponent,
-              //   //Set active course and workgroup. Determine if results are published for active group. 
-              // },
+        children: [
 
-              {
-                path: 'list/:crsId',
-                // set to most recent course, allow student to switch between courses.
-                component: ListComponent,
-                // children: [
-                //   { path: 'sp', component: SpComponent},
-                //   { path: 'comment', component: CommentComponent}
-                // ]
-                resolve: { course: 'courseResolver' },
-              },
-              {
-                path: 'list/:crsId/status/:wrkGrpId',
-                component: StatusComponent,
-                resolve: { workGroup: 'facWorkGroupResolver'}
-              },
-              {
-                path: 'list/:crsId/evaluate/:wrkGrpId',
-                component: EvaluateComponent,
-                resolve: { workGroup: 'facWorkGroupResolver'}
-              },
-              // {
-              //   path: 'results/:crsId/:wrkGrpId',
-              //   component: ResultsComponent,
-              //   //resolve: { results: 'resultsResolver' },
-              // },
-              {
-                path: 'list/:crsId/evaluate/:wrkGrpId/assess/:assesseeId',
-                component: AssessComponent,
-                resolve: { inventories: 'facSpAssessResolver' }
-              },
-              // {
-              //   path: '',
-              //   component: StudentComponent,
-              //   resolve: { assess: 'assessmentResolver'},
-              //}
+          {
+            path: 'list/:crsId',
+            // set to most recent course, allow student to switch between courses.
+            component: ListComponent,
+          },
+          {
+            path: 'list/:crsId/status/:wrkGrpId',
+            component: StatusComponent,
+            resolve: { workGroup: 'facWorkGroupResolver' }
+          },
+          {
+            path: 'list/:crsId/evaluate/:wrkGrpId',
+            component: EvaluateComponent,
+            resolve: { workGroup: 'facWorkGroupResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
+          },
 
-            ]
+          {
+            path: 'list/:crsId/evaluate/:wrkGrpId/assess/:assesseeId',
+            component: AssessComponent,
+            resolve: { inventories: 'facSpAssessResolver' },
+            canDeactivate: [FacultySaveChangesGuard],
+          },
+          {
+            path: 'list/:crsId/results/:wrkGrpId',
+            component: ResultsComponent,
+          },
+          {
+            path: 'list/:crsId/results/:wrkGrpId/details/:stuId',
+            component: ResultsDetailsComponent,
+          },
+          {
+            path: '',
+            component: FacultyComponent,
+            resolve: { courses: 'coursesResolver' },
           }
+
         ]
       }
     ]
+  }
+]
 
 
-export function coursesResolver(facultyDataContext: FacultyDataContextService){
-   return (route: ActivatedRouteSnapshot) => facultyDataContext.initCourses();
- }
-
-export function courseResolver(facultyDataContext: FacultyDataContextService) {
-  return (route: ActivatedRouteSnapshot) => facultyDataContext.getActiveCourse(+route.params['crsId']);
+export function coursesResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.initCourses();
 }
 
+// export function courseResolver(facultyDataContext: FacultyDataContextService) {
+//   return (route: ActivatedRouteSnapshot) => facultyDataContext.getActiveCourse(+route.params['crsId']);
+// }
+
 export function facSpAssessResolver(facultyDataContext: FacultyDataContextService) {
-  return (route: ActivatedRouteSnapshot) => facultyDataContext.getFacSpInventory(+route.params['crsId'], 
-+route.params['wrkGrpId'], +route.params['assesseeId']);
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.getFacSpInventory(+route.params['crsId'],
+    +route.params['wrkGrpId'], +route.params['assesseeId']);
 }
 
 // export function courseResolver(studentDataContext: StudentDataContext) {
@@ -103,8 +102,8 @@ export function facWorkGroupResolver(facultyDataContext: FacultyDataContextServi
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
 // }
 
-// export function resultsResolver(studentDataContext: StudentDataContext) {
-//   return (route: ActivatedRouteSnapshot) => studentDataContext.results(+route.params['id']);
+// export function facFesultsResolver(facultyDataContext: FacultyDataContextService) {
+//   return (route: ActivatedRouteSnapshot) => FacultyDataContextService.results(+route.params['id']);
 // }
 
 @NgModule({
@@ -118,9 +117,9 @@ export function facWorkGroupResolver(facultyDataContext: FacultyDataContextServi
     {
       provide: 'coursesResolver', useFactory: coursesResolver, deps: [FacultyDataContextService]
     },
-    {
-      provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
-    },
+    // {
+    //   provide: 'courseResolver', useFactory: courseResolver, deps: [FacultyDataContextService]
+    // },
     {
       provide: 'facWorkGroupResolver', useFactory: facWorkGroupResolver, deps: [FacultyDataContextService]
     },

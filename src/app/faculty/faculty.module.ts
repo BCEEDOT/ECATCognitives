@@ -15,6 +15,14 @@ import { StratComponent } from './workgroups/evaluate/strat/strat.component';
 import { CommentsComponent } from './workgroups/evaluate/comments/comments.component';
 import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
 import { FacWorkgroupService } from "./services/facworkgroup.service";
+import { ResultsComponent } from './workgroups/results/results.component';
+import { AssessOverviewComponent } from './workgroups/results/assess-overview/assess-overview.component';
+import { StratOverviewComponent } from './workgroups/results/strat-overview/strat-overview.component';
+import { MyhighlightDirective } from './directives/myhighlight.directive';
+import { ResultsDetailsComponent } from './workgroups/results/results-details/results-details.component';
+import { BehaviorsComponent } from './workgroups/results/results-details/behaviors/behaviors.component';
+import { ResultsCommentsComponent } from './workgroups/results/results-details/comments/comments.component';
+import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 
 @NgModule({
   imports: [
@@ -32,9 +40,17 @@ import { FacWorkgroupService } from "./services/facworkgroup.service";
     AssessComponent,
     StratComponent,
     CommentsComponent,
+    ResultsComponent,
+    AssessOverviewComponent,
+    StratOverviewComponent,
+    MyhighlightDirective,
+    ResultsDetailsComponent,
+    BehaviorsComponent,
+    ResultsCommentsComponent,
   ], 
   providers: [
     FacultyAuthGuardService,
+    FacultySaveChangesGuard,
     FacultyDataContextService,
     FacWorkgroupService
   ], 
