@@ -57,14 +57,11 @@ export class EditGroupDialogComponent implements OnInit {
 
   delete(): void {
 
-    this.workGroup.groupMembers.forEach(gm => {
-      
-    });
+    // this.workGroup.groupMembers.forEach(gm => {
 
-    this.workGroup.entityAspect.setDeleted()
+    // });
 
-
-
+    //this.workGroup.entityAspect.setDeleted()
     this.dialogRef.close(this.workGroup);
   }
 
@@ -87,8 +84,7 @@ export class EditGroupDialogComponent implements OnInit {
   }
 
   close(): void {
-
-    this.dialogRef.close('You are awesome');
+    this.dialogRef.close();
   }
 
 }

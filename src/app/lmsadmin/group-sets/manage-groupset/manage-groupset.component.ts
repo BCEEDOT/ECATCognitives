@@ -130,9 +130,19 @@ export class ManageGroupsetComponent implements OnInit {
       }
     });
 
-    this.dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      console.log(this.lmsadminDataContext.getChanges());
+    this.dialogRef.afterClosed().subscribe(workGroup => {
+      if (workGroup) {
+        console.log(workGroup);
+        workGroup['changeDescription'] = `${workGroup.defaultName} was deleted`;
+        let groupName = workGroup.defaultName;
+        workGroup.groupMembers.forEach(gm => {
+          gm.isDeleted = true;
+          gm['changeDescription'] = `${gm.rankName} moved from ${groupName} to unassigned`;
+          this.unassignedStudents.push(gm);
+        });
+        workGroup.entityAspect.setDeleted();
+        this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== workGroup.workGroupId);
+      }
     })
   }
 
