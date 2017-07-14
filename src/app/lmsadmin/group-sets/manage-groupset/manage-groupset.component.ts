@@ -117,7 +117,7 @@ export class ManageGroupsetComponent implements OnInit {
       disableClose: true,
       hasBackdrop: true,
       backdropClass: '',
-      width: '300px',
+      width: '325px',
       height: '',
       position: {
         top: '',
@@ -129,6 +129,11 @@ export class ManageGroupsetComponent implements OnInit {
         workGroup: group
       }
     });
+
+    this.dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      console.log(this.lmsadminDataContext.getChanges());
+    })
   }
 
   undoChange(change: CrseStudentInGroup) {

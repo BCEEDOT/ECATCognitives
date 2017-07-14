@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from "@angular/forms";
 //import { CommonModule } from '@angular/common';
 import { CovalentPagingModule } from '@covalent/core';
 import { CoursesComponent } from './courses/courses.component';
@@ -23,6 +24,7 @@ import { EditGroupDialogComponent } from './group-sets/manage-groupset/edit-grou
     EntityLmsadminModule,
     SharedModule,
     CovalentPagingModule,
+    ReactiveFormsModule
   ],
   declarations: [
     LmsadminComponent,
