@@ -38,6 +38,8 @@ export class CrseStudentInGroup extends EntityBase {
     workGroup: WorkGroup;
 
     /// <code> Place custom code between <code> tags
+    changeDescription: string;
+
     get rankName(): string {
         let _salutation: string;
         const p = (this.studentProfile) ? this.studentProfile.person : null;

@@ -42,7 +42,7 @@ export class WorkGroup extends EntityBase {
    wgModel: WorkGroupModel;
 
    /// <code> Place custom code between <code> tags
-   
+   changeDescription: string;
    /// </code>
 
 }

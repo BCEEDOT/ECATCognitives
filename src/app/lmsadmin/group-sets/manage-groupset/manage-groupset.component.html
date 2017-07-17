@@ -29,7 +29,7 @@
       [alwaysVisible]="false" flex></td-search-box>
     <button (click)="save()" type="button" md-raised-button color="accent">Save</button>
     <button (click)="reset()" type="button" md-raised-button color="accent">Reset</button>
-    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" [color]="color" [checked]="checked"
+    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()"
       [disabled]="disabled">
       {{(allExpanded) ? 'Collapse' : 'Expand'}} All
     </md-slide-toggle>

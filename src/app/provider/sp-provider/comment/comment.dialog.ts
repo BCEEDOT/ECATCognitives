@@ -17,11 +17,11 @@ import { FacultyDataContextService } from "../../../faculty/services/faculty-dat
   styleUrls: ['./comment.dialog.scss']
 })
 export class CommentDialog implements OnInit {
-  private comment: StudSpComment | FacSpComment;
-  private isStudent: boolean;
-  private canSave: boolean = false;
-  private commentLoad: string = 'CommentLoading';
-  private viewOnly: boolean = true;
+  comment: StudSpComment | FacSpComment;
+  isStudent: boolean;
+  canSave: boolean = false;
+  commentLoad: string = 'CommentLoading';
+  viewOnly: boolean = true;
 
   constructor(private studentDataContext: StudentDataContext,
     private facultyDataContext: FacultyDataContextService,

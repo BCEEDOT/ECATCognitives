@@ -133,11 +133,11 @@ export class ManageGroupsetComponent implements OnInit {
     this.dialogRef.afterClosed().subscribe(workGroup => {
       if (workGroup) {
         console.log(workGroup);
-        workGroup['changeDescription'] = `${workGroup.defaultName} was deleted`;
+        workGroup.changeDescription = `${workGroup.defaultName} was deleted`;
         let groupName = workGroup.defaultName;
         workGroup.groupMembers.forEach(gm => {
           gm.isDeleted = true;
-          gm['changeDescription'] = `${gm.rankName} moved from ${groupName} to unassigned`;
+          gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
           this.unassignedStudents.push(gm);
         });
         workGroup.entityAspect.setDeleted();
@@ -157,6 +157,7 @@ export class ManageGroupsetComponent implements OnInit {
       this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
       this.workGroups.filter(wg => wg.workGroupId === workGroupId)[0].groupMembers.push(change);
     }
+    
     change.entityAspect.rejectChanges();
     this.changes = this.lmsadminDataContext.getChanges();
 
@@ -282,39 +283,39 @@ export class ManageGroupsetComponent implements OnInit {
 
   }
 
-  private hasClass(el: any, name: string) {
+  hasClass(el: any, name: string) {
     return new RegExp('(?:^|\\s+)' + name + '(?:\\s+|$)').test(el.className);
   }
 
-  private addClass(el: any, name: string) {
+  addClass(el: any, name: string) {
     if (!this.hasClass(el, name)) {
       el.className = el.className ? [el.className, name].join(' ') : name;
     }
   }
 
-  private removeClass(el: any, name: string) {
+  removeClass(el: any, name: string) {
     if (this.hasClass(el, name)) {
       el.className = el.className.replace(new RegExp('(?:^|\\s+)' + name + '(?:\\s+|$)', 'g'), '');
     }
   }
 
-  private onDrag(args) {
+  onDrag(args) {
     let [e, el] = args;
     this.removeClass(e, 'ex-moved');
   }
 
-  private onDrop(args) {
+  onDrop(args) {
     let [e, target, source] = args;
     this.addClass(e, 'ex-moved');
     this.trackChanges(args);
   }
 
-  private onOver(args) {
+  onOver(args) {
     let [e, el, container] = args;
     this.addClass(el, 'ex-over');
   }
 
-  private onOut(args) {
+  onOut(args) {
     let [e, el, container] = args;
     this.removeClass(el, 'ex-over');
   }
@@ -344,7 +345,7 @@ export class ManageGroupsetComponent implements OnInit {
         })
 
         unAssignedStudent.isDeleted = true;
-        unAssignedStudent['changeDescription'] = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
+        unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
 
       } else {
 
@@ -363,7 +364,7 @@ export class ManageGroupsetComponent implements OnInit {
           this.changes = this.lmsadminDataContext.getChanges();
         }
 
-        assignedStudent['changeDescription'] = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
+        assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
 
       }
 
@@ -371,7 +372,7 @@ export class ManageGroupsetComponent implements OnInit {
         let student = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
           return gm.studentId === +studentId
         });
-        student['changeDescription'] = `${student.rankName} moved from ${this.flights[+fromGroupId]} to ${this.flights[+toGroupId]}`;
+        student.changeDescription = `${student.rankName} moved from ${this.flights[+fromGroupId]} to ${this.flights[+toGroupId]}`;
       }
 
       this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 });

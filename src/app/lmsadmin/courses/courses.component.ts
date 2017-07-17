@@ -16,6 +16,7 @@ import { GlobalService } from "../../core/services/global.service";
 export class CoursesComponent implements OnInit {
   courses$: Observable<Array<Course>>;
   courses: Array<Course>;
+  isLoading: boolean = false;
 
   constructor(private ctx: LmsadminDataContextService,
     private global: GlobalService,

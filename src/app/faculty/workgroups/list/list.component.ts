@@ -31,7 +31,7 @@ export class ListComponent implements OnInit {
   course: Course;
   isLoading: boolean = true;
   paramCourseId: number;
-  private statusMap = MpSpStatus;
+  statusMap = MpSpStatus;
 
   options: boolean = false;
 

@@ -29,11 +29,12 @@ export class Course extends EntityBase {
    workGroups: WorkGroup[];
 
    /// <code> Place custom code between <code> tags
-   test: string;
+   displayName: string;
+
 
    constructor() {
        super();
-       this.test = 'Hello';
+
 
    }
 
