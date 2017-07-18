@@ -146,21 +146,40 @@ export class ManageGroupsetComponent implements OnInit {
     })
   }
 
-  undoChange(change: CrseStudentInGroup) {
-    let workGroupId: number;
-    if (change.isDeleted) {
-      if (change.entityAspect.originalValues.workGroupId) {
-        workGroupId = change.entityAspect.originalValues.workGroupId;
-      } else {
-        workGroupId = change.workGroupId;
-      }
-      this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
-      this.workGroups.filter(wg => wg.workGroupId === workGroupId)[0].groupMembers.push(change);
-    }
-    
-    change.entityAspect.rejectChanges();
-    this.changes = this.lmsadminDataContext.getChanges();
+  undoChange(change: any) {
+    //Change can be a CrseStudentinGroup or WorkGroup
+    let workGroupId: number = change.workGroupId;
+    let group = this.workGroups.filter(wg => wg.workGroupId === workGroupId)[0];
 
+    if (group) {
+      group.groupMembers.push(change);
+      if (change.isDeleted) {
+        // if (change.entityAspect.originalValues.workGroupId) {
+        //   workGroupId = change.entityAspect.originalValues.workGroupId;
+        // } else {
+        //   workGroupId = change.workGroupId;
+        // }
+        this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
+      }
+
+      change.entityAspect.rejectChanges();
+
+    } else {
+
+
+      //Change is WorkGroup
+      if (change.entityAspect.entity instanceof WorkGroup) {
+        change as WorkGroup;
+        workGroupId = change.workGroupId;
+        change.entityAspect.rejectChanges();
+        this.workGroups.push(change);
+      } else {
+        this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+
+      }
+    }
+
+    this.changes = this.lmsadminDataContext.getChanges();
 
   }
 
