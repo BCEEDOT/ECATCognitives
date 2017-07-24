@@ -10,7 +10,7 @@ import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA, MdSnackBar } fro
 import { DOCUMENT } from '@angular/platform-browser';
 
 import { MpEntityType, MpGroupCategory, MpSpStatus } from '../../../core/common/mapStrings';
-import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../core/entities/lmsadmin';
+import { Course, CrseStudentInGroup, WorkGroup } from '../../../core/entities/lmsadmin';
 import { LmsadminDataContextService } from '../../services/lmsadmin-data-context.service';
 import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
@@ -88,13 +88,6 @@ export class ManageGroupsetComponent implements OnInit {
           }
         }
 
-        // this.changes = this.lmsadminDataContext.getChanges();
-
-        // this.changes.forEach(change => {
-        //   if (change.entityAspect.entity instanceof CrseStudentInGroup) {
-        //   }
-        // });
-
         this.changes = this.lmsadminDataContext.getChanges();
 
       }
@@ -109,6 +102,27 @@ export class ManageGroupsetComponent implements OnInit {
       this.activate();
     });
 
+
+  }
+
+  addGroup(): void {
+
+    //Required in database WgModelId, CourseId, isPrimary
+    let initial = {
+      courseId: this.workGroups[0].courseId,
+      defaultName: '',
+      customName: '',
+      groupNumber: '',
+      isPrimary: true,
+      mpCategory: this.workGroupCategory,
+      mpSpStatus: "Open",
+      wgModelId: this.workGroups[0].wgModelId,
+      //workGroupId: 93838 //How does this get created?
+    } as WorkGroup;
+
+    let workGroup = this.lmsadminDataContext._manager.createEntity('WorkGroup', initial) as WorkGroup;
+    this.editGroup(workGroup);
+    console.log(this.lmsadminDataContext.getChanges());
 
   }
 
@@ -132,16 +146,29 @@ export class ManageGroupsetComponent implements OnInit {
 
     this.dialogRef.afterClosed().subscribe(workGroup => {
       if (workGroup) {
-        console.log(workGroup);
-        workGroup.changeDescription = `${workGroup.defaultName} was deleted`;
-        let groupName = workGroup.defaultName;
-        workGroup.groupMembers.forEach(gm => {
-          gm.isDeleted = true;
-          gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
-          this.unassignedStudents.push(gm);
-        });
-        workGroup.entityAspect.setDeleted();
-        this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== workGroup.workGroupId);
+
+        let groupName = workGroup.defaultName.toLowerCase();
+
+        if (workGroup.entityAspect.entityState.isAdded()) {
+          workGroup.changeDescription = `${workGroup.defaultName} added`;
+          this.flights[workGroup.workGroupId] = workGroup.defaultName;
+          this.workGroups.push(workGroup);
+
+        }
+
+        if (workGroup.entityAspect.entityState.name === "Unchanged") {
+
+          workGroup.changeDescription = `${workGroup.defaultName} deleted`;
+
+          workGroup.groupMembers.forEach(gm => {
+            gm.isDeleted = true;
+            gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
+            this.unassignedStudents.push(gm);
+          });
+          workGroup.entityAspect.setDeleted();
+          this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== workGroup.workGroupId);
+        }
+
       }
     })
   }
@@ -166,8 +193,7 @@ export class ManageGroupsetComponent implements OnInit {
 
     } else {
 
-
-      //Change is WorkGroup
+      //Change is a deleted workgroup
       if (change.entityAspect.entity instanceof WorkGroup) {
         change as WorkGroup;
         workGroupId = change.workGroupId;
@@ -230,11 +256,21 @@ export class ManageGroupsetComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.unassignedStudents.forEach(student => {
-            this.undoChange(student);
-          });
-          this.lmsadminDataContext.rollback();
-          this.changes = this.lmsadminDataContext.getChanges();
+          if (this.changes) {
+            this.changes.forEach(change => {
+              if (change.entityAspect.entity instanceof WorkGroup) {
+                this.undoChange(change);
+              }
+            })
+
+            this.unassignedStudents.forEach(student => {
+              this.undoChange(student);
+            });
+            this.lmsadminDataContext.rollback();
+            this.changes = this.lmsadminDataContext.getChanges();
+          }
+
+
         }
       });
 
@@ -245,6 +281,8 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   save(): void {
+    //Need to make sure that they cannot have Duplicate flight numbers. 
+    console.log(this.lmsadminDataContext.getChanges());
     console.log(this.workGroups);
     console.log(this.unassignedStudents);
   }

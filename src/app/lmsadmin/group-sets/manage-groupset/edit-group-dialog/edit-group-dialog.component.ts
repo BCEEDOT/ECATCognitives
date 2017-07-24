@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MD_DIALOG_DATA, MdDialog, MdDialogConfig, MdDialogRef } from '@angular/material';
+import { TdDialogService } from "@covalent/core";
 
 
 import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../../core/entities/lmsadmin';
@@ -17,21 +18,32 @@ export class EditGroupDialogComponent implements OnInit {
   editGroupForm: FormGroup
   workGroup: WorkGroup;
   submitted: boolean = false;
+  numbers: string[] = [];
+  flightNumber: string;
 
-  constructor(private fb: FormBuilder, public dialogRef: MdDialogRef<EditGroupDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
+  constructor(private fb: FormBuilder, private dialogService: TdDialogService,
+    public dialogRef: MdDialogRef<EditGroupDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
 
     this.workGroup = this.data.workGroup;
+    for (var i = 1; i <= 30; i++) {
+
+
+      if (i < 10) {
+        this.numbers.push(`0${i}`);
+      } else {
+        this.numbers.push(i.toString());
+      }
+    }
     this.buildForm();
 
   }
 
   buildForm(): void {
     this.editGroupForm = this.fb.group({
-      'defaultName': [this.workGroup.defaultName, [
-        Validators.required,
-        Validators.maxLength(50)
+      'groupNumber': [this.workGroup.groupNumber, [
+        Validators.required
       ]
       ],
       'customName': [this.workGroup.customName, [
@@ -57,30 +69,43 @@ export class EditGroupDialogComponent implements OnInit {
 
   delete(): void {
 
-    // this.workGroup.groupMembers.forEach(gm => {
+    this.dialogService.openConfirm({
+      message: 'Are you sure you want to delete this flight? All students will be placed in unassigned.',
+      title: 'Delete Flight',
+      acceptButton: 'Yes',
+      cancelButton: 'No'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        
+        this.dialogRef.close(this.workGroup);
+      }
+    });
 
-    // });
-
-    //this.workGroup.entityAspect.setDeleted()
-    this.dialogRef.close(this.workGroup);
   }
 
 
 
-  save(): void {
+  ok(): void {
     this.submitted = true;
 
-    if (this.workGroup.defaultName.toLowerCase() !== this.editGroupForm.value.defaultName.toLowerCase() ||
-      this.workGroup.customName.toLowerCase() !== this.editGroupForm.value.defaultName.toLowerCase()) {
+    if (this.workGroup.groupNumber !== this.editGroupForm.value.groupNumber ||
+      this.workGroup.customName.toLowerCase() !== this.editGroupForm.value.customName.toLowerCase()) {
 
-      this.workGroup.defaultName = this.editGroupForm.value.defaultName;
+      this.workGroup.groupNumber = this.editGroupForm.value.groupNumber;
+      this.workGroup.defaultName = `Flight ${this.editGroupForm.value.groupNumber}`;
       this.workGroup.customName = this.editGroupForm.value.customName;
 
-      this.workGroup['changeDescription'] = `${this.workGroup.defaultName}'s information has been modified`;
+      if (this.workGroup.entityAspect.originalValues.defaultName) {
+        this.workGroup['changeDescription'] = `${this.workGroup.entityAspect.originalValues.defaultName}'s information has been modified`;
+      } else {
+        this.workGroup['changeDescription'] = `${this.workGroup.defaultName}'s information has been modified`;
+      }
+
+      
 
     }
 
-    this.dialogRef.close();
+    this.dialogRef.close(this.workGroup);
   }
 
   close(): void {
