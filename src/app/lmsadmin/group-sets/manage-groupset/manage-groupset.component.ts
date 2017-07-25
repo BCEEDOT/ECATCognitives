@@ -26,6 +26,7 @@ import { AddGroupDialogComponent } from "./add-group-dialog/add-group-dialog.com
 export class ManageGroupsetComponent implements OnInit {
 
   workGroups: WorkGroup[];
+  origWorkGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
   unassigned: string = "unassigned";
   changes = [];
@@ -101,7 +102,7 @@ export class ManageGroupsetComponent implements OnInit {
   ngOnInit() {
 
     this.workGroups$.subscribe(workGroups => {
-      this.workGroups = workGroups;
+      this.workGroups = this.origWorkGroups =  workGroups;
       this.activate();
     });
 
@@ -339,20 +340,11 @@ export class ManageGroupsetComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           if (this.changes) {
-            this.changes.forEach(change => {
-              if (change.entityAspect.entity instanceof WorkGroup) {
-                this.undoChange(change);
-              }
-            })
-
-            this.unassignedStudents.forEach(student => {
-              this.undoChange(student);
-            });
+            this.unassignedStudents = [];
+            this.workGroups = this.origWorkGroups;
             this.lmsadminDataContext.rollback();
             this.changes = this.lmsadminDataContext.getChanges();
           }
-
-
         }
       });
 
