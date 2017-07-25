@@ -28,6 +28,7 @@ export class ManageGroupsetComponent implements OnInit {
   workGroups: WorkGroup[];
   origWorkGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
+  courseId: number;
   unassigned: string = "unassigned";
   changes = [];
   unassignedStudents: CrseStudentInGroup[] = [];
@@ -53,6 +54,7 @@ export class ManageGroupsetComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.workGroupCategory = params['catId'];
+      this.courseId = params['crsId'];
     });
 
     dragulaService.drag.subscribe((value) => {
@@ -102,7 +104,7 @@ export class ManageGroupsetComponent implements OnInit {
   ngOnInit() {
 
     this.workGroups$.subscribe(workGroups => {
-      this.workGroups = this.origWorkGroups =  workGroups;
+      this.workGroups = workGroups;
       this.activate();
     });
 
@@ -340,10 +342,15 @@ export class ManageGroupsetComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           if (this.changes) {
-            this.unassignedStudents = [];
-            this.workGroups = this.origWorkGroups;
             this.lmsadminDataContext.rollback();
-            this.changes = this.lmsadminDataContext.getChanges();
+            this.lmsadminDataContext.fetchAllGroupSetMembers(this.courseId, this.workGroupCategory, true).then((workGroups: WorkGroup[]) => {
+              this.unassignedStudents = [];
+              this.changes = this.lmsadminDataContext.getChanges();
+              this.workGroups = workGroups;
+              this.activate();
+            })
+
+
           }
         }
       });
