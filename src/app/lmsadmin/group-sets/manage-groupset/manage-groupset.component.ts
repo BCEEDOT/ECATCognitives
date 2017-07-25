@@ -14,6 +14,7 @@ import { Course, CrseStudentInGroup, WorkGroup } from '../../../core/entities/lm
 import { LmsadminDataContextService } from '../../services/lmsadmin-data-context.service';
 import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
+import { AddGroupDialogComponent } from "./add-group-dialog/add-group-dialog.component";
 
 @Component({
   selector: 'app-manage-groupset',
@@ -34,7 +35,8 @@ export class ManageGroupsetComponent implements OnInit {
   disabled = false;
   allExpanded: boolean = false;
   searchInputTerm: string;
-  dialogRef: MdDialogRef<EditGroupDialogComponent>;
+  editDialogRef: MdDialogRef<EditGroupDialogComponent>;
+  addDialogRef: MdDialogRef<AddGroupDialogComponent>;
 
   constructor(private lmsadminDataContext: LmsadminDataContextService,
     private dragulaService: DragulaService,
@@ -43,7 +45,8 @@ export class ManageGroupsetComponent implements OnInit {
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
     private snackBar: MdSnackBar,
-    public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
+    public editDialog: MdDialog, @Inject(DOCUMENT) editDoc: any,
+    public addDialog: MdDialog, @Inject(DOCUMENT) addDoc: any) {
 
     this.workGroups$ = route.data.pluck('groupSetMembers');
 
@@ -121,13 +124,44 @@ export class ManageGroupsetComponent implements OnInit {
     } as WorkGroup;
 
     let workGroup = this.lmsadminDataContext._manager.createEntity('WorkGroup', initial) as WorkGroup;
-    this.editGroup(workGroup);
-    console.log(this.lmsadminDataContext.getChanges());
 
+    this.addDialogRef = this.addDialog.open(AddGroupDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '325px',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: ''
+      },
+      data: {
+        workGroup: workGroup
+      }
+    });
+
+    this.addDialogRef.afterClosed().subscribe(workGroup => {
+      if (workGroup) {
+
+        let groupName = workGroup.defaultName.toLowerCase();
+
+        if (workGroup.entityAspect.entityState.isAdded()) {
+
+          workGroup.changeDescription = `${workGroup.defaultName} added`;
+          this.flights[workGroup.workGroupId] = workGroup.defaultName;
+          this.workGroups.push(workGroup);
+
+        }
+
+      }
+    })
   }
 
+
   editGroup(group: WorkGroup): void {
-    this.dialogRef = this.dialog.open(EditGroupDialogComponent, {
+    this.editDialogRef = this.editDialog.open(EditGroupDialogComponent, {
       disableClose: true,
       hasBackdrop: true,
       backdropClass: '',
@@ -144,30 +178,35 @@ export class ManageGroupsetComponent implements OnInit {
       }
     });
 
-    this.dialogRef.afterClosed().subscribe(workGroup => {
+    this.editDialogRef.afterClosed().subscribe(workGroup => {
       if (workGroup) {
 
         let groupName = workGroup.defaultName.toLowerCase();
 
-        if (workGroup.entityAspect.entityState.isAdded()) {
-          workGroup.changeDescription = `${workGroup.defaultName} added`;
-          this.flights[workGroup.workGroupId] = workGroup.defaultName;
-          this.workGroups.push(workGroup);
-
-        }
-
-        if (workGroup.entityAspect.entityState.name === "Unchanged") {
-
-          workGroup.changeDescription = `${workGroup.defaultName} deleted`;
+        if (workGroup.entityAspect.entityState.name !== "Modified") {
 
           workGroup.groupMembers.forEach(gm => {
             gm.isDeleted = true;
-            gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
+            if (gm.workGroupId < 0) {
+              gm.changeDescription = `${gm.rankName} moved from ${this.flights[gm.entityAspect.originalValues.workGroupId]} to unassigned`;
+            } else {
+              gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
+            }
             this.unassignedStudents.push(gm);
           });
-          workGroup.entityAspect.setDeleted();
+
+          if (workGroup.entityAspect.entityState.name === "Added") {
+            workGroup.entityAspect.rejectChanges();
+          } else {
+            workGroup.entityAspect.setDeleted();
+            workGroup.changeDescription = `${workGroup.defaultName} deleted`;
+          }
+
+
           this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== workGroup.workGroupId);
         }
+
+        this.changes = this.lmsadminDataContext.getChanges();
 
       }
     })
@@ -176,33 +215,76 @@ export class ManageGroupsetComponent implements OnInit {
   undoChange(change: any) {
     //Change can be a CrseStudentinGroup or WorkGroup
     let workGroupId: number = change.workGroupId;
+
+    //Group will return undefined if it is deleted
     let group = this.workGroups.filter(wg => wg.workGroupId === workGroupId)[0];
 
     if (group) {
-      group.groupMembers.push(change);
+
       if (change.isDeleted) {
-        // if (change.entityAspect.originalValues.workGroupId) {
-        //   workGroupId = change.entityAspect.originalValues.workGroupId;
-        // } else {
-        //   workGroupId = change.workGroupId;
-        // }
         this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
+        group.groupMembers.push(change);
+        change.entityAspect.rejectChanges();
       }
 
-      change.entityAspect.rejectChanges();
+      if (change.entityAspect.entity instanceof WorkGroup) {
+        if (change.groupMembers.length === 0) {
+          this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== change.workGroupId);
+          change.entityAspect.rejectChanges();
+        } else {
+          if (change.entityAspect.entityState.name === "Modified") {
+            change.entityAspect.rejectChanges();
+          } else {
+
+            this.dialogService.openConfirm({
+              message: 'Are you sure you want to delete this flight? All students will be placed in unassigned.',
+              title: 'Delete Flight',
+              acceptButton: 'Yes',
+              cancelButton: 'No'
+            }).afterClosed().subscribe((confirmed: boolean) => {
+              if (confirmed) {
+                change.groupMembers.forEach(gm => {
+                  gm.isDeleted = true;
+                  gm.changeDescription = `${gm.rankName} moved from ${this.flights[gm.entityAspect.originalValues.workGroupId]} to unassigned`;
+                  this.unassignedStudents.push(gm);
+                });
+
+                this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== change.workGroupId);
+                change.entityAspect.rejectChanges();
+                this.changes = this.lmsadminDataContext.getChanges();
+
+              }
+            });
+          }
+        }
+      } else {
+        change.entityAspect.rejectChanges();
+      }
+
+
 
     } else {
 
       //Change is a deleted workgroup
       if (change.entityAspect.entity instanceof WorkGroup) {
         change as WorkGroup;
-        workGroupId = change.workGroupId;
+        //workGroupId = change.workGroupId;
         change.entityAspect.rejectChanges();
         this.workGroups.push(change);
       } else {
-        this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+
+        //Check if student was previously in an added group that has since been deleted
+        if (group || change.workGroupId < 0) {
+          this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
+          change.entityAspect.rejectChanges();
+        } else {
+
+          this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+        }
 
       }
+
+
     }
 
     this.changes = this.lmsadminDataContext.getChanges();
@@ -281,7 +363,7 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   save(): void {
-    //Need to make sure that they cannot have Duplicate flight numbers. 
+    //Need to make sure that they cannot have Duplicate flight numbers.
     console.log(this.lmsadminDataContext.getChanges());
     console.log(this.workGroups);
     console.log(this.unassignedStudents);
@@ -401,8 +483,15 @@ export class ManageGroupsetComponent implements OnInit {
           return gm.studentId === +studentId;
         })
 
+
+        if (unAssignedStudent.entityAspect.originalValues.workGroupId) {
+
+          unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[unAssignedStudent.entityAspect.originalValues.workGroupId]} to unassigned`;
+        } else {
+          unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
+        }
+
         unAssignedStudent.isDeleted = true;
-        unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
 
       } else {
 

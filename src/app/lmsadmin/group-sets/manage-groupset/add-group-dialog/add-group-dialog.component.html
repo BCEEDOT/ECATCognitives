@@ -1,4 +1,4 @@
-<md-card-title>Edit Flight</md-card-title>
+<md-card-title>Add Flight</md-card-title>
 <md-list>
   <form [formGroup]="editGroupForm" (ngSubmit)="ok()">
     <md-list-item class="pull-left-md">
@@ -23,7 +23,6 @@
 
     <button md-raised-button color="accent" type="button" [disabled]="isDisabled()" (click)="ok()" class="text-upper">Ok</button>
     <button md-raised-button color="accent" type="button" class="text-upper" (click)="close();">Cancel</button>
-    <button md-raised-button color="accent" type="button" class="text-upper" (click)="delete()">Delete</button>
 
   </div>
 </md-card-actions>
