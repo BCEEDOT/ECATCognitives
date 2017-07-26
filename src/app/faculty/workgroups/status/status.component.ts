@@ -33,14 +33,14 @@ interface CrseStudExtended extends CrseStudentInGroup {
 })
 
 export class StatusComponent implements OnInit {
-  private workGroup: WorkGroup;
-  private workGroup$: Observable<WorkGroup>;
-  private canReview: boolean = false;
-  private members: Array<CrseStudExtended>;
-  private wgName: string;
+  workGroup: WorkGroup;
+  workGroup$: Observable<WorkGroup>;
+  canReview: boolean = false;
+  members: Array<CrseStudExtended>;
+  wgName: string;
   //private facIncomplete: boolean = false;
-  private chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
-  private statusMap = MpSpStatus;
+  chartColors = {domain: ['#00308F', '#00AA58', '#AAAAAA', '#AA0000']};
+  statusMap = MpSpStatus;
 
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,

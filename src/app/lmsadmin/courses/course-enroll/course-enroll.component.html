@@ -1,0 +1,63 @@
+<md-card>
+  <md-card-title>
+    <button md-raised-button [routerLink]="['../..']">Back</button>
+    <div fxFlex="100" class="text-center">
+      {{course?.name}} - {{course?.classNumber}} Enrollments
+    </div>
+    <span fxFlex></span>
+    <!--<button md-raised-button>Poll LMS Enrollments</button>-->
+    <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+  </md-card-title>
+  <md-card-content>
+    <md-tab-group md-stretch-tabs>
+      <md-tab>
+        <ng-template md-tab-label>Students</ng-template>
+        <span fxFlex="100" class="text-center pad-top-xl md-title" *ngIf="course?.students.length === 0">No student enrollments for this course in ECAT.</span>
+        <div *ngIf="course?.students.length > 0">
+          <td-paging-bar #pagingBar pageLinkCount="10" [initialPage]="1" [firstLast]="true" [total]="course?.students.length" (change)="change($event)">
+            <span td-paging-bar-label hide-xs>Row per page:</span>
+            {{pagingBar.range}} <span hide-xs>of {{pagingBar.total}}</span>
+          </td-paging-bar>
+          <md-list>
+            <md-list-item>
+              <span fxFlex="30">LAST NAME</span>
+              <span fxFlex="30">FIRST NAME</span>
+              <span fxFlex="30">GRADE</span>
+              <span fxFlex="30">AFFILIATION</span>
+              <span fxFlex="30">COMPONENT</span>
+            </md-list-item>
+            <md-list-item *ngFor="let courseStudent of studentsPage">
+              <span fxFlex="30">{{courseStudent.student.person.lastName}}</span>
+              <span fxFlex="30">{{courseStudent.student.person.firstName}}</span>
+              <span fxFlex="30">{{courseStudent.student.person.mpPaygrade}}</span>
+              <span fxFlex="30">{{courseStudent.student.person.mpAffiliation}}</span>
+              <span fxFlex="30">{{courseStudent.student.person.mpComponent}}</span>
+            </md-list-item>
+          </md-list>
+        </div>
+      </md-tab>
+      <md-tab>
+        <ng-template md-tab-label>Faculty</ng-template>
+        <span fxFlex="100" class="text-center pad-top-xl md-title" *ngIf="course?.faculty.length === 0">No Faculty enrollments for this course in ECAT.</span>
+        <div *ngIf="course?.faculty.length > 0">
+          <md-list>
+            <md-list-item>
+              <span fxFlex="30">LAST NAME</span>
+              <span fxFlex="30">FIRST NAME</span>
+              <span fxFlex="30">GRADE</span>
+              <span fxFlex="30">AFFILIATION</span>
+              <span fxFlex="30">COMPONENT</span>
+            </md-list-item>
+            <md-list-item *ngFor="let courseFaculty of course?.faculty">
+              <span fxFlex="30">{{courseFaculty.facultyProfile.person.lastName}}</span>
+              <span fxFlex="30">{{courseFaculty.facultyProfile.person.firstName}}</span>
+              <span fxFlex="30">{{courseFaculty.facultyProfile.person.mpPaygrade}}</span>
+              <span fxFlex="30">{{courseFaculty.facultyProfile.person.mpAffiliation}}</span>
+              <span fxFlex="30">{{courseFaculty.facultyProfile.person.mpComponent}}</span>
+            </md-list-item>
+          </md-list>
+        </div>
+      </md-tab>
+    </md-tab-group>
+  </md-card-content>
+</md-card>

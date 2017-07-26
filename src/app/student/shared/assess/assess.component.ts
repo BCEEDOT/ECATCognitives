@@ -63,8 +63,8 @@ export class AssessComponent implements OnInit, OnChanges {
 
       // gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
 
-      gm['commentText'] = commentText;
-      gm['assessText'] = assessText;
+      gm.commentText = commentText;
+      gm.assessText = assessText;
 
     });
 

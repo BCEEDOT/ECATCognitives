@@ -17,6 +17,7 @@ import { RoadrunnerModule } from "./roadrunner/roadrunner.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
+import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -37,6 +38,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     CoreModule,
     BrowserModule,
     FacultyModule,
+    LmsadminModule,
     UsersModule,
     StudentModule,
     ProfileModule,

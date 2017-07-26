@@ -1,6 +1,7 @@
 <td-layout #layout>
   <td-navigation-drawer logo="assets:covalent" sidenavTitle="" name={{persona?.person?.prettyName}} email={{persona?.person?.email}}>
     <md-nav-list>
+       
 
 
       <a md-list-item routerLink="/dashboard" (click)="layout.close()">
@@ -10,8 +11,10 @@
         <md-icon>assessment</md-icon>Assessment Center</a>
       <a *ngIf="isFaculty" md-list-item routerLink="/faculty/workgroups" (click)="layout.close()">
         <md-icon>people</md-icon>Workgroup Center</a>
-                 <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
+         <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
          <a *ngIf="isFaculty" md-list-item routerLink="/roadrunnerFaculty" (click)="layout.close()"><md-icon>android</md-icon>Road Runner</a>
+         <a *ngIf="isLmsAdmin" md-list-item routerLink="/lmsadmin/courses" (click)="layout.close()"><md-icon>security</md-icon>Instructional System Admin</a>
+
         <md-divider></md-divider>
         <a md-list-item routerLink="/profile" (click)="layout.close()">
         <md-icon>account_circle</md-icon>Profile</a>

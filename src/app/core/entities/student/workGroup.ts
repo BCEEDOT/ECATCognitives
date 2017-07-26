@@ -35,7 +35,7 @@ export class WorkGroup extends EntityBase {
    spStratResults: StratResult[];
 
    /// <code> Place custom code between <code> tags
-   
+   displayName: string;
    /// </code>
 
 }
