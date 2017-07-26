@@ -3,15 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MD_DIALOG_DATA, MdDialog, MdDialogConfig, MdDialogRef } from '@angular/material';
 import { TdDialogService } from "@covalent/core";
 
-
 import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../../core/entities/lmsadmin';
 
 @Component({
-  selector: 'app-edit-group-dialog',
-  templateUrl: './edit-group-dialog.component.html',
-  styleUrls: ['./edit-group-dialog.component.scss']
+  selector: 'app-add-group-dialog',
+  templateUrl: './add-group-dialog.component.html',
+  styleUrls: ['./add-group-dialog.component.scss']
 })
-export class EditGroupDialogComponent implements OnInit {
+export class AddGroupDialogComponent implements OnInit {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
 
@@ -22,7 +21,7 @@ export class EditGroupDialogComponent implements OnInit {
   flightNumber: string;
 
   constructor(private fb: FormBuilder, private dialogService: TdDialogService,
-    public dialogRef: MdDialogRef<EditGroupDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
+    public dialogRef: MdDialogRef<AddGroupDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
 
@@ -66,29 +65,6 @@ export class EditGroupDialogComponent implements OnInit {
     return true;
   }
 
-  delete(): void {
-
-    if (this.workGroup.groupMembers.length === 0) {
-      this.dialogRef.close(this.workGroup);
-    } else {
-
-      this.dialogService.openConfirm({
-        message: 'Are you sure you want to delete this flight? All students will be placed in unassigned.',
-        title: 'Delete Flight',
-        acceptButton: 'Yes',
-        cancelButton: 'No'
-      }).afterClosed().subscribe((confirmed: boolean) => {
-        if (confirmed) {
-
-          this.dialogRef.close(this.workGroup);
-        }
-      });
-    }
-
-  }
-
-
-
   ok(): void {
     this.submitted = true;
 
@@ -102,20 +78,19 @@ export class EditGroupDialogComponent implements OnInit {
       if (this.workGroup.entityAspect.originalValues.defaultName) {
         this.workGroup['changeDescription'] = `${this.workGroup.entityAspect.originalValues.defaultName}'s information has been modified`;
       } else {
-        if (!this.workGroup.entityAspect.entityState.isAdded()) {
-          this.workGroup['changeDescription'] = `${this.workGroup.defaultName}'s information has been modified`;
-        }
+        this.workGroup['changeDescription'] = `${this.workGroup.defaultName}'s information has been modified`;
       }
+
+      
 
     }
 
-    this.dialogRef.close();
+    this.dialogRef.close(this.workGroup);
   }
 
   close(): void {
+    this.workGroup.entityAspect.rejectChanges();
     this.dialogRef.close();
   }
 
 }
-
-

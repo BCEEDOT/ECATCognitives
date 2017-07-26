@@ -10,11 +10,12 @@
         </td-expansion-panel>
         <td-expansion-panel label="Changes" [disabled]="changes.length === 0">
 
-          <div *ngFor="let change of changes" fxLayout="row" fxLayoutAlign="center center">
+          <div *ngFor="let change of changes" fxLayout="row" fxLayoutAlign="start center">
             <div fxFlexOffset="5%"></div>
             <p class="push-none pad-xs">
               {{change.changeDescription}}
             </p>
+            <div fxFlex></div>
             <a md-icon-button mdTooltip="Click to Undo Change" (click)="undoChange(change)">
               <md-icon>close</md-icon>
             </a>
@@ -29,8 +30,7 @@
       [alwaysVisible]="false" flex></td-search-box>
     <button (click)="save()" type="button" md-raised-button color="accent">Save</button>
     <button (click)="reset()" type="button" md-raised-button color="accent">Reset</button>
-    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()"
-      [disabled]="disabled">
+    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" [disabled]="disabled">
       {{(allExpanded) ? 'Collapse' : 'Expand'}} All
     </md-slide-toggle>
   </div>
@@ -48,7 +48,7 @@
           </td-expansion-summary>
           <md-divider></md-divider>
           <md-card-content>
-            <div [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
+            <div style="min-height: 50px" [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
 
               <p [myHighlight]="groupMember.highlighted" [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId"
                 (mouseout)="hovered = null" [id]="groupMember.studentId" *ngFor="let groupMember of workGroup.groupMembers"
@@ -63,6 +63,6 @@
 
   </div>
 </md-sidenav-container>
-<a md-fab color="accent" class="mat-fab-bottom-right fixed fab-pad">
+<a md-fab (click)="addGroup()" color="accent" class="mat-fab-bottom-right fixed fab-pad">
   <md-icon>add</md-icon>
 </a>
