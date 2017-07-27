@@ -108,6 +108,7 @@ export class ManageGroupsetComponent implements OnInit {
       this.activate();
     });
 
+    console.log(this.workGroups);
 
   }
 
@@ -120,6 +121,7 @@ export class ManageGroupsetComponent implements OnInit {
       customName: '',
       groupNumber: '',
       isPrimary: true,
+      assignedSpInstrId: this.workGroups[0].assignedSpInstrId,
       mpCategory: this.workGroupCategory,
       mpSpStatus: "Open",
       wgModelId: this.workGroups[0].wgModelId,
@@ -190,6 +192,7 @@ export class ManageGroupsetComponent implements OnInit {
 
           workGroup.groupMembers.forEach(gm => {
             gm.isDeleted = true;
+            //Check if student is being move to unassigned from newly added flight
             if (gm.workGroupId < 0) {
               gm.changeDescription = `${gm.rankName} moved from ${this.flights[gm.entityAspect.originalValues.workGroupId]} to unassigned`;
             } else {
@@ -261,6 +264,9 @@ export class ManageGroupsetComponent implements OnInit {
           }
         }
       } else {
+        if (change.entityAspect.originalValues.isDeleted) {
+          this.unassignedStudents.push(change);
+        }
         change.entityAspect.rejectChanges();
       }
 
@@ -295,6 +301,7 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   activate(): void {
+    console.log(this.workGroups);
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
 
     this.getFlightNames();
@@ -308,6 +315,25 @@ export class ManageGroupsetComponent implements OnInit {
     this.workGroups.forEach(workGroup => {
       workGroup['isExpanded'] = false;
     });
+
+    this.workGroups.forEach(wg => {
+      let deletedMembers = wg.groupMembers.filter(gm => gm.isDeleted === true);
+
+      deletedMembers.forEach(dm => {
+        this.unassignedStudents.push(dm);
+        dm.workGroup = null;
+        dm.workGroupId = 1000;
+        dm.entityAspect.setUnchanged();
+      });
+
+
+
+    });
+
+    this.changes = this.lmsadminDataContext.getChanges();
+
+    console.log(this.unassignedStudents);
+    console.log(this.lmsadminDataContext.getChanges());
 
   }
 
@@ -332,7 +358,7 @@ export class ManageGroupsetComponent implements OnInit {
 
   reset(): void {
 
-    if (this.changes.length > 0 || this.unassignedStudents.length > 0) {
+    if (this.changes.length > 0) {
 
       this.dialogService.openConfirm({
         message: 'Are you sure you want to reset all students to original flights?',
@@ -342,10 +368,11 @@ export class ManageGroupsetComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           if (this.changes) {
-            this.lmsadminDataContext.rollback();
+            this.lmsadminDataContext._manager.rejectChanges();
+            this.lmsadminDataContext._manager.clear();
             this.lmsadminDataContext.fetchAllGroupSetMembers(this.courseId, this.workGroupCategory, true).then((workGroups: WorkGroup[]) => {
               this.unassignedStudents = [];
-              this.changes = this.lmsadminDataContext.getChanges();
+              this.changes = [];
               this.workGroups = workGroups;
               this.activate();
             })
@@ -362,10 +389,26 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   save(): void {
-    //Need to make sure that they cannot have Duplicate flight numbers.
+
     console.log(this.lmsadminDataContext.getChanges());
-    console.log(this.workGroups);
     console.log(this.unassignedStudents);
+
+    if (this.changes.length > 0) {
+
+      this.dialogService.openConfirm({
+        message: 'Are you sure you want to save?',
+        title: 'Save Changes',
+        acceptButton: 'Yes',
+        cancelButton: 'No'
+      }).afterClosed().subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.lmsadminDataContext.commit();
+        }
+      });
+
+    } else {
+      this.dialogService.openAlert({ message: 'No changes to save.', title: 'Save Changes' });
+    }
   }
 
   clear(event: string) {
@@ -508,9 +551,14 @@ export class ManageGroupsetComponent implements OnInit {
           assignedStudent.isDeleted = false;
           this.changes = this.lmsadminDataContext.getChanges();
         }
+        
+        if (assignedStudent.entityAspect.originalValues.workGroupId !== 1000) {
 
-        assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
-
+          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
+        } else {
+          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
+          
+        }
       }
 
       if (toGroupId !== this.unassigned && fromGroupId !== this.unassigned) {
@@ -522,6 +570,8 @@ export class ManageGroupsetComponent implements OnInit {
 
       this.snackBar.open(`${studentName} has been moved to ${toGroupName}`, 'Dismiss', { duration: 2000 });
     }
+
+    console.log(this.lmsadminDataContext.getChanges())
 
   }
 
