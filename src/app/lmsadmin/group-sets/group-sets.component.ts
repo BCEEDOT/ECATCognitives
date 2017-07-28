@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { MdSnackBar } from "@angular/material";
+import { MdSnackBar, MdDialog, MdDialogRef } from "@angular/material";
 import { TdDialogService } from "@covalent/core";
 
 import { LmsadminDataContextService } from "../services/lmsadmin-data-context.service";
 import { WorkGroupModel, Course, WorkGroup } from "../../core/entities/lmsadmin";
 import { MpSpStatus, MpGroupCategory } from "../../core/common/mapStrings";
 import { LmsadminWorkgroupService } from "../services/lmsadmin-workgroup.service";
+import { PollLmsDialog } from "./poll-lms-dialog/poll-lms-dialog.component";
 
 @Component({
   selector: 'app-group-sets',
@@ -26,13 +27,15 @@ export class GroupSetsComponent implements OnInit {
     pub: 'Published',
   };
   catMap = MpGroupCategory;
+  dialogRef: MdDialogRef<PollLmsDialog>;
   
   constructor(private lmsadminDataContext: LmsadminDataContextService, 
    private lmsadminWorkGroupService: LmsadminWorkgroupService,
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
-    private snackBar: MdSnackBar) { }
+    private snackBar: MdSnackBar,
+    private dialog: MdDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -123,7 +126,16 @@ export class GroupSetsComponent implements OnInit {
       });
   }
 
-  pollLmsGroups(){
+  pollLmsGroups() {
+    this.dialog.open(PollLmsDialog, {
+      disableClose: true,
+      data: {
+        courseId: this.course.id,
+      }
+    }).afterClosed().subscribe(() => {this.activate()});
+  }
+
+  syncGrades(model: WorkGroupModel){
     
   }
 

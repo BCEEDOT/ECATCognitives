@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';
 
@@ -21,7 +22,9 @@ export class CoursesComponent implements OnInit {
   constructor(private ctx: LmsadminDataContextService,
     private global: GlobalService,
     private router: Router,
-    private route: ActivatedRoute,) {
+    private route: ActivatedRoute,
+    private dialogService: TdDialogService,
+    private loadingService: TdLoadingService) {
       this.courses$ = route.data.pluck('courses');
     }
 
@@ -42,6 +45,22 @@ export class CoursesComponent implements OnInit {
   refreshData() {
     this.ctx.fetchAllCourses(true).then(data => {
       this.courses = data;
+      this.activate();
+    })
+  }
+
+  pollCourses() {
+    this.loadingService.register();
+    this.ctx.pollCourses().then(data => {
+      this.loadingService.resolve();
+      this.courses = this.ctx.cachedCourses();
+      
+      this.dialogService.openAlert({
+        message: 'Courses Added: ' + data.numAdded,
+        title: 'Poll Complete',
+        closeButton: 'Dismiss'
+      });
+
       this.activate();
     })
   }
