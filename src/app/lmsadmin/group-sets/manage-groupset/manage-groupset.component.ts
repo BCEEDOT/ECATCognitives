@@ -402,7 +402,13 @@ export class ManageGroupsetComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-          this.lmsadminDataContext.commit();
+          let that = this;
+          this.lmsadminDataContext.commit().then((message) => {
+            this.changes = this.lmsadminDataContext.getChanges();
+            this.snackBar.open('Changes Saved', 'Dismiss', { duration: 2000 });
+          }).catch((errors) => {
+            that.dialogService.openAlert({ message: 'There was an error saving, please try again', title: 'Error' });
+          });
         }
       });
 
@@ -551,13 +557,13 @@ export class ManageGroupsetComponent implements OnInit {
           assignedStudent.isDeleted = false;
           this.changes = this.lmsadminDataContext.getChanges();
         }
-        
+
         if (assignedStudent.entityAspect.originalValues.workGroupId !== 1000) {
 
           assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
         } else {
           assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
-          
+
         }
       }
 
