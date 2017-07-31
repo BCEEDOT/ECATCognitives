@@ -62,7 +62,14 @@ export class CoursesComponent implements OnInit {
       });
 
       this.activate();
-    })
+    }).catch((e: Event) => {
+      console.log('Error retrieving courses ' + e);
+      this.dialogService.openAlert({
+        message: 'Error polling LMS for courses. Please try again.',
+        title: 'Poll Error',
+        closeButton: 'Dismiss'
+      });
+    });
   }
 
 }

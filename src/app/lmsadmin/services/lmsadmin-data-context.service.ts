@@ -98,6 +98,14 @@ export class LmsadminDataContextService extends BaseDataContext {
     //i think we have to go back to the serve for this every time unless we set up an "isLoaded" thing again
 
     const params: any = { courseId: courseId };
+
+    //drop all the groups so that we aren't messing with another course's groups on the group set screen
+    //if you browse the sets for multiple courses of the same type, they are all using the same models so the groups from each are attached
+    let groups = this.manager.getEntities(MpEntityType.workGroup) as Array<WorkGroup>;
+    groups.forEach(grp => {
+      grp.entityAspect.setDetached();
+    });
+    
     let query: any = EntityQuery.from(this.lmsAdminApiResource.courseModels.resource).withParameters(params);
 
     return <Promise<Array<WorkGroupModel>>>this.manager.executeQuery(query)

@@ -43,7 +43,10 @@
                 <span class="md-subhead" *ngIf="model.status === testStatus.created"> Open </span>
                 <span class="md-subhead" *ngIf="model.status === testStatus.inUse || model.status === testStatus.reviewed"> Publish </span>
               </button>
-              <button md-menu-item (click)="syncGrades(model)" *ngIf="model.status === testStatus.pub"><md-icon>file_upload</md-icon>Push Grades</button>
+              <button md-menu-item (click)="syncGrades(model)" *ngIf="model.status === testStatus.pub">
+                <md-icon>file_upload</md-icon>
+                <span class="md-subhead">Push Grades</span>
+              </button>
             </md-menu>
             <button md-icon-button [mdMenuTriggerFor]="appMenu">
               <md-icon>more_vert</md-icon>

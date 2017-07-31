@@ -20,7 +20,7 @@
     </md-list>
     <div *ngIf="pollComplete === true">
       <md-list>
-        <md-list-item>Course Enrollment Results: </md-list-item>
+        <md-list-item><h5 md-title>Course Enrollment Results: </h5></md-list-item>
         <md-list-item *ngIf="enrollResult.numOfAccountCreated > 0">Accounts Created: {{enrollResult.numOfAccountCreated}} </md-list-item>
         <md-list-item *ngIf="enrollResult.numAdded > 0">Enrollments Added: {{enrollResult.numAdded}}</md-list-item>
         <md-list-item *ngIf="enrollResult.numRemoved > 0">Enrollments Removed: {{enrollResult.numRemoved}} </md-list-item>
@@ -28,24 +28,25 @@
       </md-list>
       <md-divider></md-divider>
       <md-list>
-        <md-list-item>Group Results: </md-list-item>
+        <md-list-item><h5 md-title>Group Results: </h5></md-list-item>
         <md-list-item *ngIf="groupsResult.numAdded > 0">Groups Added: {{groupsResult.numAdded}} </md-list-item>
         <md-list-item *ngIf="groupsResult.numRemoved > 0">Groups Removed: {{groupsResult.numRemoved}} </md-list-item>
         <md-list-item *ngIf="groupsResult.numRemoved === 0 && groupsResult.numAdded === 0">No Changes </md-list-item>
       </md-list>
       <md-divider></md-divider>
       <md-list>
-        <md-list-item>Group Memerships Results:</md-list-item>
+        <md-list-item><h5 md-title>Group Memerships Results:</h5></md-list-item>
         <md-list-item *ngFor="let result of grpMemResults">
           {{result.workGroupName}} - Added: {{result.numAdded}} Removed: {{result.numRemoved}}
         </md-list-item>
+        <md-list-item *ngIf="grpMemResults.length === 0">No Changes </md-list-item>
       </md-list>
     </div>
     <div *ngIf="pollFail === true">
-      {{failMessage}}
+      <p color="red">{{failMessage}}</p>
     </div>
   </md-dialog-content>
-  <md-dialog-actions>
+  <md-dialog-actions fxLayoutAlign="end">
     <button [disabled]="!pollComplete && !pollFail" md-raised-button (click)="close()">Close</button>
   </md-dialog-actions>
 </div>

@@ -69,12 +69,19 @@ export class PollLmsDialog implements OnInit {
     this.lmsAdminDataCtx.pollAllGroupMembers(this.courseId)
     .then(resp => {
       if (resp) {
-        this.grpMemResults = resp;
+        //For some reason groups with no additions or removals are getting returned
+        var cleanResult: Array<GroupMemReconResult> = [];
+        resp.forEach(result => {
+          if (result.numAdded > 0 || result.numRemoved > 0){
+            cleanResult.push(result);
+          }
+        });
+        this.grpMemResults = cleanResult;
         this.grpMemsComplete = true;
         this.pollComplete = true;
       }
     })
-    .catch((e: Event) => {
+    .catch((e) => {
       console.log('Error retrieving group memberships ' + e);
       this.pollFail = true;
       this.failMessage = "Error retrieving group memberships. Please try again.";

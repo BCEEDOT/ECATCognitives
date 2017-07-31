@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { IPageChangeEvent, TdDialogService } from "@covalent/core";
+import { IPageChangeEvent, TdDialogService, TdLoadingService } from "@covalent/core";
 
 import { Course, StudentInCourse, FacultyInCourse } from "../../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
@@ -18,7 +18,8 @@ export class CourseEnrollComponent implements OnInit {
   constructor(private lmsadminDataContextService: LmsadminDataContextService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialogService: TdDialogService) { }
+    private dialogService: TdDialogService,
+    private loadingService: TdLoadingService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -67,7 +68,9 @@ export class CourseEnrollComponent implements OnInit {
   }
 
   pollEnrollments() {
+    this.loadingService.register();
     this.lmsadminDataContextService.pollCourseMembers(this.course.id).then(data => {
+      this.loadingService.resolve();
       this.course.students.push(...data.students);
       this.course.faculty.push(...data.faculty);
       
@@ -78,6 +81,13 @@ export class CourseEnrollComponent implements OnInit {
       });
       
       this.activate();
+    }).catch((e: Event) => {
+      console.log('Error retrieving course enrollments ' + e);
+      this.dialogService.openAlert({
+        message: 'Error polling LMS for enrollments. Please try again.',
+        title: 'Poll Error',
+        closeButton: 'Dismiss'
+      });
     });
   }
 
