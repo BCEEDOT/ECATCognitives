@@ -41,11 +41,13 @@ export class GroupSetsComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
+      this.loadingService.register();
       let courseId: number = +params['crsId'];
       let promise1 = this.lmsadminDataContext.fetchCourseModels(courseId);
       let promise2 = this.lmsadminDataContext.fetchAllCourses(false);
 
       Promise.all([promise1, promise2]).then(res => {
+        this.loadingService.resolve();
         this.wgModels = res[0];
         this.courses = res[1];
         this.course = this.courses.filter(course => course.id === courseId)[0];

@@ -22,6 +22,7 @@ export class CourseEnrollComponent implements OnInit {
     private loadingService: TdLoadingService) { }
 
   ngOnInit() {
+    this.loadingService.register();
     this.route.params.subscribe(params => {
       let courseId: number = +params['crsId'];
       this.lmsadminDataContextService.fetchAllCourseMembers(courseId).then((course: Course) => {
@@ -54,6 +55,7 @@ export class CourseEnrollComponent implements OnInit {
     });
 
     this.studentsPage = this.course.students.slice(0,50);
+    this.loadingService.resolve();
   }
 
   refreshData(){
@@ -82,6 +84,7 @@ export class CourseEnrollComponent implements OnInit {
       
       this.activate();
     }).catch((e: Event) => {
+      this.loadingService.resolve();
       console.log('Error retrieving course enrollments ' + e);
       this.dialogService.openAlert({
         message: 'Error polling LMS for enrollments. Please try again.',

@@ -63,6 +63,7 @@ export class CoursesComponent implements OnInit {
 
       this.activate();
     }).catch((e: Event) => {
+      this.loadingService.resolve();
       console.log('Error retrieving courses ' + e);
       this.dialogService.openAlert({
         message: 'Error polling LMS for courses. Please try again.',
