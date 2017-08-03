@@ -24,8 +24,13 @@ export class CogInventory extends EntityBase {
 
    /// <code> Place custom code between <code> tags
    response: CogResponse;
-   isChanged: boolean;
+   isChanged: boolean = false;
    /// </code>
+    rejectChanges(): void {
+        this.response.entityAspect.rejectChanges();
+        this.isChanged = false;
+    }
+
 
 }
 

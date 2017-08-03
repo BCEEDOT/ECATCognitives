@@ -55,16 +55,11 @@ export class CognitivesComponent implements OnInit {
 
     }
 
-    goBack(route: string): void {
-        this.router.navigate(['/']);
-    }
-
     ngOnInit(): void {
         // broadcast to all listener observables when loading the page
         this.titleService.setTitle('Cognitives Center');
-        this.cogResults$.subscribe(results => { 
+        this.cogResults$.subscribe(results => {
             this.cogResults = results;
-            console.log(this.cogResults);
         })
         this.activate();
     }
@@ -89,7 +84,7 @@ export class CognitivesComponent implements OnInit {
                 if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.esalb) {
                     that.cogResultsService.cogEsalbResult(res);
                     that.esalbResult = res;
-                 }
+                }
                 if (res.instrument.mpCogInstrumentType === _mp.MpCogInstrumentType.ecmspe) {
                     that.cogResultsService.cogEcmspeResult(res);
                     that.ecmspeResult = res;
@@ -97,7 +92,7 @@ export class CognitivesComponent implements OnInit {
             });
         }
     }//end activate
-    
+
 }//end CognitivesComponent
 
 const enum CogViews {

@@ -1,24 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { BaseChartComponent } from '@swimlane/ngx-charts/release';
 
+import { BaseAssessService } from "../services/base-assess.service";
 import { CogInstrument, CogInventory, CogResponse } from "../../../core/entities/user";
 import { CogAssessService } from "../../services/cog-assess.service";
 
 @Component({
-  selector: 'etmpre-assess',
-  templateUrl: './etmpre-assess.component.html',
-  styleUrls: ['./etmpre-assess.component.scss']
+  selector: 'esalb-assess',
+  templateUrl: './esalb-assess.component.html',
+  styleUrls: ['./esalb-assess.component.scss']
 })
-export class EtmpreAssessComponent implements OnInit {
+export class EsalbAssessComponent implements OnInit {
 
-  etmpreInventories: CogInventory[]
+  esalbInventories: CogInventory[]
   activeInventory: CogInventory;
   inventories: CogInventory[];
+  cogName: string;
 
   constructor(private cogAssessService: CogAssessService) { }
 
   ngOnInit() {
     this.cogAssessService.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
-      this.etmpreInventories = cogInventories;
+      this.esalbInventories = cogInventories;
       this.activate();
     });
     this.cogAssessService.cogActiveInventory$.subscribe((cogInventory: CogInventory) => {
@@ -27,11 +30,11 @@ export class EtmpreAssessComponent implements OnInit {
   }
 
   activate(): void {
-    this.inventories = this.etmpreInventories;
+    this.inventories = this.esalbInventories;
     this.activeInventory = this.inventories[0];
     this.inventories.forEach(inv => {
       if (inv.response.itemScore == 0) {
-        inv.response.itemScore = null;
+        inv.response.itemScore = 500;
       }
     });
     this.cogAssessService.cogActiveInventory(this.activeInventory);
@@ -43,10 +46,6 @@ export class EtmpreAssessComponent implements OnInit {
 
   previousInventory(): void {
     this.cogAssessService.previousInventory();
-  }
-
-  checkSave(): void {
-    this.cogAssessService.checkReadyToSave();
   }
 
 }

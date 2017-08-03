@@ -19,7 +19,7 @@ export class CogResultsService {
 
   cogEcpeResult(cogEcpeResult: CogEcpeResult) {
     this.cogEcpeResult$.next(cogEcpeResult);
-  }  
+  }
 
   cogEsalbResult(cogEsalbResult: CogEsalbResult) {
     this.cogEsalbResult$.next(cogEsalbResult);
@@ -28,7 +28,7 @@ export class CogResultsService {
   cogEcmspeResult(cogEcmspeResult: CogEcmspeResult) {
     this.cogEcmspeResult$.next(cogEcmspeResult);
   }
-  
+
   cogEtmpreResult(cogEtmpreResult: CogEtmpreResult) {
     this.cogEtmpreResult$.next(cogEtmpreResult);
   }

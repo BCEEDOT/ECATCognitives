@@ -1,6 +1,9 @@
 <div>
+
     <div>
+
         <div fxLayout="column">
+
             <div *ngIf="!activeInventory.isReversed">
                 <div fxFlex="40" class="md-caption">
                     {{activeInventory.adaptiveDescription}}
@@ -10,6 +13,7 @@
                     {{activeInventory.innovativeDescription}}
                 </div>
             </div>
+
             <div *ngIf="activeInventory.isReversed">
                 <div fxFlex="40" class="md-caption">
                     {{activeInventory.innovativeDescription}}
@@ -19,31 +23,27 @@
                     {{activeInventory.adaptiveDescription}}
                 </div>
             </div>
+
         </div>
+
         <div class="pad-top-sm" style="padding-left: 0px; padding-right: 0px;">
-            <svg height="50" width="560">
+            <svg height="50" width="675">
                 <svg:polygon [attr.points]="points" fill="#365F7F">
                     </polygon>
-                    <!--<polygon [attr.points]="{{svg1x}},{{svg1y}} {{svg2x}},{{svg2y}} {{svg3x}},{{svg3y}}" fill="#365F7F"></polygon>-->
             </svg>
         </div>
-        <!--<div class="row p-b-20 p-r-15 p-l-15">
-            <div cog-slider
-                    id="slider"
-                    ng-model="cogAssess.activeInvent.response.itemScore"
-                    cogType="ecpe"
-                    ng-click="cogAssess.activeInvent.isChanged=true"></div>
-        </div>-->
-        <md-slider color="primary" (input)="slide($event.value)" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000" tickInterval="1">
-        </md-slider>
 
-       
+        <md-slider color="primary" (input)="slide($event.value)" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000"
+            tickInterval="1">
+        </md-slider>
 
     </div>
 
     <div fxLayout="row" fxLayoutAlign="center center">
-        <button md-raised-button color="primary" [disabled]="activeInventory.id===inventories[0].id" (click)="previousInventory();">Previous</button>
-        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.id}} of {{inventories.length}} </p>
-        <button md-raised-button color="primary" [disabled]="activeInventory.id===inventories[inventories.length - 1].id" (click)="nextInventory();">Next</button>
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
+        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
+            (click)="nextInventory();">Next</button>
     </div>
+
 </div>

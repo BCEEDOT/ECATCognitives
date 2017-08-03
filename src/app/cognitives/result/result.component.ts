@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-result',
@@ -13,10 +11,15 @@ export class ResultComponent implements OnInit {
   private cogResultId: string;
 
   constructor(
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private router: Router, ) {
     this.route.params.subscribe(params => {
       this.cogResultId = params['cogId'];
     });
+  }
+
+  goBack(route: string): void {
+    this.router.navigate(['/cognitives']);
   }
 
   ngOnInit() {

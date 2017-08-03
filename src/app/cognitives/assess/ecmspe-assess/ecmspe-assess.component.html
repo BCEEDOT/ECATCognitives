@@ -1,0 +1,38 @@
+<div fxLayout="column" fxLayoutGap="15px">
+
+    <div>
+        <div fxLayoutAlign="center center" class="text-xxl pd-md">
+            {{activeInventory.itemDescription}}
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+
+        <div>
+            <md-slider color="primary" (input)="slide($event.value)" [vertical]="true" [(ngModel)]="activeInventory.response.itemScore"
+                min="1" max="1000" tickInterval="1">
+            </md-slider>
+        </div>
+
+        <div>
+            <p class="text-center">Just like me</p>
+            <br />
+            <p class="text-center">Quite a lot like me</p>
+            <br />
+            <p class="text-center">Somewhat like me</p>
+            <br />
+            <p class="text-center">Not much like me</p>
+            <br />
+            <p class="text-center">Not at all like me</p>
+        </div>
+
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
+        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
+            (click)="nextInventory();">Next</button>
+    </div>
+
+</div>

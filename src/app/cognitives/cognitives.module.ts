@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { SharedModule } from '../shared/shared.module';
 import { AssessComponent } from './assess/assess.component';
 import { EcpeAssessComponent } from './assess/ecpe-assess/ecpe-assess.component';
-import { EsalbecmspeAssessComponent } from './assess/esalbecmspe-assess/esalbecmspe-assess.component';
 import { EtmpreAssessComponent } from './assess/etmpre-assess/etmpre-assess.component';
 import { CognitivesRoutingModule } from './cognitives-routing.module';
 import { CognitivesComponent } from './cognitives.component';
@@ -14,6 +13,8 @@ import { EtmpreResultComponent } from './result/etmpre-result/etmpre-result.comp
 import { ResultComponent } from './result/result.component';
 import { CogAssessService } from './services/cog-assess.service';
 import { CogResultsService } from './services/cog-results.service';
+import { EcmspeAssessComponent } from './assess/ecmspe-assess/ecmspe-assess.component';
+import { EsalbAssessComponent } from './assess/esalb-assess/esalb-assess.component';
 
 @NgModule({
     imports: [
@@ -30,7 +31,8 @@ import { CogResultsService } from './services/cog-results.service';
         EcpeAssessComponent,
         EtmpreAssessComponent,
         AssessComponent,
-        EsalbecmspeAssessComponent
+        EcmspeAssessComponent,
+        EsalbAssessComponent
     ],
     exports: [],
     providers: [CogResultsService, CogAssessService]

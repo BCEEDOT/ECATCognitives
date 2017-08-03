@@ -1,10 +1,12 @@
 <ng-template tdLoading="userIsLoaded">
+
     <div fxLayout="column" fxLayoutAlign="center center">
         <div fxFlex="100">
             <h3>Electronic Team Members Preferred Role Estimator (e-TMPRE) Results</h3>
         </div>
     </div>
-    <!-- -->
+
+    <!--Introduction-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
         <div fxFlex="100">
             <b>Introduction</b>
@@ -22,7 +24,8 @@
         </div>
     </div>
     <hr>
-    <!-- -->
+
+    <!--Creator-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
         <div fxFlex="100">
             <b>Creator</b>
@@ -31,7 +34,8 @@
     <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
         <div class="rectangle" [ngStyle]="{width: etmpreResult.creator + '%'}"></div>
     </div>
-    <!-- -->
+
+    <!--Advancer-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
         <div fxFlex="100">
             <b>Advancer</b>
@@ -40,7 +44,8 @@
     <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
         <div class="rectangle" [ngStyle]="{width: etmpreResult.advancer + '%'}"></div>
     </div>
-    <!-- -->
+
+    <!--Refiner-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
         <div fxFlex="100">
             <b>Refiner</b>
@@ -49,7 +54,8 @@
     <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
         <div class="rectangle" [ngStyle]="{width: etmpreResult.refiner + '%'}"></div>
     </div>
-    <!-- -->
+
+    <!--Executor-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
         <div fxFlex="100">
             <b>Executor</b>
@@ -59,7 +65,8 @@
         <div class="rectangle" [ngStyle]="{width: etmpreResult.executor + '%'}"></div>
     </div>
     <hr>
-    <!-- -->
+
+    <!--Becoming aware of preferences-->
     <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
         <div fxFlex="100">
             Becoming aware of your own preferences, as well as the preferences of other members of a team, can help you:
@@ -76,7 +83,8 @@
         </div>
     </div>
     <hr>
-    <!-- -->
+
+    <!--Understanding Approaches-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
         <div fxFlex="100">
             <b>Understanding Approaches</b>
@@ -123,7 +131,8 @@
             </ul>
         </div>
     </div>
-    <!-- -->
+
+    <!--Understanding Your Role-->
     <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
         <div fxFlex="100">
             <b>Understanding Your Role</b>
@@ -203,4 +212,5 @@
             (create Problem B) - a key leadership concern.
         </div>
     </div>
+
 </ng-template>

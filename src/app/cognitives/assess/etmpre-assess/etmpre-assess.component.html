@@ -1,3 +1,28 @@
-<p>
-  etmpre-assess works!
-</p>
+<div>
+
+    <div fxLayout="row">
+        <div fxFlex="100" fxLayoutAlign="center center" class="text-xl pd-md">
+            {{activeInventory.itemDescription}}
+        </div>
+    </div>
+
+    <div fxLayout="row">
+        <div fxFlex="100" fxLayoutAlign="center center" class="text-md pad-md">
+            <md-button-toggle-group name="tmrForm" [vertical]="true" class="text-center tc-black" (change)="checkSave()" [(ngModel)]="activeInventory.response.itemScore">
+                <md-button-toggle [value]="5">JUST LIKE ME</md-button-toggle>
+                <md-button-toggle [value]="4">QUITE A LOT LIKE ME</md-button-toggle>
+                <md-button-toggle [value]="3">SOMEWHAT LIKE ME</md-button-toggle>
+                <md-button-toggle [value]="2">NOT MUCH LIKE ME</md-button-toggle>
+                <md-button-toggle [value]="1">NOT AT ALL LIKE ME</md-button-toggle>
+            </md-button-toggle-group>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
+        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
+        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
+            (click)="nextInventory();">Next</button>
+    </div>
+
+</div>

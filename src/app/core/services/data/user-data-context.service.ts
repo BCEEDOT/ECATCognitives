@@ -6,7 +6,8 @@ import {
 
 import { BaseDataContext } from '../../../shared/services';
 import { EmProviderService } from '../em-provider.service';
-import { Person, ProfileStudent, ProfileFaculty, CogResponse, CogInstrument, RoadRunner, CogInventory } from '../../entities/user';
+import { Person, ProfileStudent, ProfileFaculty, CogResponse, CogInstrument, RoadRunner, CogInventory,
+         CogEcpeResult, CogEcmspeResult, CogEsalbResult, CogEtmpreResult } from '../../entities/user';
 import { IUserApiResources } from "../../entities/client-models";
 import { MpEntityType, MpInstituteRole, MpCogInstrumentType } from "../../common/mapStrings";
 import { DataContext } from '../../../app-constants';
@@ -40,6 +41,10 @@ export class UserDataContext extends BaseDataContext {
         },
         roadRunner: {
             resource: 'RoadRunnerInfos',
+            returnedEntityType: MpEntityType.unk
+        },        
+         getNewCogResult: {
+            resource: 'GetNewCogResult',
             returnedEntityType: MpEntityType.unk
         }
 
@@ -139,7 +144,6 @@ export class UserDataContext extends BaseDataContext {
     }
 
     getCogInst(cogId: number): Promise<Array<CogInventory> | Promise<void>> {
-
         let that = this;
         let cogType = '';
 
@@ -158,6 +162,7 @@ export class UserDataContext extends BaseDataContext {
                 break;
         }
 
+
         let query = EntityQuery.from(this.userApiResources.cogInst.resource).withParameters({ type: cogType });
 
         return <Promise<Array<CogInventory>>>this.manager.executeQuery(query)
@@ -165,17 +170,19 @@ export class UserDataContext extends BaseDataContext {
             .catch(this.queryFailed);
 
         function getCogInstResponse(result: QueryResult): Array<CogInventory> {
-
             const cogInst = result.results[0] as CogInstrument;
-
             if (!cogInst) {
                 return null;
             }
 
-            //isLoaded.cogInst[type] = true;
             console.log('Retrieved cognitive instrument from remote cache', cogInst, false);
             const inventoryList = cogInst.inventoryCollection as Array<CogInventory>;
             const personId = that.global.persona.value.person.personId;
+
+            let cogRespones = that.manager.getEntities(MpEntityType.cogResponse) as Array<CogResponse>;
+            cogRespones.forEach(element => {
+               that.manager.detachEntity(element);    
+            });
 
             return inventoryList.map((item: CogInventory) => {
                 const key = { personId: personId, cogInventoryId: item.id, attempt: (1) };
@@ -185,6 +192,22 @@ export class UserDataContext extends BaseDataContext {
 
                 return item;
             }) as Array<CogInventory>;
+        }
+    }
+
+    getNewCogResult(type: string, instId: number, prevAttempt: number): any {
+        const personId = this.global.persona.value.person.personId;
+        const key = { personId: personId, instrumentId: instId, attempt: (prevAttempt + 1) };
+
+        switch (type) {
+            case MpCogInstrumentType.ecpe:
+                return this.manager.createEntity(MpEntityType.cogEcpeResult, key) as CogEcpeResult;
+            case MpCogInstrumentType.etmpre:
+                return this.manager.createEntity(MpEntityType.cogEtmpreResult, key) as CogEtmpreResult;
+            case MpCogInstrumentType.esalb:
+                return this.manager.createEntity(MpEntityType.cogEsalbResult, key) as CogEsalbResult;
+            case MpCogInstrumentType.ecmspe:
+                return this.manager.createEntity(MpEntityType.cogEcmspeResult, key) as CogEcmspeResult;
         }
     }
 

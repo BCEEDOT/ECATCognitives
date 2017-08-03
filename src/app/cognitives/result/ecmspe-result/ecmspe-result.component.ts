@@ -12,7 +12,6 @@ import { CogResultsService } from "../../services/cog-results.service";
 })
 export class EcmspeResultComponent implements OnInit {
 
-
   protected ecmspeResult: CogEcmspeResult;
 
   constructor(private cogResultsService: CogResultsService, private router: Router) { };
@@ -22,10 +21,8 @@ export class EcmspeResultComponent implements OnInit {
       this.ecmspeResult = res;
     });
 
-
     if (_.isEmpty(this.ecmspeResult)) {
-        this.router.navigate(['/cognitives']);
+      this.router.navigate(['/cognitives']);
     }
   }
-
 }

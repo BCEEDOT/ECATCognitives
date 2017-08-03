@@ -21,9 +21,8 @@ export class EsalbResultComponent implements OnInit {
       this.esalbResult = res;
     });
 
-
     if (_.isEmpty(this.esalbResult)) {
-        this.router.navigate(['/cognitives']);
+      this.router.navigate(['/cognitives']);
     }
   }
 

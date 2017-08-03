@@ -21,9 +21,8 @@ export class EtmpreResultComponent implements OnInit {
       this.etmpreResult = res;
     });
 
-
     if (_.isEmpty(this.etmpreResult)) {
-        this.router.navigate(['/cognitives']);
+      this.router.navigate(['/cognitives']);
     }
   }
 

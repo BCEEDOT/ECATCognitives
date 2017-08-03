@@ -16,12 +16,12 @@ const cognitivesRoutes: Routes = [
     resolve: { results: 'resultsResolver' },
   },
   {
-    path: 'cognitive/result/:cogId',
+    path: 'cognitives/result/:cogId',
     component: ResultComponent,
     canActivate: [UserAuthGuard],
   },
   {
-    path: 'cognitive/assess/:cogId',
+    path: 'cognitives/assess/:cogId',
     component: AssessComponent,
     resolve: { assess: 'assessResolver' },
     canActivate: [UserAuthGuard],
