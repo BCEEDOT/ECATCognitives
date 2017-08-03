@@ -1,0 +1,68 @@
+<md-sidenav-container fullscreen>
+  <md-sidenav #sidenav mode="side" color="accent" opened="true" style="width:257px;border-right:1px solid #ccc">
+    <div flex class="md-content ">
+      <md-nav-list>
+        <td-expansion-panel label="Unassigned" [disabled]="disabled">
+          <div id="unassigned" style="min-height: 50px;" [dragula]='"bag-one"' [dragulaModel]='unassignedStudents'>
+            <p [id]="unassignedStudent.studentId" fxFlexOffset="5%" class="push-none pad-xs" *ngFor="let unassignedStudent of unassignedStudents">
+              {{unassignedStudent.rankName}}</p>
+          </div>
+        </td-expansion-panel>
+        <td-expansion-panel label="Changes" [disabled]="changes.length === 0">
+
+          <div *ngFor="let change of changes" fxLayout="row" fxLayoutAlign="start center">
+            <div fxFlexOffset="5%"></div>
+            <p class="push-none pad-xs">
+              {{change.changeDescription}}
+            </p>
+            <div fxFlex></div>
+            <a md-icon-button mdTooltip="Click to Undo Change" (click)="undoChange(change)">
+              <md-icon>close</md-icon>
+            </a>
+          </div>
+
+        </td-expansion-panel>
+      </md-nav-list>
+    </div>
+  </md-sidenav>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px" class="pad-right-sm">
+    <td-search-box [showUnderline]="true" (search)="search($event)" (clear)="clear($event)" backIcon="arrow_back" placeholder="Search here"
+      [alwaysVisible]="false" flex></td-search-box>
+    <button (click)="save()" type="button" md-raised-button color="accent">Save</button>
+    <button (click)="reset()" type="button" md-raised-button color="accent">Reset</button>
+    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" [disabled]="disabled">
+      {{(allExpanded) ? 'Collapse' : 'Expand'}} All
+    </md-slide-toggle>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap>
+    <div fxFlex="25%" *ngFor="let workGroup of workGroups">
+      <md-card>
+        <td-expansion-panel label="{{workGroup.defaultName}}" [disabled]="disabled" [expand]="workGroup.isExpanded">
+          <td-expansion-summary>
+            <div fxLayout="row" class="bgc-grey-50 pad-left-md pad-right-md pad-top-sm">
+              <span fxFlex>{{workGroup.customName}}</span>
+              <a fxFlexAlign="end center" md-icon-button mdTooltip="Click to edit Flight" (click)="editGroup(workGroup)">
+                <md-icon>edit</md-icon>
+              </a>
+            </div>
+          </td-expansion-summary>
+          <md-divider></md-divider>
+          <md-card-content>
+            <div style="min-height: 50px" [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
+
+              <p [myHighlight]="groupMember.highlighted" [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId"
+                (mouseout)="hovered = null" [id]="groupMember.studentId" *ngFor="let groupMember of workGroup.groupMembers"
+                class="md-caption push-none pad-xs">{{groupMember.rankName}}</p>
+
+            </div>
+
+          </md-card-content>
+        </td-expansion-panel>
+      </md-card>
+    </div>
+
+  </div>
+</md-sidenav-container>
+<a md-fab (click)="addGroup()" color="accent" class="mat-fab-bottom-right fixed fab-pad">
+  <md-icon>add</md-icon>
+</a>

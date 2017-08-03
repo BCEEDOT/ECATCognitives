@@ -1,0 +1,27 @@
+@mixin md-icon-size($size: 18px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+
+}
+
+.material-icons.mat-icon{
+    @include md-icon-size(18px);
+}
+
+// .ex-moved {
+//     background-color: blueviolet;
+// }
+
+// .ex-over {
+//     background-color: yellow;
+// }
+
+
+
+.selected {
+    background-color: #73a0c3 !important; 
+    cursor: move;
+    color: white !important; 
+}
+

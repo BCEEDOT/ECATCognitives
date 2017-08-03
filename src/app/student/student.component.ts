@@ -77,7 +77,7 @@ export class StudentComponent implements OnInit {
       return 0;
     });
 
-    this.courses.forEach(course => course['displayName'] = `${course.classNumber}: ${course.name}`);
+    this.courses.forEach(course => course.displayName = `${course.classNumber}: ${course.name}`);
     this.activeCourse = this.courses[0];
     this.activeCourseId = this.activeCourse.id;
     
@@ -116,7 +116,7 @@ export class StudentComponent implements OnInit {
       return 0;
     });
 
-    this.workGroups.forEach(wg => { wg['displayName'] = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
+    this.workGroups.forEach(wg => { wg.displayName = `${wg.mpCategory}: ${wg.customName || wg.defaultName}` });
 
     let activeWorkgroup = this.workGroups[0];
 

@@ -1,0 +1,45 @@
+<md-card class="width">
+  <md-card-title> Edit Course Information </md-card-title>
+  <md-card-content>
+    <form #courseInfoForm="ngForm">
+        <div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <input mdInput #classNumInput="ngModel" placeholder="Class Number" [(ngModel)]="course.classNumber" name="classNumber"
+              maxlength="10" tdAutoTrim/>
+            <md-hint>
+              <span [hidden]="classNumInput.pristine" class="tc-red-600"></span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <!--<div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <input mdInput #startDateInput="ngModel" placeholder="Start Date" [(ngModel)]="course.startDate" name="startDate" tdAutoTrim/>
+            <md-hint>
+              <span [hidden]="startDateInput.pristine || !startDateInput.errors?.pattern" class="tc-red-600"></span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <input mdInput #gradDateInput="ngModel" placeholder="Grad Date" [(ngModel)]="course.gradDate" name="gradDate" tdAutoTrim/>
+            <md-hint>
+              <span [hidden]="gradDateInput.pristine || !gradDateInput.errors?.pattern" class="tc-red-600"></span>
+            </md-hint>
+          </md-input-container>
+        </div>-->
+        <div layout-gt-xs="row" layout-margin>
+          <md-input-container flex>
+            <input mdInput #displayNameInput="ngModel" placeholder="Display Name" [(ngModel)]="course.name" name="name" tdAutoTrim/>
+            <md-hint>
+              <span [hidden]="displayNameInput.pristine" class="tc-red-600"></span>
+            </md-hint>
+          </md-input-container>
+        </div>
+    </form>
+  </md-card-content>
+  <md-card-actions>
+    <span fxFlex></span>
+    <button md-raised-button color="accent" (click)="this.cancel()">Cancel</button>
+    <button md-raised-button color="accent" (click)="this.save()" [disabled]="!courseInfoForm.dirty">Save</button>
+  </md-card-actions>
+</md-card>

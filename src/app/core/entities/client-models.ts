@@ -39,6 +39,20 @@ export interface IFacultyApiResources extends IApiResources {
     currentWorkGroup: IApiResource;
 }
 
+export interface ILmsAdminApiResources extends IApiResources {
+    allCourses: IApiResource;
+    allGroups: IApiResource;
+    courseModels: IApiResource;
+    allCourseMembers: IApiResource;
+    allGroupMembers: IApiResource;
+    allGroupSetMembers: IApiResource;
+    pollCourses: IApiResource;
+    pollCourseMembers: IApiResource;
+    pollGroups: IApiResource;
+    pollAllGroupMembers: IApiResource;
+    syncBbGrades: IApiResource;
+}
+
 export interface IMilPayGrade {
     civ: { designator: string };
     fn: { designator: string };
@@ -86,4 +100,16 @@ export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
    behavior: string;
    //instrument: SpInstrument;
    //itemResponses: faculty.FacSpResponse[];
+}
+
+//this is on the server... should really do this differently
+export interface ISaveGradesResult extends EntityBase
+{
+    courseId: number;
+    wgCategory: string;
+    success: boolean;
+    sentScores: number;
+    returnedScores: number;
+    numOfStudents: number;
+    message: string;
 }

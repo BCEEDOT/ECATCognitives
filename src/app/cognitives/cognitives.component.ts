@@ -24,10 +24,10 @@ import * as _mp from "../core/common/mapStrings";
 })
 export class CognitivesComponent implements OnInit {
 
-    protected ecpeResult: CogEcpeResult;
-    protected etmpreResult: CogEtmpreResult;
-    protected esalbResult: CogEsalbResult;
-    protected ecmspeResult: CogEcmspeResult;
+    ecpeResult: CogEcpeResult;
+    etmpreResult: CogEtmpreResult;
+    esalbResult: CogEsalbResult;
+    ecmspeResult: CogEcmspeResult;
 
     cogResults$: Observable<Array<any>>;
     cogResults: Array<any>;

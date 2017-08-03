@@ -21,6 +21,7 @@ import { FacultyDataContextService } from "../../services/faculty-data-context.s
 export class EvaluateComponent implements OnInit {
 
   showComments: boolean = false;
+  isLoading: boolean = false;
   wgStatus: string = "tc-red-900";
   assessStatusIcon: string;
   stratStatusIcon: string;
@@ -33,9 +34,9 @@ export class EvaluateComponent implements OnInit {
   workGroupId: number;
   paramWorkGroupId: number;
   paramCourseId: number;
-  private wgName: string;
-  private reviewBtnText: string = 'Review';
-  private statusMap = MpSpStatus;
+  wgName: string;
+  reviewBtnText: string = 'Review';
+  statusMap = MpSpStatus;
 
   assessComplete: boolean;
   stratComplete: boolean;

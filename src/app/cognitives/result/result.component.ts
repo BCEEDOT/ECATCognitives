@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ResultComponent implements OnInit {
 
-  private cogResultId: string;
+  cogResultId: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,7 +18,7 @@ export class ResultComponent implements OnInit {
     });
   }
 
-  goBack(route: string): void {
+  goBack(): void {
     this.router.navigate(['/cognitives']);
   }
 

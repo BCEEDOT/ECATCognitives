@@ -9,7 +9,7 @@
     <div fxLayout="row" fxLayoutAlign="center center">
 
         <div>
-            <md-slider color="primary" (input)="slide($event.value)" [vertical]="true" [(ngModel)]="activeInventory.response.itemScore"
+            <md-slider color="primary" [vertical]="true" [(ngModel)]="activeInventory.response.itemScore"
                 min="1" max="1000" tickInterval="1">
             </md-slider>
         </div>

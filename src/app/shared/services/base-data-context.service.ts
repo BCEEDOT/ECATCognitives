@@ -9,12 +9,12 @@ import { DataContext } from '../../app-constants';
 //@Injectable()
 export class BaseDataContext {
 
-    private static shelveSets = {};
+    static shelveSets = {};
     //private static savedOrRejectedSubject = new Subject<SavedOrRejectedArgs>();
 
-    private _manager: EntityManager;
+    _manager: EntityManager;
 
-    private entityChangedSubject: Subject<EntityChangedEventArgs>;
+    entityChangedSubject: Subject<EntityChangedEventArgs>;
 
     constructor(private dataContext: DataContext, private _emProvider: EmProviderService) {
         this.entityChangedSubject = new Subject<EntityChangedEventArgs>();

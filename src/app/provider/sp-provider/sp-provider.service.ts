@@ -23,7 +23,7 @@ export class SpProviderService {
   dialogRef: MdDialogRef<CommentDialog>;
   commentClosed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  private off: any;
+  off: any;
   workGroup: WorkGroup;
 
   constructor(private studentDataContext: StudentDataContext,

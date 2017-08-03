@@ -16,6 +16,8 @@ import {
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { DragulaModule } from "ng2-dragula";
+
 import { LoggerService } from "./services/logger.service";
 
 @NgModule({
@@ -32,6 +34,7 @@ import { LoggerService } from "./services/logger.service";
         CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule,
         CovalentHighlightModule,
         CovalentMarkdownModule,
+        DragulaModule,
         NgxChartsModule
 
     ],
@@ -50,6 +53,7 @@ import { LoggerService } from "./services/logger.service";
         CovalentNotificationsModule, CovalentMenuModule, CovalentChipsModule, CovalentDataTableModule, CovalentJsonFormatterModule,
         CovalentHighlightModule, CovalentMessageModule,
         CovalentMarkdownModule,
+        DragulaModule,
         NgxChartsModule,
     ],
     providers: [

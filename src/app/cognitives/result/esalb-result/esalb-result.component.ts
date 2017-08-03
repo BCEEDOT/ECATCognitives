@@ -12,7 +12,7 @@ import { CogResultsService } from "../../services/cog-results.service";
 })
 export class EsalbResultComponent implements OnInit {
 
-  protected esalbResult: CogEsalbResult;
+  esalbResult: CogEsalbResult;
 
   constructor(private cogResultsService: CogResultsService, private router: Router) { }
 

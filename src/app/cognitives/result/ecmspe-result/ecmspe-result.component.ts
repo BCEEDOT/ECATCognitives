@@ -12,7 +12,7 @@ import { CogResultsService } from "../../services/cog-results.service";
 })
 export class EcmspeResultComponent implements OnInit {
 
-  protected ecmspeResult: CogEcmspeResult;
+  ecmspeResult: CogEcmspeResult;
 
   constructor(private cogResultsService: CogResultsService, private router: Router) { };
 

@@ -12,12 +12,12 @@ import { CogResultsService } from "../../services/cog-results.service";
 })
 export class EcpeResultComponent implements OnInit {
 
-    protected ecpeResult: CogEcpeResult;
-    protected ecpeResultText: string;
+    ecpeResult: CogEcpeResult;
+    ecpeResultText: string;
 
     //TODO: Update eCPE mean and Standard Deviation values periodically based on new assessment data
-    private ecpeMean = 473;
-    private ecpeSD = 124;
+    ecpeMean = 473;
+    ecpeSD = 124;
 
     constructor(private cogResultsService: CogResultsService, private router: Router) { }
 
