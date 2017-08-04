@@ -1,3 +1,4 @@
+import { CrseStudentInGroup } from '../../core/entities/lmsadmin';
 import { Injectable } from '@angular/core';
 import { EntityQuery, QueryResult } from 'breeze-client';
 
@@ -8,7 +9,7 @@ import { LoggerService } from "../../shared/services/logger.service";
 import { DataContext } from "../../app-constants";
 import { ILmsAdminApiResources } from '../../core/entities/client-models';
 import { MpEntityType } from '../../core/common/mapStrings';
-import { Course, WorkGroup, WorkGroupModel } from "../../core/entities/lmsadmin";
+import { Course, WorkGroup, WorkGroupModel, StudentInCourse } from "../../core/entities/lmsadmin";
 
 @Injectable()
 export class LmsadminDataContextService extends BaseDataContext {
@@ -129,9 +130,11 @@ export class LmsadminDataContextService extends BaseDataContext {
 
   fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course> {
     let course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
-    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
-      console.log('Retrieved course members from local cache', course, false);
-      return Promise.resolve(course);
+    if (course) {
+      if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
+        console.log('Retrieved course members from local cache', course, false);
+        return Promise.resolve(course);
+      }
     }
 
     const params: any = { courseId: courseId };
@@ -148,16 +151,14 @@ export class LmsadminDataContextService extends BaseDataContext {
       course = data.results[0] as Course;
       if (course.students.length > 0 && course.faculty.length > 1) {
         console.log('Course members loaded from remote store', course, false);
+      } else {
+        console.log('No members in course');
       }
-
-      console.log('No members in course');
       return course;
-
-
     }
   }
 
-  fetchAllGroupSetMembers(courseId, categoryId, forceRefresh?: boolean): Promise<Array<WorkGroup> | Promise<void>> {
+  fetchAllGroupSetMembers(courseId, categoryId, forceRefresh?: boolean): Promise<WorkGroup[]> {
     const self = this;
 
     let groups = this.manager.getEntities(MpEntityType.workGroup) as Array<WorkGroup>;
@@ -167,7 +168,7 @@ export class LmsadminDataContextService extends BaseDataContext {
     // if (groups) {
 
     //   groups.forEach(group => {
-        
+
     //   })
 
     //   console.log('GroupSet memberships loaded from local cache', false);
@@ -198,5 +199,17 @@ export class LmsadminDataContextService extends BaseDataContext {
       return groups;
 
     }
+  }
+
+  createCrseStudentInGroup(student: StudentInCourse): CrseStudentInGroup {
+    return this.manager.createEntity(MpEntityType.crseStudInGrp, {
+      studentId: student.studentPersonId,
+      courseId: student.courseId
+
+    }) as CrseStudentInGroup;
+  }
+
+  createWorkGroup(workGroup: WorkGroup): WorkGroup {
+    return this.manager.createEntity(MpEntityType.workGroup, workGroup) as WorkGroup;
   }
 }

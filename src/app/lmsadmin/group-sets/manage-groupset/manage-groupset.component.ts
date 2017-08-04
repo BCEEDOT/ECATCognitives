@@ -1,8 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { groupBy } from 'rxjs/operator/groupBy';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { EntityAction } from 'breeze-client';
 import 'rxjs/add/operator/pluck';
+import 'rxjs/add/operator/zip';
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { DragulaService } from "ng2-dragula";
@@ -10,7 +12,7 @@ import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA, MdSnackBar } fro
 import { DOCUMENT } from '@angular/platform-browser';
 
 import { MpEntityType, MpGroupCategory, MpSpStatus } from '../../../core/common/mapStrings';
-import { Course, CrseStudentInGroup, WorkGroup } from '../../../core/entities/lmsadmin';
+import { Course, CrseStudentInGroup, WorkGroup, StudentInCourse } from '../../../core/entities/lmsadmin';
 import { LmsadminDataContextService } from '../../services/lmsadmin-data-context.service';
 import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
@@ -23,11 +25,14 @@ import { AddGroupDialogComponent } from "./add-group-dialog/add-group-dialog.com
 })
 
 
-export class ManageGroupsetComponent implements OnInit {
+export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
   workGroups: WorkGroup[];
+  course: Course;
+  course$: Observable<Course>;
   origWorkGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
+  courseMembers: StudentInCourse[];
   courseId: number;
   unassigned: string = "unassigned";
   changes = [];
@@ -46,19 +51,22 @@ export class ManageGroupsetComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
+    private loadingService: TdLoadingService,
     private snackBar: MdSnackBar,
     public editDialog: MdDialog, @Inject(DOCUMENT) editDoc: any,
     public addDialog: MdDialog, @Inject(DOCUMENT) addDoc: any) {
 
     this.workGroups$ = route.data.pluck('groupSetMembers');
+    this.course$ = route.data.pluck('courseMembers');
 
     this.route.params.subscribe(params => {
+
       this.workGroupCategory = params['catId'];
       this.courseId = params['crsId'];
     });
 
     dragulaService.drag.subscribe((value) => {
-      // console.log(`drag: ${value[0]}`);
+      //console.log(`drag: ${value[0]}`);
       this.onDrag(value.slice(1));
     });
     dragulaService.drop.subscribe((value) => {
@@ -103,13 +111,26 @@ export class ManageGroupsetComponent implements OnInit {
 
   ngOnInit() {
 
-    this.workGroups$.subscribe(workGroups => {
-      this.workGroups = workGroups;
+    //Wait for both observables to emit a value before continuing.
+    this.workGroups$.zip(this.course$).subscribe(data => {
+      this.workGroups = data[0];
+      console.log(this.workGroups);
+      this.course = data[1];
       this.activate();
     });
 
-    console.log(this.workGroups);
 
+  }
+
+  ngOnDestroy() {
+    //This is needed because the unassigned students will have been created. So they must be cleaned up to prevent an error
+    //if the user leaves the component and then navigates back. 
+    if (this.unassignedStudents.length > 0) {
+      this.unassignedStudents.forEach(us => {
+        us.entityAspect.setAdded();
+        us.entityAspect.rejectChanges();
+      });
+    }
   }
 
   addGroup(): void {
@@ -128,7 +149,7 @@ export class ManageGroupsetComponent implements OnInit {
       //workGroupId: 93838 //How does this get created?
     } as WorkGroup;
 
-    let workGroup = this.lmsadminDataContext._manager.createEntity('WorkGroup', initial) as WorkGroup;
+    let workGroup = this.lmsadminDataContext.createWorkGroup(initial);
 
     this.addDialogRef = this.addDialog.open(AddGroupDialogComponent, {
       disableClose: true,
@@ -163,7 +184,6 @@ export class ManageGroupsetComponent implements OnInit {
       }
     })
   }
-
 
   editGroup(group: WorkGroup): void {
     this.editDialogRef = this.editDialog.open(EditGroupDialogComponent, {
@@ -264,7 +284,8 @@ export class ManageGroupsetComponent implements OnInit {
           }
         }
       } else {
-        if (change.entityAspect.originalValues.isDeleted) {
+        if (change.notAssignedToGroup) {
+          change.entityAspect.setUnchanged();
           this.unassignedStudents.push(change);
         }
         change.entityAspect.rejectChanges();
@@ -301,8 +322,28 @@ export class ManageGroupsetComponent implements OnInit {
   }
 
   activate(): void {
-    console.log(this.workGroups);
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
+    this.courseMembers = this.course.students;
+
+    let studentsWithoutGroup = this.courseMembers.filter(cm => {
+      if (cm.workGroupEnrollments.length === 0) {
+        return true;
+      } else {
+        let check = cm.workGroupEnrollments.some(wge => wge.workGroup.mpCategory === this.workGroupCategory);
+        return !check
+      }
+    });
+
+    console.log(studentsWithoutGroup);
+
+    if (studentsWithoutGroup.length > 0) {
+      studentsWithoutGroup.forEach(swog => {
+        let studentWithoutGroup = this.lmsadminDataContext.createCrseStudentInGroup(swog);
+        studentWithoutGroup.entityAspect.setUnchanged();
+        studentWithoutGroup.notAssignedToGroup = true;
+        this.unassignedStudents.push(studentWithoutGroup);
+      });
+    }
 
     this.getFlightNames();
 
@@ -314,20 +355,6 @@ export class ManageGroupsetComponent implements OnInit {
 
     this.workGroups.forEach(workGroup => {
       workGroup['isExpanded'] = false;
-    });
-
-    this.workGroups.forEach(wg => {
-      let deletedMembers = wg.groupMembers.filter(gm => gm.isDeleted === true);
-
-      deletedMembers.forEach(dm => {
-        this.unassignedStudents.push(dm);
-        dm.workGroup = null;
-        dm.workGroupId = 1000;
-        dm.entityAspect.setUnchanged();
-      });
-
-
-
     });
 
     this.changes = this.lmsadminDataContext.getChanges();
@@ -368,12 +395,19 @@ export class ManageGroupsetComponent implements OnInit {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           if (this.changes) {
+            this.loadingService.register();
             this.lmsadminDataContext._manager.rejectChanges();
             this.lmsadminDataContext._manager.clear();
-            this.lmsadminDataContext.fetchAllGroupSetMembers(this.courseId, this.workGroupCategory, true).then((workGroups: WorkGroup[]) => {
+            let promise1 = this.lmsadminDataContext.fetchAllGroupSetMembers(this.courseId, this.workGroupCategory, true);
+            let promise2 = this.lmsadminDataContext.fetchAllCourseMembers(this.courseId, true);
+
+            Promise.all([promise1, promise2]).then(data => {
               this.unassignedStudents = [];
               this.changes = [];
-              this.workGroups = workGroups;
+              this.workGroups = data[0];
+              this.course = data[1];
+              console.log(data);
+              this.loadingService.resolve();
               this.activate();
             })
 
@@ -558,11 +592,12 @@ export class ManageGroupsetComponent implements OnInit {
           this.changes = this.lmsadminDataContext.getChanges();
         }
 
-        if (assignedStudent.entityAspect.originalValues.workGroupId !== 1000) {
+        if (assignedStudent.notAssignedToGroup) {
+          assignedStudent.entityAspect.setAdded();
+          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
+        } else {
 
           assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
-        } else {
-          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
 
         }
       }
