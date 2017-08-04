@@ -30,16 +30,16 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   workGroups: WorkGroup[];
   course: Course;
   course$: Observable<Course>;
-  origWorkGroups: WorkGroup[];
+  //origWorkGroups: WorkGroup[];
   workGroups$: Observable<WorkGroup[]>
-  courseMembers: StudentInCourse[];
+  //courseMembers: StudentInCourse[];
   courseId: number;
   unassigned: string = "unassigned";
   changes = [];
   unassignedStudents: CrseStudentInGroup[] = [];
   flights: number[] = [];
   workGroupCategory: string;
-  disabled = false;
+  //disabled = false;
   allExpanded: boolean = false;
   searchInputTerm: string;
   editDialogRef: MdDialogRef<EditGroupDialogComponent>;
@@ -109,12 +109,40 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     })
   }
 
+  activate(): void {
+
+    this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
+    let courseMembers = this.course.students;
+    let groupMembers =this.course.studentInCrseGroups.filter(sicg => sicg.workGroup.mpCategory === this.workGroupCategory);
+
+    console.log(courseMembers);
+    console.log(groupMembers);
+
+    courseMembers.forEach(cm => {
+      
+    });
+
+    this.getFlightNames();
+
+    this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+      if (+wgA.groupNumber < +wgB.groupNumber) return -1;
+      if (+wgA.groupNumber > +wgB.groupNumber) return 1;
+      return 0;
+    });
+
+    this.workGroups.forEach(workGroup => {
+      workGroup['isExpanded'] = false;
+    });
+
+    this.changes = this.lmsadminDataContext.getChanges();
+
+  }
+
   ngOnInit() {
 
     //Wait for both observables to emit a value before continuing.
     this.workGroups$.zip(this.course$).subscribe(data => {
       this.workGroups = data[0];
-      console.log(this.workGroups);
       this.course = data[1];
       this.activate();
     });
@@ -123,14 +151,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //This is needed because the unassigned students will have been created. So they must be cleaned up to prevent an error
-    //if the user leaves the component and then navigates back. 
-    if (this.unassignedStudents.length > 0) {
-      this.unassignedStudents.forEach(us => {
-        us.entityAspect.setAdded();
-        us.entityAspect.rejectChanges();
-      });
-    }
+ 
   }
 
   addGroup(): void {
@@ -321,48 +342,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
   }
 
-  activate(): void {
-    this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
-    this.courseMembers = this.course.students;
-
-    let studentsWithoutGroup = this.courseMembers.filter(cm => {
-      if (cm.workGroupEnrollments.length === 0) {
-        return true;
-      } else {
-        let check = cm.workGroupEnrollments.some(wge => wge.workGroup.mpCategory === this.workGroupCategory);
-        return !check
-      }
-    });
-
-    console.log(studentsWithoutGroup);
-
-    if (studentsWithoutGroup.length > 0) {
-      studentsWithoutGroup.forEach(swog => {
-        let studentWithoutGroup = this.lmsadminDataContext.createCrseStudentInGroup(swog);
-        studentWithoutGroup.entityAspect.setUnchanged();
-        studentWithoutGroup.notAssignedToGroup = true;
-        this.unassignedStudents.push(studentWithoutGroup);
-      });
-    }
-
-    this.getFlightNames();
-
-    this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
-      if (+wgA.groupNumber < +wgB.groupNumber) return -1;
-      if (+wgA.groupNumber > +wgB.groupNumber) return 1;
-      return 0;
-    });
-
-    this.workGroups.forEach(workGroup => {
-      workGroup['isExpanded'] = false;
-    });
-
-    this.changes = this.lmsadminDataContext.getChanges();
-
-    console.log(this.unassignedStudents);
-    console.log(this.lmsadminDataContext.getChanges());
-
-  }
 
   getFlightNames(): void {
     this.workGroups.forEach(wg => {
@@ -549,6 +528,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     let toGroupName: string;
     let fromGroupName: string;
     let fromGroupId = args[2].id;
+    console.log(this.unassignedStudents);
 
     if (toGroupId === fromGroupId) {
       let student = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
@@ -582,9 +562,15 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
       if (fromGroupId === this.unassigned) {
 
-        let assignedStudent = this.workGroups.filter(wg => wg.workGroupId === +toGroupId)[0].groupMembers.find((gm) => {
+        let workgroup = this.workGroups.filter((wg) => {
+          return wg.workGroupId === +toGroupId
+        }
+        )[0]
+
+        let assignedStudent = workgroup.groupMembers.find((gm) => {
           return gm.studentId === +studentId
-        })
+        });
+
 
         if (assignedStudent.isDeleted) {
 
@@ -593,6 +579,9 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
         }
 
         if (assignedStudent.notAssignedToGroup) {
+          // if (assignedStudent.entityAspect.entityState.isDetached()) {
+          //   assignedStudent.entityAspect.
+          // }
           assignedStudent.entityAspect.setAdded();
           assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
         } else {

@@ -54,6 +54,10 @@ export class BaseDataContext {
         return this.manager.hasChanges();
     }
 
+    // clear(): void {
+    //     this.manager.clear();
+    // }
+
     // hasChangesChanged(): Observable<any> {
     //     return this.manager.hasChangesChanged.subscribe(eventArgs => {
     //         var data = {hasChanges: eventArgs.hasChanges}
@@ -96,9 +100,9 @@ export class BaseDataContext {
         // });
     }
 
-    // clear(): void {
-    //     this._emProvider.reset(this.manager);
-    // }
+    clear(): void {
+        this._emProvider.clear(this.dataContext);
+    }
 
     // shelve(key: string, clear: boolean = false): void {
     //     let data = this.manager.exportEntities(null, { asString: false, includeMetadata: false });
