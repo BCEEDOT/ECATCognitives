@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { IPageChangeEvent } from "@covalent/core";
+import { IPageChangeEvent, TdDialogService, TdLoadingService } from "@covalent/core";
 
 import { Course, StudentInCourse, FacultyInCourse } from "../../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
@@ -17,9 +17,12 @@ export class CourseEnrollComponent implements OnInit {
 
   constructor(private lmsadminDataContextService: LmsadminDataContextService,
     private router: Router,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private dialogService: TdDialogService,
+    private loadingService: TdLoadingService) { }
 
   ngOnInit() {
+    this.loadingService.register();
     this.route.params.subscribe(params => {
       let courseId: number = +params['crsId'];
       this.lmsadminDataContextService.fetchAllCourseMembers(courseId).then((course: Course) => {
@@ -52,6 +55,7 @@ export class CourseEnrollComponent implements OnInit {
     });
 
     this.studentsPage = this.course.students.slice(0,50);
+    this.loadingService.resolve();
   }
 
   refreshData(){
@@ -65,5 +69,29 @@ export class CourseEnrollComponent implements OnInit {
     this.studentsPage = this.course.students.slice(event.fromRow, event.toRow);
   }
 
+  pollEnrollments() {
+    this.loadingService.register();
+    this.lmsadminDataContextService.pollCourseMembers(this.course.id).then(data => {
+      this.loadingService.resolve();
+      this.course.students.push(...data.students);
+      this.course.faculty.push(...data.faculty);
+      
+      this.dialogService.openAlert({
+        message: 'Accounts Created: ' + data.numOfAccountCreated + '\n Accounts Enrolled: ' + data.numAdded + '\n Accounts Disenrolled: ' + data.numRemoved,
+        title: 'Poll Complete',
+        closeButton: 'Dismiss'
+      });
+      
+      this.activate();
+    }).catch((e: Event) => {
+      this.loadingService.resolve();
+      console.log('Error retrieving course enrollments ' + e);
+      this.dialogService.openAlert({
+        message: 'Error polling LMS for enrollments. Please try again.',
+        title: 'Poll Error',
+        closeButton: 'Dismiss'
+      });
+    });
+  }
 
 }

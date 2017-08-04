@@ -112,6 +112,11 @@ export class AuthService implements IHttpInterceptor {
 
     this.global.user(user);
 
+    //set a timer for warning the user when they are 5 minutes from token expiring
+    //token.exp is in seconds, Date.now in milliseconds, and tokenTimer wants milliseconds
+    let tokenWarn = ((accessToken.exp - (Date.now() / 1000)) - 300) * 1000;
+    this.global.startTokenTimer(tokenWarn);
+
     if (!user.person.registrationComplete) {
       this.router.navigate(['/profile']);
     }
