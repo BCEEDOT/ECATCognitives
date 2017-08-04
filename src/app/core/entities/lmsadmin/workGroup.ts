@@ -43,6 +43,7 @@ export class WorkGroup extends EntityBase {
 
    /// <code> Place custom code between <code> tags
    changeDescription: string;
+   maxSize: number;
    /// </code>
 
 }

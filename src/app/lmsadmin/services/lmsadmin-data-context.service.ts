@@ -1,4 +1,3 @@
-import { CrseStudentInGroup } from '../../core/entities/lmsadmin';
 import { Injectable } from '@angular/core';
 import { EntityQuery, QueryResult } from 'breeze-client';
 
@@ -8,9 +7,8 @@ import { GlobalService } from "../../core/services/global.service";
 import { LoggerService } from "../../shared/services/logger.service";
 import { DataContext } from "../../app-constants";
 import { ILmsAdminApiResources, ISaveGradesResult } from '../../core/entities/client-models';
-import { MpEntityType } from '../../core/common/mapStrings';
-import { Course, WorkGroup, WorkGroupModel, StudentInCourse, CourseReconResult, MemReconResult, GroupReconResult, GroupMemReconResult } from "../../core/entities/lmsadmin";
-
+import { MpEntityType, MpSpStatus } from '../../core/common/mapStrings';
+import { Course, WorkGroup, WorkGroupModel, StudentInCourse, CourseReconResult, MemReconResult, GroupReconResult, GroupMemReconResult, CrseStudentInGroup } from "../../core/entities/lmsadmin";
 
 @Injectable()
 export class LmsadminDataContextService extends BaseDataContext {
@@ -240,6 +238,30 @@ export class LmsadminDataContextService extends BaseDataContext {
 
   createWorkGroup(workGroup: WorkGroup): WorkGroup {
     return this.manager.createEntity(MpEntityType.workGroup, workGroup) as WorkGroup;
+  }
+
+  createWorkgroup(courseId: number, wgModelId: number, category: string, grpNum: string, defaultName: string, customName: string): WorkGroup{
+    var newGrp = {
+      courseId: courseId,
+      wgModelId: wgModelId,
+      mpCategory: category,
+      groupNumber: grpNum,
+      defaultName: defaultName,
+      mpSpStatus: MpSpStatus.created,
+      customName: customName
+    };
+
+    return this.manager.createEntity(MpEntityType.workGroup, newGrp) as WorkGroup;
+  }
+
+  createGroupMembership(group: WorkGroup, studentId: number): CrseStudentInGroup{
+    var newMem = {
+      studentId: studentId,
+      courseId: group.courseId,
+      workGroupId: group.workGroupId
+    };
+
+    return this.manager.createEntity(MpEntityType.crseStudInGrp, newMem) as CrseStudentInGroup;
   }
 
   pollCourses(): Promise<CourseReconResult> {
