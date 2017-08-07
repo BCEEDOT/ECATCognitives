@@ -5,6 +5,7 @@ import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { EntityAction } from 'breeze-client';
 import 'rxjs/add/operator/pluck';
 import 'rxjs/add/operator/zip';
+//import * as _ from "lodash";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { DragulaService } from "ng2-dragula";
@@ -67,18 +68,32 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     dragulaService.drag.subscribe((value) => {
       //console.log(`drag: ${value[0]}`);
+      console.log('In the drag');
+      this.workGroups.forEach(wg => console.log(wg.groupMembers.length));
       this.onDrag(value.slice(1));
     });
     dragulaService.drop.subscribe((value) => {
       // console.log(`drop: ${value[0]}`);
+      console.log('In the drop');
+      
+      this.workGroups.forEach(wg => console.log(wg.groupMembers.length));
+      
       this.onDrop(value.slice(1));
     });
     dragulaService.over.subscribe((value) => {
       // console.log(`over: ${value[0]}`);
+      console.log('In the over');
+      
+      this.workGroups.forEach(wg => console.log(wg.groupMembers.length));
+      
       this.onOver(value.slice(1));
     });
     dragulaService.out.subscribe((value) => {
       // console.log(`out: ${value[0]}`);
+      console.log('In the out');
+      
+      this.workGroups.forEach(wg => console.log(wg.groupMembers.length));
+      
       this.onOut(value.slice(1));
     });
 
@@ -113,14 +128,29 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
     let courseMembers = this.course.students;
-    let groupMembers =this.course.studentInCrseGroups.filter(sicg => sicg.workGroup.mpCategory === this.workGroupCategory);
-
-    console.log(courseMembers);
-    console.log(groupMembers);
-
-    courseMembers.forEach(cm => {
-      
+    let count: number = 0;
+    let groupMembers = this.course.studentInCrseGroups.filter(sicg => {
+      //When going in and out of groups. Student entities not maching category will
+      //not have a workgroup object. 
+      if (sicg.workGroup) {
+         return sicg.workGroup.mpCategory === this.workGroupCategory
+      } 
     });
+
+    console.log(`Number of course members - ${courseMembers.length}`);
+    console.log(`Number of group members - ${groupMembers.length}`);
+
+    let courseStudentsWithNoGroup = courseMembers.filter(cm => !groupMembers.some(gm => gm.studentId === cm.studentPersonId));
+
+    if (courseStudentsWithNoGroup.length > 0) {
+      courseStudentsWithNoGroup.forEach(csng => {
+        let courseStudentWithNoGroup = this.lmsadminDataContext.createCrseStudentInGroup(csng);
+        console.log(courseStudentWithNoGroup);
+        courseStudentWithNoGroup.entityAspect.setUnchanged();
+        courseStudentWithNoGroup.notAssignedToGroup = true;
+        this.unassignedStudents.push(courseStudentWithNoGroup);
+      })
+    };
 
     this.getFlightNames();
 
@@ -151,7 +181,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
- 
+
   }
 
   addGroup(): void {
@@ -403,6 +433,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
   save(): void {
 
+    console.log(this.workGroups);
     console.log(this.lmsadminDataContext.getChanges());
     console.log(this.unassignedStudents);
 

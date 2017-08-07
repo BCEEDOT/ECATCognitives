@@ -229,6 +229,14 @@ export class LmsadminDataContextService extends BaseDataContext {
   }
 
   createCrseStudentInGroup(student: StudentInCourse): CrseStudentInGroup {
+
+    let courseStudentWithNoGroup = 
+    this.manager.getEntityByKey(MpEntityType.crseStudInGrp, [student.studentPersonId, student.courseId, 0]) as CrseStudentInGroup;
+
+    if (courseStudentWithNoGroup) {
+      return courseStudentWithNoGroup
+    }
+
     return this.manager.createEntity(MpEntityType.crseStudInGrp, {
       studentId: student.studentPersonId,
       courseId: student.courseId

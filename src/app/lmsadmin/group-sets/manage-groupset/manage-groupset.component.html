@@ -51,7 +51,7 @@
             <div style="min-height: 50px" [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
 
               <p [myHighlight]="groupMember.highlighted" [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId"
-                (mouseout)="hovered = null" [id]="groupMember.studentId" *ngFor="let groupMember of workGroup.groupMembers"
+                (mouseout)="hovered = null" [id]="groupMember.studentId" *ngFor="let groupMember of workGroup.groupMembers trackBy:groupMember?.studentId"
                 class="md-caption push-none pad-xs">{{groupMember.rankName}}</p>
 
             </div>
