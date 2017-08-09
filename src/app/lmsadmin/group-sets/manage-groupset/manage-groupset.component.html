@@ -2,14 +2,14 @@
   <md-sidenav #sidenav mode="side" color="accent" opened="true" style="width:257px;border-right:1px solid #ccc">
     <div flex class="md-content ">
       <md-nav-list>
-        <td-expansion-panel *ngIf="readOnly" label="Unassigned Students" [disabled]="disabled" [expand]="isUnassignedPanelExpanded">
+        <td-expansion-panel *ngIf="readOnly" label="Unassigned Students"  [expand]="isUnassignedPanelExpanded">
           <div id="unassigned" style="min-height: 50px;">
             <p [id]="unassignedStudent.studentId" [myHighlight]="unassignedStudent.highlighted" (mouseover)="hovered = unassignedStudent.studentId"
               (mouseout)="hovered = null" fxFlexOffset="5%" class="push-none pad-xs md-caption" *ngFor="let unassignedStudent of unassignedStudents">
               {{unassignedStudent.rankName}}</p>
           </div>
         </td-expansion-panel>
-        <td-expansion-panel *ngIf="!readOnly" label="Unassigned Students" [disabled]="disabled" [expand]="isUnassignedPanelExpanded">
+        <td-expansion-panel *ngIf="!readOnly" label="Unassigned Students"  [expand]="isUnassignedPanelExpanded">
           <div id="unassigned" style="min-height: 50px;" [dragula]='"bag-one"' [dragulaModel]='unassignedStudents'>
             <p [id]="unassignedStudent.studentId" [myHighlight]="unassignedStudent.highlighted" [ngClass]="{'selected': hovered === unassignedStudent.studentId}"
               (mouseover)="hovered = unassignedStudent.studentId" (mouseout)="hovered = null" fxFlexOffset="5%" class="push-none pad-xs md-caption"
@@ -39,14 +39,14 @@
       [alwaysVisible]="false" flex></td-search-box>
     <button [ngClass]="canSaveFlag ? '' : 'can-save'" (click)="save()" type="button" md-raised-button color="accent">Save</button>
     <button (click)="reset(false)" type="button" md-raised-button color="accent">Reset</button>
-    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" [disabled]="disabled">
+    <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" >
       {{(allExpanded) ? 'Collapse' : 'Expand'}} All
     </md-slide-toggle>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap>
     <div fxFlex="25%" *ngFor="let workGroup of workGroups">
       <md-card *ngIf="readOnly">
-        <td-expansion-panel [disabled]="disabled" [expand]="workGroup.isExpanded">
+        <td-expansion-panel [expand]="workGroup.isExpanded">
           <ng-template td-expansion-panel-label>
             <md-icon>lock_outline</md-icon>
             <span>{{workGroup.defaultName}} - ({{workGroup.groupMembers.length}})</span>
@@ -73,7 +73,7 @@
 
 
       <md-card *ngIf="!readOnly">
-        <td-expansion-panel [disabled]="disabled" [expand]="workGroup.isExpanded">
+        <td-expansion-panel  [expand]="workGroup.isExpanded">
           <ng-template td-expansion-panel-label>
             <md-icon>{{(workGroup.isOpen) ? 'lock_open' : 'lock_outline'}}</md-icon>
             <span>{{workGroup.defaultName}} - ({{workGroup.groupMembers.length}})</span>
