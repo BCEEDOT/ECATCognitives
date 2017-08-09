@@ -154,12 +154,12 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     this.workGroups.forEach(workGroup => {
       workGroup['isExpanded'] = false;
-      workGroup['isOpen'] = true;
-      if (workGroup.mpSpStatus != MpSpStatus.open) {
-        workGroup['isOpen'] = false;
+      workGroup['isEditable'] = true;
+      if (workGroup.mpSpStatus === MpSpStatus.open || workGroup.mpSpStatus === MpSpStatus.created ) {
+        workGroup['isEditable'] = false;
       }
     });
-
+    
     this.changes = this.lmsadminDataContext.getChanges();
 
   }
