@@ -23,7 +23,7 @@
 
     <button md-raised-button color="accent" type="button" [disabled]="isDisabled()" (click)="ok()" class="text-upper">Ok</button>
     <button md-raised-button color="accent" type="button" class="text-upper" (click)="close();">Cancel</button>
-    <button md-raised-button color="accent" type="button" class="text-upper" (click)="delete()">Delete</button>
+    <button *ngIf="canDelete" md-raised-button color="accent" type="button" class="text-upper" (click)="delete()">Delete</button>
 
   </div>
 </md-card-actions>
