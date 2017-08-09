@@ -47,7 +47,8 @@ export class CrseStudentInGroup extends EntityBase {
     workGroup: WorkGroup;
 
     /// <code> Place custom code between <code> tags
-
+    commentText: string;
+    assessText: string;
     stratIsValid: boolean;
     stratValidationErrors: Array<{ cat: string, text: string }>;
     proposedStratPosition: number = null;

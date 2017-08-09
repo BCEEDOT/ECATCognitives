@@ -16,14 +16,14 @@ import { FacWorkgroupService } from "../../../services/facworkgroup.service";
 })
 export class CommentsComponent implements OnInit {
 
-  private memsWithComments: CrseStudentInGroup[];
-  private selectedAuthor: CrseStudentInGroup;
-  private authoredComments: StudSpComment[];
-  private selectedComment: StudSpComment;
-  private grpHasComments: boolean = true;
-  private commFlagMap = MpCommentFlag;
-  private hasChanges: boolean = false;
-  private viewOnly: boolean = true;
+  memsWithComments: CrseStudentInGroup[];
+  selectedAuthor: CrseStudentInGroup;
+  authoredComments: StudSpComment[];
+  selectedComment: StudSpComment;
+  grpHasComments: boolean = true;
+  commFlagMap = MpCommentFlag;
+  hasChanges: boolean = false;
+  viewOnly: boolean = true;
 
   constructor(private route: ActivatedRoute,
     private location: Location,

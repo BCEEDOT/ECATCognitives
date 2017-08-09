@@ -9,12 +9,12 @@ import { DataContext } from '../../app-constants';
 //@Injectable()
 export class BaseDataContext {
 
-    private static shelveSets = {};
+    static shelveSets = {};
     //private static savedOrRejectedSubject = new Subject<SavedOrRejectedArgs>();
 
-    private _manager: EntityManager;
+    _manager: EntityManager;
 
-    private entityChangedSubject: Subject<EntityChangedEventArgs>;
+    entityChangedSubject: Subject<EntityChangedEventArgs>;
 
     constructor(private dataContext: DataContext, private _emProvider: EmProviderService) {
         this.entityChangedSubject = new Subject<EntityChangedEventArgs>();
@@ -54,6 +54,10 @@ export class BaseDataContext {
         return this.manager.hasChanges();
     }
 
+    // clear(): void {
+    //     this.manager.clear();
+    // }
+
     // hasChangesChanged(): Observable<any> {
     //     return this.manager.hasChangesChanged.subscribe(eventArgs => {
     //         var data = {hasChanges: eventArgs.hasChanges}
@@ -62,6 +66,20 @@ export class BaseDataContext {
 
     getChanges(): Entity[] {
         return this.manager.getChanges();
+    }
+
+    namedCommit(selectedEntities: Entity[]) {
+        return <any>this.manager.saveChanges(selectedEntities)
+            .then((saveResult) => {
+                return saveResult.entities;
+            }).catch((errors) => {
+                console.log("errors from the commit");
+                console.log(errors);
+                if (errors.status == 401) {
+                    console.log('You have been logged out due to time. Please go in again');
+                }
+                throw errors;
+            });
     }
 
     //This is save changes
@@ -96,9 +114,9 @@ export class BaseDataContext {
         // });
     }
 
-    // clear(): void {
-    //     this._emProvider.reset(this.manager);
-    // }
+    clear(): void {
+        this._emProvider.clear(this.dataContext);
+    }
 
     // shelve(key: string, clear: boolean = false): void {
     //     let data = this.manager.exportEntities(null, { asString: false, includeMetadata: false });

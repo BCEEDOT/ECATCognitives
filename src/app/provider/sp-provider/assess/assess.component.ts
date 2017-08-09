@@ -21,22 +21,22 @@ import { GlobalService } from "../../../core/services/global.service";
 })
 
 export class AssessComponent implements OnInit {
-  private inventories: Array<IStudSpInventory | IFacSpInventory>;
-  private inventories$: Observable<Array<IStudSpInventory | IFacSpInventory>>;
-  private isStudent: boolean;
-  private isSelf: boolean;
-  private perspective: string;
-  private activeInventory: IStudSpInventory | IFacSpInventory;
-  private canSave: boolean = false;
-  private respEnum = {
+  inventories: Array<IStudSpInventory | IFacSpInventory>;
+  inventories$: Observable<Array<IStudSpInventory | IFacSpInventory>>;
+  isStudent: boolean;
+  isSelf: boolean;
+  perspective: string;
+  activeInventory: IStudSpInventory | IFacSpInventory;
+  canSave: boolean = false;
+  respEnum = {
     he: SpEffectLevel.HighlyEffective,
     e: SpEffectLevel.Effective,
     ie: SpEffectLevel.Ineffective,
     usl: SpFreqLevel.Usually,
     alw: SpFreqLevel.Always
   };
-  private assessLoad: string = 'AssessLoading';
-  private viewOnly: boolean = true;
+  assessLoad: string = 'AssessLoading';
+  viewOnly: boolean = true;
 
   constructor(private studentDataContext: StudentDataContext,
     private facultyDataContext: FacultyDataContextService,

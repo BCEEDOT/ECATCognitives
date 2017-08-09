@@ -1,0 +1,59 @@
+<md-card>
+  <md-card-title>
+    <button md-raised-button [routerLink]="['../..']">Back</button>
+    <div fxFlex="100" class="text-center">
+      {{course?.name}} - {{course?.classNumber}} Group Management
+    </div>
+    <span fxFlex></span>
+    <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+  </md-card-title>
+  <md-divider></md-divider>
+  <md-card-content>
+    <md-list>
+      <md-list-item>
+        <span fxFlex="30">CATEGORY ID</span>
+        <span fxFlex="30">NAME</span>
+        <span fxFlex="30"># OF GROUPS</span>
+        <span fxFlex="30">OVERALL STATUS</span>
+        <span fxFlex="10"></span>
+      </md-list-item>
+      <md-list-item *ngFor="let model of wgModels">
+        <span fxFlex="30">{{model.mpWgCategory}}</span>
+        <span fxFlex="30">{{model.name}}</span>
+        <span fxFlex="30">{{model.workGroups.length}}</span>
+        <span fxFlex="30">{{model.status}}</span>
+        <span fxFlex="10">
+          <div>
+            <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
+              <button md-menu-item [routerLink]="[model.mpWgCategory + '/config']" *ngIf="model.status === testStatus.await && model.mpWgCategory !== catMap.bc1"> 
+                <md-icon> group_add </md-icon>
+                <span class="md-subhead"> Create </span>
+              </button>
+              <button md-menu-item (click)="pollLmsGroups()" *ngIf="model.status !== testStatus.reviewed && model.status !== testStatus.pub && model.mpWgCategory === catMap.bc1"> 
+                <md-icon> file_download </md-icon>
+                <span class="md-subhead"> Poll LMS </span>
+              </button>
+              <button md-menu-item [routerLink]="[model.mpWgCategory + '/manage']" *ngIf="model.status !== testStatus.await"> 
+                <md-icon> group </md-icon>
+                <span class="md-subhead" *ngIf="model.status === testStatus.created || model.status === testStatus.inUse || model.status === testStatus.reviewed"> Manage </span>
+                <span class="md-subhead" *ngIf="model.status === testStatus.pub"> View </span>
+              </button>
+              <button md-menu-item (click)="advance(model)" [disabled]="model.status === testStatus.inUse" *ngIf="model.status !== testStatus.pub && model.status !== testStatus.await"> 
+                <md-icon [ngClass]="{'tc-grey-400': model.status === testStatus.inUse}"> forward </md-icon>
+                <span class="md-subhead" *ngIf="model.status === testStatus.created"> Open </span>
+                <span class="md-subhead" *ngIf="model.status === testStatus.inUse || model.status === testStatus.reviewed"> Publish </span>
+              </button>
+              <button md-menu-item (click)="syncGrades(model)" *ngIf="model.status === testStatus.pub">
+                <md-icon>file_upload</md-icon>
+                <span class="md-subhead">Push Grades</span>
+              </button>
+            </md-menu>
+            <button md-icon-button [mdMenuTriggerFor]="appMenu">
+              <md-icon>more_vert</md-icon>
+            </button>
+          </div>
+        </span>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+</md-card>

@@ -8,7 +8,6 @@ import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
-import { UsersModule } from "./users/users.module";
 import { StudentModule } from "./student/student.module";
 import { FacultyModule } from "./faculty/faculty.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
@@ -16,6 +15,7 @@ import { ProfileModule } from "./profile/profile.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
+import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -36,7 +36,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     CoreModule,
     BrowserModule,
     FacultyModule,
-    UsersModule,
+    LmsadminModule,
     StudentModule,
     ProfileModule,
     DashboardModule,
