@@ -4,7 +4,7 @@
       placeholder="Click to filter by flight" (inputChange)="filterStrings($event)" requireMatch>
     </td-chips>
     <md-list>
-
+ 
       <ng-template let-workGroup let-last="last" ngFor [ngForOf]="workGroups">
         <div #row fxLayout="row" fxLayoutGap="20px" (mouseover)="row.options = true" (mouseout)="row.options = false">
           <md-list-item fxFlex="30">
@@ -26,6 +26,12 @@
                 <md-icon> check_circle </md-icon>
                 <span class="md-subhead"> Status </span>
               </button>
+<!--RICKY-->
+              <button *ngIf="workGroup.mpSpStatus !== statusMap.published" md-menu-item [routerLink]="['flight-roster/' + workGroup.workGroupId]"> 
+                <md-icon> list </md-icon>
+                <span class="md-subhead"> Flight Roster </span>
+              </button>
+
               <button *ngIf="workGroup.mpSpStatus === statusMap.published" md-menu-item [routerLink]="['results/' + workGroup.workGroupId]"> 
                 <md-icon> data_usage </md-icon>
                 <span class="md-subhead"> Results </span>

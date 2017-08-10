@@ -23,6 +23,7 @@ import { ResultsDetailsComponent } from './workgroups/results/results-details/re
 import { BehaviorsComponent } from './workgroups/results/results-details/behaviors/behaviors.component';
 import { ResultsCommentsComponent } from './workgroups/results/results-details/comments/comments.component';
 import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
+import { FlightRosterComponent } from './workgroups/flight-roster/flight-roster.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.ser
     ResultsDetailsComponent,
     BehaviorsComponent,
     ResultsCommentsComponent,
+    FlightRosterComponent,
   ], 
   providers: [
     FacultyAuthGuardService,
