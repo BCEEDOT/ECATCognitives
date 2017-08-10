@@ -34,7 +34,6 @@ export class FlightRosterComponent implements OnInit {
   groupMembers: CrseStudentInGroup[];
   rosterInfos: RosterInfo[] = [];
 
-
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -57,26 +56,15 @@ export class FlightRosterComponent implements OnInit {
   }
 
   activate(): void {
-    console.log('crsId:  ' + this.crsId);
-    console.log('workGroupId:  ' + this.workGroupId);
-    console.log(this.course);
 
     let students = this.course.students;
-    console.log(students);
 
     this.workGroup = this.course.workGroups.filter(workGroup => workGroup.workGroupId === this.workGroupId)[0];
-    console.log(this.workGroup);
 
     this.groupMembers = this.workGroup.groupMembers;
 
     let workGroups = this.course.workGroups;
-    console.log(this.groupMembers);
 
-    // const grpName = {};
-
-    // this.workGroups.forEach((g, i, array) => {
-    //   grpName[g.groupNumber] = null;
-    // });
     this.activeCategory = this.workGroup.mpCategory;
 
     var uniqueCategories = [];
@@ -88,10 +76,17 @@ export class FlightRosterComponent implements OnInit {
 
     //Need to filter out active category and one previous
     this.categoriesToDisplay = uniqueCategories.filter(cat => cat !== this.activeCategory);
-    console.log(this.categoriesToDisplay);
+
+    this.groupMembers.sort((stuA: CrseStudentInGroup, stuB: CrseStudentInGroup) => {
+      if (stuA.studentProfile.person.lastName < stuB.studentProfile.person.lastName) return -1;
+      if (stuA.studentProfile.person.lastName > stuB.studentProfile.person.lastName) return 1;
+      if (stuA.studentProfile.person.firstName < stuB.studentProfile.person.firstName) return -1;
+      if (stuA.studentProfile.person.firstName > stuB.studentProfile.person.firstName) return 1;
+      return 0;
+    });
 
     this.groupMembers.forEach((groupMember: CrseStudentInGroup) => {
-      let studentRosterInfo: RosterInfo = {rankName: null, flights: []};
+      let studentRosterInfo: RosterInfo = { rankName: null, flights: [] };
       studentRosterInfo.rankName = groupMember.rankName;
       let workGroupEnrollments = students.filter(
         student => student.studentPersonId === groupMember.studentId)[0].workGroupEnrollments;
@@ -110,10 +105,6 @@ export class FlightRosterComponent implements OnInit {
       }
       this.rosterInfos.push(studentRosterInfo);
     });
-
-    console.log(this.rosterInfos[0].flights['BC2']);
-
-    console.log(this.rosterInfos);
 
     this.loadingService.resolve()
 
