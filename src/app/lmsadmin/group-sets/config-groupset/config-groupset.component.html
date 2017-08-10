@@ -1,14 +1,43 @@
 <div>
-    <div class='wrapper'>
-      <div class='container' [dragula]='"first-bag"'>
-        <div>You can move these elements between these two containers</div>
-        <div>Moving them anywhere else isn't quite possible</div>
-        <div>There's also the possibility of moving elements around in the same container, changing their position</div>
+  <md-card class="width">
+    <md-card-title>Configure Group Creation for {{currentModel?.mpWgCategory}} - {{currentModel?.name}}</md-card-title>
+    <md-card-content>
+      <div *ngIf="!finalFlight">
+        <md-checkbox [(ngModel)]="reuseFlights" (click)="reuseCheck()"><h4>Use Flights from {{previousModel?.mpWgCategory}} {{previousModel?.name}}</h4></md-checkbox>
+        <div *ngIf="reuseFlights" class="pad-left-sm pad-bottom-sm">
+          <md-checkbox [(ngModel)]="keepNames">Apply Previous Flight Nicknames</md-checkbox>
+          <br/>
+          <md-checkbox [(ngModel)]="keepSizes">Maintain Previous Flight Sizes</md-checkbox>
+            <div class="pad-left-sm pad-top-sm" *ngIf="!keepSizes">
+              <md-input-container>
+                <input mdInput #maxSizeInput="ngModel" placeholder="Max Flight Size" [(ngModel)]="maxSize" name="maxSize" max="20" min="2" tdAutoTrim [disabled]="keepSizes"/>
+              </md-input-container>
+            </div>
+        </div>
+        <md-divider></md-divider>
+        <md-checkbox [(ngModel)]="newFlights" (click)="newCheck()"><h4>Create New Flights</h4></md-checkbox>
+        <div *ngIf="newFlights" class="pad-left-sm">
+          <div class="pad-left-sm pad-top-sm">
+            <md-input-container>
+              <input mdInput #newNumFlights="ngModel" placeholder="Number of Flights" [(ngModel)]="numFlights" name="numFlights" max="100" min="2" tdAutoTrim/>
+            </md-input-container>
+            <br/>
+            <md-input-container class="pad-top-sm">
+              <input mdInput #newMaxSizeInput="ngModel" placeholder="Max Flight Size" [(ngModel)]="maxSize" name="newMaxSize" max="20" min="2" tdAutoTrim/>
+            </md-input-container>
+          </div>
+        </div>
       </div>
-      <div class='container' [dragula]='"first-bag"'>
-        <div>This is the default use case. You only need to specify the containers you want to use</div>
-        <div>More interactive use cases lie ahead</div>
-        <div>Make sure to check out the <a href='https://github.com/bevacqua/dragula#readme'>documentation on GitHub!</a></div>
+      <div *ngIf="finalFlight">
+        <h3>Final Flight</h3>
+        <p>Flights, sizes, and memberships for this category will be copied from {{previousModel?.mpWgCategory}} {{previousModel?.name}}.</p>
       </div>
-    </div>
-  </div>
+    </md-card-content>
+    <md-card-actions>
+      <span fxFlex></span>
+      <button md-raised-button [routerLink]="['../..']">Cancel</button>
+      <button md-raised-button *ngIf="!finalFlight" (click)="this.scatter()" >Scatter</button>
+      <button md-raised-button *ngIf="finalFlight" (click)="this.scatter()" >Create</button>
+    </md-card-actions>
+  </md-card>
+</div>

@@ -8,7 +8,6 @@ import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
-import { UsersModule } from "./users/users.module";
 import { StudentModule } from "./student/student.module";
 import { FacultyModule } from "./faculty/faculty.module";
 import { DashboardModule } from "./dashboard/dashboard.module";
@@ -39,7 +38,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     BrowserModule,
     FacultyModule,
     LmsadminModule,
-    UsersModule,
     StudentModule,
     ProfileModule,
     DashboardModule,

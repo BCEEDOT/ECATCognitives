@@ -5,7 +5,7 @@
       {{course?.name}} - {{course?.classNumber}} Enrollments
     </div>
     <span fxFlex></span>
-    <!--<button md-raised-button>Poll LMS Enrollments</button>-->
+    <button md-raised-button (click)="this.pollEnrollments()">Poll Enrollments</button>
     <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
   </md-card-title>
   <md-card-content>

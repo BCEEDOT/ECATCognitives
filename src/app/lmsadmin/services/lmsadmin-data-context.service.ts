@@ -6,9 +6,9 @@ import { EmProviderService } from "../../core/services/em-provider.service";
 import { GlobalService } from "../../core/services/global.service";
 import { LoggerService } from "../../shared/services/logger.service";
 import { DataContext } from "../../app-constants";
-import { ILmsAdminApiResources } from '../../core/entities/client-models';
-import { MpEntityType } from '../../core/common/mapStrings';
-import { Course, WorkGroup, WorkGroupModel } from "../../core/entities/lmsadmin";
+import { ILmsAdminApiResources, ISaveGradesResult } from '../../core/entities/client-models';
+import { MpEntityType, MpSpStatus } from '../../core/common/mapStrings';
+import { Course, WorkGroup, WorkGroupModel, StudentInCourse, CourseReconResult, MemReconResult, GroupReconResult, GroupMemReconResult, CrseStudentInGroup } from "../../core/entities/lmsadmin";
 
 @Injectable()
 export class LmsadminDataContextService extends BaseDataContext {
@@ -37,6 +37,26 @@ export class LmsadminDataContextService extends BaseDataContext {
     allGroupSetMembers: {
       returnedEntityType: MpEntityType.workGroup,
       resource: 'GetAllGroupSetMembers',
+    },
+    pollCourses: {
+      returnedEntityType: MpEntityType.courseRecon,
+      resource: 'PollCourses',
+    },
+    pollCourseMembers: {
+      returnedEntityType: MpEntityType.memRecon,
+      resource: 'PollCourseMembers',
+    },
+    pollGroups: {
+      returnedEntityType: MpEntityType.groupRecon,
+      resource: 'PollGroups',
+    },
+    pollAllGroupMembers: {
+      returnedEntityType: MpEntityType.grpMemRecon,
+      resource: 'PollGroupCategory',
+    },
+    syncBbGrades: {
+      returnedEntityType: MpEntityType.unk,
+      resource: 'SyncBbGrades',
     }
   };
 
@@ -78,6 +98,14 @@ export class LmsadminDataContextService extends BaseDataContext {
     //i think we have to go back to the serve for this every time unless we set up an "isLoaded" thing again
 
     const params: any = { courseId: courseId };
+
+    //drop all the groups so that we aren't messing with another course's groups on the group set screen
+    //if you browse the sets for multiple courses of the same type, they are all using the same models so the groups from each are attached
+    let groups = this.manager.getEntities(MpEntityType.workGroup) as Array<WorkGroup>;
+    groups.forEach(grp => {
+      grp.entityAspect.setDetached();
+    });
+
     let query: any = EntityQuery.from(this.lmsAdminApiResource.courseModels.resource).withParameters(params);
 
     return <Promise<Array<WorkGroupModel>>>this.manager.executeQuery(query)
@@ -129,9 +157,11 @@ export class LmsadminDataContextService extends BaseDataContext {
 
   fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course> {
     let course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
-    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
-      console.log('Retrieved course members from local cache', course, false);
-      return Promise.resolve(course);
+    if (course) {
+      if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
+        console.log('Retrieved course members from local cache', course, false);
+        return Promise.resolve(course);
+      }
     }
 
     const params: any = { courseId: courseId };
@@ -148,16 +178,14 @@ export class LmsadminDataContextService extends BaseDataContext {
       course = data.results[0] as Course;
       if (course.students.length > 0 && course.faculty.length > 1) {
         console.log('Course members loaded from remote store', course, false);
+      } else {
+        console.log('No members in course');
       }
-
-      console.log('No members in course');
       return course;
-
-
     }
   }
 
-  fetchAllGroupSetMembers(courseId, categoryId, forceRefresh?: boolean): Promise<Array<WorkGroup> | Promise<void>> {
+  fetchAllGroupSetMembers(courseId, categoryId, forceRefresh?: boolean): Promise<WorkGroup[]> {
     const self = this;
 
     let groups = this.manager.getEntities(MpEntityType.workGroup) as Array<WorkGroup>;
@@ -167,7 +195,7 @@ export class LmsadminDataContextService extends BaseDataContext {
     // if (groups) {
 
     //   groups.forEach(group => {
-        
+
     //   })
 
     //   console.log('GroupSet memberships loaded from local cache', false);
@@ -199,4 +227,155 @@ export class LmsadminDataContextService extends BaseDataContext {
 
     }
   }
-}
+
+  createCrseStudentInGroup(student: StudentInCourse): CrseStudentInGroup {
+
+    let courseStudentWithNoGroup = 
+    this.manager.getEntityByKey(MpEntityType.crseStudInGrp, [student.studentPersonId, student.courseId, 0]) as CrseStudentInGroup;
+
+    if (courseStudentWithNoGroup) {
+      return courseStudentWithNoGroup
+    }
+
+    return this.manager.createEntity(MpEntityType.crseStudInGrp, {
+      studentId: student.studentPersonId,
+      courseId: student.courseId
+
+    }) as CrseStudentInGroup;
+  }
+
+  createWorkGroup(workGroup: WorkGroup): WorkGroup {
+    return this.manager.createEntity(MpEntityType.workGroup, workGroup) as WorkGroup;
+  }
+
+  createWorkgroup(courseId: number, wgModelId: number, category: string, grpNum: string, defaultName: string, customName: string): WorkGroup{
+    var newGrp = {
+      courseId: courseId,
+      wgModelId: wgModelId,
+      mpCategory: category,
+      groupNumber: grpNum,
+      defaultName: defaultName,
+      mpSpStatus: MpSpStatus.created,
+      customName: customName
+    };
+
+    return this.manager.createEntity(MpEntityType.workGroup, newGrp) as WorkGroup;
+  }
+
+  createGroupMembership(group: WorkGroup, studentId: number): CrseStudentInGroup{
+    var newMem = {
+      studentId: studentId,
+      courseId: group.courseId,
+      workGroupId: group.workGroupId
+    };
+
+    return this.manager.createEntity(MpEntityType.crseStudInGrp, newMem) as CrseStudentInGroup;
+  }
+
+  pollCourses(): Promise<CourseReconResult> {
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.pollCourses.resource);
+
+    return <Promise<CourseReconResult>>this.manager.executeQuery(query)
+      .then(allCoursesResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve courses ' + e);
+        return Promise.reject(e);
+      });
+  
+
+    function allCoursesResp(data: QueryResult): CourseReconResult {
+      let courseRecon = data.results[0] as CourseReconResult;
+      if (courseRecon) {
+        console.log('Courses loaded from remote store', courseRecon, false);
+        return courseRecon;
+      }
+    }
+  }
+
+  cachedCourses(): Array < Course > {
+    return this.manager.getEntities(MpEntityType.course) as Array<Course>;
+  }
+
+  pollCourseMembers(courseId: number): Promise < MemReconResult > {
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.pollCourseMembers.resource).withParameters(params);
+
+
+    return<Promise<MemReconResult >> this.manager.executeQuery(query)
+      .then(allCoursesResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve course members ' + e);
+        return Promise.reject(e);
+      });
+
+      function allCoursesResp(data: QueryResult): MemReconResult {
+        let memRecon = data.results[0] as MemReconResult;
+        if (memRecon) {
+          console.log('Course members loaded from remote store', memRecon, false);
+          return memRecon;
+        }
+      }
+    }
+
+  pollGroups(courseId: number): Promise < GroupReconResult > {
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.pollGroups.resource).withParameters(params);
+
+
+    return<Promise<GroupReconResult >> this.manager.executeQuery(query)
+      .then(groupsResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve groups ' + e);
+        return Promise.reject(e);
+      });
+
+      function groupsResp(data: QueryResult): GroupReconResult {
+        let grpRecon = data.results[0] as GroupReconResult;
+        if (grpRecon) {
+          console.log('Groups loaded from remote store', grpRecon, false);
+          return grpRecon;
+        }
+      }
+    }
+
+  pollAllGroupMembers(courseId: number): Promise < Array < GroupMemReconResult >> {
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.pollAllGroupMembers.resource).withParameters(params);
+
+
+    return<Promise<Array < GroupMemReconResult >>> this.manager.executeQuery(query)
+      .then(grpMemResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve group members ' + e);
+        return Promise.reject(e);
+      });
+
+      function grpMemResp(data: QueryResult): Array<GroupMemReconResult> {
+        let grpMemRecon = data.results as Array<GroupMemReconResult>;
+        if (grpMemRecon) {
+          console.log('Group members loaded from remote store', grpMemRecon, false);
+          return grpMemRecon;
+        }
+      }
+    }
+
+  syncBbGrades(courseId: number, category: string): Promise < ISaveGradesResult > {
+    const params: any = { crseId: courseId, wgCategory: category };
+    let query: any = EntityQuery.from(this.lmsAdminApiResource.syncBbGrades.resource).withParameters(params);
+
+      return<Promise<ISaveGradesResult >> this.manager.executeQuery(query)
+      .then(syncGradesResp)
+      .catch((e: Event) => {
+        console.log('Bb Gradebook Sync error ' + e);
+        return Promise.reject(e);
+      });
+
+      function syncGradesResp(data: QueryResult): ISaveGradesResult {
+        let syncResult = data.results[0] as ISaveGradesResult;
+        if (syncResult) {
+          console.log('Bb Gradebook Sync ' + syncResult.message, syncResult, false);
+          return syncResult;
+        }
+      }
+    }
+  }

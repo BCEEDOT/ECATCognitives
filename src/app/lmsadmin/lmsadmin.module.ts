@@ -18,6 +18,7 @@ import { LmsadminWorkgroupService } from "./services/lmsadmin-workgroup.service"
 import { MyHighlightDirective } from './directives/my-highlight.directive';
 import { EditGroupDialogComponent } from './group-sets/manage-groupset/edit-group-dialog/edit-group-dialog.component';
 import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-dialog/add-group-dialog.component';
+import { PollLmsDialog } from './group-sets/poll-lms-dialog/poll-lms-dialog.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-
     ManageGroupsetComponent,
     CourseEnrollComponent,
     ConfigGroupsetComponent,
-    CourseInfoComponent, MyHighlightDirective, EditGroupDialogComponent, AddGroupDialogComponent
+    CourseInfoComponent, MyHighlightDirective, EditGroupDialogComponent, AddGroupDialogComponent, 
+    PollLmsDialog
   ],
   providers: [
     LmsadminAuthGuardService,
@@ -43,7 +45,8 @@ import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-
   ],
   entryComponents: [
     EditGroupDialogComponent,
-    AddGroupDialogComponent
+    AddGroupDialogComponent,
+    PollLmsDialog
   ]
 })
 export class LmsadminModule { }
