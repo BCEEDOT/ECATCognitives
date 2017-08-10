@@ -1,6 +1,6 @@
 <md-card class="width">
   <md-card-title>
-    <div fxFlex class="fixed">
+    <div fxFlex>
       <button md-raised-button color="primary" (click)="this.location.back()">
         <md-icon class="tc-white-700">arrow_back</md-icon>Back
       </button>
@@ -14,14 +14,15 @@
 
   <md-list>
     <md-list-item>
-      <div fxFlex="60"></div>
-      <div fxFlex="20" class="pad-sm text-center tc-black text-lg">BC2 Flight</div>
-      <div fxFlex="20" class="pad-sm text-center tc-black text-lg">BC3 Flight</div>
+      <div fxFlex="80"></div>
+      <div *ngFor="let category of categoriesToDisplay" fxFlex="20" class="pad-sm text-center tc-black text-lg">
+        {{category}} Flight
+      </div>
     </md-list-item>
 
     <md-divider></md-divider>
 
-    <ng-template let-member let-last="last" ngFor [ngForOf]="groupMembers">
+    <ng-template let-member let-last="last" ngFor [ngForOf]="rosterInfos">
 
       <md-list-item>
 
@@ -30,14 +31,10 @@
           {{member?.rankName}}
         </div>
 
-        <div fxFlex="20" class="md-subhead text-center pad-sm">
-          FLIGHT 02
+        <div fxFlex="20" *ngFor="let category of categoriesToDisplay" class="md-subhead text-center pad-sm">
+          {{(member?.flights[category]) ? member?.flights[category] : 'None'}}
         </div>
-        <div fxFlex="20" class="md-subhead text-center pad-sm">
-          FLIGHT 03
-        </div>
-
-
+        <div fxFlex></div>
       </md-list-item>
       <md-divider *ngIf="!last" md-inset></md-divider>
 

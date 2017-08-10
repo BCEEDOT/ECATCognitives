@@ -13,10 +13,8 @@ import { FacWorkgroupService } from "../../services/facworkgroup.service";
 import { FacultyDataContextService } from "../../services/faculty-data-context.service";
 
 export class RosterInfo {
-  personId: number;
   rankName: string;
-  scatter1: string;
-  scatter2: string;
+  flights: string[];
 }
 
 @Component({
@@ -31,6 +29,8 @@ export class FlightRosterComponent implements OnInit {
   course: Course;
   workGroupId: number;
   workGroup: WorkGroup;
+  activeCategory: string;
+  categoriesToDisplay: string[] = [];
   groupMembers: CrseStudentInGroup[];
   rosterInfos: RosterInfo[] = [];
 
@@ -44,6 +44,7 @@ export class FlightRosterComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.crsId = +params['crsId'];
       this.workGroupId = +params['wrkGrpId'];
+
     });
   }
 
@@ -56,33 +57,63 @@ export class FlightRosterComponent implements OnInit {
   }
 
   activate(): void {
-console.log('crsId:  ' + this.crsId);
-console.log('workGroupId:  ' + this.workGroupId);
-console.log(this.course);
+    console.log('crsId:  ' + this.crsId);
+    console.log('workGroupId:  ' + this.workGroupId);
+    console.log(this.course);
 
     let students = this.course.students;
-console.log(students);
+    console.log(students);
 
     this.workGroup = this.course.workGroups.filter(workGroup => workGroup.workGroupId === this.workGroupId)[0];
-console.log(this.workGroup);
+    console.log(this.workGroup);
 
     this.groupMembers = this.workGroup.groupMembers;
-console.log(this.groupMembers);
 
-/*     this.groupMembers.forEach((groupMember: CrseStudentInGroup) => {
-      let studentRosterInfo: RosterInfo;
-      studentRosterInfo.personId = groupMember.studentId;
+    let workGroups = this.course.workGroups;
+    console.log(this.groupMembers);
+
+    // const grpName = {};
+
+    // this.workGroups.forEach((g, i, array) => {
+    //   grpName[g.groupNumber] = null;
+    // });
+    this.activeCategory = this.workGroup.mpCategory;
+
+    var uniqueCategories = [];
+    for (let i = 0; i < workGroups.length; i++) {
+      if (uniqueCategories.indexOf(workGroups[i].mpCategory) === -1) {
+        uniqueCategories.push(workGroups[i].mpCategory);
+      }
+    }
+
+    //Need to filter out active category and one previous
+    this.categoriesToDisplay = uniqueCategories.filter(cat => cat !== this.activeCategory);
+    console.log(this.categoriesToDisplay);
+
+    this.groupMembers.forEach((groupMember: CrseStudentInGroup) => {
+      let studentRosterInfo: RosterInfo = {rankName: null, flights: []};
       studentRosterInfo.rankName = groupMember.rankName;
       let workGroupEnrollments = students.filter(
         student => student.studentPersonId === groupMember.studentId)[0].workGroupEnrollments;
       if (workGroupEnrollments) {
         if (workGroupEnrollments.length > 0) {
           workGroupEnrollments.forEach(workGroupEnrollment => {
-            if (workGroupEnrollment.workGroup.mpCategory ===  )
-              });
+            this.categoriesToDisplay.forEach(ctd => {
+              if (workGroupEnrollment.workGroup.mpCategory === ctd) {
+                studentRosterInfo.flights[ctd] = workGroupEnrollment.workGroup.defaultName;
+                //studentRosterInfo[ctd] = workGroupEnrollment.workGroup.defaultName;
+              }
+            });
+
+          });
         }
       }
-    }); */
+      this.rosterInfos.push(studentRosterInfo);
+    });
+
+    console.log(this.rosterInfos[0].flights['BC2']);
+
+    console.log(this.rosterInfos);
 
     this.loadingService.resolve()
 

@@ -1,8 +1,8 @@
 {
-  "name": "covalent-quickstart",
-  "version": "1.0.0-beta.3",
+  "name": "ecat",
+  "version": "2.0",
   "private": true,
-  "description": "Quickstart App with @covalent packages",
+  "description": "epme course applicaton toolkit",
   "keywords": [
     "angular",
     "components",
