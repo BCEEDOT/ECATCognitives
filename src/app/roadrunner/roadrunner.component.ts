@@ -152,7 +152,7 @@ export class RoadrunnerComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('RoadRunner');
+    this.titleService.setTitle('Road Runner');
     this.persona = this.global.persona.value;
     
     this.activate();

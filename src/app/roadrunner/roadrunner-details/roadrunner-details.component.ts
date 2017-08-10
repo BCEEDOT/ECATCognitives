@@ -52,11 +52,14 @@ export class RoadrunnerDetailsComponent implements OnInit {
             this.event = roadRunnerData;
         })
 
-        if(_.isEmpty(this.event)){
+        
+
+        this.checkNew = (this.route.snapshot.params['id']);
+
+        if(_.isEmpty(this.event) && this.checkNew != "New"){
             this.router.navigate(['roadrunnerStudent/']);
         }
 
-        this.checkNew = (this.route.snapshot.params['id']);
 
         if (this.checkNew === "New") {
             this.oneEvent = this.userDataContext.addRoadRunner();

@@ -39,7 +39,7 @@ export class FacultyComponent implements OnInit {
      this.facWorkGroupService.onListView$.subscribe(value => {
        this.onListView = value;
     });
-
+this.titleService.setTitle('WorkGroup Center');
   }
 
   setActiveCourse(course: Course): void {

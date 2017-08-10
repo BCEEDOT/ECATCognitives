@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   //selector: 'app-lmsadmin',
@@ -8,10 +9,12 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class LmsadminComponent implements OnInit {
 
-  constructor(private router: Router,
+  constructor(private titleService: Title,
+    private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Instructional System Admin');
     this.router.navigate(['courses'], {relativeTo: this.route});
   }
 
