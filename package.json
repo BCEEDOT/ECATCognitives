@@ -35,6 +35,7 @@
     "Ilsun Park <ilsun.park@teradata.com>"
   ],
   "dependencies": {
+
     "@angular/animations": "^4.2.0",
     "@angular/common": "^4.2.0",
     "@angular/compiler": "^4.2.0",

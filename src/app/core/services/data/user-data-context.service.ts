@@ -17,8 +17,6 @@ import { GlobalService } from "../global.service";
 @Injectable()
 export class UserDataContext extends BaseDataContext {
 
-    //person: IRepository<Person>;
-
     user: DataContext;
 
     private userApiResources: IUserApiResources = {
@@ -100,18 +98,6 @@ export class UserDataContext extends BaseDataContext {
 
         return <Promise<Person[]>>this.manager.executeQuery(query)
             .then(res => {
-                //console.log(res.results);
-                //var store = this.manager.metadataStore;
-                //var personType = store.getEntityType('Person');
-                //personType.dataProperties.forEach((dp) => {
-                //console.log(dp.name);
-                //});
-
-                //console.log(store);
-                //console.log(personType);
-                //var person = res.results[0];
-                //person.entityAspect;
-                //person.entityType;
                 console.log('users is querying the server');
                 return res.results as Person[]
 
@@ -122,6 +108,28 @@ export class UserDataContext extends BaseDataContext {
             });
     }
 
+
+
+    getRoadRunnerInfos(force?: boolean): Promise<RoadRunner[]> {
+
+        const self = this;
+
+        let query = EntityQuery.from(this.userApiResources.roadRunner.resource);
+
+        return <Promise<RoadRunner[]>>this.manager.executeQuery(query)
+            .then(res => res.results as RoadRunner[])
+            .catch(e => {
+                console.log('Did not retrieve users road runner info' + e);
+                return Promise.reject(e);
+            });
+    }
+
+    addRoadRunner(): RoadRunner {
+
+        const newAddress = this.manager.createEntity(MpEntityType.roadRunner,{personId: this.global.persona.value.person.personId}) as RoadRunner;
+
+        return newAddress;
+    }
 
 
 }

@@ -17,10 +17,12 @@ import {
 import { any } from 'codelyzer/util/function';
 
 import { BaseDataContext } from '../../shared/services';
+
 import {
   Course, WorkGroup, FacSpResponse, FacSpComment, FacSpCommentFlag,
   FacStratResponse, StudSpComment, CrseStudentInGroup, SpInstrument, SpInventory
 } from "../../core/entities/faculty";
+
 import { EmProviderService } from '../../core/services/em-provider.service';
 import { IFacultyApiResources } from '../../core/entities/client-models';
 import { IStudSpInventory, IFacSpInventory } from "../../core/entities/client-models";
@@ -29,8 +31,13 @@ import { DataContext } from '../../app-constants';
 import { GlobalService, ILoggedInUser } from '../../core/services/global.service';
 import { LoggerService } from "../../shared/services/logger.service";
 
+
 @Injectable()
 export class FacultyDataContextService extends BaseDataContext {
+
+
+  activeCourseId: number;
+
 
   private facultyApiResource: IFacultyApiResources = {
     initCourses: {
@@ -149,6 +156,29 @@ export class FacultyDataContextService extends BaseDataContext {
       return courses;
     }
   }
+
+
+   fetchRoadRunnerWorkGroups(courseId: number, forceRefresh?: boolean): Promise<WorkGroup[] | Promise<void>> {
+         const self = this;
+
+         let flights = this.manager.getEntities(MpEntityType.workGroup) as WorkGroup[];
+
+        let query = EntityQuery.from(this.facultyApiResource.currentWorkGroup.resource).withParameters({courseId: courseId});
+
+        return <Promise<WorkGroup[]>>this.manager.executeQuery(query)
+
+            .then(getCurrentWorkGroup)
+            .catch(this.queryFailed);
+
+        function getCurrentWorkGroup(workGroupResult: QueryResult) {
+            if (workGroupResult.results.length === 0) {
+                console.log('Roadrunner query did not return any results', workGroupResult.results, false);
+            } else {
+                console.log('Roadrunner info loaded from remote store', workGroupResult.results, false);
+            }
+            return workGroupResult.results;
+        }
+    }
 
   fetchActiveWorkGroup(crsId: number, grpId: number, forceRefresh?: boolean): Promise<WorkGroup> {
     const that = this;
@@ -289,6 +319,7 @@ export class FacultyDataContextService extends BaseDataContext {
     }
   }
 
+
   fetchGrpMemsWithSpResults(courseId: number, groupId: number, forcedRefresh?: boolean): Promise<Array<CrseStudentInGroup> | Promise<void>> {
     const that = this;
 
@@ -427,7 +458,6 @@ export class FacultyDataContextService extends BaseDataContext {
       return facComments;
     }
   }
-
 
 
 }

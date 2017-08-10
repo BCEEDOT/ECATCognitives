@@ -1,0 +1,84 @@
+<td-layout-nav logo="assets:covalent">
+  <div td-toolbar-content layout="row" layout-align="center center" flex>
+    <span flex></span>
+    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+      <md-icon>chrome_reader_mode</md-icon>
+    </a>
+    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+      <md-icon svgIcon="assets:github"></md-icon>
+    </a>
+  </div>
+
+  <md-card>
+
+    <div *ngIf="event.length > 0 || checkNew == 'New'">
+      <form #roadRunnerForm="ngForm">
+        <md-toolbar>
+          <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+
+            <span *ngIf="checkNew === 'New'" class="md-title">Create a location</span>
+            <span *ngIf="!(checkNew === 'New')" class="md-title">Edit the location</span>
+
+
+          </div>
+        </md-toolbar>
+        <md-list class="will-load">
+
+          <div layout-gt-xs="row" layout-margin>
+            <md-input-container flex>
+              <textarea #locationForm="ngModel" rows="2" maxlength="75" mdInput placeholder="Location" value="{{oneEvent.location}}" [(ngModel)]="oneEvent.location"
+                name="location" maxlength="50" tdAutoTrim required></textarea>
+
+            </md-input-container>
+          </div>
+
+          <div layout-gt-xs="row" layout-margin>
+            <md-input-container flex>
+              <input mdInput placeholder="Contact Number" value="{{oneEvent.phoneNumber}}" [(ngModel)]="oneEvent.phoneNumber" name="contactNumber"
+                maxlength="10" pattern="^\d+$" tdAutoTrim #contactForm="ngModel" required />
+              <md-hint>
+                <span [hidden]="!contactForm.errors?.pattern" class="tc-red-600">Numbers only</span>
+              </md-hint>
+            </md-input-container>
+          </div>
+          <div>
+            <div layout-gt-xs="row" layout-margin>
+              <md-input-container flex>
+                <input mdInput [min]="minDate" [max]="maxDate" #leaveForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="leave"
+                  [(ngModel)]="oneEvent.leaveDate" placeholder="Leave Date" required/>
+                <button mdSuffix [mdDatepickerToggle]="leave"></button>
+
+              </md-input-container>
+              <md-datepicker #leave [touchUi]="touch" [startAt]="oneEvent.leaveDate"></md-datepicker>
+            </div>
+
+            <div layout-gt-xs="row" layout-margin>
+
+              <md-input-container flex>
+
+                <button mdSuffix [mdDatepickerToggle]="return"></button>
+                <input mdInput [min]="oneEvent.leaveDate" [max]="maxDate" #returnForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="return"
+                  placeholder="Return Date" [(ngModel)]="oneEvent.returnDate" required/>
+                <md-error *ngIf="returnForm.hasError('mdDatepickerMin')">Please select date after your leave date!</md-error>
+
+              </md-input-container>
+              <md-datepicker #return [touchUi]="touch" [startAt]="oneEvent.returnDate"></md-datepicker>
+            </div>
+          </div>
+        </md-list>
+
+        <div layout-gt-xs="row" layout-margin class="button-row">
+          <span style="padding-right:10px;">
+        <button md-raised-button color="primary" (click)="cancel()">Cancel</button>
+        </span>
+          <span style="padding-right:10px;">
+        <button md-raised-button color="primary" [disabled]="!roadRunnerForm.valid || !leaveForm.valid || !returnForm.valid"(click)="save()">Save</button>
+        </span>
+          <button md-raised-button color="primary" *ngIf="!(checkNew === 'New') && !clone" (click)="delete()">Delete</button>
+        </div>
+      </form>
+    </div>
+
+  </md-card>
+
+</td-layout-nav>
