@@ -72,10 +72,44 @@ export class FacultyDataContextService extends BaseDataContext {
       returnedEntityType: MpEntityType.workGroup,
       resource: 'GetRoadRunnerWorkGroups',
     },
+    allCourseMembers: {
+      returnedEntityType: MpEntityType.course,
+      resource: 'GetAllCourseMembers',
+    },
   };
 
   constructor(emProvider: EmProviderService, private global: GlobalService, private logger: LoggerService) {
     super(DataContext.Faculty, emProvider);
+  }
+
+  fetchAllCourseMembers(courseId: number, forcedRefresh?: boolean): Promise<Course> {
+    let course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
+    if (course.students.length > 0 && course.faculty.length > 1 && !forcedRefresh) {
+      console.log('Retrieved course members from local cache', course, false);
+      return Promise.resolve(course);
+    }
+
+    const params: any = { courseId: courseId };
+    let query: any = EntityQuery.from(this.facultyApiResource.allCourseMembers.resource).withParameters(params);
+
+    return <Promise<Course>>this.manager.executeQuery(query)
+      .then(allCourseMemsResp)
+      .catch((e: Event) => {
+        console.log('Did not retrieve course members' + e);
+        return Promise.reject(e);
+      });
+
+    function allCourseMemsResp(data: QueryResult) {
+      course = data.results[0] as Course;
+      if (course.students.length > 0 && course.faculty.length > 1) {
+        console.log('Course members loaded from remote store', course, false);
+      }
+
+      //console.log('No members in course');
+      return course;
+
+
+    }
   }
 
   getActiveCourse(courseId: number, forceRefresh?: boolean): Promise<Course | Promise<void>> {
@@ -84,6 +118,12 @@ export class FacultyDataContextService extends BaseDataContext {
 
 
     course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
+
+    if (course) {
+        if(course.workGroups.length > 0) {
+          return Promise.resolve (course);
+        }
+    }
 
     const params: any = { courseId: courseId };
 

@@ -9,6 +9,7 @@ import { ListComponent } from './workgroups/list/list.component';
 import { GlobalService } from '../core/services/global.service';
 import { StatusComponent } from './workgroups/status/status.component'
 import { EvaluateComponent } from './workgroups/evaluate/evaluate.component';
+import { FlightRosterComponent } from './workgroups/flight-roster/flight-roster.component';
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
 import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
@@ -44,6 +45,13 @@ const facultyRoutes: Routes = [
             component: EvaluateComponent,
             resolve: { workGroup: 'facWorkGroupResolver' },
             canDeactivate: [FacultySaveChangesGuard],
+          },
+
+          {
+            path: 'list/:crsId/flight-roster/:wrkGrpId',
+            component: FlightRosterComponent,
+            //resolve: { workGroup: 'facWorkGroupResolver' }
+            //canDeactivate: [FacultySaveChangesGuard],
           },
 
           {

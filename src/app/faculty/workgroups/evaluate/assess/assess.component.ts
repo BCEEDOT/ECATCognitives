@@ -21,7 +21,7 @@ export class AssessComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-
+console.log(this.members);
     this.facWorkGroupService.readOnly$.subscribe(status => {
       this.readOnly = status;
       this.activate();
