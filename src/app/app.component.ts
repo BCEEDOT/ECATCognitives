@@ -135,7 +135,14 @@ export class AppComponent implements OnInit {
   ngAfterViewInit() {
     //there has to be a better way to do this
     //TODO: Implement error handling
+    console.log(this.tokenRef.nativeElement.ownerDocument.body.children[0].tagName);
+    if (this.tokenRef.nativeElement.ownerDocument.body.children[0].tagName === 'ECAT-APP'){
+      //if we aren't coming through LTI the first child seems to be an ECAT-APP element that contains the angular version
+      return;
+    }
+
     var viewBag = this.tokenRef.nativeElement.ownerDocument.body.children[0].attributes[1].value;
+
     if (viewBag !== '') {
       var vBData = JSON.parse(viewBag);
       localStorage.setItem('ecatAccessToken', vBData.access_token);

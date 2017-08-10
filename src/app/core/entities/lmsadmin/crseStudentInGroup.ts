@@ -39,6 +39,11 @@ export class CrseStudentInGroup extends EntityBase {
 
     /// <code> Place custom code between <code> tags
     changeDescription: string;
+    notAssignedToGroup: boolean;
+
+    set rankName(name: string) {
+        this.rankName = name;
+    }
 
     get rankName(): string {
         let _salutation: string;

@@ -26,6 +26,8 @@ export class AddGroupDialogComponent implements OnInit {
   ngOnInit() {
 
     this.workGroup = this.data.workGroup;
+    let usedFlightNumbers = this.data.usedFlightNumbers;
+
     for (var i = 1; i <= 30; i++) {
 
       if (i < 10) {
@@ -34,6 +36,8 @@ export class AddGroupDialogComponent implements OnInit {
         this.numbers.push(i.toString());
       }
     }
+
+    this.numbers = this.numbers.filter(number => !usedFlightNumbers.some(usfn => usfn === number));
     this.buildForm();
 
   }

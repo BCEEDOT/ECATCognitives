@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MD_DIALOG_DATA, MdDialog, MdDialogConfig, MdDialogRef } from '@angular/material';
 import { TdDialogService } from "@covalent/core";
 
-
+import { MpGroupCategory } from '../../../../core/common/mapStrings';
 import { Course, CrseStudentInGroup, WorkGroup, WorkGroupModel } from '../../../../core/entities/lmsadmin';
 
 @Component({
@@ -20,6 +20,7 @@ export class EditGroupDialogComponent implements OnInit {
   submitted: boolean = false;
   numbers: string[] = [];
   flightNumber: string;
+  canDelete: boolean = false;
 
   constructor(private fb: FormBuilder, private dialogService: TdDialogService,
     public dialogRef: MdDialogRef<EditGroupDialogComponent>, @Inject(MD_DIALOG_DATA) public data: any) { }
@@ -27,6 +28,11 @@ export class EditGroupDialogComponent implements OnInit {
   ngOnInit() {
 
     this.workGroup = this.data.workGroup;
+
+    if (this.workGroup.mpCategory !== MpGroupCategory.bc1 ) {
+      this.canDelete = true;
+    }
+
     for (var i = 1; i <= 30; i++) {
 
       if (i < 10) {
@@ -35,6 +41,7 @@ export class EditGroupDialogComponent implements OnInit {
         this.numbers.push(i.toString());
       }
     }
+
     this.buildForm();
 
   }
@@ -79,7 +86,7 @@ export class EditGroupDialogComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
-
+          this.workGroup['toDelete'] = true;
           this.dialogRef.close(this.workGroup);
         }
       });
