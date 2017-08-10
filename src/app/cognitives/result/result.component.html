@@ -1,0 +1,27 @@
+<td-layout-nav logo="assets:covalent">
+
+    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+        <span fxFlex></span>
+        <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+            <md-icon>chrome_reader_mode</md-icon>
+        </a>
+        <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+            <md-icon svgIcon="assets:github"></md-icon>
+        </a>
+    </div>
+
+  <md-card [ngSwitch]="cogResultId" tdMediaToggle="gt-xs" class="pad-sm">
+    <md-card-title>
+        <div>
+          <button md-raised-button color="primary" (click)="goBack()">
+              <md-icon class="tc-white-700">arrow_back</md-icon>Back to Cognitives
+          </button>
+        </div>
+    </md-card-title>
+    <ecpe-result *ngSwitchCase = "1"> </ecpe-result>
+    <esalb-result *ngSwitchCase = "2"> </esalb-result>
+    <ecmspe-result *ngSwitchCase = "3"> </ecmspe-result>
+    <etmpre-result *ngSwitchCase = "4"> </etmpre-result>
+  </md-card>
+
+</td-layout-nav>

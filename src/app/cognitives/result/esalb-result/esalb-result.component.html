@@ -1,0 +1,416 @@
+<ng-template tdLoading="userIsLoaded">
+
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxFlex="100">
+            <h3>Electronic Self Assessment of Leadership Behavior (e-SALB) Results</h3>
+        </div>
+    </div>
+
+    <!--Introduction-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Introduction</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            This report displays your ratings for each category. This information will help you identify your leadership strengths and
+            areas for improvement. Gaining an understanding of both can help you become an even more effective leader by
+            capitalizing on your strengths and by focusing on development needs, experiences, assignments and training and
+            educational opportunities to help overcome weaknesses.
+        </div>
+    </div>
+
+    <!--Summary of Results-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Summary of Results</b>
+        </div>
+    </div>
+    <hr>
+
+    <!--Absence of Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            <strong>Absence of Leadership</strong>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+        <div fxFlex="20">
+            Laissez Faire:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.laissezFaire}}
+        </div>
+    </div>
+    <hr>
+
+    <!--Transactional Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            <strong>Transactional Leadership</strong>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Management:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.management}}
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Contingent:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.contingent}}
+        </div>
+    </div>
+    <hr>
+
+    <!--Transformational Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            <strong>Transformational Leadership</strong>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Idealized:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.idealized}}
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Inspirational:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.inspirational}}
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Intellectual Stimulation:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.intellectualStim}}
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+        <div fxFlex="20">
+            Individual:
+        </div>
+        <div fxFlex="20">
+            {{esalbResult.individual}}
+        </div>
+    </div>
+    <hr>
+
+    <!--Scores and Averages defined-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            <sup>1</sup> High scores indicate strengths, except for Laissez Faire, where low scores are desired
+            <br/>
+            <sup>2</sup> Class Average is the average of all students in your class only who have taken the e-SALB as of
+            the date of this report.
+            <br/>
+            <sup>3</sup> Composite Average, based on 100% scale, is the average of all students who have taken the e-SALB
+            as of the date of this report.
+        </div>
+    </div>
+    <hr>
+
+    <!--How to Read Your Report-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>How to Read Your Report</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            This report provides scores based on your answers for each of the four dimensions of Transformational Leadership, the two
+            dimensions of Transactional Leadership, and the Absence of Leadership. This report also provides composite scores
+            for each of the dimensions so that you may compare your scores to others who have taken the e-SALB.
+            <br /> The self-response and class average scores derive from a 5-point Likert scale and the percentile rank
+            compares you to your peers in the current class. The composite average and composite percentile allow you to
+            see how you compare to the general population of people who have taken the e-SALB as of the date of this report.
+            In general, higher scores equal greater effectiveness in that area, except for Laissez Faire, where low scores
+            are desirable.
+            <br/> This report includes an explanation of each leadership style, along with a short explanation of how you
+            might enhance your ability to be more effective across the range of FRLD areas. This information is especially
+            important for individuals who wish to create a personal leadership development plan (PLDP).
+        </div>
+    </div>
+
+    <!--What do my scores mean?-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>What do my scores mean?</b>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="20">
+            Absence of Leadership:
+        </div>
+        <div fxFlex="80">
+            A low score is good because it indicates less use/reliance on this leadership style.
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="20">
+            Transactional Leadership:
+        </div>
+        <div fxFlex="80">
+            These scores indicate your level of ability/willingness to use/exhibit transactional leadership behaviors. Scores of 1-2
+            indicate a major area for improvement while scores of 3-4 indicate a minor area for improvement.
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="20">
+            Transformational Leadership:
+        </div>
+        <div fxFlex="80">
+            These scores indicate your level of ability/willingness to use/exhibit transformational leadership behaviors. Scores of 1-2
+            indicate a major area for improvement while scores of 3-4 indicate a minor area for improvement.
+        </div>
+    </div>
+
+    <!--Using Psychometric Assessments To Measure Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Using Psychometric Assessments To Measure Leadership</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            Air Force Institute of Technology (AFIT) delivered and validated the original version (called LPM-360) of this instrument.
+            They subjected the instrument to more than four years of rigorous scientific study and benchmarked it against
+            other leading leadership development instruments. They found the LPM-360 to be superior in almost every way.
+            <br /><br /> However, because AFIT designed the original instrument for military officers, it contained a great
+            deal of officer-centric language. With this in mind, we developed the e-SALBI with language to encompass all
+            members of society.
+            <br /><br />
+            <strong>CAUTION</strong>: Regardless of its design and validity, no instrument can possibly measure every dimension
+            associated with something as broad and as complex as leadership. In addition, psychometric assessments are ‘self-assessments’,
+            therefore, results are only as accurate as the honesty of the individual completing the instrument. Keep this
+            in mind as you interpret your results. Just because your e-SALBI results are lower (or higher) than expected,
+            that does not necessarily mean you are an ineffective (or a very effective) leader. First, ask yourself whether
+            you were completely honest when completing the instrument. If not, consider re-accomplishing it. Next, by looking
+            at how you compare to others, you can choose areas to include in your PLDP.
+        </div>
+    </div>
+
+    <!--Full-Range Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Full-Range Leadership</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            Leadership is the process of influencing others to achieve specific goals. Although there are myriad of leadership theories,
+            the Full Range Leadership theory encompasses both the transformational and transformational leadership concepts.
+            <br /><br /> Described as charismatic or visionary leadership, transformational leaders maintain a strong personal
+            connection with followers. They consistently practice Idealized Influence (II), Inspirational Motivation (IM),
+            Intellectual Stimulation (IS), and Individual Consideration (IE).
+            <br /><br /> Describes as reward and mistake oriented, transactional leaders view their relationship with subordinates
+            as a contract void of emotion. This leader sets performance expectations, monitors progress, and then rewards
+            those who achieve the agreed upon outcome(s).
+            <br /><br /> Finally, leaders should avoid (in most circumstances) Laissez-Faire leadership, which is described
+            as the absence of leadership.
+        </div>
+    </div>
+
+    <!--Summary of Transformational Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Summary of Transformational Leadership</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <strong>Idealized Influence</strong> - Occurs when followers:
+            <ul>
+                <li>see their leader exhibit high levels of ethical and moral conduct</li>
+                <li>personally respect their leaders</li>
+                <li>demonstrate loyalty</li>
+                <li>believe their leader genuinely cares about their welfare</li>
+                <li>see their leader put followers’ needs ahead of leaders’ desires</li>
+                <li>see leaders who carefully consider the intended/unintended consequences of decisions</li>
+            </ul>
+            <strong>Inspirational Motivation</strong> - Occurs when followers:
+            <ul>
+                <li>exhibit confidence in their leader</li>
+                <li>buy into their leader’s vision</li>
+                <li>are inspired/swayed by a leader’s use of symbolic elements and persuasive language</li>
+                <li>share, or agree with their leader’s ethics and principles</li>
+            </ul>
+            <strong>Intellectual Stimulation</strong> - Occurs when followers feel:
+            <ul>
+                <li>comfortable challenging organizational norms</li>
+                <li>encouraged to think outside the box</li>
+                <li>confident that when their ideas do not pan out (or even fail outright), their leader will treat the incident
+                    as an opportunity to learn</li>
+                <li>comfortable discussing positions that are different from their leader’s position</li>
+                <li>encouraged to look at problems from many different angles</li>
+                <li>comfortable suggesting new ways of solving problems</li>
+            </ul>
+            <strong>Individual Consideration</strong> - Occurs when followers:
+            <ul>
+                <li>believe their leader recognizes and supports individual talents, needs, and desires</li>
+                <li>see their leader as a coach and mentor</li>
+                <li>feel comfortable and are encouraged to seek advice from a myriad of people</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Summary of Transactional Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Summary of Transactional Leadership</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <strong>Contingent Reward</strong> - Occurs when followers:
+            <ul>
+                <li>agree with their leader’s performance expectations</li>
+                <li>feel they are being rewarded fairly, based on level of performance</li>
+                <li>are being rewarded according to the contract (i.e. performance and rewards agreed upon by leader and follower)</li>
+                <li>believe their leader provides the support and resources (tangible/intangible) necessary to meet performance
+                    expectations
+                </li>
+            </ul>
+            <strong>Management by Exception</strong> - Occurs when followers see a leader who:
+            <ul>
+                <li>focuses on events that are not normal or expected to happen.</li>
+                <li>sets standards and then constantly monitors for irregularities, mistakes, exceptions, and deviations in order
+                    to take corrective action</li>
+                <li>focuses nearly all of his/her attention on failures (individual or unit) to meet standards</li>
+                <li>does not (typically) intervene until problems become serious.</li>
+                <li>Appear to live by the axiom "If it ain't broke, don't fix it.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Summary of Abscense of Leadership-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Summary of Abscense of Leadership</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <strong>Laissez Faire Leadership</strong> - Occurs when followers see a leader who:
+            <ul>
+                <li>is seldom, if ever, engaged in important decisions</li>
+                <li>is often absent, especially when followers need help (crisis, stressful situation, etc.)</li>
+                <li>appear incapable of leading or unwilling to lead</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Hints for Exhibiting/Developing Transformational Leadership Behaviors-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Hints for Exhibiting/Developing Transformational Leadership Behaviors</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <strong>Idealized Influence</strong>
+            <ul>
+                <li>Speak as if you are in control</li>
+                <li>Speak with passion (i.e. display obvious commitment to your message)</li>
+                <li>Vary tone, pace, and loudness when speaking</li>
+                <li>Use verbal and nonverbal communication to emphasize important points</li>
+                <li>Use strategic pauses to help drive home your point.</li>
+                <li>Continually emphasize the purpose of the work being performed</li>
+                <li>Ensure followers know what they need to do, why they need to do it</li>
+                <li>Tell followers how important you consider their individual contributions</li>
+                <li>Always consider the moral and ethical consequences of your decisions…then ensure followers know how important
+                    it is to not hurt others by making wrong decisions</li>
+                <li>Allow for mistakes and always encourage followers to try again</li>
+            </ul>
+            <strong>Inspirational Motivation</strong>
+            <ul>
+                <li>Articulate a strong vision for the work being performed</li>
+                <li>Exhibit a powerful, confident, and dynamic interaction style (e.g. appropriate eye contact and facial expressions
+                    couple with effective use of body language</li>
+                <li>Tour your area of responsibility to visit with followers</li>
+                <li>Express confidence it your followers’ ability to achieve established goals</li>
+            </ul>
+            <strong>Intellectual Stimulation</strong>
+            <ul>
+                <li>When you are uncertain about the most effective/appropriate course of action, never hesitate to ask peers,
+                    followers, and superiors for suggestions</li>
+                <li>Consistently encourage followers to come up with more efficient methods for completing tasks and to consider
+                    different ways of performing a task</li>
+                <li>Resist the ‘Escalation of Commitment” syndrome…when things are not working… be open-minded and willing to
+                    change/adjust your strategy and decisions…and then eliminate the possibility for miscommunication by
+                    explaining to your team your reason(s) for the change.</li>
+            </ul>
+            <strong>Individual Consideration</strong>
+            <ul>
+                <li>Be willing to provide individual support...but be sure your help is supportive rather than irritating and/or
+                    frustrating…do not over control!</li>
+                <li>Ask followers what you can do or what they need to make their job easier</li>
+                <li>Recognize individual and team accomplishments…when earned</li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!--Hints for Exhibiting/Developing Transactional Leadership Behaviors-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Hints for Exhibiting/Developing Transactional Leadership Behaviors</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <strong>Contingent Reward</strong> Discuss/Determine/Set:
+            <ul>
+                <li>Specific performance criteria and targets with followers</li>
+                <li>Who is responsible for achieving established/agreed upon performance targets</li>
+                <li>Who is responsible for directing actions to accomplish performance targets</li>
+                <li>Express satisfaction when followers meet performance targets/expectations and then provide appropriate and
+                    agreed upon rewards.</li>
+            </ul>
+            <strong>Management by Exception</strong>
+            <ul>
+                <li>Inform/warn followers when they are in danger of dropping below a specific level of performance.</li>
+                <li>Politely, but firmly bring mistakes to teams’/followers’ attention, but don’t dwell on the issue…help them
+                    work out effective solutions/courses of action</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Hint for Reducing/Eliminating Laissez Faire Behaviors-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Hint for Reducing/Eliminating Laissez Faire Behaviors</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-md">
+        <div fxFlex="100">
+            <ul>
+                <li>Engage with followers/team/unit and then remain engaged!</li>
+            </ul>
+        </div>
+    </div>
+
+</ng-template>

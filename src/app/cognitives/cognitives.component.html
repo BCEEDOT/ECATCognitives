@@ -1,0 +1,130 @@
+<td-layout-nav logo="assets:covalent" toolbarTitle="Cognitive Assessment Center">
+
+    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+
+        <span fxFlex></span>
+        <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
+            <md-icon>chrome_reader_mode</md-icon>
+        </a>
+        <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
+            <md-icon svgIcon="assets:github"></md-icon>
+        </a>
+
+    </div>
+
+    <div class="width">
+
+        <md-card tdMediaToggle="gt-xs">
+
+            <!-- e-CPE -->
+            <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center" class="pad-sm">
+
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/AI.png" height="100" width="200">
+                    </a>
+                </div>
+
+                <div fxFlex="60">
+                    <h4>Electronic Cognitive Preference Estimator (e-CPE)</h4>
+                    <p>One of the key areas of focus within EMPE is that of helping you as an individual and as a team member
+                        to become a more effective problem solver. This is aided by having a better understanding of the
+                        cognitive processes we all use – and the variations that exist in the way each person uses them.</p>
+                </div>
+
+                <div fxFlex="15" *ngIf="!ecpeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 1]">
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+
+                <div fxFlex="15" *ngIf="ecpeResult" class="pad-left-md">
+                    <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 1]"> Results </button>
+                </div>
+
+            </div>
+
+            <!-- e-SALB -->
+            <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Compass.png" height="100" width="200">
+                    </a>
+                </div>
+
+                <div fxFlex="60">
+                    <h4>Electronic Self Assessment of Leadership Behavior (e-SALB)</h4>
+                    <p>One of the key areas of focus within EPME is that of helping you as an individual and as a team member
+                        to become a more effective leader in differing and challenging environments/situations. The e-SALB
+                        instrument was developed to help accomplish this outcome. This self-assessment instrument helps students
+                        identify their strengths and areas for improvement based on the Full Range Leadership Development
+                        (FRLD) model.</p>
+                </div>
+
+                <div fxFlex="15" *ngIf="!esalbResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 2]">
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+
+                <div fxFlex="15" *ngIf="esalbResult" class="pad-left-md">
+                    <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 2]"> Results </button>
+                </div>
+
+            </div>
+
+            <!-- e-CMSPE -->
+            <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Scale.png" height="100" width="200">
+                    </a>
+                </div>
+
+                <div fxFlex="60">
+                    <h4>Electronic Conflict Management Style Preference Estimator (e-CMSPE)</h4>
+                    <p>Gaining an understanding of which conflict management styles you prefer can help you become an even more
+                        effective leader by capitalizing on your strengths and by focusing on development needs, experiences,
+                        assignments and training and educational opportunities to help overcome weaknesses.</p>
+                </div>
+
+                <div fxFlex="15" *ngIf="!ecmspeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 3]">
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+
+                <div fxFlex="15" *ngIf="ecmspeResult" class="pad-left-md">
+                    <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 3]">  Results </button>
+                </div>
+
+            </div>
+
+            <!-- e-TMPRE -->
+            <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
+
+                <div fxFlex="25">
+                    <a href="#" class="thumbnail">
+                        <img src="assets/images/Team.png" height="100" width="200">
+                    </a>
+                </div>
+
+                <div fxFlex="60">
+                    <h4>Electronic Team Members Preferred Role Estimator (e-TMPRE)</h4>
+                    <p>Becoming aware of your own team member role preferences, as well as the preferences of other members
+                        of a team, can help you: better understand why you prefer a particular role on a team, contribute
+                        to the team’s ability to solve Problem A while managing problem B, enhance the overall team performance
+                        (i.e. make the sum greater than the whole), and lead teams more effectively.</p>
+                </div>
+
+                <div fxFlex="15" *ngIf="!etmpreResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 4]">
+                    <button md-raised-button color="primary"> Start </button>
+                </div>
+
+                <div fxFlex="15" *ngIf="etmpreResult" class="pad-left-md">
+                    <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 4]"> Results </button>
+                </div>
+
+            </div>
+
+        </md-card>
+
+    </div>
+    
+</td-layout-nav>

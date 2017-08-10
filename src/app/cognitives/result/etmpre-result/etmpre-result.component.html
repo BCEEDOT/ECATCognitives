@@ -1,0 +1,216 @@
+<ng-template tdLoading="userIsLoaded">
+
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxFlex="100">
+            <h3>Electronic Team Members Preferred Role Estimator (e-TMPRE) Results</h3>
+        </div>
+    </div>
+
+    <!--Introduction-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Introduction</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            The chart below indicates the results of how you rated all items on the electronic team role preference instrument. The bars
+            represent the strength of your preference for a particular role (i.e. preferred way of thinking and acting when
+            interacting with other members of a team) Most people will have one or two long bars. The longest bar indicates
+            their preferred (primary) pattern of thinking and behaving in a team environment. Some people may have two, three,
+            or even four bars of similar length, which indicates their comfort level for those roles. For example, people
+            with creator, executor, and refiner bars of equal length are very comfortable fulfilling all three roles. People
+            with four bars of equal length are able to fulfill the flexer role quite effectively.
+        </div>
+    </div>
+    <hr>
+
+    <!--Creator-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
+        <div fxFlex="100">
+            <b>Creator</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
+        <div class="rectangle" [ngStyle]="{width: etmpreResult.creator + '%'}"></div>
+    </div>
+
+    <!--Advancer-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
+        <div fxFlex="100">
+            <b>Advancer</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
+        <div class="rectangle" [ngStyle]="{width: etmpreResult.advancer + '%'}"></div>
+    </div>
+
+    <!--Refiner-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
+        <div fxFlex="100">
+            <b>Refiner</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
+        <div class="rectangle" [ngStyle]="{width: etmpreResult.refiner + '%'}"></div>
+    </div>
+
+    <!--Executor-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-xs">
+        <div fxFlex="100">
+            <b>Executor</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-xs">
+        <div class="rectangle" [ngStyle]="{width: etmpreResult.executor + '%'}"></div>
+    </div>
+    <hr>
+
+    <!--Becoming aware of preferences-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            Becoming aware of your own preferences, as well as the preferences of other members of a team, can help you:
+            <ul>
+                <li>Better understand why you prefer a particular role on a team;</li>
+                <li>Contribute to the team’s ability to solve Problem A while managing problem B<sup>2</sup>;</li>
+                <li>Enhance the overall team performance (i.e. make the sum greater than the whole);</li>
+                <li>Lead teams more effectively.</li>
+            </ul>
+            Do <strong>NOT</strong> confuse preferred role with ability—we all have the ability to fulfill any one of the
+            roles—we just prefer the role that feels most comfortable and natural to us. Never pigeon-hole yourself or others
+            by assuming people can only fulfill one role on a team.
+
+        </div>
+    </div>
+    <hr>
+
+    <!--Understanding Approaches-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Understanding Approaches</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            What follows are brief descriptions for each approach. Read each description, and then self-validate the results from the
+            Role Preference Chart (i.e. Primary and Secondary preferences).
+            <strong>Spontaneous (Less Structure - Extemporanous)</strong>
+            <ul>
+                <li>Wants freedom from constraint;</li>
+                <li>Likes to have respect and influence;</li>
+                <li>Don't feel obligated to follow tradition;</li>
+                <li>Let’s their feelings guide them when making decisions;</li>
+                <li>Tend to move from one subject to another, focusing on many things at once, and sometimes showing impatience.</li>
+            </ul>
+            <strong>Normative (Conventional/Traditional)</strong>
+            <ul>
+                <li>Tries to fit in with other people;</li>
+                <li>Prefer to let others take the lead;</li>
+                <li>Prefers to put ideas into a familiar context;</li>
+                <li>Likes to see the consequences before acting;</li>
+                <li>Let’s accepted norms and expectations steer them;</li>
+                <li>Relies on past experiences with similar situations to guide them.</li>
+            </ul>
+            <strong>Methodical (More Structure - Systematic)</strong>
+            <ul>
+                <li>Prefers order and rationality;</li>
+                <li>Likes to see things fit together;</li>
+                <li>Good at putting things in order;</li>
+                <li>Prefers to focus on what they prove is true;</li>
+                <li>Tends to follow a step-by-step process when presented with a problem;</li>
+                <li>Prefers to examine details and thinking things over carefully before acting.</li>
+            </ul>
+            <strong>Conceptual (Abstract, Theoretical)</strong>
+            <ul>
+                <li>Prefers to focus on the future;</li>
+                <li>Good at recognizing alternatives;</li>
+                <li>Likes to come up with new ideas;</li>
+                <li>Good at visualizing the master plan;</li>
+                <li>Likes to develop theories, principles, and ideas;</li>
+                <li>Good at exploring alternatives and discussing concepts when presented with a problem or an opportunity.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!--Understanding Your Role-->
+    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+        <div fxFlex="100">
+            <b>Understanding Your Role</b>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+        <div fxFlex="100">
+            Team leaders and team members are more effective when they recognize and utilize the “Z-process” and account for the Panic-Elation-Panic
+            cycle. What follows are brief descriptions for each role, which are a combination of two approaches. Read each
+            description, and then self-validate the results from the Role Preference Chart (i.e. Primary and Secondary preferences).
+            <br /><br />
+            <hr>
+            <strong>Stages of the “Z” Process</strong>
+            <br /><br />
+            <strong>Creating</strong>: During this stage, new ideas are born. Team members look at problems from perspectives
+            that are unusual and unique. Discussions are conceptual and focus on the "big picture.” The atmosphere is receptive,
+            open, and uncritical.
+            <br /><br />
+            <strong>Advancing</strong> : During this stage, the team gives new ideas more structure and considers broad strategies
+            for implementation. The team communicates its ideas to the larger group in an effort to show everyone how the
+            idea is valuable and clarify the role they might play in the project.
+            <br /><br />
+            <strong>Refining</strong> : During this stage, the team scrutinizes new ideas to see if they are realistic. The
+            team analyzes in an orderly fashion to find flaws and avoid problems down the road. Detailed plans for implementation
+            are developed and evaluated.
+            <br /><br />
+            <strong>Executing</strong> : During this stage, the team puts ideas into action; following through on the plan
+            to get concrete results. The team focuses on details and makes progress through an orderly, well-thought-out
+            process.
+            <br /><br />
+            <strong>The PEP Cycle</strong> The P.E.P Cycle begins with the call for ideas in order to reach a specified team
+            goal. At this point, all team members panic as they attempt to come up with ideas. When brainstorming begins,
+            the Creator’s Panic lasts only a few seconds as they immediately visualize all the possibilities and produce
+            ideas. Other members come up with ideas too, but the Creators are almost always the first to respond with new
+            and innovative ideas. Creators quickly move up the “bell curve” to Elation as every idea is a “great idea” to
+            a Creator.
+            <hr>
+            <br />However, without the Advancers’ encouragement, (or encouragement from the team leader) even creators
+            return to Panic. Advancers help Creators by offering support and encouragement without critical judgment.
+            <br /><br /> When other team members come up with an idea, they also move from Panic to Elation simply because
+            they “thought of something” but most quickly return to Panic because they immediately begin doubting their own
+            ideas.
+            <br /><br /> When brainstorming begins, Refiners are usually unable to offer any ideas until they have more information
+            and so they remain in Panic mode. Therefore, instead of generating ideas, Refiners observe the interaction between
+            the Creators and Advancers, scrutinizing (analyzing) every proposal. They examine ideas, considering facts and
+            logic, to determine whether they are reasonable.
+            <br /><br /> Some of the ideas may be confirmed as unacceptable which will cause Creators to “slide” back to
+            a state of Panic until the next “great idea” evolves.
+            <br /><br /> Ideas often bounce back and forth among the Creators, Advancers, and Refiners in what’s called the
+            “Z” process. The Creator comes up with an idea and as the Advancer begins promoting it, the Refiner begins analyzing
+            it.
+            <br /><br /> The idea might go back and forth several times before the Refiner (along with the Creator and Advancer)
+            agree the idea is ready to pass off to the Executor who has been waiting for an idea to come to fruition (realization)
+            then moves the idea into production. Flexers assist the other roles by satisfying the unfulfilled needs of the
+            team in order to reach the goal.
+            <br /><br /> Effective management is required throughout the cycle to make sure the team succeeds. Without continuous
+            leadership involvement and oversight, Creators are likely to continue developing ideas, gaining support from
+            the Advancers and criticism from the Refiners. In the meantime, the Executor waits impatiently idle, waiting
+            for the call to action. It is up to the team leader to:
+            <ul>
+                <li>Recognize when Creators (as well as all team members) reach Elation, and look to the Advancer to help move
+                    the idea forward before panic sets in again</li>
+                <li>Involve and encourage Refiners at the appropriate time, to ensure ideas/solutions are feasible, and if not,
+                    eliminated
+                </li>
+                <li>To utilize the creator-advancer-refiner loop of the Z-process as many times as necessary to ensure that only
+                    sound, feasible ideas/solutions are handed off to the executor for implementation</li>
+            </ul>
+            <br />
+            <sup> 1</sup> Researchers, Allen N. Fahden and Srinivasan Namakkal, first posited that people have a preferred
+            approach to thinking and behaving when in a team environment. Over the past two decades, empirical research by
+            Inscape Publishing has supplemented Fahden and Namakkal’s research.
+            <br />
+            <sup>2</sup> Problem A vs. B: Problem A is the agreed common problem for which any team is formed. Problem B
+            is any problem that impedes progress towards resolution of Problem A. Note: two problem As make a Problem B and
+            all sub-problems within Problem A need resolving such that they do not impede the solution of other sub-problems
+            (create Problem B) - a key leadership concern.
+        </div>
+    </div>
+
+</ng-template>

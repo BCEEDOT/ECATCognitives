@@ -16,6 +16,7 @@ import { RoadrunnerModule } from "./roadrunner/roadrunner.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
+import { CognitivesModule } from "./cognitives/cognitives.module";
 import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -43,7 +44,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     DashboardModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    RoadrunnerModule //Add feature modules/routes before main routing module
+    RoadrunnerModule, //Add feature modules/routes before main routing module
+    CognitivesModule, //Add feature modules/routes before main routing module
   ], // modules needed to run this module
   providers: [
     {
