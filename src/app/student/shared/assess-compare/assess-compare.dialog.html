@@ -32,6 +32,20 @@
        > 
        <!-- [autoScale]="autoScale" -->
        <!-- (select)="onSelect($event)" -->
+       <ng-template #tooltipTemplate let-model="model">
+          <p>{{model.name}} : {{ratings(model.value)}}</p>
+          <!-- <h2>{{model.name}}: {{model.value}}</h2> -->
+      </ng-template>
+
+      <ng-template #seriesTooltipTemplate let-models="model">
+         <!-- {{models | json}}  -->
+         <h4>{{models[0].name}}</h4> 
+         <p *ngFor="let model of models">
+          {{model.series}} : {{ratings(model.value)}}
+        </p> 
+        <!-- <p>{{model.name}} : {{ratings(model.value)}}</p> -->
+        <!-- <h2>{{model.name}}: {{model.value}}</h2> -->
+      </ng-template>
 </ngx-charts-line-chart>
 
 <!--<button md-icon-button (click)="reset()">Reset</button>-->

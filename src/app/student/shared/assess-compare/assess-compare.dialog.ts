@@ -46,11 +46,19 @@ export class AssessCompareDialog implements OnInit {
     @Inject(MD_DIALOG_DATA) public data: any) {
 
     let grp: WorkGroup = data.workGroup;
-    grp.groupMembers.forEach(mem => {
+
+    let groupMembers = grp.groupMembers.filter(gm => {
+      if (gm.assesseeSpResponses && gm.assesseeSpResponses.length > 0) {
+        return true;
+      }
+    });
+
+    groupMembers.forEach(mem => {
       let memData = { 
         name: '',
         series: []
       };
+
       memData.name = mem.studentProfile.person.firstName.slice(0,1) + '. ' + mem.studentProfile.person.lastName;
       if (mem.assesseeSpResponses || mem.assesseeSpResponses.length > 0){
         mem.assesseeSpResponses.sort((a: SpResponse, b: SpResponse) => {
@@ -114,6 +122,7 @@ export class AssessCompareDialog implements OnInit {
 
   ngOnInit() {
     //console.log(this.itemsRequireMatch);
+    console.log(this.multi);
   }
 
   // onSelect(event) {
