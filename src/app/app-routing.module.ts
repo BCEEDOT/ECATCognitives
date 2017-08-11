@@ -9,7 +9,13 @@ import { LoginComponent } from './login/login.component';
 const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'lti/ltiEntry', redirectTo: '/dashboard' }
+  { path: 'lti/ltiEntry', redirectTo: '/dashboard' },
+  { path: 'student', loadChildren: './student/student.module#StudentModule'},
+  { path: 'lmsadmin', loadChildren: './lmsadmin/lmsadmin.module#LmsadminModule'},
+  { path: 'faculty', loadChildren: './faculty/faculty.module#FacultyModule'},
+  { path: 'cognitives', loadChildren: './cognitives/cognitives.module#CognitivesModule'}
+
+
   //{ path: '**', component: PageNotFoundComponent }
 ];
 

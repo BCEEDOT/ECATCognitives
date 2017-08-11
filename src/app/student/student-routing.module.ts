@@ -11,7 +11,7 @@ import { AssessComponent } from '../provider/sp-provider/assess/assess.component
 
 const studentRoutes: Routes = [
   {
-    path: 'student',
+    path: '',
     //Check if role is student, spin up Student Data Context
     canActivate: [StudentAuthGuard],
     children: [

@@ -18,7 +18,7 @@ import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.ser
 
 const facultyRoutes: Routes = [
   {
-    path: 'faculty',
+    path: '',
     // Check if role is student, spin up Student Data Context
     canActivate: [FacultyAuthGuardService],
     children: [

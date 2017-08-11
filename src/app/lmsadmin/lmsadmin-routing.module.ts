@@ -13,7 +13,7 @@ import { CourseInfoComponent } from "./courses/course-info/course-info.component
 
 const lmsadminRoutes: Routes = [
   { 
-    path: 'lmsadmin',
+    path: '',
     component: LmsadminComponent,
     // Check if role is ISA, spin up ISA Data Context
     canActivate: [LmsadminAuthGuardService],

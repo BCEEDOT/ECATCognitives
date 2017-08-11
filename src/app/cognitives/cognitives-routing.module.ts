@@ -10,18 +10,18 @@ import { ResultComponent } from './result/result.component';
 
 const cognitivesRoutes: Routes = [
   {
-    path: 'cognitives',
+    path: '',
     component: CognitivesComponent,
     canActivate: [UserAuthGuard],
     resolve: { results: 'resultsResolver' },
   },
   {
-    path: 'cognitives/result/:cogId',
+    path: 'result/:cogId',
     component: ResultComponent,
     canActivate: [UserAuthGuard],
   },
   {
-    path: 'cognitives/assess/:cogId',
+    path: 'assess/:cogId',
     component: AssessComponent,
     resolve: { assess: 'assessResolver' },
     canActivate: [UserAuthGuard],

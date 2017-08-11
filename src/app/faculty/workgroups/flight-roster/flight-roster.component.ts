@@ -110,4 +110,8 @@ export class FlightRosterComponent implements OnInit {
 
   }//END ACTIVATE
 
+  back(): void {
+    this.location.back();
+  }
+
 } //END COMPONENT
