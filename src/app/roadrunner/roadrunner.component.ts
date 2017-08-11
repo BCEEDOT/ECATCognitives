@@ -66,7 +66,9 @@ export class RoadrunnerComponent implements OnInit {
     private _dataTableService: TdDataTableService,
     public media: TdMediaService,
     private global: GlobalService,
-    private roadRunnerService: RoadrunnerService
+    private roadRunnerService: RoadrunnerService,
+    
+    
   ) { }
 
 

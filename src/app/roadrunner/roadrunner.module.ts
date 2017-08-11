@@ -7,7 +7,7 @@ import { RoadrunnerRoutingModule } from "./roadrunner-routing.module";
 import {RoadrunnerService } from './services/roadrunner.service';
 import { RoadrunnerDetailsComponent } from'./roadrunner-details/roadrunner-details.component';
 
-import {MaterialModule, MdNativeDateModule} from'@angular/material';
+import {MaterialModule, MdNativeDateModule, MdTooltipModule} from'@angular/material';
 
 import {ReactiveFormsModule, FormsModule} from "@angular/forms";
 import { RoadrunnerCompletedComponent } from './roadrunner-completed/roadrunner-completed.component';
@@ -23,6 +23,8 @@ import { RoadrunnerLocationsComponent } from './roadrunner-locations/roadrunner-
         ReactiveFormsModule,
         FormsModule,
         CovalentMessageModule,
+        MdTooltipModule,
+        
         
     ],
     declarations: [
