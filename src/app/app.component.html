@@ -9,15 +9,16 @@
         <md-icon>assessment</md-icon>Assessment Center</a>
       <a *ngIf="isFaculty" md-list-item routerLink="/faculty/workgroups" (click)="layout.close()">
         <md-icon>people</md-icon>Workgroup Center</a>
-      <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()">
-        <md-icon>android</md-icon>Road Runner</a>
-      <a *ngIf="isFaculty" md-list-item routerLink="/roadrunnerFaculty" (click)="layout.close()">
-        <md-icon>android</md-icon>Road Runner</a>
       <a *ngIf="isLmsAdmin" md-list-item routerLink="/lmsadmin/courses" (click)="layout.close()">
         <md-icon>security</md-icon>Instructional System Admin</a>
       <md-divider></md-divider>
       <a md-list-item routerLink="/cognitives" (click)="layout.close()">
         <md-icon>trending_up</md-icon>Cognitives</a>
+      <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()">
+        <md-icon>android</md-icon>Road Runner</a>
+      <a *ngIf="isFaculty" md-list-item routerLink="/roadrunnerFaculty" (click)="layout.close()">
+        <md-icon>android</md-icon>Road Runner</a>
+      <md-divider></md-divider>
     </md-nav-list>
     <md-nav-list td-navigation-drawer-menu>
       <!--<a md-list-item routerLink="/profile" (click)="layout.close()">
