@@ -12,7 +12,7 @@
         <button md-raised-button *ngIf="workGroup.mpSpStatus === statusMap.open || workGroup.mpSpStatus === statusMap.underReview || workGroup.mpSpStatus === statusMap.reviewed" (click)="this.reviewFlight()" [ngClass]="canReview ? 'can-review' : 'no-review'" [disabled]="workGroup.mpSpStatus === statusMap.created">{{reviewBtnText}}</button>
         <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
         <!--TODO: Remove this button-->
-        <button md-raised-button (click)="this.publish()" [disabled]="workGroup.mpSpStatus !== statusMap.reviewed">Publish</button>
+        <!-- <button md-raised-button (click)="this.publish()" [disabled]="workGroup.mpSpStatus !== statusMap.reviewed">Publish</button> -->
       </md-card-title>
       <md-tab-group md-stretch-tabs>
         <md-tab>
