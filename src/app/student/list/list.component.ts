@@ -54,12 +54,12 @@ export class ListComponent implements OnInit {
 
     this.workGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
-      this.assessStatusIcon = (this.assessComplete) ? "check_cirlce" : "error_outline";
+      this.assessStatusIcon = (this.assessComplete) ? "check_circle" : "error_outline";
     });
 
     this.workGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
-      this.stratStatusIcon = (this.stratComplete) ? "check_cirlce" : "error_outline";
+      this.stratStatusIcon = (this.stratComplete) ? "check_circle" : "error_outline";
     });
 
   }
@@ -104,6 +104,7 @@ export class ListComponent implements OnInit {
       let hasStrat: boolean = false;
 
       memberIds.forEach(id => {
+        console.log(this.user.statusOfPeer[+id]);
         if (!this.user.statusOfPeer[+id].stratComplete) { hasStrat = true; }
       });
 

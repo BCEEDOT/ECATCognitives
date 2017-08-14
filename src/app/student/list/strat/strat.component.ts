@@ -52,7 +52,6 @@ export class StratComponent implements OnInit, OnChanges {
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.peers = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId !== userId);
     this.evaluateStrat(true);
-
   }
 
   cancel() {
@@ -95,7 +94,9 @@ export class StratComponent implements OnInit, OnChanges {
   }
 
   isPristine(): boolean {
-    return this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null);
+    let stratComplete =  this.activeWorkGroup.groupMembers.some(gm => gm.proposedStratPosition !== null || gm.stratValidationErrors.length > 0);
+    this.workGroupService.stratComplete(!stratComplete);
+    return stratComplete
   }
 
   evaluateStrat(force?: boolean): void {
