@@ -4,6 +4,7 @@ import { UserDataContext } from "../../core/services/data/user-data-context.serv
 import { RoadRunner } from "../../core/entities/user";
 import { Router } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
+import { Location } from '@angular/common'
 
 import * as _ from "lodash"; 
 
@@ -41,6 +42,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private snackBarService: MdSnackBar,
+        private location: Location,
     ) {
 
     }
@@ -90,7 +92,8 @@ export class RoadrunnerDetailsComponent implements OnInit {
     cancel() {
 
         this.oneEvent.entityAspect.rejectChanges();
-        this.router.navigate(['roadrunnerStudent/']);
+        this.location.back();
+
     }
 
     save() {

@@ -40,11 +40,11 @@ export class RoadrunnerComponent implements OnInit {
 
 
   columns: ITdDataTableColumn[] = [
-    { name: 'flight', label: 'Flight', sortable: true },
+    { name: 'flight', label: 'Flight', sortable: false },
     { name: 'name', label: 'Name' },
     { name: 'location', label: 'Location', sortable: false },
-    { name: 'leaveDate', label: 'Leave Date', sortable: true, format: date => this.dateFormat.format(date) },
-    { name: 'returnDate', label: 'Return Date', sortable: true, format: date => this.dateFormat.format(date) },
+    { name: 'leaveDate', label: 'Leave Date', sortable: false, format: date => this.dateFormat.format(date) },
+    { name: 'returnDate', label: 'Return Date', sortable: false, format: date => this.dateFormat.format(date) },
     { name: 'contactNumber', label: 'Contact Number', sortable: false }
   ]
 
