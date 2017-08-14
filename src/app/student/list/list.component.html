@@ -15,13 +15,20 @@
     <md-card *ngIf="user?.hasAcknowledged">
       <td-message *ngIf="readOnly" label="This Group is currently Under-Review or awaiting Publication" color="accent" icon="error">
       </td-message>
-      <md-tab-group md-stretch-tabs>
+      <md-tab-group class="tab-group" dynamicHeight>
         <md-tab>
-          <ng-template md-tab-label>Assessment</ng-template>
+          
+          <ng-template md-tab-label>
+            <md-icon class="tab-icon">assessment</md-icon>
+            ASSESS
+          </ng-template>
+          
           <assess [workGroup]="activeWorkGroup"></assess>
         </md-tab>
         <md-tab [disabled]="readOnly">
-          <ng-template md-tab-label>Stratification</ng-template>
+          <ng-template md-tab-label>
+          <md-icon class="tab-icon">format_list_numbered</md-icon>
+            STRAT</ng-template>
           <strat [workGroup]="activeWorkGroup"></strat>
         </md-tab>
       </md-tab-group>
