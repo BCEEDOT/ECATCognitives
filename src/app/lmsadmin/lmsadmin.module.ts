@@ -19,6 +19,7 @@ import { MyHighlightDirective } from './directives/my-highlight.directive';
 import { EditGroupDialogComponent } from './group-sets/manage-groupset/edit-group-dialog/edit-group-dialog.component';
 import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-dialog/add-group-dialog.component';
 import { PollLmsDialog } from './group-sets/poll-lms-dialog/poll-lms-dialog.component';
+import {MaterialModule, MdNativeDateModule } from "@angular/material";
 
 @NgModule({
   imports: [
@@ -26,7 +27,9 @@ import { PollLmsDialog } from './group-sets/poll-lms-dialog/poll-lms-dialog.comp
     EntityLmsadminModule,
     SharedModule,
     CovalentPagingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialModule,
+    MdNativeDateModule
   ],
   declarations: [
     LmsadminComponent,

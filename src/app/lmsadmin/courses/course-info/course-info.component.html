@@ -5,31 +5,34 @@
         <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
             <input mdInput #classNumInput="ngModel" placeholder="Class Number" [(ngModel)]="course.classNumber" name="classNumber"
-              maxlength="10" tdAutoTrim/>
+              maxlength="10" tdAutoTrim required/>
             <md-hint>
               <span [hidden]="classNumInput.pristine" class="tc-red-600"></span>
             </md-hint>
           </md-input-container>
         </div>
-        <!--<div layout-gt-xs="row" layout-margin>
+        <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
-            <input mdInput #startDateInput="ngModel" placeholder="Start Date" [(ngModel)]="course.startDate" name="startDate" tdAutoTrim/>
-            <md-hint>
-              <span [hidden]="startDateInput.pristine || !startDateInput.errors?.pattern" class="tc-red-600"></span>
-            </md-hint>
+            <input mdInput [min]="minDate" [max]="maxDate" #startForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="start"
+              [(ngModel)]="course.startDate" placeholder="Start Date" required/>
+            <button mdSuffix [mdDatepickerToggle]="start"></button>
+
           </md-input-container>
+          <md-datepicker #start [touchUi]="touch" [startAt]="course.startDate"></md-datepicker>
         </div>
         <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
-            <input mdInput #gradDateInput="ngModel" placeholder="Grad Date" [(ngModel)]="course.gradDate" name="gradDate" tdAutoTrim/>
-            <md-hint>
-              <span [hidden]="gradDateInput.pristine || !gradDateInput.errors?.pattern" class="tc-red-600"></span>
-            </md-hint>
+            <button mdSuffix [mdDatepickerToggle]="grad"></button>
+            <input mdInput [min]="course.startDate" [max]="maxDate" #gradForm="ngModel" [ngModelOptions]="{standalone: true}" [mdDatepicker]="grad"
+              placeholder="Grad Date" [(ngModel)]="course.gradDate" required/>
+            <md-error *ngIf="gradForm.hasError('mdDatepickerMin')">Please select date after the start date!</md-error>
+
           </md-input-container>
-        </div>-->
+          <md-datepicker #grad [touchUi]="touch" [startAt]="course.gradDate"></md-datepicker>
+        </div>
         <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
-            <input mdInput #displayNameInput="ngModel" placeholder="Display Name" [(ngModel)]="course.name" name="name" tdAutoTrim/>
+            <input mdInput #displayNameInput="ngModel" placeholder="Display Name" [(ngModel)]="course.name" name="name" tdAutoTrim required/>
             <md-hint>
               <span [hidden]="displayNameInput.pristine" class="tc-red-600"></span>
             </md-hint>
@@ -40,6 +43,6 @@
   <md-card-actions>
     <span fxFlex></span>
     <button md-raised-button color="accent" (click)="this.cancel()">Cancel</button>
-    <button md-raised-button color="accent" (click)="this.save()" [disabled]="!courseInfoForm.dirty">Save</button>
+    <button md-raised-button color="accent" (click)="this.save()" [disabled]="!courseInfoForm.dirty && !startForm.dirty && !gradForm.dirty">Save</button>
   </md-card-actions>
 </md-card>

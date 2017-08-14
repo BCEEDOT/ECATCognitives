@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { MdSnackBar } from "@angular/material";
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 
 import { Course } from "../../../core/entities/lmsadmin";
 import { LmsadminDataContextService } from "../../services/lmsadmin-data-context.service";
@@ -13,12 +13,15 @@ import { LmsadminDataContextService } from "../../services/lmsadmin-data-context
 })
 export class CourseInfoComponent implements OnInit {
   course: Course = {} as Course;
+  minDate = new Date(2017, 0, 1);
+  maxDate = new Date(2020, 0, 1);
 
   constructor(private lmsadminDataContextService: LmsadminDataContextService,
     private router: Router,
     private route: ActivatedRoute,
     private dialogService: TdDialogService,
-    private snackBar: MdSnackBar) { }
+    private snackBar: MdSnackBar,
+    private loadingService: TdLoadingService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -48,11 +51,14 @@ export class CourseInfoComponent implements OnInit {
   }
 
   save(){
+    this.loadingService.register();
     if (this.course.entityAspect.entityState.isModified()) {
       this.lmsadminDataContextService.commit().then(fulfilled => {
       this.snackBar.open('Course Info Saved!', 'Dismiss', {duration: 2000});
+      this.loadingService.resolve();
       this.router.navigate(['../../'], { relativeTo: this.route });
     }, (reject => {
+      this.loadingService.resolve();
       this.dialogService.openAlert({message: 'There was a problem saving, please try again.', title: 'Save Error'});
     }));
     } else {
