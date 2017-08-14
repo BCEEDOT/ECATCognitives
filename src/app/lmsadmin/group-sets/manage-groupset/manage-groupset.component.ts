@@ -361,6 +361,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
         }
       } else {
         if (change.notAssignedToGroup) {
+          change.workGroupId = 0;
           change.entityAspect.setUnchanged();
           this.unassignedStudents.push(change);
         }
@@ -491,6 +492,9 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+
+    console.log(this.unassignedStudents);
+    console.log(this.lmsadminDataContext.getChanges());
 
     var deletedPromise: Promise<any>;
     var changedPromise: Promise<any>;
