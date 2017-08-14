@@ -69,17 +69,17 @@ export class EvaluateComponent implements OnInit {
     });
     this.facWorkGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
-      this.assessStatusIcon = (this.assessComplete) ? "check_box" : "indeterminate_check_box";
+      this.assessStatusIcon = (this.assessComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
     });
     this.facWorkGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
-      this.stratStatusIcon = (this.stratComplete) ? "check_box" : "indeterminate_check_box";
+      this.stratStatusIcon = (this.stratComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
     });
     this.facWorkGroupService.commentsComplete$.subscribe(cc => {
       this.commentsComplete = cc;
-      this.commentStatusIcon = (this.commentsComplete) ? "check_box" : "indeterminate_check_box";
+      this.commentStatusIcon = (this.commentsComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
     });
 

@@ -7,6 +7,8 @@ export class WorkGroupService {
 
     workGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    stratComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     workGroup(workGroup: WorkGroup) {
         this.workGroup$.next(workGroup);
@@ -14,6 +16,14 @@ export class WorkGroupService {
 
     isLoading(isLoading: boolean) {
         this.isLoading$.next(isLoading);
+    }
+
+    assessComplete(assessComplete: boolean){
+        this.assessComplete$.next(assessComplete);
+    }
+
+    stratComplete(stratComplete: boolean){
+        this.stratComplete$.next(stratComplete);
     }
 
 }

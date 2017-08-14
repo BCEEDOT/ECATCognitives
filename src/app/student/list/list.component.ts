@@ -19,7 +19,11 @@ import { MpSpStatus } from "../../core/common/mapStrings";
 })
 export class ListComponent implements OnInit {
 
-  lastCloseResult: string;
+  //lastCloseResult: string;
+  assessComplete: boolean = false;
+  stratComplete: boolean = false;
+  assessStatusIcon: string;
+  stratStatusIcon: string;
   actionsAlignment: string;
   user: CrseStudentInGroup;
   instructions: string;
@@ -33,7 +37,7 @@ export class ListComponent implements OnInit {
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
     private route: ActivatedRoute, private dialogService: TdDialogService
-    
+
   ) {
 
     this.activeWorkGroup$ = route.data.pluck('workGroup');
@@ -46,7 +50,17 @@ export class ListComponent implements OnInit {
 
     this.workGroupService.isLoading$.subscribe(value => {
       this.isLoading = value;
-    })
+    });
+
+    this.workGroupService.assessComplete$.subscribe(ac => {
+      this.assessComplete = ac;
+      this.assessStatusIcon = (this.assessComplete) ? "check_cirlce" : "error_outline";
+    });
+
+    this.workGroupService.stratComplete$.subscribe(sc => {
+      this.stratComplete = sc;
+      this.stratStatusIcon = (this.stratComplete) ? "check_cirlce" : "error_outline";
+    });
 
   }
 
@@ -55,15 +69,48 @@ export class ListComponent implements OnInit {
       this.activeWorkGroup = workGroup;
       this.activate();
     });
+
+
+
   }
 
   private activate(force?: boolean): void {
 
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
+    this.user.updateStatusOfPeer();
     this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
     this.readOnly = this.workGroupService.workGroup$.value.mpSpStatus !== MpSpStatus.open
     this.workGroupService.isLoading(false);
+
+    let memberIds = Object.keys(this.user.statusOfPeer);
+
+    console.log(this.user.statusOfPeer[memberIds[0]].assessComplete);
+
+
+    let assessIncomplete = this.activeWorkGroup.groupMembers.some(mem => {
+      let hasAssess: boolean = false;
+      memberIds.forEach(id => {
+        if (!this.user.statusOfPeer[+id].assessComplete) { hasAssess = true; }
+      });
+
+      return hasAssess;
+
+    });
+
+    this.workGroupService.assessComplete(!assessIncomplete);
+
+    let stratIncomplete = this.activeWorkGroup.groupMembers.some(mem => {
+      let hasStrat: boolean = false;
+
+      memberIds.forEach(id => {
+        if (!this.user.statusOfPeer[+id].stratComplete) { hasStrat = true; }
+      });
+
+      return hasStrat;
+    });
+
+    this.workGroupService.stratComplete(!stratIncomplete);
 
   }
 

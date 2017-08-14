@@ -17,23 +17,26 @@
       <md-tab-group>
         <md-tab>
           <ng-template md-tab-label>
+            <md-icon class="tab-icon">assessment</md-icon>
             Assess
-            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
+            <md-icon class="small-tab-icon" *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(assessComplete) ? 'tc-green-700' : 'tc-red-700'">{{assessStatusIcon}}</md-icon>
           </ng-template>
           <assess [members]="members"></assess>
         </md-tab>
         <md-tab>
           <ng-template md-tab-label>
+            <md-icon class="tab-icon">format_list_numbered</md-icon>
             Strat
-            <md-icon *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
+            <md-icon class="small-tab-icon" *ngIf="workGroup.mpSpStatus !== statusMap.published" [ngClass]="(stratComplete) ? 'tc-green-700' : 'tc-red-700'">{{stratStatusIcon}}</md-icon>
           </ng-template>
           <strat [members]="members"></strat>
         </md-tab>
         <md-tab [disabled]="!showComments">
           <ng-template md-tab-label>
+            <md-icon class="tab-icon">comment</md-icon>
             Review Comments
-            <md-icon *ngIf="!showComments && workGroup.mpSpStatus !== statusMap.published">lock</md-icon>
-            <md-icon *ngIf="showComments && workGroup.mpSpStatus !== statusMap.published" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
+            <md-icon class="small-tab-icon" *ngIf="!showComments && workGroup.mpSpStatus !== statusMap.published">lock</md-icon>
+            <md-icon class="small-tab-icon" *ngIf="showComments && workGroup.mpSpStatus !== statusMap.published" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
           </ng-template>
           <comments [members]="members"></comments>
         </md-tab>

@@ -30,7 +30,7 @@ export class StratComponent implements OnInit, OnChanges {
     private spTools: SpProviderService, private dialogService: TdDialogService,
     private studentDataContext: StudentDataContext) {
 
-      //this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
+    //this.workGroupService.isLoading$.subscribe(value => this.isLoading = value);
   }
 
   @Input() workGroup: WorkGroup;
@@ -65,11 +65,11 @@ export class StratComponent implements OnInit, OnChanges {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.activeWorkGroup.groupMembers.forEach(gm => {
-             gm.stratValidationErrors = [];
-             gm.stratIsValid = true;
-             gm.proposedStratPosition = undefined;
-           });
-          this.snackBarService.open('Changes Discarded', 'Dismiss', {duration: 2000})
+            gm.stratValidationErrors = [];
+            gm.stratIsValid = true;
+            gm.proposedStratPosition = undefined;
+          });
+          this.snackBarService.open('Changes Discarded', 'Dismiss', { duration: 2000 })
           //this.location.back();
         }
       });
@@ -136,8 +136,9 @@ export class StratComponent implements OnInit, OnChanges {
           gm.stratIsValid = true;
           gm.proposedStratPosition = null;
         });
+      this.workGroupService.stratComplete(true);
       this.user.updateStatusOfPeer();
-      this.snackBarService.open("Success, Strats Updated!", 'Dismiss', {duration: 2000})
+      this.snackBarService.open("Success, Strats Updated!", 'Dismiss', { duration: 2000 })
     }).catch((error) => {
       this.dialogService.openAlert({
         message: 'There was an error saving your changes, please try again.'
