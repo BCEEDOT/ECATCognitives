@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BaseChartComponent } from '@swimlane/ngx-charts/release';
+import { Subscription } from 'rxjs/Rx';
 
 import { BaseAssessService } from "../services/base-assess.service";
 import { CogInstrument, CogInventory, CogResponse } from "../../../core/entities/user";
@@ -10,23 +11,35 @@ import { CogAssessService } from "../../services/cog-assess.service";
   templateUrl: './ecmspe-assess.component.html',
   styleUrls: ['./ecmspe-assess.component.scss']
 })
-export class EcmspeAssessComponent implements OnInit {
+export class EcmspeAssessComponent implements OnInit, OnDestroy {
 
   ecmspeInventories: CogInventory[]
   activeInventory: CogInventory;
   inventories: CogInventory[];
   cogName: string;
+  sub1 = new Subscription();
+  sub2 = new Subscription();
 
   constructor(private cogAssessService: CogAssessService) { }
 
   ngOnInit() {
-    this.cogAssessService.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
+    this.sub1 = this.cogAssessService.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
       this.ecmspeInventories = cogInventories;
       this.activate();
     });
-    this.cogAssessService.cogActiveInventory$.subscribe((cogInventory: CogInventory) => {
+    this.sub2 = this.cogAssessService.cogActiveInventory$.subscribe((cogInventory: CogInventory) => {
       this.activeInventory = cogInventory;
     })
+  }
+
+  ngOnDestroy(): void {
+    this.sub1.unsubscribe();
+    this.sub2.unsubscribe();
+    this.cogAssessService.cogActiveInventory(null);
+    this.cogAssessService.cogInventories(null);
+
+    // this.cogAssessService.cogActiveInventory$.unsubscribe();
+    // this.cogAssessService.cogInventories$.unsubscribe();
   }
 
   activate(): void {
