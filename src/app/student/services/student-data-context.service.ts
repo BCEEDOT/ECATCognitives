@@ -63,10 +63,12 @@ export class StudentDataContext extends BaseDataContext {
         let allCourses: Array<Course>;
         allCourses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
 
+        if (!forceRefresh) {
+            if (allCourses.length > 0) {
 
-        if (allCourses.length > 0) {
-            console.log('Courses loaded from local cache');
-            return Promise.resolve(allCourses);
+                console.log('Courses loaded from local cache');
+                return Promise.resolve(allCourses);
+            }
         }
 
 
@@ -103,15 +105,21 @@ export class StudentDataContext extends BaseDataContext {
         }
     }
 
-    fetchActiveCourse(courseId: number, force?: boolean): Promise<Course | Promise<void>> {
+    fetchActiveCourse(courseId: number, forcedRefresh?: boolean): Promise<Course | Promise<void>> {
         const that = this;
 
-        // let course = this.manager.getEntityByKey(MpEntityType.workGroup, courseId) as Course;
+        let course = this.manager.getEntityByKey(MpEntityType.workGroup, courseId) as Course;
 
-        // if (Course && Course.length > 0) {
-        //     console.log("WorkGroup loaded from local cache");
-        //     return Promise.resolve(course);
-        // }
+        if (!forcedRefresh) {
+            if (Course && Course.length > 0) {
+                if (course.workGroups.length > 0) {
+
+                    console.log("Course loaded from local cache");
+                    return Promise.resolve(course);
+                }
+
+            }
+        }
 
         const params = { crseId: courseId }
         let query = EntityQuery.from(this.studentApiResources.course.resource).withParameters(params);
@@ -182,9 +190,12 @@ export class StudentDataContext extends BaseDataContext {
 
         workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
 
-        if (workGroup && workGroup.groupMembers.length > 0) {
-            console.log("WorkGroup loaded from local cache");
-            return Promise.resolve(workGroup);
+        if (!forcedRefresh) {
+
+            if (workGroup && workGroup.groupMembers.length > 0) {
+                console.log("WorkGroup loaded from local cache");
+                return Promise.resolve(workGroup);
+            }
         }
 
         const params = { wgId: workGroupId, addAssessment: false };

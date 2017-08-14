@@ -69,7 +69,7 @@ export class StudentComponent implements OnInit {
 
   }
 
-  private activate(force?: boolean): void {
+  activate(force?: boolean): void {
 
     this.courses.sort((crseA: Course, crseB: Course) => {
       if (crseA.startDate < crseB.startDate) return 1;
@@ -80,9 +80,7 @@ export class StudentComponent implements OnInit {
     this.courses.forEach(course => course.displayName = `${course.classNumber}: ${course.name}`);
     this.activeCourse = this.courses[0];
     this.activeCourseId = this.activeCourse.id;
-    
     let activeWorkgroup = this.setupWorkGroups(this.activeCourse);
-    
     this.setActiveWorkGroup(activeWorkgroup, force);
   }
 
@@ -107,7 +105,7 @@ export class StudentComponent implements OnInit {
 
   }
 
-  private setupWorkGroups(course: Course): WorkGroup {
+  setupWorkGroups(course: Course): WorkGroup {
     this.workGroups = this.activeCourse.workGroups;
 
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
@@ -121,10 +119,10 @@ export class StudentComponent implements OnInit {
     let activeWorkgroup = this.workGroups[0];
 
     return activeWorkgroup;
-    
-  } 
 
-  private setActiveCourse(course: Course, force?: boolean): void {
+  }
+
+  setActiveCourse(course: Course, force?: boolean): void {
 
     this.workGroupService.isLoading(true);
 
@@ -135,104 +133,29 @@ export class StudentComponent implements OnInit {
         this.activeCourseId = this.activeCourse.id;
         this.setActiveWorkGroup(activeWorkGroup, force);
       }).catch(error => {
-        console.log('There was an error retriving the active course');
-      })
+        this.dialogService.openAlert({ message: 'There was a problem loading your course, please try again.', title: 'Load Error' });
+      });
   }
 
 
-  private setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
+  setActiveWorkGroup(workGroup: WorkGroup, force?: boolean): void {
 
     this.workGroupService.isLoading(true);
 
     const workGroupId = (workGroup) ? workGroup.workGroupId : 0;
 
-    this.studentDataContext.fetchActiveWorkGroup(workGroupId, false).then(workGroup => {
+    this.studentDataContext.fetchActiveWorkGroup(workGroupId, force).then(workGroup => {
       this.activeWorkGroup = workGroup as WorkGroup;
       this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
 
       const resultsPublished = this.activeWorkGroup.mpSpStatus === MpSpStatus.published;
 
       this.workGroupService.workGroup(this.activeWorkGroup);
+      this.workGroupService.isLoading(false);
 
-      if (!force) {
-        resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
-      }
+      resultsPublished ? this.router.navigate(['results', this.activeCourseId, workGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, workGroupId], { relativeTo: this.route });
+
     });
 
-
-
   }
-
-
-
-
-
-
-
-
-
-
-
-  // initCourses(): void {
-  //   //maps to ng-template tag
-  //   this.loadingService.register('course.list');
-  //   this.studentDataContext.initCourses()
-  //       .then((courses) => {
-  //         this.courses = courses;
-  //         this.loadingService.resolve('course.list');
-  //         console.log(this.courses);
-  //       })
-  //       .catch(e => {
-  //         this.loadingService.resolve('course.list');
-  //         console.log('error getting users');
-  //         console.log(e);
-  //       })
-
-  // }
-
-
-  // loadUsers(): void {
-  //   this._loadingService.register('users.list');
-  //   this._usersService.query().subscribe((users: IUser[]) => {
-  //     this.users = users;
-  //     this.filteredUsers = users;
-  //     this._loadingService.resolve('users.list');
-  //   }, (error: Error) => {
-  //     this._usersService.staticQuery().subscribe((users: IUser[]) => {
-  //       this.users = users;
-  //       this.filteredUsers = users;
-  //       this._loadingService.resolve('users.list');
-  //     });
-  //   });
-  // }
-
-  // filterUsers(displayName: string = ''): void {
-  //   this.filteredUsers = this.users.filter((user: IUser) => {
-  //     return user.displayName.toLowerCase().indexOf(displayName.toLowerCase()) > -1;
-  //   });
-  // }
-
-  // deleteUser(id: string): void {
-  //   this._dialogService
-  //     .openConfirm({message: 'Are you sure you want to delete this user?'})
-  //     .afterClosed().subscribe((confirm: boolean) => {
-  //       if (confirm) {
-  //         this._loadingService.register('users.list');
-  //         this._usersService.delete(id).subscribe(() => {
-  //           this.users = this.users.filter((user: IUser) => {
-  //             return user.id !== id;
-  //           });
-  //           this.filteredUsers = this.filteredUsers.filter((user: IUser) => {
-  //             return user.id !== id;
-  //           });
-  //           this._loadingService.resolve('users.list');
-  //           this._snackBarService.open('User deleted', 'Ok');
-  //         }, (error: Error) => {
-  //           this._dialogService.openAlert({message: 'There was an error'});
-  //           this._loadingService.resolve('users.list');
-  //         });
-  //       }
-  //     });
-  // }
-
 }
