@@ -248,7 +248,7 @@ export class LmsadminDataContextService extends BaseDataContext {
     return this.manager.createEntity(MpEntityType.workGroup, workGroup) as WorkGroup;
   }
 
-  createWorkgroup(courseId: number, wgModelId: number, category: string, grpNum: string, defaultName: string, customName: string): WorkGroup{
+  createWorkgroup(courseId: number, wgModelId: number, category: string, grpNum: string, defaultName: string, customName: string, instId: number): WorkGroup{
     var newGrp = {
       courseId: courseId,
       wgModelId: wgModelId,
@@ -256,7 +256,8 @@ export class LmsadminDataContextService extends BaseDataContext {
       groupNumber: grpNum,
       defaultName: defaultName,
       mpSpStatus: MpSpStatus.created,
-      customName: customName
+      customName: customName,
+      assignedSpInstrId: instId
     };
 
     return this.manager.createEntity(MpEntityType.workGroup, newGrp) as WorkGroup;

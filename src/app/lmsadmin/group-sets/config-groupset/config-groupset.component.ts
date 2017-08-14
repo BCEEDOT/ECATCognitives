@@ -38,6 +38,7 @@ export class ConfigGroupsetComponent implements OnInit {
     private snackBar: MdSnackBar) { }
 
   ngOnInit() {
+    this.loadingService.register();
     this.route.params.subscribe(params => {
       this.wgCat = params['catId'];
       this.courseId = params['crsId'];
@@ -80,6 +81,7 @@ export class ConfigGroupsetComponent implements OnInit {
     }
     
     this.lmsAdminDataCtx.fetchAllCourseMembers(this.courseId);
+    this.loadingService.resolve();
   }
 
   reuseCheck(){
@@ -126,9 +128,9 @@ export class ConfigGroupsetComponent implements OnInit {
         this.previousModel.workGroups.forEach(grp => {
           let newGroup: WorkGroup;
           if (this.keepNames) {
-            newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,grp.groupNumber,grp.defaultName, grp.customName);      
+            newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,grp.groupNumber,grp.defaultName, grp.customName, this.currentModel.assignedSpInstrId);      
           } else {
-            newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,grp.groupNumber,grp.defaultName, null);
+            newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,grp.groupNumber,grp.defaultName, null, this.currentModel.assignedSpInstrId);
           }
 
           if (this.keepSizes){
@@ -146,7 +148,7 @@ export class ConfigGroupsetComponent implements OnInit {
           } else {
             flightNum = i.toString();
           }
-          newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,flightNum,'Flight ' + flightNum, null);
+          newGroup = this.lmsAdminDataCtx.createWorkgroup(this.courseId,this.currentModel.id, this.currentModel.mpWgCategory,flightNum,'Flight ' + flightNum, null, this.currentModel.assignedSpInstrId);
           newGroup.maxSize = this.maxSize;
         }
       }
@@ -217,7 +219,7 @@ export class ConfigGroupsetComponent implements OnInit {
     this.lmsAdminDataCtx.commit().then(res => {
       if (res){
         this.loadingService.resolve();
-        this.snackBar.open('Groups and memberships created!', 'Dismiss');
+        this.snackBar.open('Groups and memberships created!', 'Dismiss', {duration: 2000});
         this.router.navigate(['../manage'], {relativeTo: this.route});
       }
     }, res => {
@@ -242,7 +244,7 @@ export class ConfigGroupsetComponent implements OnInit {
     this.lmsAdminDataCtx.commit().then(res => {
       if (res){
         this.loadingService.resolve();
-        this.snackBar.open('Groups and memberships created!', 'Dismiss');
+        this.snackBar.open('Groups and memberships created!', 'Dismiss', {duration: 2000});
         this.router.navigate(['../manage'], {relativeTo: this.route});
       }
     }, res => {
