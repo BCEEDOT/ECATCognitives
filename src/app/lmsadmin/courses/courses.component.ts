@@ -36,6 +36,15 @@ export class CoursesComponent implements OnInit {
   }
 
   activate(){
+    //sort descending
+    this.courses.sort((a: Course, b: Course) => {
+      if (a.startDate < b.startDate) {return 1}
+      if (a.startDate > b.startDate) {return -1}
+      if (a.gradDate < b.gradDate) {return 1}
+      if (a.gradDate > b.gradDate) {return -1}
+      return 0
+    })
+    
     this.courses.forEach(course => {
       course['displayStart'] = course.startDate.toDateString();
       course['displayGrad'] = course.gradDate.toDateString();
