@@ -256,30 +256,29 @@ export class EvaluateComponent implements OnInit {
     }
   }
 
+  reopenFlight(){
+    this.dialogService.openConfirm({
+      message: 'This will open the flight to students allowing them to make changes. Are you sure you want to re-open?',
+      title: 'Re-Open Group',
+      acceptButton: 'Yes',
+      cancelButton: 'No'
+    }).afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed){
+        this.workGroup.mpSpStatus = MpSpStatus.open;
+        this.facultyDataContext.commit().then(success => {
+          this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
+          this.showComments = false;
+          this.refreshData();
+        })
+      }
+    })
+  }
+
   refreshData() {
     this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true).then(data => {
       this.workGroup = data;
       this.facWorkGroupService.facWorkGroup(this.workGroup);
       this.activate();
-    })
-  }
-
-  //TODO: Remove this... for internal testing only
-  publish() {
-    this.dialogService.openConfirm({
-      message: 'Are you sure you want to publish?',
-      title: 'Publish Flight'
-    }).afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed){
-        this.workGroup.mpSpStatus = MpSpStatus.published;
-        this.facultyDataContext.commit().then(success => {
-          this.snackBar.open('Group Published', 'Dismiss', {duration: 2000});
-          this.activate();
-        }, reject => {
-          this.workGroup.mpSpStatus = MpSpStatus.reviewed;
-          this.dialogService.openAlert({message: 'Something went wrong, group not published', title: 'Save Failure'})
-        })
-      }
     })
   }
 }
