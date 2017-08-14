@@ -75,7 +75,7 @@
       <md-card *ngIf="!readOnly">
         <td-expansion-panel  [expand]="workGroup.isExpanded">
           <ng-template td-expansion-panel-label>
-            <md-icon>{{(workGroup.isEditable) ? 'lock_outline': 'lock_open' }}</md-icon>
+            <md-icon *ngIf="!workGroup.canEdit">lock_outline</md-icon>
             <span>{{workGroup.defaultName}} - ({{workGroup.groupMembers.length}})</span>
           </ng-template>
           <td-expansion-summary>
@@ -87,7 +87,7 @@
             </div>
           </td-expansion-summary>
           <md-divider></md-divider>
-          <md-card-content *ngIf="workGroup.isEditable">
+          <md-card-content *ngIf="!workGroup.canEdit">
             <div style="min-height: 50px" [id]="workGroup.workGroupId">
               <p *ngFor="let groupMember of workGroup.groupMembers trackBy:groupMember?.studentId" [id]="groupMember.studentId" [myHighlight]="groupMember.highlighted"
                 (mouseover)="hovered = groupMember.studentId" (mouseout)="hovered = null" class="md-caption push-none pad-xs">
@@ -95,7 +95,7 @@
               </p>
             </div>
           </md-card-content>
-          <md-card-content *ngIf="!workGroup.isEditable">
+          <md-card-content *ngIf="workGroup.canEdit">
             <div style="min-height: 50px" [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
               <p *ngFor="let groupMember of workGroup.groupMembers trackBy:groupMember?.studentId" [id]="groupMember.studentId" [myHighlight]="groupMember.highlighted"
                 [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId" (mouseout)="hovered = null"
