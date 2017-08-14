@@ -34,15 +34,16 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     BreezeBridgeAngularModule,
+    //SharedModule with the MaterialModule needs to load after Browser and BrowserAnimations
+    BrowserModule,
+    BrowserAnimationsModule,
     SharedModule,
     CoreModule,
-    BrowserModule,
     FacultyModule,
     LmsadminModule,
     StudentModule,
     ProfileModule,
     DashboardModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
     RoadrunnerModule, //Add feature modules/routes before main routing module
     CognitivesModule, //Add feature modules/routes before main routing module
