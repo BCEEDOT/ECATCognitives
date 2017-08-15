@@ -159,12 +159,12 @@ export class GroupSetsComponent implements OnInit {
               this.activate();
             }, (rejected) => {
               this.loadingService.resolve();
-              this.dialogService.openAlert({message: 'There was a problem saving, please refresh data and try again.', title: 'Save Error'});
+              this.dialogService.openAlert({message: 'There was a problem publishing the groups on the server. Check all groups\' Evaluate screens to ensure their review data was properly saved.', title: 'Publishing Error'});
             });
           }
         });
       } else {
-        this.dialogService.openAlert({message: 'Please refresh the page and try again.', title: 'Error Publishing Groups'});
+        this.dialogService.openAlert({message: 'There was a problem publishing. Please refresh the page and try again.', title: 'Error Publishing Groups'});
       }
     }
   }
