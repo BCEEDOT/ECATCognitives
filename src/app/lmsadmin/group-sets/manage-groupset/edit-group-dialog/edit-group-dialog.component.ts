@@ -100,7 +100,7 @@ export class EditGroupDialogComponent implements OnInit {
     this.submitted = true;
 
     if (this.workGroup.groupNumber !== this.editGroupForm.value.groupNumber ||
-      this.workGroup.customName.toLowerCase() !== this.editGroupForm.value.customName.toLowerCase()) {
+      (this.workGroup.customName === null && this.editGroupForm.value.customName !== null) || (this.workGroup.customName !== null && this.editGroupForm.value.customName === null) || this.workGroup.customName.toLowerCase() !== this.editGroupForm.value.customName.toLowerCase()) {
 
       this.workGroup.groupNumber = this.editGroupForm.value.groupNumber;
       this.workGroup.defaultName = `Flight ${this.editGroupForm.value.groupNumber}`;
