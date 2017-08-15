@@ -1,9 +1,12 @@
 <div class="width" *ngIf="isLoading">
-  <md-card *tdLoading="'isLoading'; type:'linear'; mode:'indeterminate'; strategy:'overlay'; color:'accent'">
+  <md-card>
     <div fxLayout="row" fxLayoutAlign="center center">
-      <img class="pad-xl" src="../../../../assets/resultsloading.png" height="256" width="256">
-    </div>
-    <h4 class="text-center pad-bottom-xxl">Your results are on the way!</h4>
+      <img class="pad-top-md" src="../../../../assets/resultsloading.png" height="150" width="150">
+    </div>  
+     <h4 class="text-center pad-bottom-md">Results loading... please wait. </h4> 
+    <md-card-footer>
+      <md-progress-bar color="accent" mode="indeterminate"></md-progress-bar>
+    </md-card-footer>
   </md-card>
 </div>
 

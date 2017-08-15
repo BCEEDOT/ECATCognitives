@@ -23,7 +23,7 @@ export class ResultsComponent implements OnInit {
   memberResults: SpResult;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService, private route: ActivatedRoute,
-   private studentDataContext: StudentDataContext,
+    private studentDataContext: StudentDataContext, private dialogService: TdDialogService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
 
 
@@ -45,6 +45,11 @@ export class ResultsComponent implements OnInit {
         this.activate();
         this.loadingService.resolve('isLoading');
         this.isLoading = false;
+      }).catch(error => {
+        this.dialogService.openAlert({
+          message: 'There was an error loading your results, please try again.',
+          title: 'Load Error',
+        });
       });
   }
 

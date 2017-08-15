@@ -31,6 +31,7 @@ export class ResultsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private facWorkGroupService: FacWorkgroupService,
     private location: Location,
     private loadingService: TdLoadingService,
@@ -44,7 +45,7 @@ export class ResultsComponent implements OnInit {
     this.facWorkGroupService.onListView(false);
     this.isLoading = true;
 
-    this.loadingService.register('isLoading');
+    //this.loadingService.register('isLoading');
 
     this.route.params.subscribe(params => {
       this.paramWorkGroupId = +params['wrkGrpId'];
@@ -54,9 +55,16 @@ export class ResultsComponent implements OnInit {
     this.facultyDataContext.fetchGrpMemsWithSpResults(this.paramCourseId, this.paramWorkGroupId)
       .then((results: CrseStudentInGroup[]) => {
         this.membersResults = results;
-        this.activate();
-        this.loadingService.resolve('isLoading');
         this.isLoading = false;
+        this.activate();
+        //this.loadingService.resolve('isLoading');
+        
+      }).catch(error => {
+        this.router.navigate(['../../'], { relativeTo: this.route });
+        this.dialogService.openAlert({
+          message: 'There was an error loading results, please try again.',
+          title: 'Load Error',
+        });
       });
 
   }
@@ -79,6 +87,12 @@ export class ResultsComponent implements OnInit {
       .then((results: CrseStudentInGroup[]) => {
         this.membersResults = results;
         this.activate();
+      }).catch(error => {
+        this.router.navigate(['../../'], { relativeTo: this.route });
+        this.dialogService.openAlert({
+          message: 'There was an error loading results, please try again.',
+          title: 'Load Error',
+        });
       });
   }
 

@@ -120,9 +120,9 @@ export class FacultyDataContextService extends BaseDataContext {
     course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
 
     if (course) {
-        if(course.workGroups.length > 0) {
-          return Promise.resolve (course);
-        }
+      if (course.workGroups.length > 0) {
+        return Promise.resolve(course);
+      }
     }
 
     const params: any = { courseId: courseId };
@@ -198,27 +198,27 @@ export class FacultyDataContextService extends BaseDataContext {
   }
 
 
-   fetchRoadRunnerWorkGroups(courseId: number, forceRefresh?: boolean): Promise<WorkGroup[] | Promise<void>> {
-         const self = this;
+  fetchRoadRunnerWorkGroups(courseId: number, forceRefresh?: boolean): Promise<WorkGroup[] | Promise<void>> {
+    const self = this;
 
-         let flights = this.manager.getEntities(MpEntityType.workGroup) as WorkGroup[];
+    let flights = this.manager.getEntities(MpEntityType.workGroup) as WorkGroup[];
 
-        let query = EntityQuery.from(this.facultyApiResource.currentWorkGroup.resource).withParameters({courseId: courseId});
+    let query = EntityQuery.from(this.facultyApiResource.currentWorkGroup.resource).withParameters({ courseId: courseId });
 
-        return <Promise<WorkGroup[]>>this.manager.executeQuery(query)
+    return <Promise<WorkGroup[]>>this.manager.executeQuery(query)
 
-            .then(getCurrentWorkGroup)
-            .catch(this.queryFailed);
+      .then(getCurrentWorkGroup)
+      .catch(this.queryFailed);
 
-        function getCurrentWorkGroup(workGroupResult: QueryResult) {
-            if (workGroupResult.results.length === 0) {
-                console.log('Roadrunner query did not return any results', workGroupResult.results, false);
-            } else {
-                console.log('Roadrunner info loaded from remote store', workGroupResult.results, false);
-            }
-            return workGroupResult.results;
-        }
+    function getCurrentWorkGroup(workGroupResult: QueryResult) {
+      if (workGroupResult.results.length === 0) {
+        console.log('Roadrunner query did not return any results', workGroupResult.results, false);
+      } else {
+        console.log('Roadrunner info loaded from remote store', workGroupResult.results, false);
+      }
+      return workGroupResult.results;
     }
+  }
 
   fetchActiveWorkGroup(crsId: number, grpId: number, forceRefresh?: boolean): Promise<WorkGroup> {
     const that = this;
@@ -396,14 +396,17 @@ export class FacultyDataContextService extends BaseDataContext {
 
       workGroup = data.results[0] as WorkGroup;
 
-      if (!workGroup.groupMembers || workGroup.groupMembers.length === 0) {
-        console.log('No published data was found for this workGroup');
+      if (workGroup.groupMembers) {
 
-        const queryError: any = {
-          errorMessage: 'No published data was found for this workgroup'
+        if (workGroup.groupMembers.some(gm => gm.spResult === null)) {
+          console.log('No published data was found for this workGroup');
+
+          const queryError: any = {
+            errorMessage: 'No published data was found for this workgroup'
+          }
+
+          return Promise.reject(queryError) as any;
         }
-
-        Promise.reject(queryError);
       }
 
       console.log('Fetched course student in groups result from the remote data store', workGroup.groupMembers, false);
