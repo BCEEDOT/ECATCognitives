@@ -7,50 +7,51 @@
     </div>
   </md-toolbar>
   <md-list class="will-load">
-    <div *ngIf="roadRunnerInfos?.length > 0">
-      <ng-template let-rrData let-last="last" ngFor [ngForOf]="roadRunnerInfos">
-        <div *ngIf="(!rrData?.prevSignOut && rrData?.signOut) || (!rrData?.prevSignOut && !rrData?.signedOutSomewhere) " fxShow fxHide.xs="true"
-          #row fxLayout="row" fxLayoutGap="20px">
-          <md-list-item fxFlex="100%">
-            <h4 md-line *ngIf="rrData.splitLocation.length > 1" [ngClass]="{'highlight': rrData?.signOut == true}"> {{rrData?.splitLocation[0]}} </h4>
-            <p md-line *ngIf="rrData.splitLocation.length > 1" [ngClass]="{'highlight': rrData?.signOut == true}">{{rrData?.splitLocation[1]}}</p>
-            <h4 md-line *ngIf="rrData.splitLocation.length === 1" [ngClass]="{'highlight': rrData?.signOut == true}"> {{rrData?.splitLocation[0]}}</h4>
-            <p md-line></p>
-            <span fxFlex="30">
+    <div *ngIf="roadRunnerInfos">
+      <div *ngIf="roadRunnerInfos?.length > 0">
+        <ng-template let-rrData let-last="last" ngFor [ngForOf]="roadRunnerInfos">
+          <div *ngIf="(!rrData?.prevSignOut && rrData?.signOut) || (!rrData?.prevSignOut && !rrData?.signedOutSomewhere) " fxShow fxHide.xs="true"
+            #row fxLayout="row" fxLayoutGap="20px">
+            <md-list-item fxFlex="100%">
+              <h4 md-line *ngIf="rrData.splitLocation.length > 1" [ngClass]="{'highlight': rrData?.signOut == true}"> {{rrData?.splitLocation[0]}} </h4>
+              <p md-line *ngIf="rrData.splitLocation.length > 1" [ngClass]="{'highlight': rrData?.signOut == true}">{{rrData?.splitLocation[1]}}</p>
+              <h4 md-line *ngIf="rrData.splitLocation.length === 1" [ngClass]="{'highlight': rrData?.signOut == true}"> {{rrData?.splitLocation[0]}}</h4>
+              <p md-line></p>
+              <span fxFlex="30">
                 <div class="md-caption tc-grey-500">
                   Start Date: 
                   <span [innerHtml]="rrData?.leaveDate | date:'dd MMM yyyy'">{{ rrData?.leaveDate }}</span>
-        </div>
-        </span>
+          </div>
+          </span>
 
-        <span fxFlex="30">
-                <div class="md-caption tc-grey-500">
-                  Return Date: 
-                  <span [innerHtml]="rrData?.returnDate | date:'dd MMM yyyy'">{{ rrData?.returnDate }}</span>
-    </div>
-    </span>
+          <span fxFlex="30">
+          <div class="md-caption tc-grey-500">
+            Return Date: 
+            <span [innerHtml]="rrData?.returnDate | date:'dd MMM yyyy'">{{ rrData?.returnDate }}</span>
+      </div>
+      </span>
 
-    <div fxFlex="10">
-      <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
-        <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut && !rrData?.signedOutSomewhere" md-menu-item (click)="signOutButton(rrData)"> 
+      <div fxFlex="10">
+        <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
+          <button *ngIf="!rrData?.signOut && !rrData?.prevSignOut && !rrData?.signedOutSomewhere" md-menu-item (click)="signOutButton(rrData)"> 
               <md-icon> directions_run</md-icon>
               <span class="md-subhead"> Sign Out </span>
             </button>
-        <button *ngIf="rrData?.signOut" md-menu-item (click)="signOutButton(rrData)"> 
+          <button *ngIf="rrData?.signOut" md-menu-item (click)="signOutButton(rrData)"> 
               <md-icon> keyboard_return </md-icon>
               <span class="md-subhead"> Sign In </span>
             </button>
-        <button md-menu-item [routerLink]="[rrData.id]"> 
+          <button md-menu-item [routerLink]="[rrData.id]"> 
               <md-icon> edit </md-icon>
               <span class="md-subhead"> View/Edit </span>
             </button>
-      </md-menu>
+        </md-menu>
 
-      <button md-icon-button [mdMenuTriggerFor]="appMenu">
+        <button md-icon-button [mdMenuTriggerFor]="appMenu">
             <md-icon>more_vert</md-icon>
           </button>
-    </div>
-    </md-list-item>
+      </div>
+      </md-list-item>
     </div>
 
     <!--show when screen is small-->
@@ -85,10 +86,12 @@
     </ng-template>
 
     </div>
+    </div>
+    <div *ngIf="roadRunnerInfos">
+      <div *ngIf="roadRunnerInfos?.length === 0">
 
-    <div *ngIf="roadRunnerInfos.length === 0">
-
-      <span class="md-title">You have no locations to sign out to</span>
+        <span class="md-title">You have no locations to sign out to</span>
+      </div>
     </div>
 
   </md-list>

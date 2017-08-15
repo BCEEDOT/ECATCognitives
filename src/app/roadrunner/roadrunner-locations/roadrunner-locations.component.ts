@@ -13,6 +13,7 @@ import { RoadrunnerService } from '../services/roadrunner.service';
 export class RoadrunnerLocationsComponent implements OnInit {
   signedOut:boolean;
   roadRunnerEvent: RoadRunner;
+  noRRs: boolean = false;
 
   @Input() roadRunnerInfos: RoadRunner[];
 
@@ -22,6 +23,7 @@ export class RoadrunnerLocationsComponent implements OnInit {
 
   ngOnInit() {
     this.roadRunnerService.signedOut$.subscribe(signedOut => {this.signedOut = signedOut});
+    
     console.log(this.roadRunnerInfos);
   }
 

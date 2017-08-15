@@ -83,8 +83,6 @@ export class RoadrunnerComponent implements OnInit {
 
       return item.toLowerCase().indexOf(value.toLowerCase()) > -1;
 
-
-
     }).filter((filteredItem: any) => {
       return this.flightsModel ? this.flightsModel.indexOf(filteredItem) < 0 : true;
     });
