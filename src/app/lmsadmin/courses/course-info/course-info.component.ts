@@ -15,6 +15,7 @@ export class CourseInfoComponent implements OnInit {
   course: Course = {} as Course;
   minDate = new Date(2017, 0, 1);
   maxDate = new Date(2020, 0, 1);
+  touch: boolean = true;
 
   constructor(private lmsadminDataContextService: LmsadminDataContextService,
     private router: Router,
