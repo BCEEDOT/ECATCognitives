@@ -69,4 +69,10 @@ this.titleService.setTitle('WorkGroup Center');
 
   }
 
+  refreshData() {
+    this.facultyDataContext.getActiveCourse(this.activeCourseId, true).then(res => {
+      this.setActiveCourse(res as Course);
+    });
+  }
+
 }

@@ -16,7 +16,7 @@
           {{course.displayName}}
         </button>
       </md-menu>
-      <button md-icon-button><md-icon class="md-24">autorenew</md-icon></button>
+      <button md-icon-button (click)="refreshData()"><md-icon class="md-24">autorenew</md-icon></button>
     </div>
   </div>
   <router-outlet></router-outlet>

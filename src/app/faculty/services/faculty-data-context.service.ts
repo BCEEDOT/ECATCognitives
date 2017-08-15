@@ -119,7 +119,7 @@ export class FacultyDataContextService extends BaseDataContext {
 
     course = this.manager.getEntityByKey(MpEntityType.course, courseId) as Course;
 
-    if (course) {
+    if (!forceRefresh && course) {
       if (course.workGroups.length > 0) {
         return Promise.resolve(course);
       }
