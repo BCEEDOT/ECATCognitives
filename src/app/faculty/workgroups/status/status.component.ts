@@ -106,6 +106,10 @@ export class StatusComponent implements OnInit {
       });
   }
 
+  back() {        
+        this.location.back();
+    }
+
   reviewFlight() {
     switch(this.workGroup.mpSpStatus){
       case MpSpStatus.created:
