@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   user: Person;
   prettyName: string;
   isEditing: boolean = false;
+  jwtRegistrationComplete: boolean;
   gender = MpGender;
   profileLoading = 'profileLoading';
   payGradeList;
@@ -55,8 +56,15 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   };
 
   ngAfterViewInit() {
-   
-    if (!this.user.registrationComplete) {
+    this.jwtRegistrationComplete = this.user.registrationComplete;
+  }
+
+  checkComplete(): void {
+    if (this.user.registrationComplete) {
+      if (this.user.registrationComplete && !this.jwtRegistrationComplete) {
+        this.router.navigate(['/dashboard']);
+      }
+    } else {
       this.isEditing = true;
       this.dialogService.openAlert({
         message: 'You must complete your profile before using the app.',
@@ -64,7 +72,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         closeButton: 'Dismiss'
       });
     };
-  }
+  };
 
   cancelSave() {
     this.isEditing = false;
@@ -81,7 +89,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       .then(() => {
         //No processing of results. The getProfile method attaches the profiles to the global person object
         this.userRoles = this.global.persona.value;
+        console.log(this.user);
         this.setPrettyName();
+        this.checkComplete();
         this.loadingService.resolve(this.profileLoading);
       })
       .catch(e => {
@@ -91,14 +101,14 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   saveProfile() {
     this.loadingService.register(this.profileLoading);
-    if (this.user.mpAffiliation !== MpAffiliation.unk && this.user.mpComponent !== MpComponent.unk && this.user.mpGender !== MpGender.unk && this.user.mpPaygrade !== MpPaygrade.unk){
-       this.user.registrationComplete = true;
+    if (this.user.mpAffiliation !== MpAffiliation.unk && this.user.mpComponent !== MpComponent.unk && this.user.mpGender !== MpGender.unk && this.user.mpPaygrade !== MpPaygrade.unk) {
+      this.user.registrationComplete = true;
     }
-   
+
     this.userDataContext.commit()
       .then((res) => {
         this.loadingService.resolve(this.profileLoading);
-        this.snackBarService.open('Profile Updated', 'Dismiss', {duration: 2000});
+        this.snackBarService.open('Profile Updated', 'Dismiss', { duration: 2000 });
         this.isEditing = false;
       })
       .catch((error) => {

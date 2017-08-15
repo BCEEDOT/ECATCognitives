@@ -16,8 +16,10 @@ export class UserSaveChangesGuard implements CanDeactivate<AppComponent> {
 
     let hasChanges = this.userDataContext.hasChanges();
 
-    if (!this.global.persona.value.person.registrationComplete) {
-      return false;
+    if (this.global.persona.value) {
+      if (!this.global.persona.value.person.registrationComplete) {
+        return false;
+      }
     }
 
     if (!hasChanges) {
