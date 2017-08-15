@@ -39,6 +39,7 @@ export class FlightRosterComponent implements OnInit {
     private location: Location,
     private loadingService: TdLoadingService,
     private facultyDataContext: FacultyDataContextService,
+    private facWorkgroupService: FacWorkgroupService
   ) {
     this.route.params.subscribe(params => {
       this.crsId = +params['crsId'];
@@ -56,7 +57,7 @@ export class FlightRosterComponent implements OnInit {
   }
 
   activate(): void {
-
+    this.facWorkgroupService.onListView(false);
     let students = this.course.students;
 
     this.workGroup = this.course.workGroups.filter(workGroup => workGroup.workGroupId === this.workGroupId)[0];

@@ -18,6 +18,10 @@
           </md-list-item>
           <div fxFlex="10">
             <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
+              <button md-menu-item [routerLink]="['flight-roster/' + workGroup.workGroupId]"> 
+                <md-icon> list </md-icon>
+                <span class="md-subhead"> Flight Roster </span>
+              </button>
               <button md-menu-item [routerLink]="['evaluate/' + workGroup.workGroupId]"> 
                 <md-icon> assessment </md-icon>
                 <span class="md-subhead"> {{workGroup?.statusText}} </span>
@@ -26,12 +30,6 @@
                 <md-icon> check_circle </md-icon>
                 <span class="md-subhead"> Status </span>
               </button>
-<!--RICKY-->
-              <button *ngIf="workGroup.mpSpStatus !== statusMap.published" md-menu-item [routerLink]="['flight-roster/' + workGroup.workGroupId]"> 
-                <md-icon> list </md-icon>
-                <span class="md-subhead"> Flight Roster </span>
-              </button>
-
               <button *ngIf="workGroup.mpSpStatus === statusMap.published" md-menu-item [routerLink]="['results/' + workGroup.workGroupId]"> 
                 <md-icon> data_usage </md-icon>
                 <span class="md-subhead"> Results </span>
