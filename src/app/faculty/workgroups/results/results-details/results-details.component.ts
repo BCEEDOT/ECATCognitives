@@ -37,6 +37,8 @@ export class ResultsDetailsComponent implements OnInit {
         this.groupMems = results.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
           if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
           if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
+          if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
+          if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
           return 0;
         });;
         this.selStudent = this.groupMems.filter(mem => mem.studentId === studId)[0];
@@ -54,6 +56,8 @@ export class ResultsDetailsComponent implements OnInit {
         this.groupMems = results.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
           if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
           if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
+          if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
+          if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
           return 0;
         });;
         this.selStudent = this.groupMems.filter(mem => mem.studentId === studId)[0];

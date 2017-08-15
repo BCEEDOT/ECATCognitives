@@ -23,12 +23,16 @@ export class ResultsCommentsComponent implements OnInit {
     this.student.recipientOfComments.sort((a: StudSpComment, b: StudSpComment) => {
       if (a.author.studentProfile.person.lastName > b.author.studentProfile.person.lastName) { return 1; }
       if (a.author.studentProfile.person.lastName < b.author.studentProfile.person.lastName) { return -1; }
+      if (a.author.studentProfile.person.firstName > b.author.studentProfile.person.firstName) {return 1;}
+      if (a.author.studentProfile.person.firstName < b.author.studentProfile.person.firstName) {return -1;}
       return 0;
     });
 
     this.student.authorOfComments.sort((a: StudSpComment, b: StudSpComment) => {
       if (a.recipient.studentProfile.person.lastName > b.recipient.studentProfile.person.lastName) { return 1; }
       if (a.recipient.studentProfile.person.lastName < b.recipient.studentProfile.person.lastName) { return -1; }
+      if (a.recipient.studentProfile.person.firstName > b.recipient.studentProfile.person.firstName) {return 1;}
+      if (a.recipient.studentProfile.person.firstName < b.recipient.studentProfile.person.firstName) {return -1;}
       return 0;
     });
   }

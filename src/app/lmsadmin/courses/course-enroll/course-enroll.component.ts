@@ -37,20 +37,16 @@ export class CourseEnrollComponent implements OnInit {
     this.course.students.sort((a: StudentInCourse, b: StudentInCourse) => {
       if (a.student.person.lastName < b.student.person.lastName) return -1;
       if (a.student.person.lastName > b.student.person.lastName) return 1;
-      if (a.student.person.lastName === b.student.person.lastName) {
-        if (a.student.person.firstName < b.student.person.firstName) return -1;
-        if (a.student.person.firstName < b.student.person.firstName) return 1;
-      };
+      if (a.student.person.firstName > b.student.person.firstName) {return 1;}
+      if (a.student.person.firstName < b.student.person.firstName) {return -1;}
       return 0;
     });
 
     this.course.faculty.sort((a: FacultyInCourse, b: FacultyInCourse) => {
       if (a.facultyProfile.person.lastName < b.facultyProfile.person.lastName) return -1;
       if (a.facultyProfile.person.lastName > b.facultyProfile.person.lastName) return 1;
-      if (a.facultyProfile.person.lastName === b.facultyProfile.person.lastName) {
-        if (a.facultyProfile.person.firstName < b.facultyProfile.person.firstName) return -1;
-        if (a.facultyProfile.person.firstName < b.facultyProfile.person.firstName) return 1;
-      };
+      if (a.facultyProfile.person.firstName < b.facultyProfile.person.firstName) return -1;
+      if (a.facultyProfile.person.firstName < b.facultyProfile.person.firstName) return 1;
       return 0;
     });
 

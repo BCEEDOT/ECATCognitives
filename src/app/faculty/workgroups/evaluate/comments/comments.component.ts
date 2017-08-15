@@ -83,6 +83,8 @@ export class CommentsComponent implements OnInit {
     this.authoredComments.sort((a: StudSpComment, b: StudSpComment) => {
       if (a.recipient.studentProfile.person.lastName > b.recipient.studentProfile.person.lastName) {return 1;}
       if (a.recipient.studentProfile.person.lastName < b.recipient.studentProfile.person.lastName) {return -1;}
+      if (a.recipient.studentProfile.person.firstName > b.recipient.studentProfile.person.firstName) {return 1;}
+      if (a.recipient.studentProfile.person.firstName < b.recipient.studentProfile.person.firstName) {return -1;}
       return 0;
     });
 

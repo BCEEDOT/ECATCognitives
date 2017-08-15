@@ -67,6 +67,8 @@ export class StatusComponent implements OnInit {
     this.members.sort((a: CrseStudExtended, b: CrseStudExtended) => {
       if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) {return 1;}
       if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) {return -1;}
+      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
+      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
       return 0;
     })
 

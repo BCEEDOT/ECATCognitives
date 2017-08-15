@@ -37,6 +37,8 @@ export class StratOverviewComponent implements OnInit {
     this.membersResults.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
       if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
       if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
+      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
+      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
       return 0;
     });
 
