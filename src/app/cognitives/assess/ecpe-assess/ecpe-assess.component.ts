@@ -46,8 +46,8 @@ export class EcpeAssessComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub1.unsubscribe();
     this.sub2.unsubscribe();
-    this.cogAssessService.cogActiveInventory(null);
-    this.cogAssessService.cogInventories(null);
+    // this.cogAssessService.cogActiveInventory(null);
+    // this.cogAssessService.cogInventories(null);
 
     // this.cogAssessService.cogActiveInventory$.unsubscribe();
     // this.cogAssessService.cogInventories$.unsubscribe();

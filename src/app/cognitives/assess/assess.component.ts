@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from "rxjs/Observable";
 import { MdSnackBar } from '@angular/material';
@@ -26,8 +26,8 @@ export class AssessComponent implements OnInit {
     cogName: string;
 
     constructor(
-        private route: ActivatedRoute, private cogAssessService: CogAssessService, 
-        private dialogService: TdDialogService, 
+        private route: ActivatedRoute, private cogAssessService: CogAssessService,
+        private dialogService: TdDialogService,
         private loadingService: TdLoadingService,
         private router: Router,
         private snackBarService: MdSnackBar
@@ -37,6 +37,11 @@ export class AssessComponent implements OnInit {
         });
         this.cogInventories$ = route.data.pluck('assess')
     }
+
+    ngOnDestroy() {
+        this.cogAssessService.cogActiveInventory(null);
+        this.cogAssessService.cogInventories(null);
+    };
 
     ngOnInit() {
         this.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
@@ -77,11 +82,11 @@ export class AssessComponent implements OnInit {
             if (confirmed) {
                 this.loadingService.register();
                 this.cogAssessService.saveAssess().subscribe(value => {
-                this.router.navigate(['/cognitives/result/' + this.cogAssessId]);
-                }), 
-            (error) => { 
-              this.snackBarService.open('Error saving assessment, please try again', 'Dismiss', { duration: 2000 })
-            } ;
+                    this.router.navigate(['/cognitives/result/' + this.cogAssessId]);
+                }),
+                    (error) => {
+                        this.snackBarService.open('Error saving assessment, please try again', 'Dismiss', { duration: 2000 })
+                    };
 
             }
         });
