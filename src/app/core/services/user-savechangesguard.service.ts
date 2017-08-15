@@ -5,15 +5,20 @@ import { Observable, Observer } from 'rxjs/Rx';
 
 import { AppComponent } from "../../../app/app.component";
 import { UserDataContext } from "./data/user-data-context.service";
+import { GlobalService } from "./global.service";
 
 @Injectable()
 export class UserSaveChangesGuard implements CanDeactivate<AppComponent> {
 
-  constructor(private dialogService: TdDialogService, private userDataContext: UserDataContext) { }
+  constructor(private dialogService: TdDialogService, private userDataContext: UserDataContext, private global: GlobalService) { }
 
   canDeactivate(appComponent: AppComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot): boolean {
 
     let hasChanges = this.userDataContext.hasChanges();
+
+    if (!this.global.persona.value.person.registrationComplete) {
+      return false;
+    }
 
     if (!hasChanges) {
       return true;
