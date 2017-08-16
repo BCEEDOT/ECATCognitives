@@ -128,6 +128,10 @@ export class CommentDialog implements OnInit {
         this.comment.flag.entityAspect.rejectChanges();
         this.comment.entityAspect.rejectChanges();
         this.dialogRef.close();
+      } else if (this.comment.entityAspect.entityState.isAdded() && this.comment.commentText === "" ){
+        this.comment.flag.entityAspect.rejectChanges();
+        this.comment.entityAspect.rejectChanges();
+        this.dialogRef.close();
       } else {
       
         this.dialogService.openConfirm({
