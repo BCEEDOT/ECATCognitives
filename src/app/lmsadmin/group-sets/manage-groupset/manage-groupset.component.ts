@@ -45,18 +45,25 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   unassignedStudents: CrseStudentInGroup[] = [];
   flights: number[] = [];
   workGroupCategory: string;
-  //disabled = false;
   allExpanded: boolean = false;
   searchInputTerm: string;
   editDialogRef: MdDialogRef<EditGroupDialogComponent>;
   addDialogRef: MdDialogRef<AddGroupDialogComponent>;
-  //destroy$ = new Subject();
-  //dragging$ = new Observable();
-  dropSubscription = new Subject();
+  ngUnsubscribe: Subject<any> = new Subject<any>();
   usedFlightNumbers: string[] = [];
   isUnassignedPanelExpanded: boolean = false;
   readOnly: boolean = false;
   canSaveFlag: boolean = true;
+  newGroupStatus: string;
+  assignedSpInstrumentId: number;
+  workGroupModelId: number;
+  testStatus = {
+    await: 'Awaiting Creation',
+    created: 'Created',
+    inUse: 'In Use',
+    reviewed: 'Reviewed',
+    pub: 'Published',
+  };
 
   constructor(private lmsadminDataContext: LmsadminDataContextService,
     private dragulaService: DragulaService,
@@ -79,12 +86,13 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       this.courseId = params['crsId'];
     });
 
-    this.dropSubscription = dragulaService.drop.subscribe((value) => {
-      // console.log(`drop: ${value[0]}`);
-      this.onDrop(value.slice(1));
-    });
+    dragulaService.drop.takeUntil(this.ngUnsubscribe)
+      .subscribe((value) => {
+        // console.log(`drop: ${value[0]}`);
+        this.onDrop(value.slice(1));
+      });
 
-    this.lmsadminDataContext.entityChanged.subscribe(value => {
+    this.lmsadminDataContext.entityChanged.takeUntil(this.ngUnsubscribe).subscribe(value => {
 
       let action = value.entityAction;
 
@@ -117,6 +125,8 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       this.readOnly = true;
       this.isUnassignedPanelExpanded = true;
     }
+
+
 
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
     let courseMembers = this.course.students;
@@ -155,13 +165,12 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     this.workGroups.forEach(workGroup => {
       workGroup['isExpanded'] = false;
       workGroup['canEdit'] = false;
-      if (workGroup.mpSpStatus === MpSpStatus.open || workGroup.mpSpStatus === MpSpStatus.created ) {
+      if (workGroup.mpSpStatus === MpSpStatus.open || workGroup.mpSpStatus === MpSpStatus.created) {
         workGroup['canEdit'] = true;
       }
 
-      console.log(workGroup.mpSpStatus);
     });
-    
+
     this.changes = this.lmsadminDataContext.getChanges();
 
   }
@@ -169,33 +178,56 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     //Wait for both observables to emit a value before continuing.
-    this.workGroups$.zip(this.course$).subscribe(data => {
+    this.workGroups$.zip(this.course$).takeUntil(this.ngUnsubscribe).subscribe(data => {
       this.workGroups = data[0];
       this.course = data[1];
       this.activate();
     });
 
+    this.groupSetInfo();
   }
 
   ngOnDestroy() {
     //Clean up the drop subscription to prevent errors. 
-    this.dropSubscription.unsubscribe();
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  groupSetInfo(): void {
+    let workGroupModel = this.lmsadminWorkGroupService.workGroupModels$.value
+      .filter(wgm => wgm.mpWgCategory === this.workGroupCategory)[0];
+
+    this.workGroupModelId = workGroupModel.id;
+    this.assignedSpInstrumentId = workGroupModel.assignedSpInstrId;
+
+    switch (workGroupModel.status) {
+      case this.testStatus.created:
+        this.newGroupStatus = MpSpStatus.created;
+        break;
+      case this.testStatus.inUse:
+        this.newGroupStatus = MpSpStatus.open;
+        break;
+      default:
+        this.newGroupStatus = null;
+    }
+
+    console.log(workGroupModel);
+
   }
 
   addGroup(): void {
 
     //Required in database WgModelId, CourseId, isPrimary
     let initial = {
-      courseId: this.workGroups[0].courseId,
+      courseId: +this.courseId,
       defaultName: '',
       customName: '',
       groupNumber: '',
       isPrimary: true,
-      assignedSpInstrId: this.workGroups[0].assignedSpInstrId,
+      assignedSpInstrId: this.assignedSpInstrumentId,
       mpCategory: this.workGroupCategory,
-      mpSpStatus: "Open",
-      wgModelId: this.workGroups[0].wgModelId,
-      //workGroupId: 93838 //How does this get created?
+      mpSpStatus: this.newGroupStatus,
+      wgModelId: this.workGroupModelId,
     } as WorkGroup;
 
     let workGroup = this.lmsadminDataContext.createWorkGroup(initial);
@@ -231,6 +263,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           this.lmsadminDataContext.namedCommit(saveArray).then(() => {
             workGroup.changeDescription = `${workGroup.defaultName} added`;
             this.changes = this.lmsadminDataContext.getChanges();
+            workGroup['canEdit'] = true;
             this.workGroups.push(workGroup);
             this.getFlightNames();
             this.snackBar.open('WorkGroup Created!', 'Dismiss', { duration: 2000 });
@@ -328,7 +361,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       }
 
       if (change.entityAspect.entity instanceof WorkGroup) {
-        
+
         if (change.groupMembers.length === 0) {
           this.workGroups = this.workGroups.filter(wg => wg.workGroupId !== change.workGroupId);
           change.entityAspect.rejectChanges();
