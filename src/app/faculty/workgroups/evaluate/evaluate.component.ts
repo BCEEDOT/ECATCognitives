@@ -141,7 +141,7 @@ export class EvaluateComponent implements OnInit {
         if (this.workGroup.spComments.length > 0) {
           commentIncomplete = this.workGroup.spComments.some(com => com.flag.mpFaculty === null);
         } else {
-          commentIncomplete = true;
+          commentIncomplete = false;
         }
         if (this.canReview) { this.canReview = !commentIncomplete; }
         this.facWorkGroupService.commentsComplete(!commentIncomplete);
