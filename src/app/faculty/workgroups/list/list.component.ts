@@ -64,7 +64,7 @@ export class ListComponent implements OnInit {
     const grpName = {};
 
     if (this.course.workGroups) {
-      this.workGroups = this.workGroupOrig = this.course.workGroups;
+      this.workGroups = this.workGroupOrig = this.course.workGroups.filter(wg => wg.mpSpStatus !== MpSpStatus.created);
 
       this.workGroups.forEach((g, i, array) => {
         grpName[g.groupNumber] = null;
