@@ -25,10 +25,11 @@ import { AuthService } from "./core/services/auth.service";
 })
 export class AppComponent implements OnInit {
 
-  persona: ILoggedInUser = <ILoggedInUser>{};
+  persona: ILoggedInUser;
   isFaculty: boolean = false;
   isStudent: boolean = false;
   isLmsAdmin: boolean = false;
+  cleanName: string;
   @ViewChild('tokenref') tokenRef: ElementRef;
 
   constructor(private _iconRegistry: MdIconRegistry,
@@ -83,7 +84,7 @@ export class AppComponent implements OnInit {
           //Temporary workaround for Teradata beta5
           //Promise.resolve(null).then(() => {this.loadingService.register(); })
           this.loadingService.register();
-          
+
           console.log('loader ON');
         } else {
           //Temporary workaround for Teradata beta5
@@ -124,9 +125,12 @@ export class AppComponent implements OnInit {
       console.log("User has been updated in app Component")
       this.persona = user;
       if (this.persona) {
-        this.isStudent = this.persona.isStudent;
-        this.isFaculty = this.persona.isFaculty;
-        this.isLmsAdmin = this.persona.isLmsAdmin;
+        if (this.persona.person) {
+          this.cleanName = `${this.persona.person.lastName}, ${this.persona.person.firstName}`;
+          this.isStudent = this.persona.isStudent;
+          this.isFaculty = this.persona.isFaculty;
+          this.isLmsAdmin = this.persona.isLmsAdmin;
+        }
       }
     });
 
@@ -135,7 +139,7 @@ export class AppComponent implements OnInit {
   ngAfterViewInit() {
     //there has to be a better way to do this
     //TODO: Implement error handling
-    if (this.tokenRef.nativeElement.ownerDocument.body.children[0].tagName === 'ECAT-APP'){
+    if (this.tokenRef.nativeElement.ownerDocument.body.children[0].tagName === 'ECAT-APP') {
       //if we aren't coming through LTI the first child seems to be the ECAT-APP element that contains the angular version
       return;
     }
@@ -155,7 +159,7 @@ export class AppComponent implements OnInit {
         //closeButton: 'Dismiss'
       });
     }
-    
+
   }
 
   logout() {

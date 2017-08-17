@@ -1,6 +1,6 @@
 <div #tokenref></div>
 <td-layout #layout>
-  <td-navigation-drawer logo="assets:covalent" sidenavTitle="" name={{persona?.person?.firstName}}{{persona?.person?.lastName}}
+  <td-navigation-drawer name={{cleanName}}
     email={{persona?.person?.email}}>
     <md-nav-list>
       <a md-list-item routerLink="/dashboard" (click)="layout.close()">
