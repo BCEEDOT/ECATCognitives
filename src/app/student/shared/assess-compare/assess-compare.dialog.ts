@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, TemplateRef, ContentChild } from '@angular/core';
+import { Component, Inject, ViewChild, TemplateRef, ContentChild } from '@angular/core';
 import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
 import { TdChipsComponent } from "@covalent/core";
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -11,7 +11,7 @@ import { WorkGroup, SpResponse } from "../../../core/entities/student/index";
   styleUrls: ['./assess-compare.dialog.scss'],
   viewProviders: [TdChipsComponent]
 })
-export class AssessCompareDialog implements OnInit {
+export class AssessCompareDialog {
 
   @ViewChild(TemplateRef) template: TemplateRef<any>;
   @ContentChild('tooltipTemplate') tooltipTemplate: TemplateRef<any>;
@@ -23,7 +23,6 @@ export class AssessCompareDialog implements OnInit {
   chipAddition: boolean = true;
   itemsRequireMatch: string[] = [];
   items: string[] = [];
-  //behaviorKey: string[] = [];
 
   view: any[] = [900, 400];
 
@@ -54,16 +53,16 @@ export class AssessCompareDialog implements OnInit {
     });
 
     groupMembers.forEach(mem => {
-      let memData = { 
+      let memData = {
         name: '',
         series: []
       };
 
-      memData.name = mem.studentProfile.person.firstName.slice(0,1) + '. ' + mem.studentProfile.person.lastName;
-      if (mem.assesseeSpResponses || mem.assesseeSpResponses.length > 0){
+      memData.name = mem.studentProfile.person.firstName.slice(0, 1) + '. ' + mem.studentProfile.person.lastName;
+      if (mem.assesseeSpResponses || mem.assesseeSpResponses.length > 0) {
         mem.assesseeSpResponses.sort((a: SpResponse, b: SpResponse) => {
-          if (a.inventoryItem.displayOrder < b.inventoryItem.displayOrder) {return -1;}
-          if (a.inventoryItem.displayOrder > b.inventoryItem.displayOrder) {return 1;}
+          if (a.inventoryItem.displayOrder < b.inventoryItem.displayOrder) { return -1; }
+          if (a.inventoryItem.displayOrder > b.inventoryItem.displayOrder) { return 1; }
           return 0;
         });
 
@@ -76,10 +75,7 @@ export class AssessCompareDialog implements OnInit {
           behavior.name = resp.inventoryItem.behavior.slice(0, 15);
           behavior.value = resp.itemModelScore;
           memData.series.push(behavior);
-          // if (this.behaviorKey.length < mem.assesseeSpResponses.length) {
-          //   let invKey = 'Behavior ' + i + ': ' + resp.inventoryItem.behavior;
-          //   this.behaviorKey.push(invKey);
-          // }
+
           i++;
         });
       }
@@ -88,7 +84,6 @@ export class AssessCompareDialog implements OnInit {
     this.multiOriginal = this.multi;
 
     this.multi.forEach(data => {
-      //this.items.push(data.name);
       this.itemsRequireMatch.push(data.name);
     })
 
@@ -115,27 +110,8 @@ export class AssessCompareDialog implements OnInit {
   }
 
   remove(value: string): void {
-    //console.log(value);
     this.items.push(value);
     this.multi = this.multi.filter(data => data.name != value);
-  }
-
-  ngOnInit() {
-    //console.log(this.itemsRequireMatch);
-    console.log(this.multi);
-  }
-
-  // onSelect(event) {
-
-  //   this.multi = this.multi.filter(data => data.name != event);
-    
-  //   console.log(event);
-
-
-  // }
-
-  reset(): void {
-    // this.multi = this.multiOriginal;
   }
 
   ratings(val: any): any {
@@ -161,5 +137,4 @@ export class AssessCompareDialog implements OnInit {
       return 'HEA'
     }
   }
-
 }
