@@ -1,4 +1,3 @@
-import { groupBy } from 'rxjs/operator/groupBy';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from "@angular/router";
@@ -7,10 +6,6 @@ import { EntityAction } from 'breeze-client';
 import 'rxjs/add/operator/pluck';
 import 'rxjs/add/operator/zip';
 import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/mapTo';
-import 'rxjs/add/operator/merge';
-import 'rxjs/add/operator/startWith';
-//import * as _ from "lodash";
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import { DragulaService } from "ng2-dragula";
@@ -29,7 +24,6 @@ import { AddGroupDialogComponent } from "./add-group-dialog/add-group-dialog.com
   templateUrl: './manage-groupset.component.html',
   styleUrls: ['./manage-groupset.component.scss']
 })
-
 
 export class ManageGroupsetComponent implements OnInit, OnDestroy {
 

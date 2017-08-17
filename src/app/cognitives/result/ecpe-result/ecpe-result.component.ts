@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import * as _ from "lodash";
+import { isEmpty } from "lodash"
 
 import { CogEcpeResult } from "../../../core/entities/user";
 import { CogResultsService } from "../../services/cog-results.service";
@@ -26,7 +26,7 @@ export class EcpeResultComponent implements OnInit {
             this.ecpeResult = res;
         });
 
-        if (_.isEmpty(this.ecpeResult)) {
+        if (isEmpty(this.ecpeResult)) {
             this.router.navigate(['/cognitives']);
         }
 

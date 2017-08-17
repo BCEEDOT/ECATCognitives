@@ -1,11 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common'
 import { Subscriber } from 'rxjs/Subscriber';
-
 import { Router, ActivatedRoute } from '@angular/router';
 import { TdLoadingService } from "@covalent/core";
-//import * as _ from "lodash";
-//import 'rxjs/add/operator/pluck';
 
 import { WorkGroup, CrseStudentInGroup, Course } from "../../../core/entities/faculty";
 import { FacWorkgroupService } from "../../services/facworkgroup.service";

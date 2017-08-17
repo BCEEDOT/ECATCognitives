@@ -5,7 +5,7 @@ import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 import { QueryResult } from 'breeze-client';
 import { Observable } from 'rxjs/Observable';
-import * as _ from "lodash";
+
 import 'rxjs/add/operator/pluck';
 
 import { CogEcmspeResult, CogEcpeResult, CogEsalbResult, CogEtmpreResult, CogInstrument } from "../core/entities/user";

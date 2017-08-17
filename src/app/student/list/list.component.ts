@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Subscription } from 'rxjs/Rx';
+import { Component, OnInit, ViewContainerRef, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
-import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 
@@ -11,13 +11,12 @@ import { GlobalService } from "../../core/services/global.service"
 import { StudentDataContext } from "../services/student-data-context.service";
 import { MpSpStatus } from "../../core/common/mapStrings";
 
-
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
   //lastCloseResult: string;
   assessComplete: boolean = false;
@@ -33,6 +32,8 @@ export class ListComponent implements OnInit {
   paramCourseId: number;
   isLoading: boolean = false;
   readOnly: boolean = false;
+  subs: Subscription[] = [];
+  
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private studentDataContext: StudentDataContext,
@@ -48,19 +49,19 @@ export class ListComponent implements OnInit {
 
     });
 
-    this.workGroupService.isLoading$.subscribe(value => {
+    this.subs.push(this.workGroupService.isLoading$.subscribe(value => {
       this.isLoading = value;
-    });
+    }));
 
-    this.workGroupService.assessComplete$.subscribe(ac => {
+    this.subs.push(this.workGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
       this.assessStatusIcon = (this.assessComplete) ? "check_circle" : "error_outline";
-    });
+    }));
 
-    this.workGroupService.stratComplete$.subscribe(sc => {
+    this.subs.push(this.workGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
       this.stratStatusIcon = (this.stratComplete) ? "check_circle" : "error_outline";
-    });
+    }));
 
   }
 
@@ -69,12 +70,15 @@ export class ListComponent implements OnInit {
       this.activeWorkGroup = workGroup;
       this.activate();
     });
-
-
-
   }
 
-  private activate(force?: boolean): void {
+  ngOnDestroy(): void {
+    this.subs.forEach(sub => {
+      sub.unsubscribe();
+    });
+  }
+
+  activate(force?: boolean): void {
 
     const userId = this.global.persona.value.person.personId;
     this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
@@ -84,9 +88,6 @@ export class ListComponent implements OnInit {
     this.workGroupService.isLoading(false);
 
     let memberIds = Object.keys(this.user.statusOfPeer);
-
-    console.log(this.user.statusOfPeer[memberIds[0]].assessComplete);
-
 
     let assessIncomplete = this.activeWorkGroup.groupMembers.some(mem => {
       let hasAssess: boolean = false;
@@ -104,7 +105,6 @@ export class ListComponent implements OnInit {
       let hasStrat: boolean = false;
 
       memberIds.forEach(id => {
-        console.log(this.user.statusOfPeer[+id]);
         if (!this.user.statusOfPeer[+id].stratComplete) { hasStrat = true; }
       });
 

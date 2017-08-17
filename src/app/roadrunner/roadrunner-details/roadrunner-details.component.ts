@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
 import { Location } from '@angular/common'
 
-import * as _ from "lodash"; 
+import { isEmpty} from "lodash"; 
 
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -58,7 +58,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
         this.checkNew = (this.route.snapshot.params['id']);
 
-        if(_.isEmpty(this.event) && this.checkNew != "New"){
+        if(isEmpty(this.event) && this.checkNew != "New"){
             this.router.navigate(['roadrunnerStudent/']);
         }
 

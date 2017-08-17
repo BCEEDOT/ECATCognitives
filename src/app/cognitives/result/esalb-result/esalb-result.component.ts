@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import * as _ from "lodash";
+import { isEmpty } from "lodash"
 
 import { CogEsalbResult } from "../../../core/entities/user";
 import { CogResultsService } from "../../services/cog-results.service";
@@ -21,7 +21,7 @@ export class EsalbResultComponent implements OnInit {
       this.esalbResult = res;
     });
 
-    if (_.isEmpty(this.esalbResult)) {
+    if (isEmpty(this.esalbResult)) {
       this.router.navigate(['/cognitives']);
     }
   }

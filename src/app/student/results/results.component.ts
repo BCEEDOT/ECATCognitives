@@ -26,24 +26,19 @@ export class ResultsComponent implements OnInit {
     private studentDataContext: StudentDataContext, private dialogService: TdDialogService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
 
+    this.route.params.subscribe(params => {
+      this.paramWorkGroupId = +params['wrkGrpId'];
+    });
 
   }
 
   ngOnInit() {
     this.isLoading = true;
 
-    this.loadingService.register('isLoading');
-
-    this.route.params.subscribe(params => {
-      this.paramWorkGroupId = +params['wrkGrpId'];
-    });
-
     this.studentDataContext.fetchWgResult(this.paramWorkGroupId)
       .then((results: SpResult) => {
         this.memberResults = results;
         this.workGroup = this.memberResults.workGroup;
-        this.activate();
-        this.loadingService.resolve('isLoading');
         this.isLoading = false;
       }).catch(error => {
         this.dialogService.openAlert({
@@ -51,10 +46,6 @@ export class ResultsComponent implements OnInit {
           title: 'Load Error',
         });
       });
-  }
-
-  activate(): void {
-    console.log(this.memberResults);
   }
 
 }

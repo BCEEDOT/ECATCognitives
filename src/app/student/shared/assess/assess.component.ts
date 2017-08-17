@@ -1,6 +1,8 @@
-import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output } from '@angular/core';
+import { Subject } from "rxjs/Subject";
+import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
+import 'rxjs/add/operator/takeUntil';
 
 import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/student";
 import { WorkGroupService } from "../../services/workgroup.service";
@@ -14,7 +16,7 @@ import { MpSpStatus } from "../../../core/common/mapStrings";
   templateUrl: './assess.component.html',
   styleUrls: ['./assess.component.scss']
 })
-export class AssessComponent implements OnInit, OnChanges {
+export class AssessComponent implements OnInit, OnChanges, OnDestroy {
 
   activeWorkGroup: WorkGroup;
   user: CrseStudentInGroup;
@@ -25,6 +27,7 @@ export class AssessComponent implements OnInit, OnChanges {
   checked = false;
   disabled = false;
   stratToggle: boolean = false;
+  ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
@@ -38,6 +41,11 @@ export class AssessComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.activate();
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   activate() {
@@ -73,7 +81,7 @@ export class AssessComponent implements OnInit, OnChanges {
   }
 
   comment(recipient: CrseStudentInGroup): any {
-    this.spProvider.loadComment(recipient).subscribe(() => { this.activate() });
+    this.spProvider.loadComment(recipient).takeUntil(this.ngUnsubscribe).subscribe(() => { this.activate() });
   }
 
 }

@@ -6,7 +6,6 @@ import { Subject } from 'rxjs/Subject';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MdSnackBar } from "@angular/material";
 import { TdDialogService, TdLoadingService } from "@covalent/core";
-import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 
 import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";

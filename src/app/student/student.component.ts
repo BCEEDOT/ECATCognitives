@@ -5,7 +5,6 @@ import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
 import { Observable } from 'rxjs/Observable';
-import * as _ from "lodash";
 import 'rxjs/add/operator/pluck';
 import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
 import { DOCUMENT } from '@angular/platform-browser';
@@ -25,7 +24,6 @@ import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dial
 })
 export class StudentComponent implements OnInit {
 
-  //courses: Observable<Course[]>;
   activeCourseId: number;
   courses$: Observable<Course[]>;
   courses: Course[];
