@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
@@ -22,7 +22,7 @@ export class StratComponent implements OnInit {
     courseId: number;
     readOnly: boolean = false;
 
-    constructor(private spProvider: SpProviderService, private facultyDataContext: FacultyDataContextService,
+    constructor(private spProvider: SpProviderService, private facultyDataContext: FacultyDataContextService, private loadingService: TdLoadingService,
         private dialogService: TdDialogService, private snackBarService: MdSnackBar, private route: ActivatedRoute, private facWorkGroupService: FacWorkgroupService) {
 
         this.route.params.subscribe(params => {
@@ -99,6 +99,7 @@ export class StratComponent implements OnInit {
     }
 
     saveChanges(): void {
+        this.loadingService.register();
         const that = this;
         this.evaluateStrat(true);
 
@@ -106,40 +107,43 @@ export class StratComponent implements OnInit {
             .some(gm => !gm.stratIsValid);
 
         if (hasErrors) {
+            this.loadingService.resolve();
             this.dialogService.openAlert({
                 message: 'Your proposed changes contain errors, please ensure all proposed changes are valid before saving'
+            });
+        } else {
+
+            const gmWithChanges = this.groupMembers
+                .filter(gm => gm.proposedStratPosition !== null);
+
+            const changeSet = [] as Array<number>;
+
+            gmWithChanges.forEach(gm => {
+                const stratResponse = this.facultyDataContext.getSingleStrat(this.courseId, this.workGroupId, gm.studentId);
+                stratResponse.stratPosition = gm.proposedStratPosition;
+                changeSet.push(gm.studentId);
+            });
+
+            this.spProvider.save().then(() => {
+                this.loadingService.resolve();
+                this.groupMembers
+                    .filter(gm => changeSet.some(cs => cs === gm.studentId))
+                    .forEach(gm => {
+                        gm.updateStatusOfStudent();
+                        gm.stratValidationErrors = [];
+                        gm.stratIsValid = true;
+                        gm.proposedStratPosition = null;
+                    });
+                this.facWorkGroupService.stratComplete(true);
+                this.snackBarService.open("Success, Strats Updated!", 'Dismiss', { duration: 2000 });
+            }).catch((error) => {
+                this.loadingService.resolve();
+                this.dialogService.openAlert({
+                    message: 'There was an error saving your changes, please try again.'
+                })
             })
+
         }
-
-        const gmWithChanges = this.groupMembers
-            .filter(gm => gm.proposedStratPosition !== null);
-
-        const changeSet = [] as Array<number>;
-
-        gmWithChanges.forEach(gm => {
-            const stratResponse = this.facultyDataContext.getSingleStrat(this.courseId, this.workGroupId, gm.studentId);
-            stratResponse.stratPosition = gm.proposedStratPosition;
-            changeSet.push(gm.studentId);
-        });
-
-        this.spProvider.save().then(() => {
-
-            this.groupMembers
-                .filter(gm => changeSet.some(cs => cs === gm.studentId))
-                .forEach(gm => {
-                    gm.updateStatusOfStudent();
-                    gm.stratValidationErrors = [];
-                    gm.stratIsValid = true;
-                    gm.proposedStratPosition = null;
-                });
-            this.facWorkGroupService.stratComplete(true);
-            this.snackBarService.open("Success, Strats Updated!", 'Dismiss', { duration: 2000 });
-        }).catch((error) => {
-            this.dialogService.openAlert({
-                message: 'There was an error saving your changes, please try again.'
-            })
-        })
-
     }
 
 }
