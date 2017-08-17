@@ -20,8 +20,8 @@
         <button md-raised-button (click)="activeInventory.behaviorEffect=respEnum.he; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorEffect===respEnum.he}" [disabled]="viewOnly && activeInventory.behaviorEffect!==respEnum.he">Highly Effective</button>
         <span></span>
         <div style="float:right">
-          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.alw; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.alw}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.alw">Always</button>
           <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.usl; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.usl}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.usl">Usually</button>
+          <button md-raised-button (click)="activeInventory.behaviorFreq=respEnum.alw; saveCheck()" [ngClass]="{'btn-selected': activeInventory.behaviorFreq===respEnum.alw}" [disabled]="viewOnly && activeInventory.behaviorFreq!==respEnum.alw">Always</button>
         </div>
       </div>
       <div *ngIf="!activeInventory.behaveDisplayed">
