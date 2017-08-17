@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Location } from '@angular/common';
 import { MdSnackBar } from '@angular/material';
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 
 import { WorkGroup, CrseStudentInGroup, StudSpComment } from "../../../../core/entities/faculty";
 import { ActivatedRoute } from "@angular/router";
@@ -30,6 +30,7 @@ export class CommentsComponent implements OnInit {
     private ctx: FacultyDataContextService,
     private snackBar: MdSnackBar,
     private dialogService: TdDialogService,
+    private loadingService: TdLoadingService,
     private facWorkGroupService: FacWorkgroupService,) { }
 
   @Input() members: CrseStudentInGroup[];
@@ -134,12 +135,15 @@ export class CommentsComponent implements OnInit {
   }
 
   save() {
+    this.loadingService.register();
     this.ctx.commit().then(fulfilled => {
+      this.facWorkGroupService.isLoading(false);
       this.snackBar.open('Comment Flags Saved!', 'Dismiss', {duration: 2000});
       if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
-        this.facWorkGroupService.commentsComplete(true);
+        this.loadingService.resolve();
       }
     }, (reject => {
+      this.loadingService.resolve();    
       this.dialogService.openAlert({message: 'There was a problem saving your flags, please try again.', title: 'Save Error'});
     }));
   }
