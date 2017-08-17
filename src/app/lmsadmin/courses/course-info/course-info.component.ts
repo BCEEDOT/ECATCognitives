@@ -52,6 +52,11 @@ export class CourseInfoComponent implements OnInit {
   }
 
   save(){
+    if (this.course.classNumber === null || this.course.classNumber === "" || this.course.name === null || this.course.name === "") {
+      this.dialogService.openAlert({message: 'You must have a class number and display name.', title: 'Missing Information'});
+      return;
+    }
+
     this.loadingService.register();
     if (this.course.entityAspect.entityState.isModified()) {
       this.lmsadminDataContextService.commit().then(fulfilled => {
@@ -63,6 +68,7 @@ export class CourseInfoComponent implements OnInit {
       this.dialogService.openAlert({message: 'There was a problem saving, please try again.', title: 'Save Error'});
     }));
     } else {
+      this.loadingService.resolve();
       this.router.navigate(['../../'], { relativeTo: this.route });
     }
   }

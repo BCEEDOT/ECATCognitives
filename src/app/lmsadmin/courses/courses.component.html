@@ -38,11 +38,11 @@
                 <span class="md-subhead"> Course Information </span>
               </button>
               <md-divider></md-divider>
-              <button md-menu-item [routerLink]="[course.id + '/enrollments']"> 
+              <button md-menu-item [routerLink]="[course.id + '/enrollments']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
                 <md-icon> people_outline </md-icon>
                 <span class="md-subhead"> Course Enrollments </span>
               </button>
-              <button md-menu-item [routerLink]="[course.id + '/groupsets']"> 
+              <button md-menu-item [routerLink]="[course.id + '/groupsets']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
                 <md-icon> library_books </md-icon>
                 <span class="md-subhead"> Group Management </span>
               </button>
