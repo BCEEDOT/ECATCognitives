@@ -38,7 +38,7 @@ const facultyRoutes: Routes = [
           {
             path: 'list/:crsId/status/:wrkGrpId',
             component: StatusComponent,
-            resolve: { workGroup: 'facWorkGroupResolver' }
+            resolve: { workGroup: 'facStatusResolver' }
           },
           {
             path: 'list/:crsId/evaluate/:wrkGrpId',
@@ -106,6 +106,10 @@ export function facWorkGroupResolver(facultyDataContext: FacultyDataContextServi
   return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
 }
 
+export function facStatusResolver(facultyDataContext: FacultyDataContextService) {
+  return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId'], true);
+}
+
 // export function listResolver(studentDataContext: StudentDataContext) {
 //   return (route: ActivatedRouteSnapshot) => studentDataContext.list(+route.params['id']);
 // }
@@ -133,6 +137,9 @@ export function facWorkGroupResolver(facultyDataContext: FacultyDataContextServi
     },
     {
       provide: 'facSpAssessResolver', useFactory: facSpAssessResolver, deps: [FacultyDataContextService]
+    },
+    {
+      provide: 'facStatusResolver', useFactory: facStatusResolver, deps: [FacultyDataContextService]
     }
   ]
 })

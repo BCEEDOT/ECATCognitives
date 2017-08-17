@@ -73,6 +73,7 @@ export class StatusComponent implements OnInit {
     })
 
     this.members.forEach(gm => {
+      gm.updateStatusOfStudent();
       const isSelfDone = gm.statusOfPeer[gm.studentId].assessComplete;
       const peers = this.workGroup.groupMembers.filter(mem => mem.studentId !== gm.studentId);
       const peersSpCompletion = peers.map(mem => gm.statusOfPeer[mem.studentId].assessComplete);
