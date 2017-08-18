@@ -1,0 +1,26 @@
+<md-card class="width">
+  <md-card-title>
+    <div fxFlex="100" class="text-center"> Publish {{model.mpWgCategory}} - {{model.name}} Groups </div>
+    <span fxFlex></span>
+    <button md-icon-button (click)="this.activate()"><md-icon>autorenew</md-icon></button>
+  </md-card-title>
+  <md-card-content>
+    <md-list>
+      <md-list-item>
+        <span fxFlex="50">FLIGHT</span>
+        <span fxFlex="25"># OF MEMBERS</span>
+        <span fxFlex="25">STATUS</span>
+      </md-list-item>
+      <md-list-item *ngFor="let grp of model.workGroups">
+          <span fxFlex="50">{{grp.defaultName}} {{grp.customName}}</span>
+          <span fxFlex="25">{{grp.groupMembers.length}}</span>
+          <span fxFlex="25">{{grp.mpSpStatus}}</span>
+      </md-list-item>
+    </md-list>
+  </md-card-content>
+  <md-card-actions>
+    <span fxFlex></span>
+    <button md-raised-button (click)="this.cancel()">Cancel</button>
+    <button md-raised-button (click)="this.publish()">Publish Groups</button>
+  </md-card-actions>
+</md-card>

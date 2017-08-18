@@ -370,7 +370,7 @@ export class FacultyDataContextService extends BaseDataContext {
     if (resultCached && !forcedRefresh) {
       const members = resultCached.filter(gm => gm.workGroupId === groupId && gm.courseId === courseId);
       if (members && members.length !== 0) {
-        if (members.some(member => member.stratResult !== null)) {
+        if (members.every(member => member.stratResult !== null) && members.every(member => member.spResult !== null) && members.every(member => member.assesseeStratResponse.length !== 0) && members.every(member => member.assesseeSpResponses.length !== 0)) {
           const cachedInstrument = that.manager.getEntityByKey(MpEntityType.spInstr, workGroup.assignedSpInstrId) as SpInstrument;
           const cachedInventory = cachedInstrument.inventoryCollection as Array<SpInventory>;
           cachedInventory

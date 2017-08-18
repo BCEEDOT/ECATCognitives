@@ -5,7 +5,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Subject } from 'rxjs/Subject';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MdSnackBar } from "@angular/material";
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import 'rxjs/add/operator/pluck';
 
 import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";
@@ -34,7 +34,8 @@ export class EvaluateComponent implements OnInit {
   paramWorkGroupId: number;
   paramCourseId: number;
   wgName: string;
-  reviewBtnText: string = 'Review';
+  reviewBtnText: string = 'Advance Stat';
+  reopenBtnText: string = 'Return Stat';
   statusMap = MpSpStatus;
 
   assessComplete: boolean;
@@ -47,7 +48,8 @@ export class EvaluateComponent implements OnInit {
     private location: Location,
     private dialogService: TdDialogService,
     private facultyDataContext: FacultyDataContextService,
-    private snackBar: MdSnackBar
+    private snackBar: MdSnackBar,
+    private loadingService: TdLoadingService
   ) {
 
     this.workGroup$ = route.data.pluck('workGroup');
@@ -91,6 +93,7 @@ export class EvaluateComponent implements OnInit {
   }
 
   activate() {
+    this.loadingService.register();
     //this.facWorkGroupService.readOnly(false);
     this.workGroupId = this.workGroup.workGroupId;
     this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
@@ -129,6 +132,7 @@ export class EvaluateComponent implements OnInit {
         break;
       case MpSpStatus.underReview:
         this.reviewBtnText = 'Complete';
+        this.reopenBtnText = 'Re-Open'
         if (this.assessComplete && this.stratComplete) {
           this.canReview = true;
         } else {
@@ -149,7 +153,8 @@ export class EvaluateComponent implements OnInit {
         this.facWorkGroupService.readOnly(false);
         break;
       case MpSpStatus.reviewed:
-        this.reviewBtnText = 'Re-review';
+        this.reviewBtnText = 'Publish';
+        this.reopenBtnText = 'Re-Review'
         this.canReview = true;
         this.showComments = true;
         this.facWorkGroupService.readOnly(true);
@@ -160,6 +165,7 @@ export class EvaluateComponent implements OnInit {
         this.facWorkGroupService.readOnly(true);        
         break;
     }
+    this.loadingService.resolve();
   }
 
   canReviewCheck() {
@@ -226,16 +232,16 @@ export class EvaluateComponent implements OnInit {
           setTo = MpSpStatus.underReview;
           break;
         case MpSpStatus.underReview:
-          message = 'This will set the group as Reviewed and allow the ISA to Publish results. \n\n Are you sure you are done with your review?';
+          message = 'This will set the group as Reviewed and allow the ISA to Publish results at any time. \n\n Are you sure you are done with your review?';
           title = 'Complete Review';
           setTo = MpSpStatus.reviewed;
           setReadOnly = true;
           break;
         case MpSpStatus.reviewed:
-          message = 'This will set the group back to Under Review so you can change assessments/strats/comment flags. Are you sure you want to re-review?';
-          title = 'Re-Review Group';
-          setTo = MpSpStatus.underReview;
-          setReadOnly = false;
+          message = 'This will calculate group results and publish them to students. This action is final and cannot be undone. Are you sure you want to re-review?';
+          title = 'Publish Results';
+          setTo = MpSpStatus.published;
+          setReadOnly = true;
           break;
       }
 
@@ -246,10 +252,20 @@ export class EvaluateComponent implements OnInit {
         cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
+          this.loadingService.register();
           this.workGroup.mpSpStatus = setTo;
           this.facWorkGroupService.readOnly(setReadOnly);
           this.facultyDataContext.commit().then(success => {
+            this.loadingService.resolve();
             this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
+            this.activate();
+          }, rejected => {
+            this.loadingService.resolve();
+            this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+            this.activate();
+          }).catch((e: Event) => {
+            this.loadingService.resolve();
+            this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
             this.activate();
           })
         }
@@ -258,18 +274,52 @@ export class EvaluateComponent implements OnInit {
   }
 
   reopenFlight(){
+    let setTo;
+    let setReadOnly;
+    let message: string = '';
+    let title: string = '';
+    switch (this.workGroup.mpSpStatus) {
+      case (MpSpStatus.underReview):
+        setTo = MpSpStatus.open;
+        setReadOnly = false;
+        message = 'This will open the flight to students allowing them to make changes. Are you sure you want to re-open?';
+        title = 'Re-Open Group';
+        break;
+      case (MpSpStatus.reviewed):
+        setTo = MpSpStatus.underReview;
+        setReadOnly = false;
+        message = 'This will set the group back to Under Review so you can change assessments/strats/comment flags. Are you sure you want to re-review?';
+        title = 'Re-Review Group';
+        break;
+      default:
+        return;
+    }
+
     this.dialogService.openConfirm({
-      message: 'This will open the flight to students allowing them to make changes. Are you sure you want to re-open?',
-      title: 'Re-Open Group',
+      message: message,
+      title: title,
       acceptButton: 'Yes',
       cancelButton: 'No'
     }).afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed){
-        this.workGroup.mpSpStatus = MpSpStatus.open;
+        this.loadingService.register();
+        this.workGroup.mpSpStatus = setTo;
+        this.facWorkGroupService.readOnly(setReadOnly);
         this.facultyDataContext.commit().then(success => {
+          this.loadingService.resolve();
           this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
-          this.showComments = false;
+          if (this.workGroup.mpSpStatus === MpSpStatus.open) {
+            this.showComments = false;
+          }
           this.refreshData();
+        }, rejected => {
+          this.loadingService.resolve();
+          this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+          this.activate();
+        }).catch((e: Event) => {
+          this.loadingService.resolve();
+          this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+          this.activate();
         })
       }
     })

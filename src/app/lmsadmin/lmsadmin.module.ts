@@ -20,6 +20,7 @@ import { EditGroupDialogComponent } from './group-sets/manage-groupset/edit-grou
 import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-dialog/add-group-dialog.component';
 import { PollLmsDialog } from './group-sets/poll-lms-dialog/poll-lms-dialog.component';
 import {MaterialModule, MdNativeDateModule } from "@angular/material";
+import { PublishGroupsetComponent } from './group-sets/publish-groupset/publish-groupset.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,7 @@ import {MaterialModule, MdNativeDateModule } from "@angular/material";
     CourseEnrollComponent,
     ConfigGroupsetComponent,
     CourseInfoComponent, MyHighlightDirective, EditGroupDialogComponent, AddGroupDialogComponent, 
-    PollLmsDialog
+    PollLmsDialog, PublishGroupsetComponent
   ],
   providers: [
     LmsadminAuthGuardService,

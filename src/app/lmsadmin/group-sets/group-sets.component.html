@@ -38,8 +38,8 @@
                 <span class="md-subhead" *ngIf="model.status === testStatus.created || model.status === testStatus.inUse || model.status === testStatus.reviewed"> Manage </span>
                 <span class="md-subhead" *ngIf="model.status === testStatus.pub"> View </span>
               </button>
-              <button md-menu-item (click)="advance(model)" [disabled]="model.status === testStatus.inUse" *ngIf="model.status !== testStatus.pub && model.status !== testStatus.await"> 
-                <md-icon [ngClass]="{'tc-grey-400': model.status === testStatus.inUse}"> forward </md-icon>
+              <button md-menu-item (click)="advance(model)" *ngIf="model.status !== testStatus.pub && model.status !== testStatus.await"> 
+                <md-icon> forward </md-icon>
                 <span class="md-subhead" *ngIf="model.status === testStatus.created"> Open </span>
                 <span class="md-subhead" *ngIf="model.status === testStatus.inUse || model.status === testStatus.reviewed"> Publish </span>
               </button>

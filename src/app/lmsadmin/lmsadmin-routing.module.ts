@@ -10,6 +10,7 @@ import { LmsadminComponent } from "./lmsadmin.component";
 import { CourseEnrollComponent } from "./courses/course-enroll/course-enroll.component";
 import { ConfigGroupsetComponent } from "./group-sets/config-groupset/config-groupset.component";
 import { CourseInfoComponent } from "./courses/course-info/course-info.component";
+import { PublishGroupsetComponent } from "./group-sets/publish-groupset/publish-groupset.component";
 
 const lmsadminRoutes: Routes = [
   { 
@@ -50,6 +51,10 @@ const lmsadminRoutes: Routes = [
         component: ConfigGroupsetComponent,
         //resolve: { course: 'lmsCourseResolver' }
       },
+      {
+        path: 'courses/:crsId/groupsets/:catId/publish',
+        component: PublishGroupsetComponent,
+      }
     ]
   }
 ]

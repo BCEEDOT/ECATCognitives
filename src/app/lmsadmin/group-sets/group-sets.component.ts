@@ -65,15 +65,15 @@ export class GroupSetsComponent implements OnInit {
         return;
       } 
       
-      if (mdl.workGroups.some(grp => grp.mpSpStatus === MpSpStatus.published)) {
-        mdl['status'] = this.testStatus.pub;
-        return; 
-      } 
-      
       if (mdl.workGroups.length === 0) {
         mdl['status'] = this.testStatus.await;
         return;
       } 
+
+      if (mdl.workGroups.every(grp => grp.mpSpStatus === MpSpStatus.published)) {
+        mdl['status'] = this.testStatus.pub;
+        return; 
+      }      
       
       //if all statuses are reviewed
       if (!mdl.workGroups.some(grp => grp.mpSpStatus !== MpSpStatus.reviewed)) {
@@ -131,41 +131,42 @@ export class GroupSetsComponent implements OnInit {
           });
         }
       });
-    } else if (model['status'] === this.testStatus.reviewed) {
-      let grpsWithMems = model.workGroups.filter(grp => {
-            if (grp.groupMembers.length === 0){
-              return false;
-            }
-            if (grp.groupMembers.some(mem => !mem.isDeleted)){
-              return true;
-            }
-          });
+    } else if (model['status'] === this.testStatus.reviewed || model['status'] === this.testStatus.inUse) {
+      this.router.navigate([model.mpWgCategory + '/publish'], {relativeTo: this.route});
+      // let grpsWithMems = model.workGroups.filter(grp => {
+      //       if (grp.groupMembers.length === 0){
+      //         return false;
+      //       }
+      //       if (grp.groupMembers.some(mem => !mem.isDeleted)){
+      //         return true;
+      //       }
+      //     });
 
-      if (!grpsWithMems.some(grp => grp.mpSpStatus !== MpSpStatus.reviewed)){
-        this.dialogService.openConfirm({
-          message: 'Are you sure you want to publish ' + model.mpWgCategory + ' group results to students?',
-          title: 'Publish Groups',
-          acceptButton: 'Yes',
-          cancelButton: 'No',
-        }).afterClosed().subscribe((confirmed: boolean) => {
-          if(confirmed){
-            this.loadingService.register();
-            model.workGroups.forEach(grp => {
-              grp.mpSpStatus = MpSpStatus.published;
-            })
-            this.lmsadminDataContext.commit().then((fulfilled) => {
-              this.snackBar.open(model.mpWgCategory + ' Groups Published!', 'Dismiss', {duration: 2000});
-              this.loadingService.resolve();
-              this.activate();
-            }, (rejected) => {
-              this.loadingService.resolve();
-              this.dialogService.openAlert({message: 'There was a problem publishing the groups on the server. Check all groups\' Evaluate screens to ensure their review data was properly saved.', title: 'Publishing Error'});
-            });
-          }
-        });
-      } else {
-        this.dialogService.openAlert({message: 'There was a problem publishing. Please refresh the page and try again.', title: 'Error Publishing Groups'});
-      }
+      // if (!grpsWithMems.some(grp => grp.mpSpStatus !== MpSpStatus.reviewed)){
+      //   this.dialogService.openConfirm({
+      //     message: 'Are you sure you want to publish ' + model.mpWgCategory + ' group results to students?',
+      //     title: 'Publish Groups',
+      //     acceptButton: 'Yes',
+      //     cancelButton: 'No',
+      //   }).afterClosed().subscribe((confirmed: boolean) => {
+      //     if(confirmed){
+      //       this.loadingService.register();
+      //       model.workGroups.forEach(grp => {
+      //         grp.mpSpStatus = MpSpStatus.published;
+      //       })
+      //       this.lmsadminDataContext.commit().then((fulfilled) => {
+      //         this.snackBar.open(model.mpWgCategory + ' Groups Published!', 'Dismiss', {duration: 2000});
+      //         this.loadingService.resolve();
+      //         this.activate();
+      //       }, (rejected) => {
+      //         this.loadingService.resolve();
+      //         this.dialogService.openAlert({message: 'There was a problem publishing the groups on the server. Check all groups\' Evaluate screens to ensure their review data was properly saved.', title: 'Publishing Error'});
+      //       });
+      //     }
+      //   });
+      // } else {
+      //   this.dialogService.openAlert({message: 'There was a problem publishing. Please refresh the page and try again.', title: 'Error Publishing Groups'});
+      // }
     }
   }
 
