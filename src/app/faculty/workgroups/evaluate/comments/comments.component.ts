@@ -126,12 +126,12 @@ export class CommentsComponent implements OnInit {
   massSetAuthor(){
     let authUnflagged = this.authoredComments.filter(com => com.flag.mpFaculty === null);
     authUnflagged.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
-    this.checkComplete();
+    this.activate();
   }
 
   massResetAuthor(){
     this.authoredComments.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
-    this.checkComplete();
+    this.activate();
   }
 
   save() {
@@ -139,9 +139,8 @@ export class CommentsComponent implements OnInit {
     this.ctx.commit().then(fulfilled => {
       this.facWorkGroupService.isLoading(false);
       this.snackBar.open('Comment Flags Saved!', 'Dismiss', {duration: 2000});
-      if (!this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
-        this.loadingService.resolve();
-      }
+      this.loadingService.resolve();
+      this.activate();
     }, (reject => {
       this.loadingService.resolve();    
       this.dialogService.openAlert({message: 'There was a problem saving your flags, please try again.', title: 'Save Error'});
