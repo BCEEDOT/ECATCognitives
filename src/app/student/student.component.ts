@@ -1,5 +1,5 @@
 import { MpSpStatus } from '../core/common/mapStrings';
-import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnInit, Inject, OnDestroy, ApplicationRef, NgZone, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
@@ -22,7 +22,7 @@ import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dial
   //Limits only to current view and not children
   //viewProviders: [ UsersService ],
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
 
   activeCourseId: number;
   activeWorkGroupId: number;
@@ -33,11 +33,13 @@ export class StudentComponent implements OnInit {
   activeWorkGroup: WorkGroup;
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
-
   dialogRef: MdDialogRef<AssessCompareDialog>;
 
   constructor(private titleService: Title,
     private router: Router,
+    private appRef: ApplicationRef,
+    private ngZone: NgZone,
+    private change: ChangeDetectorRef,
     private route: ActivatedRoute,
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
@@ -46,6 +48,8 @@ export class StudentComponent implements OnInit {
     private workGroupService: WorkGroupService,
     private studentDataContext: StudentDataContext,
     public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
+
+    console.log(Component.name);
 
     this.courses$ = route.data.pluck('assess');
   }
@@ -60,6 +64,19 @@ export class StudentComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.appRef.isStable.subscribe(data => {
+      console.log(data);
+    });
+
+    
+    this.ngZone.onError.subscribe(error => {console.log('THERE WAS AN ERROR')});
+
+    this.ngZone.onStable.subscribe(data => {
+      console.log(this.activeWorkGroup);
+    });
+
+    
+
     console.log('Activate was called');
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
@@ -67,6 +84,10 @@ export class StudentComponent implements OnInit {
       this.activate(false);
     });
 
+  }
+
+  ngOnDestroy(): void {
+    console.log('The component has been destroyed');
   }
 
   activate(force?: boolean): void {
@@ -102,6 +123,7 @@ export class StudentComponent implements OnInit {
     this.activeWorkGroup = workGroup;
     this.activeWorkGroupId = this.activeWorkGroup.workGroupId;
     this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
+
 
     if (this.activeWorkGroup.groupMembers.length < 1) {
       this.setActiveWorkGroup(workGroup);

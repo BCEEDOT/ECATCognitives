@@ -71,17 +71,19 @@ export class ListComponent implements OnInit, OnDestroy {
     //   this.activate();
     // });
 
-    this.workGroupService.workGroup$.subscribe(workGroup => {
+   this.subs.push(this.workGroupService.workGroup$.subscribe(workGroup => {
+      
       this.activeWorkGroup = workGroup;
        this.activate();
-    });
+    }));
 
-      // this.activeWorkGroup = this.workGroupService.workGroup$.value;
+    // this.activeWorkGroup = this.workGroupService.workGroup$.value;
      
     
   }
 
   ngOnDestroy(): void {
+    console.log('List Ondestroy');
     this.subs.forEach(sub => {
       sub.unsubscribe();
     });

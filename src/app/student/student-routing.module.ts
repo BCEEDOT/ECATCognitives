@@ -8,7 +8,6 @@ import { StudentComponent } from './student.component';
 import { ListComponent } from "./list/list.component";
 import { ResultsComponent } from "./results/results.component";
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
-import { RoutereuseService } from "./services/routereuse.service";
 
 const studentRoutes: Routes = [
   {
@@ -54,11 +53,11 @@ const studentRoutes: Routes = [
             component: AssessComponent,
             resolve: { inventories: 'spAssessResolver' }
           }, 
-           {
-             path: '',
-             component: StudentComponent,
-             pathMatch: 'full'
-          }
+          //  {
+          //    path: '',
+          //    component: StudentComponent,
+          //    pathMatch: 'full'
+          // }
         ]
       }
     ]
@@ -113,10 +112,6 @@ export function spAssessResolver(studentDataContext: StudentDataContext) {
     RouterModule
   ],
   providers: [
-    {
-      provide: RouteReuseStrategy,
-      useClass: RoutereuseService
-    },
     {
       provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
     },
