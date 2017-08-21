@@ -238,7 +238,7 @@ export class EvaluateComponent implements OnInit {
           setReadOnly = true;
           break;
         case MpSpStatus.reviewed:
-          message = 'This will calculate group results and publish them to students. This action is final and cannot be undone. Are you sure you want to re-review?';
+          message = 'This will calculate group results and publish them to students. This action is final and cannot be undone. Are you sure you want to publish?';
           title = 'Publish Results';
           setTo = MpSpStatus.published;
           setReadOnly = true;
