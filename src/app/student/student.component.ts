@@ -64,20 +64,6 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.appRef.isStable.subscribe(data => {
-      console.log(data);
-    });
-
-    
-    this.ngZone.onError.subscribe(error => {console.log('THERE WAS AN ERROR')});
-
-    this.ngZone.onStable.subscribe(data => {
-      console.log(this.activeWorkGroup);
-    });
-
-    
-
-    console.log('Activate was called');
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
@@ -91,7 +77,6 @@ export class StudentComponent implements OnInit, OnDestroy {
   }
 
   activate(force?: boolean): void {
-    console.log('Active was called');
     this.courses.sort((crseA: Course, crseB: Course) => {
       if (crseA.startDate < crseB.startDate) return 1;
       if (crseA.startDate > crseB.startDate) return -1;
