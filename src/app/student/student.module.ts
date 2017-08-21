@@ -15,6 +15,7 @@ import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dial
 import { SpProviderModule } from "../provider/sp-provider/sp-provider.module";
 import { BehaviorsComponent } from './results/behaviors/behaviors.component';
 import { CommentsComponent } from './results/comments/comments.component';
+import { RoutereuseService } from "./services/routereuse.service";
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import { CommentsComponent } from './results/comments/comments.component';
     providers: [
         StudentAuthGuard,
         StudentDataContext,
-        WorkGroupService
+        WorkGroupService,
+        RoutereuseService
     ],
     entryComponents: [
         AssessCompareDialog

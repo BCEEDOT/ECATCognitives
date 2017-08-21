@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 
 import { StudentAuthGuard } from './services/student-auth-guard.service';
 import { StudentDataContext } from "./services/student-data-context.service";
@@ -8,6 +8,7 @@ import { StudentComponent } from './student.component';
 import { ListComponent } from "./list/list.component";
 import { ResultsComponent } from "./results/results.component";
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
+import { RoutereuseService } from "./services/routereuse.service";
 
 const studentRoutes: Routes = [
   {
@@ -27,7 +28,7 @@ const studentRoutes: Routes = [
           //   component: AssessComponent,
           //   //Set active course and workgroup. Determine if results are published for active group. 
           // },
-          
+
           {
             path: 'list/:crsId/:wrkGrpId',
             //set to most recent course, allow student to switch between courses.
@@ -36,7 +37,7 @@ const studentRoutes: Routes = [
             //   { path: 'sp', component: SpComponent},
             //   { path: 'comment', component: CommentComponent}
             // ]
-            resolve: { workGroup: 'workGroupResolver' },
+            // resolve: { workGroup: 'workGroupResolver' },
           },
           {
             path: 'results/:crsId/:wrkGrpId',
@@ -52,13 +53,12 @@ const studentRoutes: Routes = [
             path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
             resolve: { inventories: 'spAssessResolver' }
-          },
-          {
-            path: '',
-            component: StudentComponent,
-            resolve: { assess: 'assessmentResolver'},
+          }, 
+           {
+             path: '',
+             component: StudentComponent,
+             pathMatch: 'full'
           }
-
         ]
       }
     ]
@@ -66,12 +66,20 @@ const studentRoutes: Routes = [
 ];
 
 export function assessmentResolver(studentDataContext: StudentDataContext) {
-  return (route: ActivatedRouteSnapshot) => studentDataContext.initCourses();
+
+  return (route: ActivatedRouteSnapshot) => {
+    return studentDataContext.initCourses().then(courses => {
+      return studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId).then(value => {
+        return courses;
+      });
+
+    });
+  }
 }
 
-export function workGroupResolver(studentDataContext: StudentDataContext) {
-  return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId'])
-}
+// export function workGroupResolver(studentDataContext: StudentDataContext) {
+//   return (route: ActivatedRouteSnapshot) => studentDataContext.fetchActiveWorkGroup(+route.params['wrkGrpId'])
+// }
 
 export function spAssessResolver(studentDataContext: StudentDataContext) {
   return (route: ActivatedRouteSnapshot) => studentDataContext.getSpInventory(+route.params['crsId'], +route.params['wrkGrpId'], +route.params['assesseeId']);
@@ -106,11 +114,15 @@ export function spAssessResolver(studentDataContext: StudentDataContext) {
   ],
   providers: [
     {
-      provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
+      provide: RouteReuseStrategy,
+      useClass: RoutereuseService
     },
     {
-      provide: 'workGroupResolver', useFactory: workGroupResolver, deps: [StudentDataContext]
+      provide: 'assessmentResolver', useFactory: assessmentResolver, deps: [StudentDataContext]
     },
+    // {
+    //   provide: 'workGroupResolver', useFactory: workGroupResolver, deps: [StudentDataContext]
+    // },
     {
       provide: 'spAssessResolver', useFactory: spAssessResolver, deps: [StudentDataContext]
     }

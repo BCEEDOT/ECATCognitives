@@ -12,7 +12,7 @@
       <md-icon class="md-24">expand_more</md-icon>
     </button>
       <md-menu x-position="before" #posXMenu="mdMenu" class="before">
-        <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup, false)">
+        <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup)">
           {{workGroup.displayName}}
           </button>
       </md-menu>
@@ -21,14 +21,16 @@
         <md-icon>menu</md-icon>
       </button>
       <md-menu #menu="mdMenu" x-position="before" class="before">
-        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
+        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course)">
           {{course.displayName}}
           </button>
       </md-menu>
       <button md-icon-button (click)="refreshFromServer()"><md-icon class="md-24">autorenew</md-icon></button>
     </div>
   </div>
-  <router-outlet></router-outlet>
+  <router-outlet>
+
+  </router-outlet>
 </td-layout-nav>
 <div>
   <a md-fab color="accent" class="mat-fab-bottom-right" (click)="assessCompare()"

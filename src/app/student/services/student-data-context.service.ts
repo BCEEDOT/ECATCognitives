@@ -99,6 +99,19 @@ export class StudentDataContext extends BaseDataContext {
                     });
                 }
             });
+
+            courses.sort((crseA: Course, crseB: Course) => {
+                if (crseA.startDate < crseB.startDate) return 1;
+                if (crseA.startDate > crseB.startDate) return -1;
+                return 0;
+            });
+
+            courses[0].workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+                if (wgA.mpCategory < wgB.mpCategory) return 1;
+                if (wgA.mpCategory > wgB.mpCategory) return -1;
+                return 0;
+            });
+
             console.log('Courses loaded from server');
             return courses;
 

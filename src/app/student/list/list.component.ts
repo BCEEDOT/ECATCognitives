@@ -41,7 +41,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ) {
 
-    this.activeWorkGroup$ = route.data.pluck('workGroup');
+    // this.activeWorkGroup$ = route.data.pluck('workGroup');
 
     this.route.params.subscribe(params => {
       this.paramWorkGroupId = +params['wrkGrpId'];
@@ -66,10 +66,19 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.activeWorkGroup$.subscribe(workGroup => {
+    // this.activeWorkGroup$.subscribe(workGroup => {
+    //   this.activeWorkGroup = workGroup;
+    //   this.activate();
+    // });
+
+    this.workGroupService.workGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
-      this.activate();
+       this.activate();
     });
+
+      // this.activeWorkGroup = this.workGroupService.workGroup$.value;
+     
+    
   }
 
   ngOnDestroy(): void {
@@ -81,10 +90,10 @@ export class ListComponent implements OnInit, OnDestroy {
   activate(force?: boolean): void {
 
     const userId = this.global.persona.value.person.personId;
-    this.user = this.workGroupService.workGroup$.value.groupMembers.filter(gm => gm.studentId == userId)[0];
+    this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.user.updateStatusOfPeer();
-    this.instructions = this.workGroupService.workGroup$.value.assignedSpInstr.studentInstructions;
-    this.readOnly = this.workGroupService.workGroup$.value.mpSpStatus !== MpSpStatus.open
+    this.instructions = this.activeWorkGroup.assignedSpInstr.studentInstructions;
+    this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open
     this.workGroupService.isLoading(false);
 
     let memberIds = Object.keys(this.user.statusOfPeer);
