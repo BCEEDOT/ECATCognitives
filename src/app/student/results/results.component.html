@@ -2,8 +2,8 @@
   <md-card>
     <div fxLayout="row" fxLayoutAlign="center center">
       <img class="pad-top-md" src="../../../../assets/resultsloading.png" height="150" width="150">
-    </div>  
-     <h4 class="text-center pad-bottom-md">Results loading... please wait. </h4> 
+    </div>
+    <h4 class="text-center pad-bottom-md">Results loading... please wait. </h4>
     <md-card-footer>
       <md-progress-bar color="accent" mode="indeterminate"></md-progress-bar>
     </md-card-footer>
@@ -12,22 +12,25 @@
 
 <div class="width" *ngIf="!isLoading">
   <md-card>
-    <md-tab-group md-stretch-tabs>
+    <md-tab-group>
       <md-tab>
         <ng-template md-tab-label>
-          Assessments
+          <md-icon class="tab-icon">assessment</md-icon>
+          Assessment
         </ng-template>
         <assess [workGroup]="workGroup"></assess>
       </md-tab>
       <md-tab>
         <ng-template md-tab-label>
-          Behaviors
+          <md-icon class="tab-icon">assignment</md-icon>
+          Feedback Results
         </ng-template>
         <behaviors [memberResults]="memberResults"></behaviors>
       </md-tab>
       <md-tab>
         <ng-template md-tab-label>
-          Comments
+          <md-icon class="tab-icon">comment</md-icon>
+          Comments Recieved
         </ng-template>
         <comments [memberResults]="memberResults"></comments>
       </md-tab>
