@@ -41,6 +41,7 @@ export class EvaluateComponent implements OnInit {
   assessComplete: boolean;
   stratComplete: boolean;
   commentsComplete: boolean;
+  tabIndex: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -310,6 +311,7 @@ export class EvaluateComponent implements OnInit {
           this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
           if (this.workGroup.mpSpStatus === MpSpStatus.open) {
             this.showComments = false;
+            if (this.tabIndex === 2) {this.tabIndex = 0;}
           }
           this.refreshData();
         }, rejected => {
