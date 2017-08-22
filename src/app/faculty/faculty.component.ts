@@ -45,6 +45,7 @@ this.titleService.setTitle('WorkGroup Center');
   setActiveCourse(course: Course): void {
     this.activeCourse = course;
     this.activeCourseId = this.activeCourse.id;
+    this.facWorkGroupService.course(course);
 
     this.router.navigate(['list', this.activeCourseId], { relativeTo: this.route });
     
@@ -64,6 +65,7 @@ this.titleService.setTitle('WorkGroup Center');
 
     this.activeCourse = this.courses[0];
     this.activeCourseId = this.activeCourse.id;
+    this.facWorkGroupService.course(this.activeCourse);
 
     this.router.navigate(['list', this.activeCourseId], { relativeTo: this.route });
 

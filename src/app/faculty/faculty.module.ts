@@ -24,6 +24,7 @@ import { BehaviorsComponent } from './workgroups/results/results-details/behavio
 import { ResultsCommentsComponent } from './workgroups/results/results-details/comments/comments.component';
 import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
 import { FlightRosterComponent } from './workgroups/flight-roster/flight-roster.component';
+import { RoutebackComponent } from './workgroups/routeback/routeback.component';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { FlightRosterComponent } from './workgroups/flight-roster/flight-roster.
     BehaviorsComponent,
     ResultsCommentsComponent,
     FlightRosterComponent,
+    RoutebackComponent,
   ], 
   providers: [
     FacultyAuthGuardService,

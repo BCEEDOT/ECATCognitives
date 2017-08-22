@@ -7,6 +7,7 @@ import { Course, WorkGroup } from "../../core/entities/faculty";
 export class FacWorkgroupService {
 
     facWorkGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
+    course$: BehaviorSubject<Course> = new BehaviorSubject({} as Course);
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -17,6 +18,10 @@ export class FacWorkgroupService {
 
     facWorkGroup(facWorkGroup: WorkGroup) {
         this.facWorkGroup$.next(facWorkGroup);
+    }
+
+    course(course: Course) {
+        this.course$.next(course);
     }
 
     isLoading(isLoading: boolean) {

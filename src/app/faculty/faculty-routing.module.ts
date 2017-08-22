@@ -15,6 +15,7 @@ import { ResultsComponent } from "./workgroups/results/results.component";
 import { Course } from '../core/entities/faculty';
 import { ResultsDetailsComponent } from "./workgroups/results/results-details/results-details.component";
 import { FacultySaveChangesGuard } from "./services/faculty-savechangesguard.service";
+import { RoutebackComponent } from "./workgroups/routeback/routeback.component";
 
 const facultyRoutes: Routes = [
   {
@@ -70,8 +71,8 @@ const facultyRoutes: Routes = [
           },
           {
             path: '',
-            component: FacultyComponent,
-            resolve: { courses: 'coursesResolver' },
+            component: RoutebackComponent,
+            //pathMatch: 'full'
           }
 
         ]

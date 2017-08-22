@@ -48,12 +48,15 @@ export class ListComponent implements OnInit {
       this.paramCourseId = +params['crsId'];
       this.isLoading = true;
 
-      this.facultyDataContext.getActiveCourse(this.paramCourseId).then((course: Course) => {
+      if (this.paramCourseId) {
+        this.facultyDataContext.getActiveCourse(this.paramCourseId).then((course: Course) => {
 
-        this.course = course;
-        this.activate();
-        this.isLoading = false;
-      });
+          this.course = course;
+          this.facWorkGroupService.course(course);
+          this.activate();
+          this.isLoading = false;
+        });
+      }
 
     });
 
