@@ -1,6 +1,6 @@
 import { MpSpStatus } from '../core/common/mapStrings';
-import { Component, AfterViewInit, OnInit, Inject, OnDestroy, ApplicationRef, NgZone, ChangeDetectorRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
@@ -22,7 +22,7 @@ import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dial
   //Limits only to current view and not children
   //viewProviders: [ UsersService ],
 })
-export class StudentComponent implements OnInit, OnDestroy {
+export class StudentComponent implements OnInit {
 
   activeCourseId: number;
   activeWorkGroupId: number;
@@ -37,9 +37,6 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   constructor(private titleService: Title,
     private router: Router,
-    private appRef: ApplicationRef,
-    private ngZone: NgZone,
-    private change: ChangeDetectorRef,
     private route: ActivatedRoute,
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
@@ -48,8 +45,6 @@ export class StudentComponent implements OnInit, OnDestroy {
     private workGroupService: WorkGroupService,
     private studentDataContext: StudentDataContext,
     public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
-
-    console.log(Component.name);
 
     this.courses$ = route.data.pluck('assess');
   }
@@ -70,10 +65,6 @@ export class StudentComponent implements OnInit, OnDestroy {
       this.activate(false);
     });
 
-  }
-
-  ngOnDestroy(): void {
-    console.log('The component has been destroyed');
   }
 
   activate(force?: boolean): void {
@@ -159,6 +150,7 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   nav(workGroup: WorkGroup): void {
     const resultsPublished = this.activeWorkGroup.mpSpStatus === MpSpStatus.published;
+
     resultsPublished ? this.router.navigate(['results', this.activeCourseId, this.activeWorkGroupId], { relativeTo: this.route }) : this.router.navigate(['list', this.activeCourseId, this.activeWorkGroupId], { relativeTo: this.route });
 
   }

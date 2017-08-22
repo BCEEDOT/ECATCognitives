@@ -5,6 +5,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class WorkGroupService {
 
+    constructor() {
+        console.log('It is creating a new workgroupservice');
+    }
+
     workGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);

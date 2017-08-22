@@ -8,6 +8,7 @@ import { StudentComponent } from './student.component';
 import { ListComponent } from "./list/list.component";
 import { ResultsComponent } from "./results/results.component";
 import { AssessComponent } from '../provider/sp-provider/assess/assess.component'
+import { RouteBackComponent } from "./shared/route-back/route-back.component";
 
 const studentRoutes: Routes = [
   {
@@ -22,21 +23,13 @@ const studentRoutes: Routes = [
         //Get the students courses
         resolve: { assess: 'assessmentResolver' },
         children: [
-          // {
-          //   path: '',
-          //   component: AssessComponent,
-          //   //Set active course and workgroup. Determine if results are published for active group. 
-          // },
+
+
 
           {
             path: 'list/:crsId/:wrkGrpId',
             //set to most recent course, allow student to switch between courses.
             component: ListComponent,
-            // children: [
-            //   { path: 'sp', component: SpComponent},
-            //   { path: 'comment', component: CommentComponent}
-            // ]
-            // resolve: { workGroup: 'workGroupResolver' },
           },
           {
             path: 'results/:crsId/:wrkGrpId',
@@ -52,7 +45,13 @@ const studentRoutes: Routes = [
             path: 'list/:crsId/:wrkGrpId/assess/:assesseeId',
             component: AssessComponent,
             resolve: { inventories: 'spAssessResolver' }
-          }, 
+          },
+          {
+            path: '',
+            component: RouteBackComponent,
+            pathMatch: 'full'
+            //Set active course and workgroup. Determine if results are published for active group. 
+          },
           //  {
           //    path: '',
           //    component: StudentComponent,

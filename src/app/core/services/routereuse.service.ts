@@ -9,7 +9,7 @@ interface RouteStorageObject {
 export class RoutereuseService extends RouteReuseStrategy {
 
 
-    routesToCache: string[] = ["list/:crsId/:wrkGrpId"];
+    routesToCache: string[] = ["student/assessment"];
     /** 
     * Object which will store RouteStorageObjects indexed by keys
     * The keys will all be a path (as in route.routeConfig.path)
@@ -26,11 +26,11 @@ export class RoutereuseService extends RouteReuseStrategy {
      * @returns boolean indicating that we want to (true) or do not want to (false) store that route
      */
     shouldDetach(route: ActivatedRouteSnapshot): boolean {
-        let detach: boolean = true;
+        let detach: boolean = false;
         //console.log("detaching", route, "return: ", detach);
 
-        if (this.routesToCache.indexOf(route.routeConfig.path) > -1 ){
-            console.log("detaching", route);
+        if (this.routesToCache.indexOf(route.routeConfig.path) > -1) {
+            //console.log("detaching", route);
             return true;
         } else {
             return false;
@@ -45,7 +45,7 @@ export class RoutereuseService extends RouteReuseStrategy {
      * @param handle Later to be retrieved by this.retrieve, and offered up to whatever controller is using this class
      */
     store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
-        console.log( "store:", "into: ", this.storedRouteHandles );
+        // console.log("store:", "into: ", this.storedRouteHandles);
         this.storedRouteHandles.set(route.routeConfig.path, handle);
     }
 
@@ -78,9 +78,11 @@ export class RoutereuseService extends RouteReuseStrategy {
         //     return false;
         // }
 
-        console.log(this.storedRouteHandles.has(route.routeConfig.path));
-        
+        // console.log(this.storedRouteHandles.has(route.routeConfig.path));
+
         return this.storedRouteHandles.has(route.routeConfig.path);
+
+        // return false;
     }
 
     /** 
@@ -90,12 +92,14 @@ export class RoutereuseService extends RouteReuseStrategy {
      */
     retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
 
-        // return null if the path does not have a routerConfig OR if there is no stored route for that routerConfig
-        if (!route.routeConfig || !this.storedRouteHandles[route.routeConfig.path]) return null;
-        console.log("retrieving", "return: ", this.storedRouteHandles[route.routeConfig.path]);
+        // // return null if the path does not have a routerConfig OR if there is no stored route for that routerConfig
+        // if (!route.routeConfig || !this.storedRouteHandles[route.routeConfig.path]) return null;
+        // console.log("retrieving", "return: ", this.storedRouteHandles[route.routeConfig.path]);
 
-        /** returns handle when the route.routeConfig.path is already stored */
+        // /** returns handle when the route.routeConfig.path is already stored */
         return this.storedRouteHandles.get(route.routeConfig.path);
+
+        // return null;
     }
 
     /** 
@@ -105,9 +109,33 @@ export class RoutereuseService extends RouteReuseStrategy {
      * @returns boolean basically indicating true if the user intends to leave the current route
      */
     shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-        console.log("deciding to reuse", "future", future.routeConfig, "current", curr.routeConfig, "return: ", future.routeConfig === curr.routeConfig);
+        // console.log("deciding to reuse", "future", future.routeConfig, "current", curr.routeConfig, "return: ", future.routeConfig === curr.routeConfig);
+
+        // console.log(future);
+
+        // console.log(curr);
+
+        // if (!curr.routeConfig || curr.routeConfig.path === "list/:crsId/:wrkGrpId") {
+        //     return false;
+        // } else {
+        //     return future.routeConfig === curr.routeConfig;
+        // }
+
+        // if (future.routeConfig) {
+        //     console.log(future.routeConfig.path);
+        // }
+
+        // if (curr.routeConfig) {
+        //     console.log(curr.routeConfig.path);
+
+        // }
+
+
         return future.routeConfig === curr.routeConfig;
+
     }
+
+
 
     /** 
      * This nasty bugger finds out whether the objects are _traditionally_ equal to each other, like you might assume someone else would have put this function in vanilla JS already

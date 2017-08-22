@@ -85,12 +85,12 @@ export class AppComponent implements OnInit {
           //Promise.resolve(null).then(() => {this.loadingService.register(); })
           this.loadingService.register();
 
-          console.log('loader ON');
+          //console.log('loader ON');
         } else {
           //Temporary workaround for Teradata beta5
           //Promise.resolve(null).then(() => {this.loadingService.resolve(); })
           this.loadingService.resolve();
-          console.log('loader OFF');
+          //console.log('loader OFF');
         }
       });
 

@@ -33,15 +33,13 @@ export class ListComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   readOnly: boolean = false;
   subs: Subscription[] = [];
-  
+
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private studentDataContext: StudentDataContext,
+    private studentDataContext: StudentDataContext, private router: Router,
     private route: ActivatedRoute, private dialogService: TdDialogService
 
   ) {
-
-    // this.activeWorkGroup$ = route.data.pluck('workGroup');
 
     this.route.params.subscribe(params => {
       this.paramWorkGroupId = +params['wrkGrpId'];
@@ -66,24 +64,22 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.activeWorkGroup$.subscribe(workGroup => {
-    //   this.activeWorkGroup = workGroup;
-    //   this.activate();
-    // });
-
-   this.subs.push(this.workGroupService.workGroup$.subscribe(workGroup => {
-      
+    this.subs.push(this.workGroupService.workGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
-       this.activate();
+      this.activate();
+
+      // if (this.activeWorkGroup.mpSpStatus === MpSpStatus.published) {
+      //   this.router.navigate(['results', this.activeWorkGroup.courseId, this.activeWorkGroup.workGroupId], { relativeTo: this.route })
+      // } else {
+      //   this.activate();
+      // }
+
+
     }));
 
-    // this.activeWorkGroup = this.workGroupService.workGroup$.value;
-     
-    
   }
 
   ngOnDestroy(): void {
-    console.log('List Ondestroy');
     this.subs.forEach(sub => {
       sub.unsubscribe();
     });
