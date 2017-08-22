@@ -1,30 +1,35 @@
 <td-layout-nav logo="" toolbarTitle="ECAT - Assessment Center">
-    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
-        <span fxFlex></span>
-        <a md-icon-button mdTooltip="Profile" routerLink="/profile">
-            <md-icon>account_circle</md-icon>
-        </a>
-    </div>
+  <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+    <span fxFlex></span>
+    <a md-icon-button mdTooltip="Profile" routerLink="/profile">
+      <md-icon>account_circle</md-icon>
+    </a>
+  </div>
   <div class="width">
-    <div align="end" class="pad-right-md pad-top-sm">
-      <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
+    <div fxLayout="row" fxLayoutAlign="end" class="pad-top-sm">
+      <div fxFlex></div>
+      <div *ngIf="activeWorkGroup" class="pad-top-sm">
+        <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
       {{activeWorkGroup?.displayName}}
       <md-icon class="md-24">expand_more</md-icon>
     </button>
-      <md-menu x-position="before" #posXMenu="mdMenu" class="before">
-        <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup)">
+        <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+          <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup)">
           {{workGroup.displayName}}
           </button>
-      </md-menu>
+        </md-menu>
+      </div>
+      <div *ngIf="activeCourse">
 
-      <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
+        <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
         <md-icon>menu</md-icon>
       </button>
-      <md-menu #menu="mdMenu" x-position="before" class="before">
-        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course)">
+        <md-menu #menu="mdMenu" x-position="before" class="before">
+          <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course)">
           {{course.displayName}}
           </button>
-      </md-menu>
+        </md-menu>
+      </div>
       <button md-icon-button (click)="refreshFromServer()"><md-icon class="md-24">autorenew</md-icon></button>
     </div>
   </div>
@@ -32,9 +37,8 @@
 
   </router-outlet>
 </td-layout-nav>
-<div>
-  <a md-fab color="accent" class="mat-fab-bottom-right" (click)="assessCompare()"
-  mdTooltip="Compare" mdTooltipPosition="left">
+<div *ngIf="activeWorkGroup">
+  <a md-fab color="accent" class="mat-fab-bottom-right" (click)="assessCompare()" mdTooltip="Compare" mdTooltipPosition="left">
     <md-icon>show_chart</md-icon>
   </a>
 </div>

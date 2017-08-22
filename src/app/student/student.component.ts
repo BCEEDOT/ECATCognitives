@@ -1,5 +1,5 @@
 import { MpSpStatus } from '../core/common/mapStrings';
-import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnInit, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
@@ -22,7 +22,7 @@ import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dial
   //Limits only to current view and not children
   //viewProviders: [ UsersService ],
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
 
   activeCourseId: number;
   activeWorkGroupId: number;
@@ -47,6 +47,7 @@ export class StudentComponent implements OnInit {
     public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
 
     this.courses$ = route.data.pluck('assess');
+
   }
 
   goBack(route: string): void {
@@ -54,7 +55,33 @@ export class StudentComponent implements OnInit {
   }
 
   refreshFromServer() {
-    this.setActiveCourse(this.activeCourse);
+
+    this.workGroupService.isLoading(true);
+    if (this.activeCourse) {
+      this.workGroupService.isLoading(false);
+      this.setActiveCourse(this.activeCourse);
+    } else {
+      this.studentDataContext.initCourses().then(courses => {
+        if (courses.length > 0) {
+          if (courses[0].workGroups.length > 0) {
+            this.studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId, true).then(workgroup => {
+              this.courses = courses;
+              this.activate(false);
+            });
+          } else {
+            this.courses = courses;
+            this.activate(false);
+          }
+        } else {
+          this.courses = courses;
+        }
+      });
+    }
+
+  }
+
+  ngOnDestroy(): void {
+    this.workGroupService.workGroup(null);
   }
 
   ngOnInit(): void {
@@ -62,7 +89,10 @@ export class StudentComponent implements OnInit {
     this.titleService.setTitle('ECAT Users');
     this.courses$.subscribe(courses => {
       this.courses = courses;
-      this.activate(false);
+      if (courses.length > 0) {
+
+        this.activate(false);
+      }
     });
 
   }
@@ -80,11 +110,16 @@ export class StudentComponent implements OnInit {
 
     this.activeCourse = this.courses[0];
     this.activeCourseId = this.activeCourse.id;
-    this.initWorkGroups(this.activeCourse.workGroups);
+
+    if (this.activeCourse.workGroups.length > 0) {
+
+      this.initWorkGroups(this.activeCourse.workGroups);
+    }
 
   }
 
   initWorkGroups(workGroups: WorkGroup[]): void {
+
     this.workGroups = workGroups;
     this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
       if (wgA.mpCategory < wgB.mpCategory) return 1;
@@ -107,7 +142,7 @@ export class StudentComponent implements OnInit {
       this.workGroupService.workGroup(this.activeWorkGroup);
       this.nav(this.activeWorkGroup);
     }
-  
+
   }
 
   assessCompare(): void {
@@ -139,7 +174,10 @@ export class StudentComponent implements OnInit {
       .then(course => {
         this.activeCourse = course as Course;
         this.activeCourseId = this.activeCourse.id;
-        this.initWorkGroups(this.activeCourse.workGroups);
+
+        if (this.activeCourse.workGroups.length > 0) {
+          this.initWorkGroups(this.activeCourse.workGroups);
+        }
         this.workGroupService.isLoading(false);
       }).catch(error => {
         this.dialogService.openAlert({ message: 'There was a problem loading your course, please try again.', title: 'Load Error' });

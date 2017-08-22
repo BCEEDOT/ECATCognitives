@@ -67,9 +67,17 @@ export function assessmentResolver(studentDataContext: StudentDataContext) {
 
   return (route: ActivatedRouteSnapshot) => {
     return studentDataContext.initCourses().then(courses => {
-      return studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId).then(value => {
-        return courses;
-      });
+      if (courses.length > 0) {
+        if (courses[0].workGroups.length > 0) {
+          return studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId).then(value => {
+            return courses;
+          });
+        } else {
+          return courses;
+        }
+      }
+
+      return courses;
 
     });
   }

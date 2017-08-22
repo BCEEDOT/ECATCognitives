@@ -86,31 +86,34 @@ export class StudentDataContext extends BaseDataContext {
 
             //that.isLoaded.initCourses = courses.length > 0;
 
-            courses.forEach(course => {
-                var workGroups = course.workGroups;
-                if (workGroups && workGroups.length > 0) {
-                    //this.isLoaded[course.id] = true;
+            if (courses.length > 0) {
+
+                courses.forEach(course => {
+                    var workGroups = course.workGroups;
+                    if (workGroups && workGroups.length > 0) {
+                        //this.isLoaded[course.id] = true;
 
 
-                    workGroups.forEach(workGroup => {
-                        if (workGroup.groupMembers && workGroup.groupMembers.length > 0) {
-                            that.isLoaded.workGroup[workGroup.workGroupId] = true;
-                        }
-                    });
-                }
-            });
+                        workGroups.forEach(workGroup => {
+                            if (workGroup.groupMembers && workGroup.groupMembers.length > 0) {
+                                that.isLoaded.workGroup[workGroup.workGroupId] = true;
+                            }
+                        });
+                    }
+                });
 
-            courses.sort((crseA: Course, crseB: Course) => {
-                if (crseA.startDate < crseB.startDate) return 1;
-                if (crseA.startDate > crseB.startDate) return -1;
-                return 0;
-            });
+                courses.sort((crseA: Course, crseB: Course) => {
+                    if (crseA.startDate < crseB.startDate) return 1;
+                    if (crseA.startDate > crseB.startDate) return -1;
+                    return 0;
+                });
 
-            courses[0].workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
-                if (wgA.mpCategory < wgB.mpCategory) return 1;
-                if (wgA.mpCategory > wgB.mpCategory) return -1;
-                return 0;
-            });
+                courses[0].workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+                    if (wgA.mpCategory < wgB.mpCategory) return 1;
+                    if (wgA.mpCategory > wgB.mpCategory) return -1;
+                    return 0;
+                });
+            }
 
             console.log('Courses loaded from server');
             return courses;
