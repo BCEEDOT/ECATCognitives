@@ -7,6 +7,7 @@ import { StudSpComment } from './StudSpComment';
 import { SpInstrument } from './SpInstrument';
 import { SpResult } from './SpResult';
 import { StratResult } from './StratResult';
+import { FacSpResponse } from "../faculty/facSpResponse";
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -36,6 +37,7 @@ export class WorkGroup extends EntityBase {
 
    /// <code> Place custom code between <code> tags
    displayName: string;
+   facSpResponses: FacSpResponse[];
    /// </code>
 
 }

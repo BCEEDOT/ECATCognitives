@@ -253,10 +253,10 @@ export class SpInventory extends EntityBase {
         breakOut.peersResult = staticData.EcLocalDataService.breakDownCalculation(compositeBreakOut);
 
         const selfResponse = responsesForItem.filter(response => response.isSelfResponse && response.inventoryItemId === this.id)[0];
-        const facResponse = (this.spResult.facultyResponses) ? this.spResult.facultyResponses.filter(response => response["InventoryItemId"] === this.id)[0] : null;
+        const facResponse = (this.spResult.workGroup.facSpResponses) ? this.spResult.workGroup.facSpResponses.filter(response => response.inventoryItemId === this.id)[0] : null;
 
         breakOut.selfResult = staticData.EcLocalDataService.prettifyItemResponse(selfResponse.mpItemResponse);
-        breakOut.facultyResult = (facResponse) ? staticData.EcLocalDataService.prettifyItemResponse(facResponse["MpItemResponse"]) : 'Not Assessed';
+        breakOut.facultyResult = (facResponse) ? staticData.EcLocalDataService.prettifyItemResponse(facResponse.mpItemResponse) : 'Not Assessed';
 
         this.memberResultBreakOut = breakOut;
         return breakOut;
