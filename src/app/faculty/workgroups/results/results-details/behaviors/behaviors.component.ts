@@ -21,6 +21,10 @@ export class BehaviorsComponent implements OnInit {
       if (a.displayOrder > b.displayOrder) { return 1; }
       return 0;
     });
+
+    this.inventories.forEach(inv => {
+      inv.resetResults();
+    })
   }
 
   // behaviorDetails(inv: SpInventory){
