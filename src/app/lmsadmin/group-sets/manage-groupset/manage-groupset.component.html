@@ -1,5 +1,5 @@
 <md-sidenav-container fullscreen>
-  <md-sidenav #sidenav mode="side" color="accent" opened="true" style="width:257px;border-right:1px solid #ccc">
+  <md-sidenav #sidenav mode="side" color="primary" opened="true" style="width:257px;border-right:1px solid #ccc">
     <div flex class="md-content ">
       <md-nav-list>
         <td-expansion-panel *ngIf="readOnly" label="Unassigned Students"  [expand]="isUnassignedPanelExpanded">
@@ -35,11 +35,11 @@
     </div>
   </md-sidenav>
   <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="20px" class="pad-right-sm pad-left-sm">
-    <button type="button" md-raised-button color="accent"  [routerLink]="['../..']">Back</button>
+    <button type="button" md-raised-button color="primary"  [routerLink]="['../..']">Back</button>
     <td-search-box [showUnderline]="true" (search)="search($event)" (clear)="clear($event)" backIcon="arrow_back" placeholder="Search here"
       [alwaysVisible]="false" flex></td-search-box>
-    <button [ngClass]="canSaveFlag ? '' : 'can-save'" (click)="save()" type="button" md-raised-button color="accent">Save</button>
-    <button (click)="reset(false)" type="button" md-raised-button color="accent">Reset</button>
+    <button [ngClass]="canSaveFlag ? '' : 'can-save'" (click)="save()" type="button" md-raised-button color="primary">Save</button>
+    <button (click)="reset(false)" type="button" md-raised-button color="primary">Reset</button>
     <md-slide-toggle class="example-margin" [(ngModel)]="allExpanded" (change)="expandOrCollapseAll()" >
       {{(allExpanded) ? 'Collapse' : 'Expand'}} All
     </md-slide-toggle>
@@ -110,7 +110,7 @@
     </div>
   </div>
 </md-sidenav-container>
-<a *ngIf="!readOnly" md-fab (click)="addGroup()" color="accent" class="mat-fab-bottom-right fixed fab-pad"
+<a *ngIf="!readOnly" md-fab (click)="addGroup()" color="primary" class="mat-fab-bottom-right fixed fab-pad"
 mdTooltip="Add Flight" mdTooltipPosition="left">
   <md-icon>add</md-icon>
 </a>

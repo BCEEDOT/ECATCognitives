@@ -116,8 +116,8 @@
                   <div layout-gt-xs="row" layout-margin>
                     <md-divider></md-divider>
                     <div class="inset">
-                      <button md-raised-button color="accent" type="button" [disabled]="!profileForm.valid" (click)="saveProfile()" class="text-upper">Save</button>
-                      <button md-raised-button color="accent" type="button" class="text-upper" (click)="cancelSave();">Cancel</button>
+                      <button md-raised-button color="primary" type="button" [disabled]="!profileForm.valid" (click)="saveProfile()" class="text-upper">Save</button>
+                      <button md-raised-button color="primary" type="button" class="text-upper" (click)="cancelSave();">Cancel</button>
                     </div>
                   </div>
                 </form>
@@ -126,7 +126,7 @@
             <div *ngIf="!isEditing">
               <md-divider></md-divider>
               <md-card-actions>
-                <button (click)="editProfile()" type="button" md-button color="accent" class="text-upper">Edit</button>
+                <button (click)="editProfile()" type="button" md-button color="primary" class="text-upper">Edit</button>
               </md-card-actions>
             </div>
           </div>

@@ -43,11 +43,11 @@
     </md-card>
   </ng-template>
 </div>
-<a style="z-index: 9999;" md-fab color="accent" class="mat-fab-bottom-right fixed" [routerLink]="['../../status', workGroupId]" *ngIf="workGroup.mpSpStatus !== statusMap.published"
+<a style="z-index: 9999;" md-fab color="primary" class="mat-fab-bottom-right fixed" [routerLink]="['../../status', workGroupId]" *ngIf="workGroup.mpSpStatus !== statusMap.published"
 mdTooltip="Go To Status" mdTooltipPosition="left">
   <md-icon>check_circle</md-icon>
 </a>
-<a style="z-index: 9999;" md-fab color="accent" class="mat-fab-bottom-right fixed" [routerLink]="['../../results', workGroupId]" *ngIf="workGroup.mpSpStatus === statusMap.published"
+<a style="z-index: 9999;" md-fab color="primary" class="mat-fab-bottom-right fixed" [routerLink]="['../../results', workGroupId]" *ngIf="workGroup.mpSpStatus === statusMap.published"
 mdTooltip="Go To Results" mdTooltipPosition="left">
   <md-icon>data_usage</md-icon>
 </a>
