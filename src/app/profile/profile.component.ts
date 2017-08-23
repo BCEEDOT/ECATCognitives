@@ -74,6 +74,14 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     };
   };
 
+  canSave(): boolean {
+    if (this.userDataContext.getChanges()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   cancelSave() {
     this.isEditing = false;
     this.user.entityAspect.rejectChanges();
