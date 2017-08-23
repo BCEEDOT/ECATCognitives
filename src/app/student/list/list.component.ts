@@ -87,6 +87,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
   activate(force?: boolean): void {
 
+    this.activeWorkGroup.groupMembers.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
+      if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) return -1;
+      if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) return 1;
+      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
+      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
+      return 0;
+    });
+
     const userId = this.global.persona.value.person.personId;
     this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
     this.user.updateStatusOfPeer();

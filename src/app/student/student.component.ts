@@ -65,16 +65,27 @@ export class StudentComponent implements OnInit, OnDestroy {
         if (courses.length > 0) {
           if (courses[0].workGroups.length > 0) {
             this.studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId, true).then(workgroup => {
+              this.workGroupService.isLoading(false);
               this.courses = courses;
               this.activate(false);
+            }).catch(error => {
+              this.workGroupService.isLoading(false);
+              this.dialogService.openAlert({ message: 'There was a problem loading your work group, please try again.', title: 'Load Error' });
+              this.workGroupService.isLoading(false);
             });
           } else {
+            this.workGroupService.isLoading(false);
             this.courses = courses;
             this.activate(false);
           }
         } else {
+          this.workGroupService.isLoading(false);
           this.courses = courses;
         }
+      }).catch(error => {
+        this.workGroupService.isLoading(false);
+        this.dialogService.openAlert({ message: 'There was a problem loading your course, please try again.', title: 'Load Error' });
+        this.workGroupService.isLoading(false);
       });
     }
 
