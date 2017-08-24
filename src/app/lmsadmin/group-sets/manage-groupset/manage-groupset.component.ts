@@ -187,6 +187,10 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  changesToSave(): boolean {
+    return this.lmsadminDataContext.hasChanges();
+  }
+
   groupSetInfo(): void {
     let workGroupModel = this.lmsadminWorkGroupService.workGroupModels$.value
       .filter(wgm => wgm.mpWgCategory === this.workGroupCategory)[0];
