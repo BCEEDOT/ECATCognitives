@@ -1,8 +1,8 @@
 <md-list>
   <md-list-item>
-    <span fxFlex="60"></span>
-    <span fxFlex="15" class="pad-left md-body-1 tc-grey-500">Strat</span>
-    <span fxFlex="15" class="pad-left md-body-1 tc-grey-500"><span *ngIf="!readOnly">Proposed Change</span></span>
+    <span fxFlex="55" fxFlexOffset="3%"></span>
+    <span fxFlex="10" fxFlexOffset="3%" class="pad-left md-body-1 tc-grey-500">Strat</span>
+    <span fxFlex="15" fxFlexOffset="2%" class="pad-left md-body-1 tc-grey-500"><span *ngIf="!readOnly">Proposed Change</span></span>
     <span fxFlex="10"></span>
   </md-list-item>
   <md-divider></md-divider>
@@ -57,9 +57,9 @@
           <span *ngIf="peer.stratIsValid">
               Valid
             </span>
-          <span *ngIf="!peer.stratIsValid">
+        <span *ngIf="!peer.stratIsValid">
             <span mdTooltip="{{peer.stratValidationErrors[0].cat}}" mdTooltipPosition="above" class="tc-red-500" >Invalid</span>
-          </span>
+        </span>
         </span>
       </div>
       <div fxFlex="25" *ngIf="readOnly">
