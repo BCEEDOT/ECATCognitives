@@ -15,7 +15,7 @@
     <md-card *ngIf="user?.hasAcknowledged">
       <td-message *ngIf="readOnly" label="This Group is currently Under Review" color="warn" icon="error">
       </td-message>
-      <md-tab-group class="tab-group" dynamicHeight>
+      <md-tab-group [(selectedIndex)]="activeTab" class="tab-group" dynamicHeight>
         <md-tab>
 
           <ng-template md-tab-label>

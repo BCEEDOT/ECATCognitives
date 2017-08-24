@@ -32,6 +32,7 @@ export class ListComponent implements OnInit, OnDestroy {
   paramCourseId: number;
   isLoading: boolean = false;
   readOnly: boolean = false;
+  activeTab: number = 0;
   subs: Subscription[] = [];
 
 
@@ -86,6 +87,8 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   activate(force?: boolean): void {
+
+    this.activeTab = 0;
 
     this.activeWorkGroup.groupMembers.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
       if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) return -1;
