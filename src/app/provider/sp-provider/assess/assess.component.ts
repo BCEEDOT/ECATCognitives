@@ -97,13 +97,23 @@ export class AssessComponent implements OnInit {
 
   previousInv() {
     let prev = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder - 1));
-    this.activeInventory = prev;
+    if (!prev) {
+      let length = this.inventories.length;
+      this.activeInventory = this.inventories[length - 1];
+    } else {
+      this.activeInventory = prev;
+    }
     this.saveCheck();
+
   }
 
   nextInv() {
     let next = this.inventories.find(inv => inv.displayOrder === (this.activeInventory.displayOrder + 1));
-    this.activeInventory = next;
+    if (!next) {
+      this.activeInventory = this.inventories[0];
+    } else {
+      this.activeInventory = next;
+    }
     this.saveCheck();
   }
 
