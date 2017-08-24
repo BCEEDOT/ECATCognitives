@@ -10,50 +10,53 @@
     </md-card-title>
     <md-divider></md-divider>
     <md-card-content>
-      <md-list>
-        <md-list-item>
-          <span fxFlex="30">NAME</span>
-          <span fxFlex="30">CLASS</span>
-          <span fxFlex="30">START DATE</span>
-          <span fxFlex="30">GRAD DATE</span>
-          <span fxFlex="10"></span>
-        </md-list-item>
-        <md-list-item *ngFor="let course of courses">
-          <span fxFlex="30">
-            <h3 class="md-subhead">{{course.name}}</h3>
-          </span>
-          <span fxFlex="30">
-            <h3 class="md-subhead">{{course.classNumber}}</h3>
-          </span>
-          <span fxFlex="30">
-            <h3 class="md-subhead">{{course.displayStart}}</h3>
-          </span>
-          <span fxFlex="30">
-            <h3 class="md-subhead">{{course.displayGrad}}</h3>
-          </span>
-          <div fxFlex="10">
-            <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
-              <button md-menu-item [routerLink]="[course.id + '/info']"> 
-                <md-icon> info_outline </md-icon>
-                <span class="md-subhead"> Course Information </span>
-              </button>
-              <md-divider></md-divider>
-              <button md-menu-item [routerLink]="[course.id + '/enrollments']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
-                <md-icon> people_outline </md-icon>
-                <span class="md-subhead"> Course Enrollments </span>
-              </button>
-              <button md-menu-item [routerLink]="[course.id + '/groupsets']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
-                <md-icon> library_books </md-icon>
-                <span class="md-subhead"> Group Management </span>
-              </button>
-            </md-menu>
+      <span fxFlex="100" class="text-center pad-top-xl md-title" *ngIf="!this.courses">No courses for this academy.</span>
+      <div *ngIf="courses?.length > 0">
+        <md-list>
+          <md-list-item>
+            <span fxFlex="30">NAME</span>
+            <span fxFlex="30">CLASS</span>
+            <span fxFlex="30">START DATE</span>
+            <span fxFlex="30">GRAD DATE</span>
+            <span fxFlex="10"></span>
+          </md-list-item>
+          <md-list-item *ngFor="let course of courses">
+            <span fxFlex="30">
+              <h3 class="md-subhead">{{course.name}}</h3>
+            </span>
+            <span fxFlex="30">
+              <h3 class="md-subhead">{{course.classNumber}}</h3>
+            </span>
+            <span fxFlex="30">
+              <h3 class="md-subhead">{{course.displayStart}}</h3>
+            </span>
+            <span fxFlex="30">
+              <h3 class="md-subhead">{{course.displayGrad}}</h3>
+            </span>
+            <div fxFlex="10">
+              <md-menu #appMenu="mdMenu" yPosition="below" xPosition="before">
+                <button md-menu-item [routerLink]="[course.id + '/info']"> 
+                  <md-icon> info_outline </md-icon>
+                  <span class="md-subhead"> Course Information </span>
+                </button>
+                <md-divider></md-divider>
+                <button md-menu-item [routerLink]="[course.id + '/enrollments']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
+                  <md-icon> people_outline </md-icon>
+                  <span class="md-subhead"> Course Enrollments </span>
+                </button>
+                <button md-menu-item [routerLink]="[course.id + '/groupsets']" [disabled]="course.classNumber===null || course.classNumber === '' || course.name === null || course.name === ''"> 
+                  <md-icon> library_books </md-icon>
+                  <span class="md-subhead"> Group Management </span>
+                </button>
+              </md-menu>
 
-            <button md-icon-button [mdMenuTriggerFor]="appMenu">
-              <md-icon>more_vert</md-icon>
-            </button>
-          </div>
-        </md-list-item>
-      </md-list>
+              <button md-icon-button [mdMenuTriggerFor]="appMenu">
+                <md-icon>more_vert</md-icon>
+              </button>
+            </div>
+          </md-list-item>
+        </md-list>
+      </div>
     </md-card-content>
   </ng-template>
 </md-card>
