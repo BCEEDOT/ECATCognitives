@@ -21,7 +21,7 @@ export class CommentsComponent implements OnInit {
   ngOnInit() {
     this.comments = this.memberResults.sanitizedComments;
 
-    if (this.comments || this.comments.length > 0) {
+    if (this.comments && this.comments.length > 0) {
       this.memHasComments = true;
 
       this.activate();
@@ -30,6 +30,7 @@ export class CommentsComponent implements OnInit {
   }
 
   activate(): void {
+    console.log(this.comments);
     this.selectedComment = this.comments[0]
   }
 
