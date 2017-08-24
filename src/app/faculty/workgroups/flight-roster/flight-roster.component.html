@@ -1,49 +1,51 @@
-<md-card class="width">
-  <md-card-title>
-    <div fxFlex>
-      <button md-raised-button (click)="back()">
+<div class="width">
+  <md-card>
+    <md-card-title>
+      <div fxFlex>
+        <button md-raised-button (click)="back()">
         <!--md-icon class="tc-white-700">arrow_back</md-icon-->Back
       </button>
-    </div>
-    <div class="text-center" fxFlex="100">
-      {{workGroup?.mpCategory}} - {{workGroup?.defaultName}}
-    </div>
-  </md-card-title>
-
-  <md-divider></md-divider>
-
-  <md-list>
-    <md-list-item>
-      <div fxFlex="80"></div>
-      <div *ngFor="let category of categoriesToDisplay" fxFlex="20" class="pad-sm text-center tc-black text-lg">
-        {{category}} Flight
       </div>
-    </md-list-item>
+      <div class="text-center" fxFlex="100">
+        {{workGroup?.mpCategory}} - {{workGroup?.defaultName}}
+      </div>
+    </md-card-title>
 
     <md-divider></md-divider>
 
-    <ng-template let-member let-last="last" ngFor [ngForOf]="rosterInfos">
-
+    <md-list>
       <md-list-item>
-
-        <md-icon md-list-avatar>person</md-icon>
-        <div fxFlex="80" class="md-subhead text-left pad-sm">
-          {{member?.rankName}}
+        <div fxFlex="80"></div>
+        <div *ngFor="let category of categoriesToDisplay" fxFlex="20" class="pad-sm text-center tc-black text-lg">
+          {{category}} Flight
         </div>
-
-        <div fxFlex="20" *ngFor="let category of categoriesToDisplay" class="md-subhead text-center pad-sm">
-          {{(member?.flights[category]) ? member?.flights[category] : 'None'}}
-        </div>
-        <div fxFlex></div>
       </md-list-item>
-      <md-divider *ngIf="!last" md-inset></md-divider>
+
+      <md-divider></md-divider>
+
+      <ng-template let-member let-last="last" ngFor [ngForOf]="rosterInfos">
+
+        <md-list-item>
+
+          <md-icon md-list-avatar>person</md-icon>
+          <div fxFlex="80" class="md-subhead text-left pad-sm">
+            {{member?.rankName}}
+          </div>
+
+          <div fxFlex="20" *ngFor="let category of categoriesToDisplay" class="md-subhead text-center pad-sm">
+            {{(member?.flights[category]) ? member?.flights[category] : 'None'}}
+          </div>
+          <div fxFlex></div>
+        </md-list-item>
+        <md-divider *ngIf="!last" md-inset></md-divider>
 
 
-    </ng-template>
+      </ng-template>
 
-  </md-list>
+    </md-list>
 
-</md-card>
+  </md-card>
+</div>
 
 
 <!-- <md-card class="width">
