@@ -2,6 +2,7 @@ import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import * as _ from 'lodash';
 import 'rxjs/add/operator/pluck';
 
@@ -24,6 +25,8 @@ export class FacultyComponent implements OnInit {
   constructor(private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
+    private loadingService: TdLoadingService,
+    private dialogService: TdDialogService,
     private facultyDataContext: FacultyDataContextService,
     private facWorkGroupService: FacWorkgroupService,
   ) {
@@ -36,10 +39,10 @@ export class FacultyComponent implements OnInit {
       this.activate();
     });
 
-     this.facWorkGroupService.onListView$.subscribe(value => {
-       this.onListView = value;
+    this.facWorkGroupService.onListView$.subscribe(value => {
+      this.onListView = value;
     });
-this.titleService.setTitle('WorkGroup Center');
+    this.titleService.setTitle('WorkGroup Center');
   }
 
   setActiveCourse(course: Course): void {
@@ -48,7 +51,7 @@ this.titleService.setTitle('WorkGroup Center');
     this.facWorkGroupService.course(course);
 
     this.router.navigate(['list', this.activeCourseId], { relativeTo: this.route });
-    
+
   }
 
   activate(force?: boolean): void {
@@ -72,8 +75,13 @@ this.titleService.setTitle('WorkGroup Center');
   }
 
   refreshData() {
+    this.loadingService.register();
     this.facultyDataContext.getActiveCourse(this.activeCourseId, true).then(res => {
+      this.loadingService.resolve();
       this.setActiveCourse(res as Course);
+    }).catch(error => {
+      this.loadingService.resolve();
+      this.dialogService.openAlert({message: 'Error refreshing Course list. Please try again.', title: 'Error Retrieving Course'});        
     });
   }
 

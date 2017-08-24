@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { ActivatedRoute, Router } from "@angular/router";
-import { TdDialogService } from "@covalent/core";
+import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { Observable } from "rxjs/Observable";
@@ -45,6 +45,7 @@ export class StatusComponent implements OnInit {
   constructor(private ctx: FacultyDataContextService,
     private global: GlobalService,
     private dialogService: TdDialogService,
+    private loadingService: TdLoadingService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -104,10 +105,15 @@ export class StatusComponent implements OnInit {
   }
 
   refreshData() {
+    this.loadingService.register();
     this.ctx.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true)
       .then(data => {
+        this.loadingService.resolve();
         this.workGroup = data;
         this.activate();
+      }).catch(error => {
+        this.loadingService.resolve();
+        this.dialogService.openAlert({message: 'Something went wrong with retrieving the group status on the server. Please try again.', title: 'Error Retrieving Status'});        
       });
   }
 

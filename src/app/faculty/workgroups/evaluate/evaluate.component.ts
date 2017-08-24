@@ -262,11 +262,11 @@ export class EvaluateComponent implements OnInit {
             this.activate();
           }, rejected => {
             this.loadingService.resolve();
-            this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+            this.dialogService.openAlert({message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status'});
             this.activate();
           }).catch((e: Event) => {
             this.loadingService.resolve();
-            this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+            this.dialogService.openAlert({message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status'});
             this.activate();
           })
         }
