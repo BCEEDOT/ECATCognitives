@@ -44,7 +44,7 @@ export class SpProviderService {
         })
         .catch((result) => {
           console.log('error');
-          return result;
+          throw result;
         })
     } else {
       return this.facultyDataContext.commit()
@@ -54,7 +54,7 @@ export class SpProviderService {
         })
         .catch((result) => {
           console.log('error');
-          return result;
+          throw result;
         })
     }
   }

@@ -141,6 +141,7 @@ export class StratComponent implements OnInit, OnChanges {
       this.user.updateStatusOfPeer();
       this.snackBarService.open("Success, Strats Updated!", 'Dismiss', { duration: 2000 })
     }).catch((error) => {
+      this.user.updateStatusOfPeer();
       this.dialogService.openAlert({
         message: 'There was an error saving your changes, please try again.'
       })
