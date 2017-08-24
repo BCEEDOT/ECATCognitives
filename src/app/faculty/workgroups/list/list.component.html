@@ -3,7 +3,11 @@
     <td-chips [items]="filteredStrings" (add)="add($event)" [debounce]="500" (remove)="remove($event)" [(ngModel)]="stringsModel"
       placeholder="Click to filter by flight" (inputChange)="filterStrings($event)" requireMatch>
     </td-chips>
-    <md-list>
+    <md-list *ngIf="workGroups?.length < 1">
+      <p class=" text-center md-subhead pad-bottom-md">No Flights</p>
+    </md-list>
+
+    <md-list *ngIf="workGroups?.length > 0">
  
       <ng-template let-workGroup let-last="last" ngFor [ngForOf]="workGroups">
         <div #row fxLayout="row" fxLayoutGap="20px" (mouseover)="row.options = true" (mouseout)="row.options = false">
