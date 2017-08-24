@@ -66,11 +66,12 @@ export class CourseEnrollComponent implements OnInit {
   }
 
   pollEnrollments() {
+    console.log(this.course);
     this.loadingService.register();
     this.lmsadminDataContextService.pollCourseMembers(this.course.id).then(data => {
       this.loadingService.resolve();
-      this.course.students.push(...data.students);
-      this.course.faculty.push(...data.faculty);
+      // this.course.students.push(...data.students);
+      // this.course.faculty.push(...data.faculty);
       
       this.dialogService.openAlert({
         message: 'Accounts Created: ' + data.numOfAccountCreated + '\n Accounts Enrolled: ' + data.numAdded + '\n Accounts Disenrolled: ' + data.numRemoved,

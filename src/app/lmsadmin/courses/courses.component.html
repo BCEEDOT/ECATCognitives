@@ -1,8 +1,8 @@
-<md-card>
+<md-card class="width">
   <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="replace" tdLoadingType="circle">
-    <md-card-title>
-      <div fxFlex="100" class="text-center">
-        ISA Home - Course List
+    <md-card-title fxLayout="row">
+      <div fxFlexOffset="40%" fxFlexAlign="center">
+        Course List
       </div>
       <span fxFlex></span>
       <button md-raised-button (click)="this.pollCourses()">Poll LMS Courses</button>
