@@ -66,12 +66,17 @@ export class CourseEnrollComponent implements OnInit {
   }
 
   pollEnrollments() {
-    console.log(this.course);
     this.loadingService.register();
     this.lmsadminDataContextService.pollCourseMembers(this.course.id).then(data => {
       this.loadingService.resolve();
-      // this.course.students.push(...data.students);
-      // this.course.faculty.push(...data.faculty);
+      // if (data.numRemoved > 0) {
+      //   this.course.students.forEach(stud => {
+      //     if (stud.student == null) {stud.entityAspect.setDetached();}
+      //   })
+      //   this.course.faculty.forEach(fac => {
+      //     if (fac.facultyProfile == null) {fac.entityAspect.setDetached();}
+      //   })
+      // }
       
       this.dialogService.openAlert({
         message: 'Accounts Created: ' + data.numOfAccountCreated + '\n Accounts Enrolled: ' + data.numAdded + '\n Accounts Disenrolled: ' + data.numRemoved,
@@ -79,7 +84,7 @@ export class CourseEnrollComponent implements OnInit {
         closeButton: 'Dismiss'
       });
       
-      this.activate();
+      this.refreshData();
     }).catch((e: Event) => {
       this.loadingService.resolve();
       console.log('Error retrieving course enrollments ' + e);
