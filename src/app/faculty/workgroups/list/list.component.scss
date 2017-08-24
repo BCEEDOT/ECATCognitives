@@ -3,3 +3,14 @@
     //width: 800px;
     margin: 0 auto;
 }
+
+:host /deep/ {
+    .tab-icon {
+    vertical-align: middle;
+    font-size: 28px;
+    }
+    .small-tab-icon {
+        vertical-align: super;
+        font-size: 18px;
+    }
+}
