@@ -3,6 +3,7 @@ import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/
 import { TdChipsComponent } from "@covalent/core";
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { WorkGroup, SpResponse } from "../../../core/entities/student/index";
+import { GlobalService } from "../../../core/services/global.service";
 
 
 @Component({
@@ -41,7 +42,7 @@ export class AssessCompareDialog {
     //domain: ['#0D47A1', '#FFCC80', '#1976D2', '#039BE5', '#00BCD4', '#FB8C00', '#FFA726', '#FFCC80', '#FFECB3'],
   };
 
-  constructor(public dialogRef: MdDialogRef<AssessCompareDialog>, private chips: TdChipsComponent,
+  constructor(public dialogRef: MdDialogRef<AssessCompareDialog>, private chips: TdChipsComponent, private globalService: GlobalService,
     @Inject(MD_DIALOG_DATA) public data: any) {
 
     let grp: WorkGroup = data.workGroup;
@@ -67,17 +68,32 @@ export class AssessCompareDialog {
         });
 
         let i = 1;
-        mem.assesseeSpResponses.forEach(resp => {
-          let behavior = {
-            name: '',
-            value: 0,
-          };
-          behavior.name = resp.inventoryItem.behavior.slice(0, 15);
-          behavior.value = resp.itemModelScore;
-          memData.series.push(behavior);
-
-          i++;
-        });
+        if (mem.studentId === this.globalService.persona.value.person.personId) {
+          let selfResp = mem.assesseeSpResponses.filter(resp => resp.assesseePersonId === resp.assessorPersonId);
+          selfResp.forEach(resp => {
+            let behavior = {
+              name: '',
+              value: 0,
+            };
+            behavior.name = resp.inventoryItem.behavior.slice(0, 15);
+            behavior.value = resp.itemModelScore;
+            memData.series.push(behavior);
+  
+            i++;
+          });
+        } else {
+          mem.assesseeSpResponses.forEach(resp => {
+            let behavior = {
+              name: '',
+              value: 0,
+            };
+            behavior.name = resp.inventoryItem.behavior.slice(0, 15);
+            behavior.value = resp.itemModelScore;
+            memData.series.push(behavior);
+  
+            i++;
+          });
+        }
       }
       this.multi.push(memData);
     });
