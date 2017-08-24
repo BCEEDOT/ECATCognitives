@@ -13,6 +13,7 @@ import { Course, WorkGroup } from "../core/entities/student";
 import { WorkGroupService } from "./services/workgroup.service";
 import { StudentDataContext } from "./services/student-data-context.service"
 import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   //Selector only needed if another template is going to refernece
@@ -34,6 +35,8 @@ export class StudentComponent implements OnInit, OnDestroy {
   grpDisplayName = 'Not Set';
   assessIsLoaded = 'assessIsLoaded';
   dialogRef: MdDialogRef<AssessCompareDialog>;
+  onListView: boolean = true;
+  viewSub: Subscription;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -93,6 +96,7 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.workGroupService.workGroup(null);
+    this.viewSub.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -104,6 +108,10 @@ export class StudentComponent implements OnInit, OnDestroy {
 
         this.activate(false);
       }
+    });
+
+    this.viewSub = this.workGroupService.onListView$.subscribe(value => {
+      this.onListView = value;
     });
 
   }

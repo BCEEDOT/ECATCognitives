@@ -6,7 +6,7 @@
     </a>
   </div>
   <div class="width">
-    <div fxLayout="row" fxLayoutAlign="end" class="pad-top-sm">
+    <div fxLayout="row" fxLayoutAlign="end" class="pad-top-sm" *ngIf="onListView">
       <div fxFlex></div>
       <div *ngIf="activeWorkGroup" class="pad-top-sm">
         <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
@@ -37,7 +37,7 @@
 
   </router-outlet>
 </td-layout-nav>
-<div *ngIf="activeWorkGroup">
+<div *ngIf="activeWorkGroup && onListView">
   <a md-fab color="primary" class="mat-fab-bottom-right" (click)="assessCompare()" mdTooltip="Compare" mdTooltipPosition="left">
     <md-icon>show_chart</md-icon>
   </a>

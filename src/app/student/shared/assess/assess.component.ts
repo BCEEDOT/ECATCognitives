@@ -1,5 +1,6 @@
 import { Subject } from "rxjs/Subject";
 import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from "@angular/router";
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 import 'rxjs/add/operator/takeUntil';
@@ -9,7 +10,6 @@ import { WorkGroupService } from "../../services/workgroup.service";
 import { GlobalService } from "../../../core/services/global.service"
 import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
 import { MpSpStatus } from "../../../core/common/mapStrings";
-
 
 @Component({
   selector: 'assess',
@@ -30,7 +30,7 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
   ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService, private router: Router, private route: ActivatedRoute) {
   }
 
   @Input() workGroup: WorkGroup;
@@ -82,6 +82,11 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
 
   comment(recipient: CrseStudentInGroup): any {
     this.spProvider.loadComment(recipient).takeUntil(this.ngUnsubscribe).subscribe(() => { this.activate() });
+  }
+
+  assess(assesseeId: number) {
+    this.router.navigate(['assess/' + assesseeId], {relativeTo: this.route});
+    this.workGroupService.onListView(false);
   }
 
 }

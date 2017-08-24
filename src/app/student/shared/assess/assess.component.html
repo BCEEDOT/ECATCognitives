@@ -18,7 +18,7 @@
       </div>
     </div>
     <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
-        <button md-button [routerLink]="['assess/' + user.studentId]"><md-icon>{{user?.assessText}}</md-icon> Assessment </button>
+        <button md-button (click)="assess(user.studentId)"><md-icon>{{user?.assessText}}</md-icon> Assessment </button>
         </span>
     <span flex="60" class="pad-right-lg md-body-1 tc-grey-500"></span>
     <span flex></span>
@@ -34,7 +34,7 @@
         </div>
       </div>
       <span flex="70" class="pad-right-lg md-body-1 tc-grey-500">
-          <button md-button [routerLink]="['assess/' + peer.studentId]"><md-icon>{{peer?.assessText}}</md-icon> Assessment</button>
+          <button md-button (click)="assess(peer.studentId)"><md-icon>{{peer?.assessText}}</md-icon> Assessment</button>
       </span>
       <span flex="60" class="pad-right-lg md-body-1 tc-grey-500">
            <button md-button *ngIf="peer?.commentText !== 'not_interested'"  (click)="comment(peer)"><md-icon>{{peer?.commentText}}</md-icon> Comment</button>

@@ -87,7 +87,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   activate(force?: boolean): void {
-
+    this.workGroupService.onListView(true);
     this.activeTab = 0;
 
     this.activeWorkGroup.groupMembers.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {

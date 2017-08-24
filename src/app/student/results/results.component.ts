@@ -34,6 +34,7 @@ export class ResultsComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading = true;
+    this.workGroupService.onListView(true);
 
     this.studentDataContext.fetchWgResult(this.paramWorkGroupId)
       .then((results: SpResult) => {

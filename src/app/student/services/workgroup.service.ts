@@ -13,6 +13,7 @@ export class WorkGroupService {
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     assessComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     stratComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+    onListView$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     workGroup(workGroup: WorkGroup) {
         this.workGroup$.next(workGroup);
@@ -28,6 +29,10 @@ export class WorkGroupService {
 
     stratComplete(stratComplete: boolean){
         this.stratComplete$.next(stratComplete);
+    }
+
+    onListView(onListView: boolean) {
+        this.onListView$.next(onListView);
     }
 
 }
