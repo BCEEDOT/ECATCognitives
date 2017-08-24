@@ -16,13 +16,19 @@
         </md-menu>
         <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
       </md-card-title>
-      <md-tab-group md-stretch-tabs>
+      <md-tab-group>
         <md-tab>
-          <ng-template md-tab-label>Behaviors</ng-template>
+          <ng-template md-tab-label>
+            <md-icon class="tab-icon">assignment</md-icon>
+            Behaviors
+          </ng-template>
           <results-behaviors *ngIf="selStudent" [student]="selStudent"></results-behaviors>
         </md-tab>
         <md-tab>
-          <ng-template md-tab-label>Comments</ng-template>
+          <ng-template md-tab-label>
+            <md-icon class="tab-icon">comment</md-icon>
+            Comments
+          </ng-template>
           <results-comments *ngIf="selStudent" [student]="selStudent"></results-comments>
         </md-tab>
       </md-tab-group>

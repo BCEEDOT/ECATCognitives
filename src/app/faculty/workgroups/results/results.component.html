@@ -22,15 +22,17 @@
       <span fxFlex></span>
       <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
     </md-card-title>
-    <md-tab-group md-stretch-tabs>
+    <md-tab-group>
       <md-tab>
         <ng-template md-tab-label>
+          <md-icon class="tab-icon">assessment</md-icon>
           Assessment Overview
         </ng-template>
         <assess-overview [membersResults]="membersResults"></assess-overview>
       </md-tab>
       <md-tab>
         <ng-template md-tab-label>
+          <md-icon class="tab-icon">format_list_numbered</md-icon>
           Strat Overview
         </ng-template>
         <strat-overview [membersResults]="membersResults"></strat-overview>
