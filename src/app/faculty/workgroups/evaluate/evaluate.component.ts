@@ -230,6 +230,11 @@ export class EvaluateComponent implements OnInit, OnDestroy {
       });
 
     } else {
+      if (this.workGroup.spComments.some(comm => comm.flag.entityAspect.entityState.isAddedModifiedOrDeleted())) {
+        this.dialogService.openAlert({message: 'You have pending comment flag changes. Please cancel or save on the Review Comments tab before changing group status.', title: 'Unsaved Changes'});
+        return;
+      }
+
       let setTo;
       let setReadOnly;
       switch (this.workGroup.mpSpStatus) {
@@ -281,6 +286,11 @@ export class EvaluateComponent implements OnInit, OnDestroy {
   }
 
   reopenFlight(){
+    if (this.workGroup.spComments.some(comm => comm.flag.entityAspect.entityState.isAddedModifiedOrDeleted())) {
+      this.dialogService.openAlert({message: 'You have pending comment flag changes. Please cancel or save on the Review Comments tab before changing group status.', title: 'Unsaved Changes'});
+      return;
+    }
+
     let setTo;
     let setReadOnly;
     let message: string = '';
