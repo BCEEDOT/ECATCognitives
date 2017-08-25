@@ -582,8 +582,9 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           Promise.all([deletedPromise, changedPromise, addedPromise]).then((message) => {
             this.loadingService.resolve();
             this.changes = this.lmsadminDataContext.getChanges();
-            this.location.back();
-            this.snackBar.open('All Changes Save', 'Dismiss', { duration: 2000 });
+            //this.location.back();
+            this.startOver();
+            this.snackBar.open('All Changes Saved', 'Dismiss', { duration: 2000 });
           }).catch((errors) => {
             this.loadingService.resolve();
             this.reset(true);
