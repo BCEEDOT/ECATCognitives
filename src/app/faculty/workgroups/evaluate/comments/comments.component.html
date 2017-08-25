@@ -27,7 +27,7 @@
     <md-list-item *ngFor="let comment of authoredComments" [ngClass]="{'selected': this.selectedComment == comment }" (click)="this.selectedComment = comment">
       <span>{{comment?.recipient?.rankName}}</span>
       <span fxFlex></span>
-      <md-icon [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.icon}}</md-icon>
+      <md-icon [ngClass]="(comment?.flag?.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.icon}}</md-icon>
     </md-list-item>
   </md-list>
   <span fxFlex=".5"></span>
@@ -41,8 +41,8 @@
       <p>{{selectedComment?.commentText}}</p>
     </md-card-content>
     <md-card-actions>
-      <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.appr">Appropriate</button>
-      <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.inappr">Inappropriate</button>
+      <button md-raised-button [ngClass]="{'appr': this.selectedComment?.flag?.mpFaculty === this.commFlagMap.appr}" (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.appr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.appr">Appropriate</button>
+      <button md-raised-button [ngClass]="{'inappr': this.selectedComment?.flag?.mpFaculty === this.commFlagMap.inappr}"  (click)="this.selectedComment?.flag.mpFaculty = this.commFlagMap.inappr; this.checkComplete()" [disabled]="viewOnly && this.selectedComment?.flag.mpFaculty !== this.commFlagMap.inappr">Inappropriate</button>
     </md-card-actions>
   </md-card>
 </md-card-content>

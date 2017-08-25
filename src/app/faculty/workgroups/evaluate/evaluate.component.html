@@ -35,7 +35,7 @@
             <md-icon class="small-tab-icon" *ngIf="!showComments && workGroup.mpSpStatus !== statusMap.published">lock</md-icon>
             <md-icon class="small-tab-icon" *ngIf="showComments && workGroup.mpSpStatus !== statusMap.published" [ngClass]="(commentsComplete) ? 'tc-green-700' : 'tc-red-700'">{{commentStatusIcon}}</md-icon>
           </ng-template>
-          <comments [members]="members"></comments>
+          <comments *ngIf="showComments" [members]="members"></comments>
         </md-tab>
       </md-tab-group>
     </md-card>

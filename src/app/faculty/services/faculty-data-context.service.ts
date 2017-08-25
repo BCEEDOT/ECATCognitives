@@ -331,6 +331,12 @@ export class FacultyDataContextService extends BaseDataContext {
     let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
     let activeWgComments = spComments.filter(com => com.workGroupId === groupId);
 
+    if (forceRefresh) {
+      if (activeWgComments) {
+        activeWgComments.forEach(comment => this.manager.detachEntity(comment));
+      }
+    }
+
     if (activeWgComments.length > 0 && !forceRefresh) {
       console.log('WorkGroup loaded from local cache');
       return Promise.resolve(activeWgComments);

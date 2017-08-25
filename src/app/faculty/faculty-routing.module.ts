@@ -104,7 +104,18 @@ export function facSpAssessResolver(facultyDataContext: FacultyDataContextServic
 // }
 
 export function facWorkGroupResolver(facultyDataContext: FacultyDataContextService) {
-  return (route: ActivatedRouteSnapshot) => facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']);
+  return (route: ActivatedRouteSnapshot) => {
+    return facultyDataContext.fetchActiveWorkGroup(+route.params['crsId'], +route.params['wrkGrpId']).then(workGroup => {
+      if (workGroup.mpSpStatus !== 'Open') {
+        return facultyDataContext.fetchActiveWgSpComments(+route.params['crsId'], +route.params['wrkGrpId'], true).then(_ => {
+          return workGroup;
+        });
+      }
+      return workGroup;
+    });
+  }
+
+
 }
 
 export function facStatusResolver(facultyDataContext: FacultyDataContextService) {

@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges } from '@angular/core';
 import { Location } from '@angular/common';
 import { MdSnackBar } from '@angular/material';
 import { TdDialogService, TdLoadingService } from "@covalent/core";
-
 import { Subscription } from "rxjs/Subscription";
 
 import { WorkGroup, CrseStudentInGroup, StudSpComment } from "../../../../core/entities/faculty";
@@ -16,7 +15,8 @@ import { FacWorkgroupService } from "../../../services/facworkgroup.service";
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })
-export class CommentsComponent implements OnInit, OnDestroy {
+
+export class CommentsComponent implements OnInit, OnDestroy, OnChanges {
 
   memsWithComments: CrseStudentInGroup[];
   selectedAuthor: CrseStudentInGroup;
@@ -34,7 +34,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
     private snackBar: MdSnackBar,
     private dialogService: TdDialogService,
     private loadingService: TdLoadingService,
-    private facWorkGroupService: FacWorkgroupService,) { }
+    private facWorkGroupService: FacWorkgroupService, ) { }
 
   @Input() members: CrseStudentInGroup[];
 
@@ -42,7 +42,13 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.roSub = this.facWorkGroupService.readOnly$.subscribe(ro => {
       this.viewOnly = ro;
     });
-    this.ctx.fetchActiveWgSpComments(this.members[0].courseId, this.members[0].workGroupId).then(_ => this.activate());
+
+    // this.ctx.fetchActiveWgSpComments(this.members[0].courseId, this.members[0].workGroupId)
+    //   .then(_ => this.activate());
+  }
+
+  ngOnChanges() {
+    this.activate();
   }
 
   ngOnDestroy(){
@@ -52,7 +58,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
   activate() {
     this.memsWithComments = [];
     this.members.forEach(mem => {
-      if (mem.authorOfComments.length > 0){
+      if (mem.authorOfComments.length > 0) {
         mem['numRemaining'] = mem.authorOfComments.filter(com => com.flag.mpFaculty === null).length;
         mem['apprFlags'] = mem.authorOfComments.filter(com => com.flag.mpFaculty === MpCommentFlag.appr).length;
         mem['inapprFlags'] = mem.authorOfComments.filter(com => com.flag.mpFaculty === MpCommentFlag.inappr).length;
@@ -60,7 +66,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
       }
     });
 
-    if(this.memsWithComments.length === 0) {
+    if (this.memsWithComments.length === 0) {
       this.grpHasComments = false;
       this.facWorkGroupService.commentsComplete(true);
       return;
@@ -70,11 +76,11 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
     this.viewOnly = (this.selectedAuthor.workGroup.mpSpStatus === MpSpStatus.underReview) ? false : true;
 
-    if (this.memsWithComments.some(mem => mem['numRemaining'] > 0)){
-        this.facWorkGroupService.commentsComplete(false);
+    if (this.memsWithComments.some(mem => mem['numRemaining'] > 0)) {
+      this.facWorkGroupService.commentsComplete(false);
     } else {
       this.hasChanges = this.selectedAuthor.workGroup.spComments.some(com => com.flag.entityAspect.entityState.isAddedModifiedOrDeleted());
-      if (this.hasChanges){
+      if (this.hasChanges) {
         this.facWorkGroupService.commentsComplete(false);
       } else {
         this.facWorkGroupService.commentsComplete(true);
@@ -84,15 +90,15 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.changeAuthor(this.selectedAuthor);
   }
 
-  changeAuthor(sel: CrseStudentInGroup){
+  changeAuthor(sel: CrseStudentInGroup) {
     this.selectedAuthor = sel;
     this.authoredComments = this.selectedAuthor.authorOfComments;
 
     this.authoredComments.sort((a: StudSpComment, b: StudSpComment) => {
-      if (a.recipient.studentProfile.person.lastName > b.recipient.studentProfile.person.lastName) {return 1;}
-      if (a.recipient.studentProfile.person.lastName < b.recipient.studentProfile.person.lastName) {return -1;}
-      if (a.recipient.studentProfile.person.firstName > b.recipient.studentProfile.person.firstName) {return 1;}
-      if (a.recipient.studentProfile.person.firstName < b.recipient.studentProfile.person.firstName) {return -1;}
+      if (a.recipient.studentProfile.person.lastName > b.recipient.studentProfile.person.lastName) { return 1; }
+      if (a.recipient.studentProfile.person.lastName < b.recipient.studentProfile.person.lastName) { return -1; }
+      if (a.recipient.studentProfile.person.firstName > b.recipient.studentProfile.person.firstName) { return 1; }
+      if (a.recipient.studentProfile.person.firstName < b.recipient.studentProfile.person.firstName) { return -1; }
       return 0;
     });
 
@@ -100,9 +106,9 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.selectedComment = this.authoredComments[0];
   }
 
-  checkComplete(){
+  checkComplete() {
     this.selectedAuthor.authorOfComments.forEach(com => {
-      switch(com.flag.mpFaculty){
+      switch (com.flag.mpFaculty) {
         case MpCommentFlag.appr: com['icon'] = 'done'; break;
         case MpCommentFlag.inappr: com['icon'] = 'highlight_off'; break;
         default: com['icon'] = '';
@@ -118,25 +124,25 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.hasChanges = this.selectedAuthor.workGroup.spComments.some(com => com.flag.entityAspect.entityState.isAddedModifiedOrDeleted());
   }
 
-  massSetAll(){
+  massSetAll() {
     let allUnflagged = this.members[0].workGroup.spComments.filter(com => com.flag.mpFaculty === null);
     allUnflagged.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
     this.activate();
   }
 
-  massResetAll(){
+  massResetAll() {
     let allComments = this.members[0].workGroup.spComments;
     allComments.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
     this.activate();
   }
 
-  massSetAuthor(){
+  massSetAuthor() {
     let authUnflagged = this.authoredComments.filter(com => com.flag.mpFaculty === null);
     authUnflagged.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
     this.activate();
   }
 
-  massResetAuthor(){
+  massResetAuthor() {
     this.authoredComments.forEach(com => com.flag.mpFaculty = MpCommentFlag.appr);
     this.activate();
   }
@@ -145,24 +151,24 @@ export class CommentsComponent implements OnInit, OnDestroy {
     this.loadingService.register();
     this.ctx.commit().then(fulfilled => {
       this.facWorkGroupService.isLoading(false);
-      this.snackBar.open('Comment Flags Saved!', 'Dismiss', {duration: 2000});
+      this.snackBar.open('Comment Flags Saved!', 'Dismiss', { duration: 2000 });
       this.loadingService.resolve();
       this.activate();
     }, (reject => {
-      this.loadingService.resolve();    
-      this.dialogService.openAlert({message: 'There was a problem saving your flags, please try again.', title: 'Save Error'});
+      this.loadingService.resolve();
+      this.dialogService.openAlert({ message: 'There was a problem saving your flags, please try again.', title: 'Save Error' });
     }));
   }
 
   discard() {
     let changes = this.selectedAuthor.workGroup.spComments.filter(com => com.flag.entityAspect.entityState.isAddedModifiedOrDeleted());
 
-    if (changes.length > 0){
+    if (changes.length > 0) {
       this.dialogService.openConfirm({
-          message: 'You have ' + changes.length + ' unsaved comment flag changes. Are you sure you want to discard them?',
-          title: 'Discard Changes',
-          acceptButton: 'Yes',
-          cancelButton: 'No'
+        message: 'You have ' + changes.length + ' unsaved comment flag changes. Are you sure you want to discard them?',
+        title: 'Discard Changes',
+        acceptButton: 'Yes',
+        cancelButton: 'No'
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           changes.forEach(com => com.flag.entityAspect.rejectChanges());
@@ -170,7 +176,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.dialogService.openAlert({message: 'No changes to discard.', title: 'Discard Changes'});
+      this.dialogService.openAlert({ message: 'No changes to discard.', title: 'Discard Changes' });
     }
   }
 }

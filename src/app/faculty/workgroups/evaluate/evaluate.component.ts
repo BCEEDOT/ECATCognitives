@@ -109,8 +109,8 @@ export class EvaluateComponent implements OnInit, OnDestroy {
     this.members.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
       if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
       if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
-      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
-      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
+      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) { return 1; }
+      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) { return -1; }
       return 0;
     });
 
@@ -169,9 +169,10 @@ export class EvaluateComponent implements OnInit, OnDestroy {
       case MpSpStatus.published:
         this.canReview = false;
         this.showComments = true;
-        this.facWorkGroupService.readOnly(true);        
+        this.facWorkGroupService.readOnly(true);
         break;
     }
+    this.members = this.members.slice();
     this.loadingService.resolve();
   }
 
@@ -265,21 +266,28 @@ export class EvaluateComponent implements OnInit, OnDestroy {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.loadingService.register();
-          this.workGroup.mpSpStatus = setTo;
-          this.facWorkGroupService.readOnly(setReadOnly);
-          this.facultyDataContext.commit().then(success => {
-            this.loadingService.resolve();
-            this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
-            this.activate();
-          }, rejected => {
-            this.loadingService.resolve();
-            this.dialogService.openAlert({message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status'});
-            this.activate();
-          }).catch((e: Event) => {
-            this.loadingService.resolve();
-            this.dialogService.openAlert({message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status'});
-            this.activate();
-          })
+
+          this.facultyDataContext.fetchActiveWgSpComments(this.workGroup.courseId, this.workGroup.workGroupId, true).then(_ => {
+
+            this.workGroup.mpSpStatus = setTo;
+            this.facWorkGroupService.readOnly(setReadOnly);
+            this.facultyDataContext.commit().then(success => {
+              this.loadingService.resolve();
+              this.snackBar.open('Group Status Updated!', 'Dismiss', { duration: 2000 });
+              this.activate();
+            }, rejected => {
+              this.loadingService.resolve();
+              this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
+              this.activate();
+            }).catch((e: Event) => {
+              this.loadingService.resolve();
+              this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
+              this.activate();
+            });
+
+          });
+
+
         }
       });
     }
@@ -318,25 +326,25 @@ export class EvaluateComponent implements OnInit, OnDestroy {
       acceptButton: 'Yes',
       cancelButton: 'No'
     }).afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed){
+      if (confirmed) {
         this.loadingService.register();
         this.workGroup.mpSpStatus = setTo;
         this.facWorkGroupService.readOnly(setReadOnly);
         this.facultyDataContext.commit().then(success => {
           this.loadingService.resolve();
-          this.snackBar.open('Group Status Updated!', 'Dismiss', {duration: 2000});
+          this.snackBar.open('Group Status Updated!', 'Dismiss', { duration: 2000 });
           if (this.workGroup.mpSpStatus === MpSpStatus.open) {
             this.showComments = false;
-            if (this.tabIndex === 2) {this.tabIndex = 0;}
+            if (this.tabIndex === 2) { this.tabIndex = 0; }
           }
           this.refreshData();
         }, rejected => {
           this.loadingService.resolve();
-          this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+          this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
           this.activate();
         }).catch((e: Event) => {
           this.loadingService.resolve();
-          this.dialogService.openAlert({message: 'Something went wrong with updaing the group status on the server. Please try again.', title: 'Error Updating Status'});
+          this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
           this.activate();
         })
       }
@@ -344,10 +352,42 @@ export class EvaluateComponent implements OnInit, OnDestroy {
   }
 
   refreshData() {
-    this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true).then(data => {
-      this.workGroup = data;
-      this.facWorkGroupService.facWorkGroup(this.workGroup);
-      this.activate();
-    })
+
+
+    this.loadingService.register();
+
+
+    if (this.showComments) {
+      let promise1 = this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true);
+      let promise2 = this.facultyDataContext.fetchActiveWgSpComments(this.workGroup.courseId, this.workGroup.workGroupId, true);
+      //this.members = this.members.slice();
+      Promise.all([promise1, promise2]).then(data => {
+
+        this.loadingService.resolve();
+        this.workGroup = data[0];
+        this.facWorkGroupService.facWorkGroup(this.workGroup);
+        this.activate();
+      }).catch(error => {
+        this.loadingService.resolve();
+        this.dialogService.openAlert({ message: 'There was a problem refreshing this group, please try again.', title: 'Refresh Error' });
+      });
+    } else {
+      let promise1 = this.facultyDataContext.fetchActiveWorkGroup(this.workGroup.courseId, this.workGroup.workGroupId, true)
+        .then(data => {
+          this.loadingService.resolve();
+          this.workGroup = data;
+          this.members = this.members.slice();
+          this.facWorkGroupService.facWorkGroup(this.workGroup);
+          this.activate();
+
+        }).catch(error => {
+          this.loadingService.resolve();
+          this.dialogService.openAlert({ message: 'There was a problem refreshing this group, please try again.', title: 'Refresh Error' });
+        });
+    }
+
+    this.facWorkGroupService.readOnly(false);
+    this.tabIndex = 0;
+
   }
 }
