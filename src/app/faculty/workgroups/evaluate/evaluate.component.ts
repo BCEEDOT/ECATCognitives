@@ -266,28 +266,30 @@ export class EvaluateComponent implements OnInit, OnDestroy {
       }).afterClosed().subscribe((confirmed: boolean) => {
         if (confirmed) {
           this.loadingService.register();
+          this.workGroup.mpSpStatus = setTo;
+          this.facWorkGroupService.readOnly(setReadOnly);
+          this.facultyDataContext.commit().then(success => {
+            this.snackBar.open('Group Status Updated!', 'Dismiss', { duration: 2000 });
 
-          this.facultyDataContext.fetchActiveWgSpComments(this.workGroup.courseId, this.workGroup.workGroupId, true).then(_ => {
-
-            this.workGroup.mpSpStatus = setTo;
-            this.facWorkGroupService.readOnly(setReadOnly);
-            this.facultyDataContext.commit().then(success => {
+            this.facultyDataContext.fetchActiveWgSpComments(this.workGroup.courseId, this.workGroup.workGroupId, true).then(_ => {
               this.loadingService.resolve();
-              this.snackBar.open('Group Status Updated!', 'Dismiss', { duration: 2000 });
               this.activate();
-            }, rejected => {
+            })
+            .catch((e: Event) => {
               this.loadingService.resolve();
-              this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
-              this.activate();
-            }).catch((e: Event) => {
-              this.loadingService.resolve();
-              this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
+              console.log('Error fetching workgroup comments');
               this.activate();
             });
 
+          }, rejected => {
+            this.loadingService.resolve();
+            this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
+            this.activate();
+          }).catch((e: Event) => {
+            this.loadingService.resolve();
+            this.dialogService.openAlert({ message: 'Something went wrong with updating the group status on the server. Please try again.', title: 'Error Updating Status' });
+            this.activate();
           });
-
-
         }
       });
     }
