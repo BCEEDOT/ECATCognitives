@@ -11,13 +11,13 @@
 
       <ng-template let-workGroup let-last="last" ngFor [ngForOf]="workGroups">
         <div #row fxLayout="row" fxLayoutGap="20px" (mouseover)="row.options = true" (mouseout)="row.options = false">
-          <md-list-item fxFlex="30">
+          <md-list-item fxFlex="20">
             <h3 class="md-subhead tc-grey-700"> {{workGroup?.mpCategory}}</h3>
           </md-list-item>
-          <md-list-item fxFlex="30">
-            <h3 class="md-subhead"> Flight {{workGroup?.groupNumber}}</h3>
+          <md-list-item fxFlex="50">
+            <h3 class="md-subhead"> {{workGroup?.defaultName}}  {{workGroup?.customName}}</h3>
           </md-list-item>
-          <md-list-item fxFlex="30">
+          <md-list-item fxFlex="20">
             <h3 class="md-subhead"> {{workGroup?.mpSpStatus}}</h3>
             <div *ngIf="workGroup?.mpSpStatus === 'Open'">
               <md-icon class="small-tab-icon tc-green-700" *ngIf="workGroup.canPublish">check_cirlce</md-icon>

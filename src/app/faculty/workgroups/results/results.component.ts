@@ -76,7 +76,7 @@ export class ResultsComponent implements OnInit {
     //   gm['hasGivenChartData'] = gm.statusOfStudent.gaveBreakOutChartData.some(cd => cd.data > 0);
     // });
 
-    this.workGroupName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
+    this.workGroupName = (this.workGroup.customName) ? `${this.workGroup.defaultName} ${this.workGroup.customName}` : this.workGroup.defaultName;
 
 
   }

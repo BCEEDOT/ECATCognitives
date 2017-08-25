@@ -63,15 +63,10 @@ export class ListComponent implements OnInit {
   }
 
   activate(): void {
-
-    const grpName = {};
+    this.strings = [];
 
     if (this.course.workGroups) {
       this.workGroups = this.workGroupOrig = this.course.workGroups.filter(wg => wg.mpSpStatus !== MpSpStatus.created);
-
-      this.workGroups.forEach((g, i, array) => {
-        grpName[g.groupNumber] = null;
-      });
 
       this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
         if (wgA.mpCategory < wgB.mpCategory) return -1;
@@ -91,11 +86,17 @@ export class ListComponent implements OnInit {
           statusText = 'Evaluate'
         }
         wg['statusText'] = statusText;
+
+        if (!this.strings.find(str => str === wg.defaultName)){
+          this.strings.push(wg.defaultName);
+        }
       });
 
-      this.strings = Object.keys(grpName)
-        .sort((a: any, b: any) => a - b)
-        .map(grpNum => `Flight ${grpNum}`);
+      this.strings.sort((a: string, b: string) => {
+        if (a < b) {return -1}
+        if (a > b) {return 1}
+        return 0
+      });
 
       this.filteredStrings = this.strings;
 
@@ -117,8 +118,8 @@ export class ListComponent implements OnInit {
       let match = false;
 
       this.stringsModel.forEach(item => {
-        let flight = `Flight ${wg.groupNumber}`;
-        if (flight === item) {
+        //let flight = `Flight ${wg.groupNumber}`;
+        if (wg.defaultName === item) {
           match = true;
         }
       });
@@ -135,8 +136,8 @@ export class ListComponent implements OnInit {
         let match = false;
 
         this.stringsModel.forEach(item => {
-          let flight = `Flight ${wg.groupNumber}`;
-          if (flight === item) {
+          //let flight = `Flight ${wg.groupNumber}`;
+          if (wg.defaultName === item) {
             match = true;
           }
         });
@@ -146,7 +147,6 @@ export class ListComponent implements OnInit {
     } else {
       this.workGroups = this.workGroupOrig;
     }
-
 
   }
 

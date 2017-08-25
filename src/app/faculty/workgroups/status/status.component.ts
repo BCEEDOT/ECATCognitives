@@ -63,7 +63,7 @@ export class StatusComponent implements OnInit {
   }
 
   activate() {
-    this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
+    this.wgName = (this.workGroup.customName) ? `${this.workGroup.defaultName} ${this.workGroup.customName}` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as Array<CrseStudExtended>;
     this.members.sort((a: CrseStudExtended, b: CrseStudExtended) => {
       if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) {return 1;}

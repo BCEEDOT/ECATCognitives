@@ -103,7 +103,7 @@ export class EvaluateComponent implements OnInit, OnDestroy {
     this.loadingService.register();
     //this.facWorkGroupService.readOnly(false);
     this.workGroupId = this.workGroup.workGroupId;
-    this.wgName = (this.workGroup.customName) ? `${this.workGroup.customName} [${this.workGroup.defaultName}]` : this.workGroup.defaultName;
+    this.wgName = (this.workGroup.customName) ? `${this.workGroup.defaultName} ${this.workGroup.customName}` : this.workGroup.defaultName;
     this.members = this.workGroup.groupMembers as CrseStudentInGroup[];
 
     this.members.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
