@@ -33,7 +33,9 @@ export class ListComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   readOnly: boolean = false;
   activeTab: number = 0;
+  test: boolean = false;
   subs: Subscription[] = [];
+  change: number = 1;
 
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
@@ -130,6 +132,9 @@ export class ListComponent implements OnInit, OnDestroy {
     });
 
     this.workGroupService.stratComplete(!stratIncomplete);
+    //Change added to input property of child assess component to trigger change detection
+    this.change++;
+
 
   }
 

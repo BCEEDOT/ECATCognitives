@@ -25,7 +25,7 @@
             <md-icon *ngIf=!assessComplete mdTooltip="Incomplete" class="small-tab-icon tc-red-700">error_outline</md-icon>
           </ng-template>
 
-          <assess [workGroup]="activeWorkGroup"></assess>
+          <assess [change]="change" [workGroup]="activeWorkGroup"></assess>
         </md-tab>
         <md-tab [disabled]="readOnly">
           <ng-template md-tab-label>

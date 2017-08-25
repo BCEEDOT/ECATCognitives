@@ -34,6 +34,7 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   @Input() workGroup: WorkGroup;
+  @Input() change: number;
 
   ngOnInit(): void {
     this.activate();
