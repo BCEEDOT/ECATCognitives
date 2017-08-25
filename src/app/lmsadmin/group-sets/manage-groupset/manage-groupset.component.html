@@ -44,7 +44,7 @@
       {{(allExpanded) ? 'Collapse' : 'Expand'}} All
     </md-slide-toggle>
   </div>
-  <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap>
+  <div fxLayout="row" fxLayoutAlign="space-around start" fxLayoutWrap class="pad-bottom-xl">
     <div fxFlex="25%" *ngFor="let workGroup of workGroups">
       <md-card *ngIf="readOnly">
         <td-expansion-panel [expand]="workGroup.isExpanded">

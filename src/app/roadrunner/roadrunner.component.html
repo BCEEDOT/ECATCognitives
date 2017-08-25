@@ -37,7 +37,7 @@
     </div>
     <p></p>
   </md-card>
-  <div *ngIf="persona.isStudent">
+  <div *ngIf="persona.isStudent" class="pad-bottom-lg">
     <div *tdLoading="'roadRunnerLoading'">
       <roadrunner-locations [roadRunnerInfos]="roadRunnerInfos" (signOut)="signOut($event)"></roadrunner-locations>
       <roadrunner-completed [roadRunnerInfos]="roadRunnerInfos"></roadrunner-completed>
