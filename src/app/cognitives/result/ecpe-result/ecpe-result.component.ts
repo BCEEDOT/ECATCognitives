@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from "@angular/router";
 import { isEmpty } from "lodash"
 
 import { CogEcpeResult } from "../../../core/entities/user";
 import { CogResultsService } from "../../services/cog-results.service";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
     selector: 'ecpe-result',
     templateUrl: './ecpe-result.component.html',
     styleUrls: ['./ecpe-result.component.scss']
 })
-export class EcpeResultComponent implements OnInit {
+export class EcpeResultComponent implements OnInit, OnDestroy {
 
     ecpeResult: CogEcpeResult;
+    resSub: Subscription;
     ecpeResultText: string;
 
     //TODO: Update eCPE mean and Standard Deviation values periodically based on new assessment data
@@ -22,7 +24,7 @@ export class EcpeResultComponent implements OnInit {
     constructor(private cogResultsService: CogResultsService, private router: Router) { }
 
     ngOnInit() {
-        this.cogResultsService.cogEcpeResult$.subscribe(res => {
+        this.resSub = this.cogResultsService.cogEcpeResult$.subscribe(res => {
             this.ecpeResult = res;
         });
 
@@ -31,6 +33,10 @@ export class EcpeResultComponent implements OnInit {
         }
 
         this.calcEcpeResult(this.ecpeResult);
+    }
+
+    ngOnDestroy(){
+        this.resSub.unsubscribe();
     }
 
     private calcEcpeResult(ecpeResult: CogEcpeResult): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { RoadrunnerService } from '../services/roadrunner.service';
 import { UserDataContext } from "../../core/services/data/user-data-context.service";
 import { RoadRunner } from "../../core/entities/user";
@@ -7,6 +7,7 @@ import { MdSnackBar } from '@angular/material';
 import { Location } from '@angular/common'
 
 import { isEmpty} from "lodash"; 
+import { Subscription } from "rxjs/Subscription";
 
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -18,9 +19,10 @@ import { ActivatedRoute } from '@angular/router';
 
 })
 
-export class RoadrunnerDetailsComponent implements OnInit {
+export class RoadrunnerDetailsComponent implements OnInit, OnDestroy {
 
     event: RoadRunner[];
+    eventSub: Subscription;
     leavedate: string;
     oneEvent: RoadRunner;
     tempEvent: RoadRunner;
@@ -49,7 +51,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
 
     ngOnInit() {
 
-        this.roadRunnerService.roadRunnerData$.subscribe((roadRunnerData: RoadRunner[]) => {
+        this.eventSub = this.roadRunnerService.roadRunnerData$.subscribe((roadRunnerData: RoadRunner[]) => {
             console.log("roadrunner update")
             this.event = roadRunnerData;
         })
@@ -89,6 +91,10 @@ export class RoadrunnerDetailsComponent implements OnInit {
         }
     }
 
+    ngOnDestroy() {
+        this.eventSub.unsubscribe();
+    }
+
     cancel() {
 
         this.oneEvent.entityAspect.rejectChanges();
@@ -100,7 +106,7 @@ export class RoadrunnerDetailsComponent implements OnInit {
         this.userDataContext.commit()
             .then((res) => {
                 console.log('check roadrunner database');
-                this.snackBarService.open('Roadrunner Data Saved', 'Dismiss');
+                this.snackBarService.open('Roadrunner Data Saved', 'Dismiss', {duration: 2000});
                 this.router.navigate(['roadrunnerStudent/']);
             })
     }
