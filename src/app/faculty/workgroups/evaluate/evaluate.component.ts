@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common'
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
@@ -12,12 +12,13 @@ import { WorkGroup, CrseStudentInGroup } from "../../../core/entities/faculty";
 import { FacWorkgroupService } from "../../services/facworkgroup.service";
 import { MpSpStatus } from "../../../core/common/mapStrings";
 import { FacultyDataContextService } from "../../services/faculty-data-context.service";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   templateUrl: './evaluate.component.html',
   styleUrls: ['./evaluate.component.scss']
 })
-export class EvaluateComponent implements OnInit {
+export class EvaluateComponent implements OnInit, OnDestroy {
 
   showComments: boolean = false;
   isLoading: boolean = false;
@@ -37,6 +38,7 @@ export class EvaluateComponent implements OnInit {
   reviewBtnText: string = 'Advance Stat';
   reopenBtnText: string = 'Return Stat';
   statusMap = MpSpStatus;
+  subscriptions: Subscription[] = [];
 
   assessComplete: boolean;
   stratComplete: boolean;
@@ -64,33 +66,37 @@ export class EvaluateComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.workGroup$.subscribe(workGroup => {
+    this.subscriptions.push(this.workGroup$.subscribe(workGroup => {
       this.workGroup = workGroup;
       this.facWorkGroupService.facWorkGroup(this.workGroup);
       this.activate();
-    });
-    this.facWorkGroupService.assessComplete$.subscribe(ac => {
+    }));
+    this.subscriptions.push(this.facWorkGroupService.assessComplete$.subscribe(ac => {
       this.assessComplete = ac;
       this.assessStatusIcon = (this.assessComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
-    });
-    this.facWorkGroupService.stratComplete$.subscribe(sc => {
+    }));
+    this.subscriptions.push(this.facWorkGroupService.stratComplete$.subscribe(sc => {
       this.stratComplete = sc;
       this.stratStatusIcon = (this.stratComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
-    });
-    this.facWorkGroupService.commentsComplete$.subscribe(cc => {
+    }));
+    this.subscriptions.push(this.facWorkGroupService.commentsComplete$.subscribe(cc => {
       this.commentsComplete = cc;
       this.commentStatusIcon = (this.commentsComplete) ? "check_cirlce" : "error_outline";
       this.canReviewCheck();
-    });
+    }));
 
-    this.facWorkGroupService.readOnly$.subscribe(status => {
+    this.subscriptions.push(this.facWorkGroupService.readOnly$.subscribe(status => {
       this.readOnly = status;
-    })
+    }));
 
     this.facWorkGroupService.onListView(false);
 
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   activate() {

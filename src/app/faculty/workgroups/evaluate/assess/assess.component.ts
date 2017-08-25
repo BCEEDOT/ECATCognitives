@@ -1,19 +1,23 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+
+import { Subscription } from "rxjs/Subscription";
 
 import { MpCommentType } from '../../../../core/common/mapStrings';
 import { CrseStudentInGroup, WorkGroup } from '../../../../core/entities/faculty';
 import { SpProviderService } from '../../../../provider/sp-provider/sp-provider.service';
 import { FacWorkgroupService } from '../../../services/facworkgroup.service';
 
+
 @Component({
   selector: 'assess',
   templateUrl: './assess.component.html',
   styleUrls: ['./assess.component.scss']
 })
-export class AssessComponent implements OnInit {
+export class AssessComponent implements OnInit, OnDestroy {
 
   groupMembers: CrseStudentInGroup[];
   readOnly: boolean = false;
+  roSub: Subscription;
 
   constructor(private spProvider: SpProviderService,
   private facWorkGroupService: FacWorkgroupService) { }
@@ -21,13 +25,16 @@ export class AssessComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-console.log(this.members);
-    this.facWorkGroupService.readOnly$.subscribe(status => {
+    this.roSub = this.facWorkGroupService.readOnly$.subscribe(status => {
       this.readOnly = status;
       this.activate();
     });
     
     this.activate();
+  }
+
+  ngOnDestroy() {
+    this.roSub.unsubscribe();
   }
 
   activate():void {

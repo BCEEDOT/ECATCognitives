@@ -1,26 +1,28 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { TdDialogService, TdLoadingService } from "@covalent/core";
 import { MdSnackBar } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
+
+import { Subscription } from "rxjs/Subscription";
 
 import { WorkGroup, CrseStudentInGroup } from "../../../../core/entities/faculty";
 import { SpProviderService } from "../../../../provider/sp-provider/sp-provider.service";
 import { FacultyDataContextService } from "../../../services/faculty-data-context.service";
 import { FacWorkgroupService } from "../../../services/facworkgroup.service";
 
-
 @Component({
     selector: 'strat',
     templateUrl: './strat.component.html',
     styleUrls: ['./strat.component.scss']
 })
-export class StratComponent implements OnInit {
+export class StratComponent implements OnInit, OnDestroy {
 
     groupMembers: CrseStudentInGroup[];
     groupCount: number;
     workGroupId: number;
     courseId: number;
     readOnly: boolean = false;
+    roSub: Subscription;
 
     constructor(private spProvider: SpProviderService, private facultyDataContext: FacultyDataContextService, private loadingService: TdLoadingService,
         private dialogService: TdDialogService, private snackBarService: MdSnackBar, private route: ActivatedRoute, private facWorkGroupService: FacWorkgroupService) {
@@ -36,12 +38,16 @@ export class StratComponent implements OnInit {
 
     ngOnInit() {
 
-        this.facWorkGroupService.readOnly$.subscribe(status => {
+        this.roSub = this.facWorkGroupService.readOnly$.subscribe(status => {
             this.readOnly = status;
             this.activate();
         });
 
         this.activate();
+    }
+
+    ngOnDestroy() {
+        this.roSub.unsubscribe();
     }
 
     activate() {

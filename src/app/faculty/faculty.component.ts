@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
@@ -9,18 +9,20 @@ import 'rxjs/add/operator/pluck';
 import { Course, WorkGroup } from '../core/entities/faculty';
 import { FacultyDataContextService } from './services/faculty-data-context.service';
 import { FacWorkgroupService } from "./services/facworkgroup.service";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   templateUrl: './faculty.component.html',
   styleUrls: ['./faculty.component.scss']
 })
-export class FacultyComponent implements OnInit {
+export class FacultyComponent implements OnInit, OnDestroy {
 
   courses$: Observable<Course[]>;
   courses: Course[];
   activeCourse: Course;
   activeCourseId: number;
   onListView: boolean = true;
+  viewSub: Subscription;
 
   constructor(private titleService: Title,
     private router: Router,
@@ -39,10 +41,14 @@ export class FacultyComponent implements OnInit {
       this.activate();
     });
 
-    this.facWorkGroupService.onListView$.subscribe(value => {
+    this.viewSub = this.facWorkGroupService.onListView$.subscribe(value => {
       this.onListView = value;
     });
     this.titleService.setTitle('WorkGroup Center');
+  }
+
+  ngOnDestroy() {
+    this.viewSub.unsubscribe();
   }
 
   setActiveCourse(course: Course): void {

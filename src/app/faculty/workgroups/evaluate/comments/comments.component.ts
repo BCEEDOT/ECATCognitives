@@ -1,7 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Location } from '@angular/common';
 import { MdSnackBar } from '@angular/material';
 import { TdDialogService, TdLoadingService } from "@covalent/core";
+
+import { Subscription } from "rxjs/Subscription";
 
 import { WorkGroup, CrseStudentInGroup, StudSpComment } from "../../../../core/entities/faculty";
 import { ActivatedRoute } from "@angular/router";
@@ -14,7 +16,7 @@ import { FacWorkgroupService } from "../../../services/facworkgroup.service";
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.scss']
 })
-export class CommentsComponent implements OnInit {
+export class CommentsComponent implements OnInit, OnDestroy {
 
   memsWithComments: CrseStudentInGroup[];
   selectedAuthor: CrseStudentInGroup;
@@ -24,6 +26,7 @@ export class CommentsComponent implements OnInit {
   commFlagMap = MpCommentFlag;
   hasChanges: boolean = false;
   viewOnly: boolean = true;
+  roSub: Subscription;
 
   constructor(private route: ActivatedRoute,
     private location: Location,
@@ -36,10 +39,14 @@ export class CommentsComponent implements OnInit {
   @Input() members: CrseStudentInGroup[];
 
   ngOnInit() {
-    this.facWorkGroupService.readOnly$.subscribe(ro => {
+    this.roSub = this.facWorkGroupService.readOnly$.subscribe(ro => {
       this.viewOnly = ro;
     });
     this.ctx.fetchActiveWgSpComments(this.members[0].courseId, this.members[0].workGroupId).then(_ => this.activate());
+  }
+
+  ngOnDestroy(){
+    this.roSub.unsubscribe();
   }
 
   activate() {
