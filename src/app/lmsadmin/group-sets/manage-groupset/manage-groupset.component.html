@@ -13,7 +13,7 @@
           <div id="unassigned" style="min-height: 50px;" [dragula]='"bag-one"' [dragulaModel]='unassignedStudents'>
             <p [id]="unassignedStudent.studentId" [myHighlight]="unassignedStudent.highlighted" [ngClass]="{'selected': hovered === unassignedStudent.studentId}"
               (mouseover)="hovered = unassignedStudent.studentId" (mouseout)="hovered = null" fxFlexOffset="5%" class="push-none pad-xs md-caption"
-              *ngFor="let unassignedStudent of unassignedStudents">
+              *ngFor="let unassignedStudent of unassignedStudents" (click)="studentClick(unassignedStudent)">
               {{unassignedStudent.rankName}}</p>
           </div>
         </td-expansion-panel>
@@ -100,7 +100,7 @@
             <div style="min-height: 50px" [id]="workGroup.workGroupId" [dragula]='"bag-one"' [dragulaModel]='workGroup.groupMembers'>
               <p *ngFor="let groupMember of workGroup.groupMembers trackBy:groupMember?.studentId" [id]="groupMember.studentId" [myHighlight]="groupMember.highlighted"
                 [ngClass]="{'selected': hovered === groupMember.studentId}" (mouseover)="hovered = groupMember.studentId" (mouseout)="hovered = null"
-                class="md-caption push-none pad-xs">
+                class="md-caption push-none pad-xs" (click)="studentClick(groupMember)">
                 {{groupMember.rankName}}
               </p>
             </div>

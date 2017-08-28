@@ -21,6 +21,7 @@ import { AddGroupDialogComponent } from './group-sets/manage-groupset/add-group-
 import { PollLmsDialog } from './group-sets/poll-lms-dialog/poll-lms-dialog.component';
 import {MaterialModule, MdNativeDateModule } from "@angular/material";
 import { PublishGroupsetComponent } from './group-sets/publish-groupset/publish-groupset.component';
+import { MoveStudentDialogComponent } from './group-sets/manage-groupset/move-student-dialog/move-student-dialog.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,7 @@ import { PublishGroupsetComponent } from './group-sets/publish-groupset/publish-
     CourseEnrollComponent,
     ConfigGroupsetComponent,
     CourseInfoComponent, MyHighlightDirective, EditGroupDialogComponent, AddGroupDialogComponent, 
-    PollLmsDialog, PublishGroupsetComponent
+    PollLmsDialog, PublishGroupsetComponent, MoveStudentDialogComponent
   ],
   providers: [
     LmsadminAuthGuardService,
@@ -50,7 +51,8 @@ import { PublishGroupsetComponent } from './group-sets/publish-groupset/publish-
   entryComponents: [
     EditGroupDialogComponent,
     AddGroupDialogComponent,
-    PollLmsDialog
+    PollLmsDialog,
+    MoveStudentDialogComponent
   ]
 })
 export class LmsadminModule { }

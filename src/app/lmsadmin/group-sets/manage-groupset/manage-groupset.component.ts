@@ -18,6 +18,7 @@ import { LmsadminDataContextService } from '../../services/lmsadmin-data-context
 import { LmsadminWorkgroupService } from '../../services/lmsadmin-workgroup.service';
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component';
 import { AddGroupDialogComponent } from "./add-group-dialog/add-group-dialog.component";
+import { MoveStudentDialogComponent } from "./move-student-dialog/move-student-dialog.component";
 
 @Component({
   selector: 'app-manage-groupset',
@@ -43,6 +44,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   searchInputTerm: string;
   editDialogRef: MdDialogRef<EditGroupDialogComponent>;
   addDialogRef: MdDialogRef<AddGroupDialogComponent>;
+  moveDialogRef: MdDialogRef<MoveStudentDialogComponent>;
   ngUnsubscribe: Subject<any> = new Subject<any>();
   usedFlightNumbers: string[] = [];
   isUnassignedPanelExpanded: boolean = false;
@@ -69,7 +71,8 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     private loadingService: TdLoadingService,
     private snackBar: MdSnackBar,
     public editDialog: MdDialog, @Inject(DOCUMENT) editDoc: any,
-    public addDialog: MdDialog, @Inject(DOCUMENT) addDoc: any) {
+    public addDialog: MdDialog, @Inject(DOCUMENT) addDoc: any,
+    public moveDialog: MdDialog, @Inject(DOCUMENT) moveDoc: any,) {
 
     this.workGroups$ = route.data.pluck('groupSetMembers');
     this.course$ = route.data.pluck('courseMembers');
@@ -82,7 +85,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     dragulaService.drop.takeUntil(this.ngUnsubscribe)
       .subscribe((value) => {
-        // console.log(`drop: ${value[0]}`);
         this.onDrop(value.slice(1));
       });
 
@@ -124,7 +126,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     this.workGroups = this.workGroups.filter(wg => wg.mpCategory === this.workGroupCategory);
     let courseMembers = this.course.students;
-    console.log(courseMembers);
     let count: number = 0;
     let groupMembers = this.course.studentInCrseGroups.filter(sicg => {
       //When going in and out of groups. Student entities not maching category will
@@ -134,9 +135,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.log(`Number of course members - ${courseMembers.length}`);
-    console.log(`Number of group members - ${groupMembers.length}`);
-
     let courseStudentsWithNoGroup = courseMembers.filter(cm => !groupMembers.some(gm => gm.studentId === cm.studentPersonId));
 
     if (courseStudentsWithNoGroup.length > 0) {
@@ -145,6 +143,13 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
         courseStudentWithNoGroup.entityAspect.setUnchanged();
         courseStudentWithNoGroup.notAssignedToGroup = true;
         this.unassignedStudents.push(courseStudentWithNoGroup);
+      })
+      this.unassignedStudents.sort((a,b) => {
+        if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) {return -1}
+        if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) {return 1}
+        if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1}
+        if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1}
+        return 0;
       })
     };
 
@@ -208,8 +213,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       default:
         this.newGroupStatus = null;
     }
-
-    console.log(workGroupModel);
 
   }
 
@@ -343,6 +346,65 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     });
   }
 
+  studentClick(student: CrseStudentInGroup){
+    let unassigned: boolean = false;
+    if (student.workGroupId === 0){
+      unassigned = true;
+    } 
+
+    let flights: string[] =[];
+    this.workGroups.forEach(grp => flights.push(grp.groupNumber));
+    if (!unassigned) {
+      flights = flights.filter(num => num !== student.workGroup.groupNumber);
+    }
+
+    this.moveDialogRef = this.moveDialog.open(MoveStudentDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '325px',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: ''
+      },
+      data: {
+        student: student,
+        fromUnassigned: unassigned,
+        flights: flights
+      }
+    });
+
+    this.moveDialogRef.afterClosed().subscribe(moveResult => {
+      if (moveResult){
+        let trackArgs: any[] = [];
+        trackArgs.push({id: student.studentId, innerText: student.rankName});
+        let fromId = student.workGroupId;
+
+        if (moveResult.unassign){
+          student.workGroupId = 0;
+          this.unassignedStudents.push(student);
+          trackArgs.push({id: this.unassigned});
+        } else {
+          let toId = this.workGroups.find(grp => grp.groupNumber === moveResult.toFlight).workGroupId;
+          student.workGroupId = toId;
+          trackArgs.push({id: toId});
+        }
+  
+        if (fromId === 0){
+          this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== student.studentId);
+          trackArgs.push({id: this.unassigned});
+        } else {
+          trackArgs.push({id: fromId});
+        }
+        
+        this.trackChanges(trackArgs);
+      }
+    });
+  }
+
   undoChange(change: any) {
     //Change can be a CrseStudentinGroup or WorkGroup
     let workGroupId: number = change.workGroupId;
@@ -451,8 +513,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   }
 
   reset(force: boolean): void {
-
-    console.log(force);
     if (this.changes.length > 0) {
 
       if (force) {
@@ -493,7 +553,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       this.changes = [];
       this.workGroups = data[0];
       this.course = data[1];
-      console.log(data);
       this.loadingService.resolve();
       this.activate();
     });
@@ -514,8 +573,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
     let notUnique = duplicates(count(this.usedFlightNumbers));
 
-    console.log(notUnique)
-
     if (notUnique.length > 0) {
       this.canSaveFlag = false;
     }
@@ -523,10 +580,6 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-
-    console.log(this.unassignedStudents);
-    console.log(this.lmsadminDataContext.getChanges());
-
     var deletedPromise: Promise<any>;
     var changedPromise: Promise<any>;
     var addedPromise: Promise<any>;
