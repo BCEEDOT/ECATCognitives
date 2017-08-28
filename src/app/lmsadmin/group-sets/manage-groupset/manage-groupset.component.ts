@@ -394,7 +394,11 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           student.workGroupId = toId;
           trackArgs.push({id: toId});
         }
-  
+        
+        if (student.entityAspect.originalValues.workGroupId){
+          fromId = student.entityAspect.originalValues.workGroupId;
+        }
+
         if (fromId === 0){
           this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== student.studentId);
           trackArgs.push({id: this.unassigned});
@@ -480,13 +484,20 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
           change.entityAspect.rejectChanges();
         } else {
-
-          this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+          //onclick does things a little differently than the drag and ends up here when undoing a set unassigned
+          if (change.entityAspect.originalValues.workGroupId) {
+            let origGrpId = change.entityAspect.originalValues.workGroupId;
+            if (this.workGroups.find(grp => grp.workGroupId === origGrpId)){
+              change.entityAspect.rejectChanges();
+              this.unassignedStudents = this.unassignedStudents.filter(stu => stu.studentId !== change.studentId);
+            } else {
+              this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+            }
+          } else {
+            this.dialogService.openAlert({ message: 'Flight must be restored first.', title: 'Failed to Undo Student' });
+          }
         }
-
       }
-
-
     }
 
     this.changes = this.lmsadminDataContext.getChanges();
