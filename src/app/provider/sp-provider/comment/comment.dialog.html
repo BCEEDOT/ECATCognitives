@@ -14,12 +14,12 @@
   </div>
   <span flex="30"></span>
   <div flex="35" *ngIf="comment.entityAspect.entityState.isAdded()">
-    <button md-raised-button (click)="cancel()">Cancel</button>
-    <button md-raised-button [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
+    <button md-raised-button color="primary" (click)="cancel()">Cancel</button>
+    <button md-raised-button color="primary" [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
   </div>
   <div flex="65" *ngIf="!comment.entityAspect.entityState.isAdded()">
-    <button md-raised-button [disabled]="viewOnly" (click)="delete()">Delete</button>
-    <button md-raised-button (click)="cancel()">Cancel</button>
-    <button md-raised-button [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
+    <button md-raised-button color="primary" [disabled]="viewOnly" (click)="delete()">Delete</button>
+    <button md-raised-button color="primary" (click)="cancel()">Cancel</button>
+    <button md-raised-button color="primary" [disabled]="viewOnly || !commentText.dirty || !commentText.valid" (click)="save()">Save</button>
   </div>
 </md-dialog-actions>

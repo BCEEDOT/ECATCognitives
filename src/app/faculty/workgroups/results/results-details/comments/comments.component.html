@@ -17,7 +17,7 @@
         <span fxFlex="15">{{comment.author.rankName}}</span>
         <span fxFlex="10">{{(comment.requestAnonymity) ? 'Anonymous' : 'Signed'}}</span>
         <span fxFlex="10" [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.flag.mpFaculty}}</span>
-        <span fxFlex="75" (click)="viewFullComment(comment)">{{(comment.shortText) ? comment.shortText : comment.commentText}}</span>
+        <span fxFlex="75" style="word-break: break-all; overflow-x: auto" (click)="viewFullComment(comment)">{{(comment.shortText) ? comment.shortText : comment.commentText}}</span>
       </md-list-item>
     </div>
   </md-list>
@@ -37,7 +37,7 @@
         <span fxFlex="15">{{comment.recipient.rankName}}</span>
         <span fxFlex="10">{{(comment.requestAnonymity) ? 'Anonymous' : 'Signed'}}</span>
         <span fxFlex="10" [ngClass]="(comment.flag.mpFaculty === this.commFlagMap.inappr) ? 'tc-red-700' : 'tc-green-700'">{{comment.flag.mpFaculty}}</span>
-        <span fxFlex="75" (click)="viewFullComment(comment)">{{(comment.shortText) ? comment.shortText : comment.commentText}}</span>
+        <span fxFlex="75" style="word-break: break-all; overflow-x: auto" (click)="viewFullComment(comment)">{{(comment.shortText) ? comment.shortText : comment.commentText}}</span>
       </md-list-item>
     </div>
   </md-list>

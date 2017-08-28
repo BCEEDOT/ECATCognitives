@@ -2,7 +2,7 @@
   <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
     <md-card>
       <md-card-title fxLayout="row">
-        <button md-raised-button (click)="this.location.back()">Back</button>
+        <button md-raised-button color="primary" (click)="this.location.back()">Back</button>
         <div fxFlexOffset="20%" fxFlexAlign="center">
           {{wgName}} - {{workGroup.mpSpStatus}}
         </div>

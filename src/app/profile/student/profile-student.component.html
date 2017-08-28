@@ -63,14 +63,14 @@
         </div>
         <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
-            <input mdInput #unitCommanderEmailForm="ngModel" placeholder="Unit Commander Email" [(ngModel)]="profile.commanderEmail" name="unitCommanderEmail"
-              maxlength="50" tdAutoTrim/>
+            <input mdInput #unitCommanderEmailForm="ngModel" placeholder="Unit Commander Email" [(ngModel)]="profile.commanderEmail"
+              name="unitCommanderEmail" maxlength="50" tdAutoTrim/>
           </md-input-container>
         </div>
         <div layout-gt-xs="row" layout-margin>
           <md-input-container flex>
-            <input mdInput #unitShirtForm="ngModel" placeholder="Unit First Sergeant" [(ngModel)]="profile.shirt" name="shirt"
-              maxlength="50" tdAutoTrim/>
+            <input mdInput #unitShirtForm="ngModel" placeholder="Unit First Sergeant" [(ngModel)]="profile.shirt" name="shirt" maxlength="50"
+              tdAutoTrim/>
           </md-input-container>
         </div>
         <div layout-gt-xs="row" layout-margin>
@@ -79,13 +79,16 @@
               maxlength="50" tdAutoTrim/>
           </md-input-container>
         </div>
-        <div layout-gt-xs="row" layout-margin>
-          <md-divider></md-divider>
-          <div class="inset">
-            <button md-raised-button color="primary" type="button" [disabled]="!studentProfileForm.valid" (click)="saveStudentProfile()"
-              class="text-upper">Save</button>
-            <button md-raised-button color="primary" type="button" class="text-upper" (click)="cancelStudentSave();">Cancel</button>
-          </div>
+        <md-divider></md-divider>
+        <div class="pad-top-sm pad-bottom-sm" fxLayout="row">
+          <div fxFlex></div>
+
+          <button md-raised-button color="primary" type="button" class="text-upper" (click)="cancelStudentSave();">Cancel</button>
+
+          <span class="pad-right-xs"></span>
+          <button md-raised-button color="primary" type="button" [disabled]="studentProfileForm.pristine || !studentProfileForm.valid" (click)="saveStudentProfile()"
+            class="text-upper">Save</button>
+          <span class="pad-right-xs"></span>
         </div>
       </form>
     </div>
@@ -93,7 +96,8 @@
   <div *ngIf="!isEditing">
     <md-divider></md-divider>
     <md-card-actions>
-      <button (click)="editStudentProfile()" type="button" md-button color="primary" class="text-upper">Edit</button>
+      <div fxFlex></div>
+      <button md-raised-button color="primary" (click)="editStudentProfile()" type="button" md-button color="primary" class="text-upper">Edit</button>
     </md-card-actions>
   </div>
 </div>

@@ -1,10 +1,10 @@
 <td-layout-nav logo="" toolbarTitle="ECAT - Profile">
-    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
-        <span fxFlex></span>
-        <a md-icon-button mdTooltip="Profile" routerLink="/profile">
-            <md-icon>account_circle</md-icon>
-        </a>
-    </div>
+  <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+    <span fxFlex></span>
+    <a md-icon-button mdTooltip="Profile" routerLink="/profile">
+      <md-icon>account_circle</md-icon>
+    </a>
+  </div>
   <div class="width">
     <md-card>
       <md-tab-group md-stretch-tabs>
@@ -113,12 +113,17 @@
                       </span>
                     </md-hint>
                   </div>
-                  <div layout-gt-xs="row" layout-margin>
-                    <md-divider></md-divider>
-                    <div class="inset">
-                      <button md-raised-button color="primary" type="button" [disabled]="profileForm.pristine || !profileForm.valid" (click)="saveProfile()" class="text-upper">Save</button>
-                      <button md-raised-button color="primary" type="button" class="text-upper" (click)="cancelSave();">Cancel</button>
-                    </div>
+                  <md-divider></md-divider>
+                  <div class="pad-top-sm pad-bottom-sm" fxLayout="row">
+
+
+                    <div fxFlex></div>
+                    <button md-raised-button color="primary" type="button" class="text-upper" (click)="cancelSave();">Cancel</button>
+                    <span class="pad-right-xs"></span>
+                    <button md-raised-button color="primary" type="button" [disabled]="profileForm.pristine || !profileForm.valid" (click)="saveProfile()"
+                      class="text-upper">Save</button>
+                    <span class="pad-right-xs"></span>
+
                   </div>
                 </form>
               </div>
@@ -126,7 +131,8 @@
             <div *ngIf="!isEditing">
               <md-divider></md-divider>
               <md-card-actions>
-                <button (click)="editProfile()" type="button" md-button color="primary" class="text-upper">Edit</button>
+                <div fxFlex></div>
+                <button md-raised-button color="primary" (click)="editProfile()" type="button" md-button color="primary" class="text-upper">Edit</button>
               </md-card-actions>
             </div>
           </div>

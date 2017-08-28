@@ -71,6 +71,6 @@
 <md-divider></md-divider>
 
 <md-list-item layout="row" layout-align="end" layout-margin>
-  <button md-raised-button color="primary" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
   <button md-raised-button color="primary" type="button" class="text-upper" [disabled]="!isPristine()" (click)="cancel();">Cancel</button>
+  <button md-raised-button color="primary" type="button" [disabled]="isValid()" (click)="saveChanges()" class="text-upper">Save</button>
 </md-list-item>
