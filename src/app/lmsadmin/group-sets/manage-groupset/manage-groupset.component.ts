@@ -396,8 +396,8 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           trackArgs.push({id: toId});
         }
         
-        if (student.entityAspect.originalValues.workGroupId){
-          fromId = student.entityAspect.originalValues.workGroupId;
+        if ((<any>student.entityAspect.originalValues).workGroupId){
+          fromId = (<any>student.entityAspect.originalValues).workGroupId;
         }
 
         if (fromId === 0){
