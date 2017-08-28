@@ -19,6 +19,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DragulaModule } from "ng2-dragula";
 
 import { LoggerService } from "./services/logger.service";
+import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
     imports: [
@@ -72,7 +73,7 @@ import { LoggerService } from "./services/logger.service";
 
     ],
     declarations: [
-    ],
+    PagenotfoundComponent],
     exports: [
         FlexLayoutModule,
         CommonModule,
