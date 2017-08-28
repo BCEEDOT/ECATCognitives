@@ -353,7 +353,9 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
     } 
 
     let flights: string[] =[];
-    this.workGroups.forEach(grp => flights.push(grp.groupNumber));
+    this.workGroups.forEach(grp => {
+      if (grp['canEdit'] === true) {flights.push(grp.groupNumber)}
+    });
     if (!unassigned) {
       flights = flights.filter(num => num !== student.workGroup.groupNumber);
     }
