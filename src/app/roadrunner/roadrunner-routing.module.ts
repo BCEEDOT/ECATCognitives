@@ -8,17 +8,17 @@ import { FacultyAuthGuardService} from '../faculty/services/faculty-auth-guard.s
 
 const RoadrunnerRoutes: Routes = [
   { 
-    path: 'roadrunnerStudent',  
+    path: 'student',  
     component: RoadrunnerComponent,
     canActivate: [UserAuthGuard] 
   },
   {
-    path: 'roadrunnerFaculty',
+    path: 'faculty',
     component: RoadrunnerComponent,
     canActivate: [FacultyAuthGuardService]
   },
   {
-    path: 'roadrunnerStudent/:id',
+    path: 'student/:id',
     component: RoadrunnerDetailsComponent
   } 
 ];

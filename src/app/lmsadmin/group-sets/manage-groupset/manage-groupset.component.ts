@@ -94,16 +94,17 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
 
       if (action === EntityAction.PropertyChange) {
         var entity = value.entity;
-        var propertyName = value.args.propertyName;
-        var newValue = value.args.newValue;
-        var oldValue = value.args.oldValue;
+        //Typed as any because breeze typescript file has it as object literal.
+        var propertyName = (<any>value.args).propertyName;
+        var newValue = (<any>value.args).newValue;
+        var oldValue = (<any>value.args).oldValue;
 
-        if (newValue === entity.entityAspect.originalValues.workGroupId) {
+        if (newValue === (<any>entity.entityAspect.originalValues).workGroupId) {
           entity.entityAspect.rejectChanges();
         }
 
         if (propertyName === "isDeleted" && oldValue) {
-          if (!entity.entityAspect.originalValues.workGroupId) {
+          if (!(<any>entity.entityAspect.originalValues).workGroupId) {
             entity.entityAspect.rejectChanges();
           }
         }
@@ -338,7 +339,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
       gm.isDeleted = true;
       //Check if student is being move to unassigned from newly added flight
       if (gm.workGroupId < 0) {
-        gm.changeDescription = `${gm.rankName} moved from ${this.flights[gm.entityAspect.originalValues.workGroupId]} to unassigned`;
+        gm.changeDescription = `${gm.rankName} moved from ${this.flights[(<any>gm.entityAspect.originalValues).workGroupId]} to unassigned`;
       } else {
         gm.changeDescription = `${gm.rankName} moved from ${groupName} to unassigned`;
       }
@@ -446,7 +447,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
               if (confirmed) {
                 change.groupMembers.forEach(gm => {
                   gm.isDeleted = true;
-                  gm.changeDescription = `${gm.rankName} moved from ${this.flights[gm.entityAspect.originalValues.workGroupId]} to unassigned`;
+                  gm.changeDescription = `${gm.rankName} moved from ${this.flights[(<any>gm.entityAspect.originalValues).workGroupId]} to unassigned`;
                   this.unassignedStudents.push(gm);
                 });
 
@@ -779,8 +780,8 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
         });
 
         if (unAssignedStudent.entityAspect.entityState.isModified()) {
-          if (unAssignedStudent.entityAspect.originalValues.workGroupId) {
-            unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[unAssignedStudent.entityAspect.originalValues.workGroupId]} to unassigned`;
+          if ((<any>unAssignedStudent.entityAspect.originalValues).workGroupId) {
+            unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[(<any>unAssignedStudent.entityAspect.originalValues).workGroupId]} to unassigned`;
           } else {
             unAssignedStudent.changeDescription = `${unAssignedStudent.rankName} moved from ${this.flights[+fromGroupId]} to unassigned`;
           }
@@ -824,7 +825,7 @@ export class ManageGroupsetComponent implements OnInit, OnDestroy {
           assignedStudent.changeDescription = `${assignedStudent.rankName} moved from unassigned to ${this.flights[+toGroupId]}`;
         } else {
 
-          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[assignedStudent.entityAspect.originalValues.workGroupId]} to ${this.flights[+toGroupId]}`;
+          assignedStudent.changeDescription = `${assignedStudent.rankName} moved from ${this.flights[(<any>assignedStudent.entityAspect.originalValues).workGroupId]} to ${this.flights[+toGroupId]}`;
 
         }
       }

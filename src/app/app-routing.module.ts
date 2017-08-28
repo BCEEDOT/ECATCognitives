@@ -14,7 +14,7 @@ const appRoutes: Routes = [
   { path: 'student', loadChildren: './student/student.module#StudentModule'},
   { path: 'lmsadmin', loadChildren: './lmsadmin/lmsadmin.module#LmsadminModule'},
   { path: 'faculty', loadChildren: './faculty/faculty.module#FacultyModule'},
-  { path: 'cognitives', loadChildren: './cognitives/cognitives.module#CognitivesModule'},
+  { path: 'roadrunner', loadChildren: './roadrunner/roadrunner.module#RoadrunnerModule'},
   { path: '**', component: PagenotfoundComponent }
 ];
 

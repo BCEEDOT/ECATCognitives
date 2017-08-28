@@ -14,9 +14,9 @@
       <md-divider></md-divider>
       <a md-list-item routerLink="/cognitives" (click)="layout.close()">
         <md-icon>trending_up</md-icon>Cognitives</a>
-      <a *ngIf="isStudent" md-list-item routerLink="/roadrunnerStudent" (click)="layout.close()">
+      <a *ngIf="isStudent" md-list-item routerLink="/roadrunner/student" (click)="layout.close()">
         <md-icon>android</md-icon>Road Runner</a>
-      <a *ngIf="isFaculty" md-list-item routerLink="/roadrunnerFaculty" (click)="layout.close()">
+      <a *ngIf="isFaculty" md-list-item routerLink="/roadrunner/faculty" (click)="layout.close()">
         <md-icon>android</md-icon>Road Runner</a>
       <md-divider></md-divider>
     </md-nav-list>

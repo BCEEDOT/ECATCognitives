@@ -1,6 +1,6 @@
 {
   "name": "ecat",
-  "version": "2.0",
+  "version": "2.0.0",
   "private": true,
   "description": "epme course applicaton toolkit",
   "keywords": [
@@ -68,7 +68,7 @@
     "zone.js": "^0.8.5"
   },
   "devDependencies": {
-    "@angular/cli": "1.1.1",
+    "@angular/cli": "1.2.4",
     "@angular/compiler-cli": "4.2.0",
     "@types/hammerjs": "2.0.34",
     "@types/jasmine": "2.5.38",

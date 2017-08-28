@@ -106,8 +106,8 @@ export class EditGroupDialogComponent implements OnInit {
       this.workGroup.defaultName = `Flight ${this.editGroupForm.value.groupNumber}`;
       this.workGroup.customName = this.editGroupForm.value.customName;
 
-      if (this.workGroup.entityAspect.originalValues.defaultName) {
-        this.workGroup['changeDescription'] = `${this.workGroup.entityAspect.originalValues.defaultName}'s information has been modified`;
+      if ((<any>this.workGroup.entityAspect.originalValues).defaultName) {
+        this.workGroup['changeDescription'] = `${(<any>this.workGroup.entityAspect.originalValues).defaultName}'s information has been modified`;
       } else {
         if (!this.workGroup.entityAspect.entityState.isAdded()) {
           this.workGroup['changeDescription'] = `${this.workGroup.defaultName}'s information has been modified`;
