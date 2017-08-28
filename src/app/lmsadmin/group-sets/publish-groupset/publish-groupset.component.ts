@@ -19,6 +19,7 @@ export class PublishGroupsetComponent implements OnInit {
   model: WorkGroupModel;
   wgCat: string;
   courseId: number;
+  toPublish: Array<WorkGroup> = [];
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -37,35 +38,37 @@ export class PublishGroupsetComponent implements OnInit {
     });
   }
 
-  activate() {
+  activate(force?: boolean) {
     this.loadingService.register();
     this.model = this.models.filter(mdl => mdl.mpWgCategory === this.wgCat)[0];
-    this.lmsadminDataService.fetchAllGroupSetMembers(this.courseId, this.wgCat).then(res => {
+    this.lmsadminDataService.fetchAllGroupSetMembers(this.courseId, this.wgCat, force).then(res => {
       this.model.workGroups.sort((a: WorkGroup, b: WorkGroup) => {
         if (a.groupNumber < b.groupNumber) {return -1}
         if (a.groupNumber > b.groupNumber) {return 1}
         return 0;
       })
+
+      this.toPublish = [];
+      this.model.workGroups.forEach(grp => {
+        if (!grp.groupMembers.some(mem => !mem.isDeleted) || grp.mpSpStatus === MpSpStatus.reviewed)
+        { 
+          this.toPublish.push(grp);
+        }
+      });
+
       this.loadingService.resolve();
     })
   }
 
   publish(){
     this.loadingService.register();
-    let toPublish: Array<WorkGroup> = [];
-    this.model.workGroups.forEach(grp => {
-      if (!grp.groupMembers.some(mem => !mem.isDeleted) || grp.mpSpStatus === MpSpStatus.reviewed)
-      { 
-        toPublish.push(grp);
-      }
-    });
 
-    if (toPublish.length > 0) {
-      this.dialogService.openConfirm({message: 'This will calculate group results and publish them to students for all groups in Reviewed status and mark groups with no members as Published. ' + toPublish.length + ' group(s) will be Published. This action is final and cannot be undone. Are you sure you want to Publish?', title: 'Publish Groups', acceptButton: 'Yes', cancelButton:'No'}).afterClosed().subscribe((confirmed) => {
+    if (this.toPublish.length > 0) {
+      this.dialogService.openConfirm({message: 'This will calculate group results and publish them to students for all groups in Reviewed status and mark groups with no members as Published. ' + this.toPublish.length + ' group(s) will be Published. This action is final and cannot be undone. Are you sure you want to Publish?', title: 'Publish Groups', acceptButton: 'Yes', cancelButton:'No'}).afterClosed().subscribe((confirmed) => {
         if (confirmed){
-          toPublish.forEach(grp => grp.mpSpStatus = MpSpStatus.published);
+          this.toPublish.forEach(grp => grp.mpSpStatus = MpSpStatus.published);
           this.lmsadminDataService.commit().then((fulfilled) => {
-            this.snackBar.open(toPublish.length + ' Group(s) Published!', 'Dismiss', {duration: 2000});
+            this.snackBar.open(this.toPublish.length + ' Group(s) Published!', 'Dismiss', {duration: 2000});
             this.loadingService.resolve();
             this.activate();
           }, (rejected) => {

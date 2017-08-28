@@ -1,6 +1,6 @@
 <div>
   <md-card class="width">
-    <md-card-title>Configure Group Creation for {{currentModel?.mpWgCategory}} - {{currentModel?.name}}</md-card-title>
+    <md-card-title class="text-center">Configure Group Creation for {{currentModel?.mpWgCategory}} - {{currentModel?.name}}</md-card-title>
     <md-card-content>
       <div *ngIf="!finalFlight">
         <md-checkbox [(ngModel)]="reuseFlights" (click)="reuseCheck()"><h4>Use Flights from {{previousModel?.mpWgCategory}} {{previousModel?.name}}</h4></md-checkbox>
@@ -35,9 +35,9 @@
     </md-card-content>
     <md-card-actions>
       <span fxFlex></span>
-      <button md-raised-button [routerLink]="['../..']">Cancel</button>
-      <button md-raised-button *ngIf="!finalFlight" (click)="this.scatter()" >Scatter</button>
-      <button md-raised-button *ngIf="finalFlight" (click)="this.scatter()" >Create</button>
+      <button md-raised-button color="primary" [routerLink]="['../..']">Cancel</button>
+      <button md-raised-button color="primary" *ngIf="!finalFlight" (click)="this.scatter()" >Scatter</button>
+      <button md-raised-button color="primary" *ngIf="finalFlight" (click)="this.scatter()" >Create</button>
     </md-card-actions>
   </md-card>
 </div>
