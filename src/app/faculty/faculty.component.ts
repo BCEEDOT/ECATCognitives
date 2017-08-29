@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { TdDialogService, TdLoadingService } from "@covalent/core";
-import * as _ from 'lodash';
 import 'rxjs/add/operator/pluck';
 
 import { Course, WorkGroup } from '../core/entities/faculty';

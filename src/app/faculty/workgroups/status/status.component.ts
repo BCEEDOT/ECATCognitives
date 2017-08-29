@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common'
 import { ActivatedRoute, Router } from "@angular/router";
 import { TdDialogService, TdLoadingService } from "@covalent/core";
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/pluck';

@@ -1,7 +1,7 @@
 import { Component, Inject, ViewChild, TemplateRef, ContentChild } from '@angular/core';
 import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
 import { TdChipsComponent } from "@covalent/core";
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 import { WorkGroup, SpResponse } from "../../../core/entities/student/index";
 import { GlobalService } from "../../../core/services/global.service";
 

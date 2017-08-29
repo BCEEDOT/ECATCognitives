@@ -3,7 +3,6 @@ import { MdSnackBar } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TdDialogService, TdLoadingService, TdMediaService } from '@covalent/core';
-import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/pluck';
 
