@@ -13,7 +13,7 @@ import {
     MdProgressSpinnerModule, MdSelectModule, MdSlideToggleModule, MdDialogModule, MdSnackBarModule, MdToolbarModule,
     MdTabsModule, MdSidenavModule, MdTooltipModule, MdCheckboxModule, MdRadioModule,
     MdProgressBarModule, MdSliderModule, MdChipsModule, MdRippleModule
-} from '@angular/material/material';
+} from '@angular/material';
 import { BarChartModule, LineChartComponent, PieChartModule } from '@swimlane/ngx-charts';
 import { DragulaModule } from "ng2-dragula";
 
