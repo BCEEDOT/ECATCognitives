@@ -70,14 +70,6 @@ export class ListComponent implements OnInit, OnDestroy {
     this.subs.push(this.workGroupService.workGroup$.subscribe(workGroup => {
       this.activeWorkGroup = workGroup;
       this.activate();
-
-      // if (this.activeWorkGroup.mpSpStatus === MpSpStatus.published) {
-      //   this.router.navigate(['results', this.activeWorkGroup.courseId, this.activeWorkGroup.workGroupId], { relativeTo: this.route })
-      // } else {
-      //   this.activate();
-      // }
-
-
     }));
 
   }
@@ -93,10 +85,10 @@ export class ListComponent implements OnInit, OnDestroy {
     this.activeTab = 0;
 
     this.activeWorkGroup.groupMembers.sort((a: CrseStudentInGroup, b: CrseStudentInGroup) => {
-      if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) return -1;
-      if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) return 1;
-      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) {return 1;}
-      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) {return -1;}
+      if (a.studentProfile.person.lastName < b.studentProfile.person.lastName) { return -1; }
+      if (a.studentProfile.person.lastName > b.studentProfile.person.lastName) { return 1; }
+      if (a.studentProfile.person.firstName > b.studentProfile.person.firstName) { return 1; }
+      if (a.studentProfile.person.firstName < b.studentProfile.person.firstName) { return -1; }
       return 0;
     });
 
