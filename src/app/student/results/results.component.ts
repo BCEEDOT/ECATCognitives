@@ -21,6 +21,7 @@ export class ResultsComponent implements OnInit {
   paramCourseId: number;
   isLoading: boolean = false;
   memberResults: SpResult;
+  change: number = 1;
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService, private route: ActivatedRoute,
     private studentDataContext: StudentDataContext, private dialogService: TdDialogService,
@@ -28,11 +29,18 @@ export class ResultsComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.paramWorkGroupId = +params['wrkGrpId'];
+      this.activate();
     });
 
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // this.activate();
+  }
+
+  activate(): void {
+
+    this.change++;
     this.isLoading = true;
     this.workGroupService.onListView(true);
 

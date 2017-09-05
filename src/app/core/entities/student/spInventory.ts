@@ -30,7 +30,7 @@ export class SpInventory extends EntityBase {
 
     get compositeScore(): number {
         return this.responseForAssessee ? this.responseForAssessee.itemModelScore : null;
-    };
+    }
 
     rejectChanges(): void {
         this.responseForAssessee.entityAspect.rejectChanges();
