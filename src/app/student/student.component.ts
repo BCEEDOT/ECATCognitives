@@ -101,7 +101,7 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.titleService.setTitle('ECAT Users');
+    this.titleService.setTitle('Assessment Center');
     this.courses$.subscribe(courses => {
       this.courses = courses;
       if (courses.length > 0) {

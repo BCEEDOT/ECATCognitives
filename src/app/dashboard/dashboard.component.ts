@@ -14,11 +14,11 @@ import { TdLoadingService, TdDigitsPipe } from '@covalent/core';
 export class DashboardComponent implements AfterViewInit {
 
 
-  constructor() {
+  constructor(private titleService: Title) {
   }
 
   ngAfterViewInit(): void {
-  
+    this.titleService.setTitle('Dashboard');
   }
 
   // ngx transform using covalent digits pipe
