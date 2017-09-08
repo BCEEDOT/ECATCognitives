@@ -122,7 +122,7 @@ export class StudentDataContext extends BaseDataContext {
         function getActiveCourseResponse(data: QueryResult): Course  {
             let courseResults: Course = data.results[0] as Course;
 
-            if (!course) {
+            if (!courseResults) {
                 const error: any = {
                     errorMessage: 'Could not find this active Course on the server',
                 };
