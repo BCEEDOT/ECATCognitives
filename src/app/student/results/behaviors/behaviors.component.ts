@@ -2,11 +2,11 @@ import { Component, OnInit, OnChanges, Input, Output } from '@angular/core';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 
-import { SpResult, SpInventory } from "../../../core/entities/student";
-import { WorkGroupService } from "../../services/workgroup.service";
-import { GlobalService } from "../../../core/services/global.service"
-import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
-import { MpSpItemResponse } from "../../../core/common/mapStrings";
+import { SpResult, SpInventory } from '../../../core/entities/student';
+import { WorkGroupService } from '../../services/workgroup.service';
+import { GlobalService } from '../../../core/services/global.service';
+import { SpProviderService } from '../../../provider/sp-provider/sp-provider.service';
+import { MpSpItemResponse } from '../../../core/common/mapStrings';
 
 @Component({
   selector: 'behaviors',
@@ -16,14 +16,12 @@ import { MpSpItemResponse } from "../../../core/common/mapStrings";
 export class BehaviorsComponent implements OnChanges {
 
   inventories: SpInventory[] = [];
-  //chartColors = {domain: ['#00308F','#0056FF', '#00AA58', '#00FF84', '#AAAAAA', '#AA0000', 'FF0000']};
+  // chartColors = {domain: ['#00308F','#0056FF', '#00AA58', '#00FF84', '#AAAAAA', '#AA0000', 'FF0000']};
 
   @Input() memberResults: SpResult;
   @Input() change: number;
 
-  chartColors = { domain: [] };
-
-  constructor() { }
+  chartColors: any = { domain: [] };
 
   ngOnChanges(): void {
     this.activate();
@@ -36,10 +34,9 @@ export class BehaviorsComponent implements OnChanges {
       return 0;
     });
 
-    this.inventories.forEach(inv => {
-      console.log(JSON.stringify(inv.resultBreakOut.peerBoChart));
-      //let chartColors = {  domain: [] };
-      inv.resultBreakOut.peerBoChart.forEach(data => {
+    this.inventories.forEach((inv: SpInventory) => {
+      // let chartColors = {  domain: [] };
+      inv.resultBreakOut.peerBoChart.forEach((data: any) => {
         if (data.name === MpSpItemResponse.hea) {
           this.chartColors.domain.push('#00308F');
         }

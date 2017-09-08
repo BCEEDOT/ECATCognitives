@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, AfterViewInit, AfterViewChecked, Output } from '@angular/core';
 
-import { SpResult, SanitizedSpComment } from "../../../core/entities/student";
-import { MpSpStatus } from "../../../core/common/mapStrings";
+import { SpResult, SanitizedSpComment } from '../../../core/entities/student';
+import { MpSpStatus } from '../../../core/common/mapStrings';
 
 @Component({
   selector: 'comments',
@@ -16,9 +16,7 @@ export class CommentsComponent implements OnInit {
 
   @Input() memberResults: SpResult;
 
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.comments = this.memberResults.sanitizedComments;
 
     if (this.comments && this.comments.length > 0) {
@@ -30,11 +28,10 @@ export class CommentsComponent implements OnInit {
   }
 
   activate(): void {
-    console.log(this.comments);
-    this.selectedComment = this.comments[0]
+    this.selectedComment = this.comments[0];
   }
 
-  changeComment(comment: SanitizedSpComment) {
+  changeComment(comment: SanitizedSpComment): void {
     this.selectedComment = comment;
   }
 

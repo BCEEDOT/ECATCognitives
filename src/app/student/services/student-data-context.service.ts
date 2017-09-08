@@ -1,54 +1,40 @@
 import { Injectable } from '@angular/core';
 import {
     EntityManager, NamingConvention, DataService, DataType, MetadataStore,
-    EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, QueryResult
+    EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, QueryResult,
 } from 'breeze-client';
 
 import { BaseDataContext } from '../../shared/services';
 import { EmProviderService } from '../../core/services/em-provider.service';
 import {
     Course, WorkGroup, SpResult, CrseStudentInGroup,
-    SpResponse, StudSpComment, StudSpCommentFlag, StratResponse, SpInventory
+    SpResponse, StudSpComment, StudSpCommentFlag, StratResponse, SpInventory,
 } from '../../core/entities/student';
-import { IStudentApiResources, IStudSpInventory } from "../../core/entities/client-models";
-import { MpEntityType, MpCommentFlag } from "../../core/common/mapStrings";
+import { IStudentApiResources, IStudSpInventory } from '../../core/entities/client-models';
+import { MpEntityType, MpCommentFlag } from '../../core/common/mapStrings';
 import { DataContext } from '../../app-constants';
-import { GlobalService, ILoggedInUser } from "../../core/services/global.service";
+import { GlobalService, ILoggedInUser } from '../../core/services/global.service';
 
 @Injectable()
 export class StudentDataContext extends BaseDataContext {
 
-    //person: IRepository<Person>;
-
     student: DataContext;
-    isLoaded = {
-        initCourses: false,
-        course: {},
-        crseInStudGroup: {},
-        workGroup: {},
-        wgResult: {},
-        spInventory: {}
-    }
-    //activeGroupId: number;
-    //activeCourseId: number;
-
-
-    private studentApiResources: IStudentApiResources = {
+    studentApiResources: IStudentApiResources = {
         initCourses: {
             returnedEntityType: MpEntityType.course,
-            resource: 'GetCourses'
+            resource: 'GetCourses',
         },
         course: {
             returnedEntityType: MpEntityType.course,
-            resource: 'ActiveCourse'
+            resource: 'ActiveCourse',
         },
         workGroup: {
             returnedEntityType: MpEntityType.workGroup,
-            resource: 'ActiveWorkGroup'
+            resource: 'ActiveWorkGroup',
         },
         wgResult: {
             returnedEntityType: MpEntityType.spResult,
-            resource: 'GetMyWgResult'
+            resource: 'GetMyWgResult',
         }
     }
 
@@ -56,136 +42,125 @@ export class StudentDataContext extends BaseDataContext {
         super(DataContext.Student, emProvider);
     }
 
-
     initCourses(forceRefresh?: boolean): Promise<Course[]> {
-        const that = this;
+        const that: this = this;
 
-        let allCourses: Array<Course>;
-        allCourses = this.manager.getEntities(MpEntityType.course) as Array<Course>;
+        let allCourses: Course[];
+        allCourses = this.manager.getEntities(MpEntityType.course) as Course[];
 
         if (!forceRefresh) {
             if (allCourses.length > 0) {
-
-                console.log('Courses loaded from local cache');
                 return Promise.resolve(allCourses);
             }
         }
 
-
-        let query = EntityQuery.from(this.studentApiResources.initCourses.resource);
+        let query: EntityQuery = EntityQuery.from(this.studentApiResources.initCourses.resource);
 
         return <Promise<Course[]>>this.manager.executeQuery(query)
             .then(initCourseResponse)
-            .catch(e => {
-                console.log('Did not retrieve courses' + e);
+            .catch((e: Event) => {
                 return Promise.reject(e);
             });
 
-        function initCourseResponse(data: QueryResult): Array<Course> {
-            const courses = data.results as Array<Course>;
-
-            //that.isLoaded.initCourses = courses.length > 0;
+        function initCourseResponse(data: QueryResult): Course[] {
+            const courses: Course[] = data.results as Course[];
 
             if (courses.length > 0) {
 
-                courses.forEach(course => {
-                    var workGroups = course.workGroups;
+                courses.forEach((course: Course) => {
+                    let workGroups: WorkGroup[] = course.workGroups;
                     if (workGroups && workGroups.length > 0) {
-                        //this.isLoaded[course.id] = true;
 
-
-                        workGroups.forEach(workGroup => {
+                        workGroups.forEach((workGroup: WorkGroup) => {
                             if (workGroup.groupMembers && workGroup.groupMembers.length > 0) {
-                                that.isLoaded.workGroup[workGroup.workGroupId] = true;
+                                // that.isLoaded.workGroup[workGroup.workGroupId] = true;
                             }
                         });
                     }
                 });
 
                 courses.sort((crseA: Course, crseB: Course) => {
-                    if (crseA.startDate < crseB.startDate) return 1;
-                    if (crseA.startDate > crseB.startDate) return -1;
+                    if (crseA.startDate < crseB.startDate) { return 1; }
+                    if (crseA.startDate > crseB.startDate) { return -1; }
                     return 0;
                 });
 
                 courses[0].workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
-                    if (wgA.mpCategory < wgB.mpCategory) return 1;
-                    if (wgA.mpCategory > wgB.mpCategory) return -1;
+                    if (wgA.mpCategory < wgB.mpCategory) { return 1; }
+                    if (wgA.mpCategory > wgB.mpCategory) { return -1; }
                     return 0;
                 });
             }
 
-            console.log('Courses loaded from server');
             return courses;
 
         }
     }
 
     fetchActiveCourse(courseId: number, forcedRefresh?: boolean): Promise<Course | Promise<void>> {
-        const that = this;
+        const that: this = this;
 
-        let course = this.manager.getEntityByKey(MpEntityType.workGroup, courseId) as Course;
+        let course: Course = this.manager.getEntityByKey(MpEntityType.workGroup, courseId) as Course;
 
         if (!forcedRefresh) {
             if (Course && Course.length > 0) {
                 if (course.workGroups.length > 0) {
 
-                    console.log("Course loaded from local cache");
                     return Promise.resolve(course);
                 }
 
             }
         }
 
-        const params = { crseId: courseId }
-        let query = EntityQuery.from(this.studentApiResources.course.resource).withParameters(params);
+        const params: any = { crseId: courseId };
+        let query: EntityQuery = EntityQuery.from(this.studentApiResources.course.resource).withParameters(params);
 
         return <Promise<Course>>this.manager.executeQuery(query)
             .then(getActiveCourseResponse)
-            .catch(this.queryFailed)
+            .catch(this.queryFailed);
 
-        function getActiveCourseResponse(data: QueryResult) {
-            let course = data.results[0] as Course
+        function getActiveCourseResponse(data: QueryResult): Course  {
+            let courseResults: Course = data.results[0] as Course;
 
             if (!course) {
-                const error = {
-                    errorMessage: 'Could not find this active Course on the server'
-                }
+                const error: any = {
+                    errorMessage: 'Could not find this active Course on the server',
+                };
 
-                console.log('Query succeeded, but the course did not return a result')
                 return Promise.reject(() => error) as any;
             }
 
-            return course;
+            return courseResults;
         }
     }
 
     getSingleStrat(studentId: number, activeGroupId: number, activeCourseId: number): StratResponse {
 
-        const loggedUserId = this.global.persona.value.person.personId;
+        const loggedUserId: number = this.global.persona.value.person.personId;
 
         if (!activeGroupId || !activeCourseId) {
-            console.log('Missing required information', { groupId: activeCourseId, courseId: activeCourseId }, false);
-            return null;
+            return undefined;
         }
 
-        const existingStrat = this.manager.getEntityByKey(MpEntityType.spStrat, [loggedUserId, studentId, activeCourseId, activeGroupId]) as StratResponse;
+        const existingStrat: StratResponse = this.manager.getEntityByKey(MpEntityType.spStrat,
+                                [loggedUserId, studentId, activeCourseId, activeGroupId]) as StratResponse;
 
-        if (existingStrat) console.log('Strat for this individual not found', { assessor: loggedUserId, assessee: studentId, course: activeCourseId, workGroup: activeGroupId }, false);
+        // if (existingStrat) console.log('Strat for this individual not found', 
+        // { assessor: loggedUserId, assessee: studentId, course: activeCourseId, workGroup: activeGroupId }, false);
 
         return (existingStrat) ? existingStrat :
             this.manager.createEntity(MpEntityType.spStrat, {
                 assesseePersonId: studentId,
                 assessorPersonId: loggedUserId,
                 courseId: activeCourseId,
-                workGroupId: activeGroupId
+                workGroupId: activeGroupId,
             }) as StratResponse;
 
     }
 
     fetchActiveWorkGroup(workGroupId: number, forcedRefresh?: boolean): Promise<WorkGroup | Promise<void>> {
 
-        const that = this;
+        const that: this = this;
 
         // if (!this.activeGroupId || !this.activeCourseId) {
         //     console.log('No course/workgroup selected!', null, true);
@@ -195,7 +170,7 @@ export class StudentDataContext extends BaseDataContext {
         // }
 
         let workGroup: WorkGroup;
-        //const api = this.studentApiResources;
+        // const api = this.studentApiResources;
 
         // if (this.isLoaded.workGroup[this.activeGroupId] && this.isLoaded.spInventory[this.activeGroupId] && !forcedRefresh) {
         //     workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, this.activeGroupId) as WorkGroup;
@@ -209,12 +184,11 @@ export class StudentDataContext extends BaseDataContext {
         if (!forcedRefresh) {
 
             if (workGroup && workGroup.groupMembers.length > 0) {
-                console.log("WorkGroup loaded from local cache");
                 return Promise.resolve(workGroup);
             }
         }
 
-        const params = { wgId: workGroupId, addAssessment: false };
+        const params: any = { wgId: workGroupId, addAssessment: false };
 
         // if (!this.isLoaded.spInventory[this.activeGroupId] || forcedRefresh) {
         //     params.addAssessment = true;
@@ -226,48 +200,45 @@ export class StudentDataContext extends BaseDataContext {
         //     activeGrpMems.forEach(ent => this.manager.detachEntity(ent));
         // }
 
-        let query = EntityQuery.from(this.studentApiResources.workGroup.resource)
+        let query: EntityQuery = EntityQuery.from(this.studentApiResources.workGroup.resource)
             .withParameters(params);
 
         return <Promise<WorkGroup>>this.manager.executeQuery(query)
             .then(getActiveWorkGrpResponse)
             .catch(this.queryFailed);
 
-        function getActiveWorkGrpResponse(data: QueryResult) {
+        function getActiveWorkGrpResponse(data: QueryResult): WorkGroup {
             workGroup = data.results[0] as WorkGroup;
 
             if (!workGroup) {
-                const error = {
+                const error: any = {
                     errorMessage: 'Could not find this active workgroup on the server',
                 }
-                console.log('Query succeeded, but the course membership did not return a result', data, false);
                 return Promise.reject(() => error) as any;
             }
 
-            //that.isLoaded.workGroup[workGroup.workGroupId] = true;
-            //that.isLoaded.spInventory[workGroup.workGroupId] = (workGroup.assignedSpInstr) ? true : false;
-
-            console.log(workGroup);
             return workGroup;
         }
     }
 
-    getSpInventory(courseId: number, workGroupId: number, assesseeId: number): Array<IStudSpInventory> {
-        let userId = this.global.persona.value.person.personId;
+    getSpInventory(courseId: number, workGroupId: number, assesseeId: number): IStudSpInventory[] {
+        let userId: number = this.global.persona.value.person.personId;
 
-        let workGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
+        let workGroup: WorkGroup = this.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
 
         if (!workGroup.assignedSpInstr) {
-            return null;
+            return undefined;
         }
 
-        let inventoryList = workGroup.assignedSpInstr.inventoryCollection as Array<IStudSpInventory>;
+        let inventoryList: IStudSpInventory[] = workGroup.assignedSpInstr.inventoryCollection as IStudSpInventory[];
 
-        return inventoryList.map(inv => {
+        return inventoryList.map((inv: IStudSpInventory) => {
 
-            let key = { assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId, workGroupId: workGroupId, inventoryItemId: inv.id };
+            let key: any = { assessorPersonId: userId, assesseePersonId: assesseeId, courseId: courseId,
+                        workGroupId: workGroupId, inventoryItemId: inv.id };
 
-            let spResponse = this.manager.getEntityByKey(MpEntityType.spResponse, [userId, assesseeId, courseId, workGroupId, inv.id]) as SpResponse;
+            let spResponse: SpResponse = this.manager.getEntityByKey(MpEntityType.spResponse,
+                                        [userId, assesseeId, courseId, workGroupId, inv.id]) as SpResponse;
 
             if (!spResponse) {
                 spResponse = this.manager.createEntity(MpEntityType.spResponse, key) as SpResponse;
@@ -280,56 +251,57 @@ export class StudentDataContext extends BaseDataContext {
     }
 
     getComment(courseId: number, workGroupId: number, recipientId: number): StudSpComment {
-        let userId = this.global.persona.value.person.personId;
+        let userId: number = this.global.persona.value.person.personId;
 
         if (!courseId || !workGroupId || !recipientId) {
-            return null;
+            return undefined;
         }
 
-        let spComments = this.manager.getEntities(MpEntityType.spComment) as Array<StudSpComment>;
+        let spComments: StudSpComment[] = this.manager.getEntities(MpEntityType.spComment) as StudSpComment[];
 
-        let comment = spComments.filter(comment => comment.authorPersonId === userId && comment.recipientPersonId === recipientId && comment.courseId === courseId && comment.workGroupId === workGroupId)[0];
+        let comment: StudSpComment = spComments.filter((c: StudSpComment) => c.authorPersonId === userId
+            && c.recipientPersonId === recipientId && c.courseId === courseId && c.workGroupId === workGroupId)[0];
 
         if (comment) {
             return comment;
         }
 
-        let newComment = {
+        let newComment: any = {
             authorPersonId: userId,
             recipientPersonId: recipientId,
             courseId: courseId,
             workGroupId: workGroupId,
             commentVersion: 0,
-            requestAnonymity: false
+            requestAnonymity: false,
         };
 
-        let newFlag = {
+        let newFlag: any = {
             authorPersonId: userId,
             recipientPersonId: recipientId,
             courseId: courseId,
-            mpAuthor: MpCommentFlag.neut
+            mpAuthor: MpCommentFlag.neut,
         }
 
-        let returnedComment = this.manager.createEntity(MpEntityType.spComment, newComment) as StudSpComment;
-        let flag = this.manager.createEntity(MpEntityType.spCommentFlag, newFlag) as StudSpCommentFlag;
+        let returnedComment: StudSpComment = this.manager.createEntity(MpEntityType.spComment, newComment) as StudSpComment;
+        let flag: StudSpCommentFlag = this.manager.createEntity(MpEntityType.spCommentFlag, newFlag) as StudSpCommentFlag;
         returnedComment.flag = flag;
         return returnedComment;
     }
 
     fetchWgResult(workGroupId: number): Promise<SpResult | Promise<void>> {
-        const that = this;
+        const that: this = this;
         let workGroup: WorkGroup;
-        let inventory: Array<SpInventory>;
+        let inventory: SpInventory[];
 
 
-        const cachedResult = this.manager.getEntities(MpEntityType.spResult) as Array<SpResult>;
+        const cachedResult: SpResult[] = this.manager.getEntities(MpEntityType.spResult) as SpResult[];
 
 
         workGroup = that.manager.getEntityByKey(MpEntityType.workGroup, workGroupId) as WorkGroup;
         inventory = workGroup.assignedSpInstr.inventoryCollection;
-        const result = cachedResult.filter(cr => cr.workGroupId === workGroupId)[0];
+        const result: SpResult = cachedResult.filter((cr: SpResult) => cr.workGroupId === workGroupId)[0];
         if (result) {
-            inventory.forEach(item => {
+            inventory.forEach((item: SpInventory) => {
                 item.resetResult();
                 item.spResult = result;
                 return item;
@@ -338,9 +310,9 @@ export class StudentDataContext extends BaseDataContext {
         }
 
 
-        const params = { wgId: workGroupId, addInstrument: false };
+        const params: any = { wgId: workGroupId, addInstrument: false };
 
-        let query = EntityQuery.from(this.studentApiResources.wgResult.resource)
+        let query: EntityQuery = EntityQuery.from(this.studentApiResources.wgResult.resource)
             .withParameters(params);
 
         return <Promise<SpResult>>this.manager.executeQuery(query)
@@ -348,7 +320,7 @@ export class StudentDataContext extends BaseDataContext {
             .catch(this.queryFailed);
 
         function getWgSpResultResponse(data: QueryResult): SpResult {
-            const result = data.results[0] as SpResult;
+            const result: SpResult = data.results[0] as SpResult;
             if (!result) {
                 const queryError: any = {
                     errorMessage: 'No sp result was returned from the server',
@@ -361,7 +333,7 @@ export class StudentDataContext extends BaseDataContext {
             if (!inventory) {
                 return Promise.reject('Then required inventory for this result was not in the returned set;') as any;
             }
-            inventory.forEach(item => {
+            inventory.forEach((item: SpInventory) => {
                 item.resetResult();
                 item.spResult = result;
                 return item;

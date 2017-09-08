@@ -5,9 +5,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Course, CrseStudentInGroup, WorkGroup, SpResult } from '../../core/entities/student';
 import { WorkGroupService } from '../services/workgroup.service';
-import { GlobalService } from "../../core/services/global.service"
-import { SpProviderService } from "../../provider/sp-provider/sp-provider.service";
-import { StudentDataContext } from "../services/student-data-context.service";
+import { GlobalService } from '../../core/services/global.service';
+import { SpProviderService } from '../../provider/sp-provider/sp-provider.service';
+import { StudentDataContext } from '../services/student-data-context.service';
 
 @Component({
   selector: 'app-results',
@@ -27,7 +27,7 @@ export class ResultsComponent implements OnInit {
     private studentDataContext: StudentDataContext, private dialogService: TdDialogService,
     private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService) {
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params: any) => {
       this.paramWorkGroupId = +params['wrkGrpId'];
       this.activate();
     });
@@ -49,7 +49,7 @@ export class ResultsComponent implements OnInit {
         this.memberResults = results;
         this.workGroup = this.memberResults.workGroup;
         this.isLoading = false;
-      }).catch(error => {
+      }).catch((error: Event) => {
         this.dialogService.openAlert({
           message: 'There was an error loading your results, please try again.',
           title: 'Load Error',

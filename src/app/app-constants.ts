@@ -9,7 +9,7 @@ export enum DataContext {
     User,
     Student,
     Faculty,
-    LmsAdmin
+    LmsAdmin,
 }
 
 export class UserEntityType {

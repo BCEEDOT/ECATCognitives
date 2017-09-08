@@ -5,11 +5,11 @@ import { WorkGroupService } from './workgroup.service';
 describe('WorkGroupService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WorkgroupService]
+      providers: [WorkGroupService]
     });
   });
 
-  it('should ...', inject([WorkgroupService], (service: WorkGroupService) => {
+  it('should ...', inject([WorkGroupService], (service: WorkGroupService) => {
     expect(service).toBeTruthy();
   }));
 });

@@ -1,44 +1,41 @@
-import { Subject } from "rxjs/Subject";
+import { Subject } from 'rxjs/Subject';
 import { Component, OnInit, OnChanges, Input, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from '@angular/router';
 import { TdLoadingService, TdDialogService } from '@covalent/core';
 import { MdSnackBar } from '@angular/material';
 import 'rxjs/add/operator/takeUntil';
 
-import { Course, WorkGroup, CrseStudentInGroup } from "../../../core/entities/student";
-import { WorkGroupService } from "../../services/workgroup.service";
-import { GlobalService } from "../../../core/services/global.service"
-import { SpProviderService } from "../../../provider/sp-provider/sp-provider.service";
-import { MpSpStatus } from "../../../core/common/mapStrings";
+import { Course, WorkGroup, CrseStudentInGroup } from '../../../core/entities/student';
+import { WorkGroupService } from '../../services/workgroup.service';
+import { GlobalService } from '../../../core/services/global.service';
+import { SpProviderService } from '../../../provider/sp-provider/sp-provider.service';
+import { MpSpStatus } from '../../../core/common/mapStrings';
 
 @Component({
   selector: 'assess',
   templateUrl: './assess.component.html',
-  styleUrls: ['./assess.component.scss']
+  styleUrls: ['./assess.component.scss'],
 })
-export class AssessComponent implements OnInit, OnChanges, OnDestroy {
+export class AssessComponent implements OnChanges, OnDestroy {
 
   activeWorkGroup: WorkGroup;
   user: CrseStudentInGroup;
   peers: CrseStudentInGroup[];
   userId: number;
   readOnly: boolean = false;
-  color = 'accent';
-  checked = false;
-  disabled = false;
+  color: string = 'accent';
+  checked: boolean = false;
+  disabled: boolean = false;
   stratToggle: boolean = false;
   ngUnsubscribe: Subject<any> = new Subject<any>();
 
   constructor(private workGroupService: WorkGroupService, private global: GlobalService,
-    private loadingService: TdLoadingService, private snackBarService: MdSnackBar, private spProvider: SpProviderService, private router: Router, private route: ActivatedRoute) {
+    private loadingService: TdLoadingService, private snackBarService: MdSnackBar,
+    private spProvider: SpProviderService, private router: Router, private route: ActivatedRoute) {
   }
 
   @Input() workGroup: WorkGroup;
   @Input() change: number;
-
-  ngOnInit(): void {
-    this.activate();
-  }
 
   ngOnChanges(): void {
     this.activate();
@@ -49,18 +46,18 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  activate() {
+  activate(): void {
 
     this.activeWorkGroup = this.workGroup;
     this.readOnly = this.activeWorkGroup.mpSpStatus !== MpSpStatus.open;
-    const userId = this.global.persona.value.person.personId;
-    this.user = this.activeWorkGroup.groupMembers.filter(gm => gm.studentId == userId)[0];
+    const userId: number = this.global.persona.value.person.personId;
+    this.user = this.activeWorkGroup.groupMembers.filter((gm: CrseStudentInGroup) => gm.studentId === userId)[0];
     this.user.updateStatusOfPeer();
-    this.activeWorkGroup.groupMembers.forEach(gm => {
-      const hasComment = this.user.statusOfPeer[gm.studentId].hasComment;
-      const assessComplete = this.user.statusOfPeer[gm.studentId].assessComplete;
-      let commentText = '';
-      let assessText = '';
+    this.activeWorkGroup.groupMembers.forEach((gm: CrseStudentInGroup) => {
+      const hasComment: boolean = this.user.statusOfPeer[gm.studentId].hasComment;
+      const assessComplete: boolean = this.user.statusOfPeer[gm.studentId].assessComplete;
+      let commentText: string = '';
+      let assessText: string = '';
 
       if (this.readOnly) {
         commentText = hasComment ? 'comment' : 'not_interested';
@@ -69,8 +66,6 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
         commentText = hasComment ? 'mode_edit' : 'add';
         assessText = assessComplete ? 'mode_edit' : 'add';
       }
-
-      // gm['stratText'] = (this.user.statusOfPeer[gm.studentId].stratComplete) ? this.user.statusOfPeer[gm.studentId].stratedPosition : 'None';
 
       gm.commentText = commentText;
       gm.assessText = assessText;
@@ -85,8 +80,8 @@ export class AssessComponent implements OnInit, OnChanges, OnDestroy {
     this.spProvider.loadComment(recipient).takeUntil(this.ngUnsubscribe).subscribe(() => { this.activate() });
   }
 
-  assess(assesseeId: number) {
-    this.router.navigate(['assess/' + assesseeId], {relativeTo: this.route});
+  assess(assesseeId: number): void {
+    this.router.navigate(['assess/' + assesseeId], { relativeTo: this.route });
     this.workGroupService.onListView(false);
   }
 

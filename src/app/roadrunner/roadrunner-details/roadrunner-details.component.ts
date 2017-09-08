@@ -7,7 +7,6 @@ import { isEmpty } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { ReactiveFormsModule, FormsModule, FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-
 import { RoadrunnerService } from '../services/roadrunner.service';
 import { UserDataContext } from '../../core/services/data/user-data-context.service';
 import { RoadRunner } from '../../core/entities/user';
@@ -50,16 +49,16 @@ export class RoadrunnerDetailsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
 
         this.eventSub = this.roadRunnerService.roadRunnerData$.subscribe((roadRunnerData: RoadRunner[]) => {
-            //console.log("roadrunner update")
+            // console.log("roadrunner update")
             this.event = roadRunnerData;
         });
         this.checkNew = (this.route.snapshot.params['id']);
 
-        if (isEmpty(this.event) && this.checkNew !== "New") {
+        if (isEmpty(this.event) && this.checkNew !== 'New') {
             this.router.navigate(['roadrunner/student/']);
         }
 
-        if (this.checkNew === "New") {
+        if (this.checkNew === 'New') {
             this.oneEvent = this.userDataContext.addRoadRunner();
             let now: Date = new Date();
             this.oneEvent.leaveDate = now;
@@ -67,8 +66,8 @@ export class RoadrunnerDetailsComponent implements OnInit, OnDestroy {
 
         } else {
             this.id = (+this.route.snapshot.params['id']);
-            this.event = this.event.filter(single => single.id === this.id);
-            this.oneEvent = this.event.find(single => single.id === this.id);
+            this.event = this.event.filter((single: RoadRunner) => single.id === this.id);
+            this.oneEvent = this.event.find((single: RoadRunner) => single.id === this.id);
 
             if (this.oneEvent.prevSignOut === true) {
                 this.tempEvent = this.oneEvent;
@@ -101,7 +100,7 @@ export class RoadrunnerDetailsComponent implements OnInit, OnDestroy {
             .then((res) => {
                 this.snackBarService.open('Roadrunner Data Saved', 'Dismiss', { duration: 2000 });
                 this.router.navigate(['roadrunner/student/']);
-            }).catch((error) => {
+            }).catch((error: Event) => {
                 this.dialogService.openAlert({
                     message: 'There was an error saving your changes, please try again.',
                 });
@@ -115,7 +114,7 @@ export class RoadrunnerDetailsComponent implements OnInit, OnDestroy {
         this.userDataContext.commit()
             .then((res) => {
                 this.router.navigate(['roadrunner/student/']);
-            }).catch((error) => {
+            }).catch((error: Event) => {
                 this.dialogService.openAlert({
                     message: 'There was an error saving your changes, please try again.',
                 });

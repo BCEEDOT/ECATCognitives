@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Course, WorkGroup } from "../../core/entities/student";
+import { Course, WorkGroup } from '../../core/entities/student';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class WorkGroupService {
-
-    constructor() {
-        console.log('It is creating a new workgroupservice');
-    }
 
     workGroup$: BehaviorSubject<WorkGroup> = new BehaviorSubject({} as WorkGroup);
     isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -15,23 +11,23 @@ export class WorkGroupService {
     stratComplete$: BehaviorSubject<boolean> = new BehaviorSubject(false);
     onListView$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    workGroup(workGroup: WorkGroup) {
+    workGroup(workGroup: WorkGroup): void {
         this.workGroup$.next(workGroup);
     }
 
-    isLoading(isLoading: boolean) {
+    isLoading(isLoading: boolean): void {
         this.isLoading$.next(isLoading);
     }
 
-    assessComplete(assessComplete: boolean){
+    assessComplete(assessComplete: boolean): void {
         this.assessComplete$.next(assessComplete);
     }
 
-    stratComplete(stratComplete: boolean){
+    stratComplete(stratComplete: boolean): void {
         this.stratComplete$.next(stratComplete);
     }
 
-    onListView(onListView: boolean) {
+    onListView(onListView: boolean): void {
         this.onListView$.next(onListView);
     }
 

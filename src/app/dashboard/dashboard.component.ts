@@ -13,7 +13,6 @@ import { TdLoadingService, TdDigitsPipe } from '@covalent/core';
 })
 export class DashboardComponent implements AfterViewInit {
 
-
   constructor(private titleService: Title) {
   }
 
