@@ -1,9 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
-
 import { Title }     from '@angular/platform-browser';
 
 import { TdLoadingService, TdDigitsPipe } from '@covalent/core';
-
 
 @Component({
   selector: 'qs-dashboard',
