@@ -1,0 +1,27 @@
+<div style="padding-bottom:1%">
+  <md-list>
+    <md-list-item>
+      <span fxFlex="50">BEHAVIOR</span>
+      <span fxFlex="20">SELF</span>
+      <span fxFlex="15" fxFlexAlign="center" >PEERS</span>
+      <span fxFlex="15">INSTRUCTOR</span>
+    </md-list-item>
+    <md-list-item *ngFor="let inv of inventories">
+      <span fxFlex="50" style="padding-right: 2.5%">{{inv?.behavior}}</span>
+      <span fxFlex="15">{{inv?.resultBreakOut?.selfResult}}</span>
+      <span fxFlex="20">
+
+        <ngx-charts-pie-chart
+          [view]="[135,90]"
+          [scheme]="inv?.resultBreakOut.peerBoChart.chartColors"
+          [legend]="false"
+          [results]="inv?.resultBreakOut.peerBoChart"
+          [arcWidth]=".45"
+          [explodeSlices]="true"
+          [doughnut]="true">
+        </ngx-charts-pie-chart>
+      </span>
+      <span fxFlex="15">{{inv?.resultBreakOut?.facultyResult}}</span>
+    </md-list-item>
+  </md-list>
+</div>

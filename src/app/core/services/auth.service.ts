@@ -18,7 +18,7 @@ import { Person } from "../entities/user";
 import { GlobalService, ILoggedInUser } from "./global.service";
 import { EmProviderService } from "./em-provider.service";
 import { DataContext } from "../../app-constants";
-import { MpEntityType } from "../common/mapStrings";
+import { MpEntityType, MpInstituteRole } from "../common/mapStrings";
 
 @Injectable()
 export class AuthService implements IHttpInterceptor {
@@ -26,8 +26,8 @@ export class AuthService implements IHttpInterceptor {
   redirectUrl: string;
   //public token: string;
 
-  constructor(private http: Http, private router: Router, private global: GlobalService, 
-  private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
+  constructor(private http: Http, private router: Router, private global: GlobalService,
+    private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
 
   login(username: string, password: string): Observable<boolean> {
 
@@ -75,7 +75,6 @@ export class AuthService implements IHttpInterceptor {
 
     let accessTokenSigned = localStorage.getItem('ecatAccessToken');
     let idTokenSigned = localStorage.getItem('ecatUserIdToken');
-
     let accessToken = this.jwtHelper.decodeToken(accessTokenSigned);
     let idToken = this.jwtHelper.decodeToken(idTokenSigned);
     var user: ILoggedInUser = <ILoggedInUser>{};
@@ -90,20 +89,51 @@ export class AuthService implements IHttpInterceptor {
       mpPaygrade: idToken.mpPaygrade,
       mpComponent: idToken.mpComponent,
       email: idToken.email,
-      registrationComplete: true,
+      registrationComplete: idToken.registrationComplete,
       mpInstituteRole: idToken.mpInstituteRole
     } as Person;
 
-    user.person = loggedInUser;
-    user.isFaculty = false;
-    user.isStudent = true;
-    user.isLmsAdmin = false;
-    user.isProfileComplete = true;
-    this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+    user.person = entityUser as Person;
+
+    if (loggedInUser.mpInstituteRole === MpInstituteRole.student) {
+      user.isFaculty = false;
+      user.isStudent = true;
+      user.isLmsAdmin = false;
+    }
+
+    if (loggedInUser.mpInstituteRole === MpInstituteRole.faculty) {
+      user.isFaculty = true;
+      user.isStudent = false;
+      user.isLmsAdmin = accessToken.role.some(role => role === 'ISA');
+    }
+
     this.global.user(user);
+    console.log(user);
+
+    //set a timer for warning the user when they are 5 minutes from token expiring
+    //token.exp is in seconds, Date.now in milliseconds, and tokenTimer wants milliseconds
+    let tokenWarn = ((accessToken.exp - (Date.now() / 1000)) - 300) * 1000;
+    this.global.startTokenTimer(tokenWarn);
   }
 
   logout() {
+
+    if(this.emProvider) {
+      this.emProvider.clear(DataContext.User);
+      this.emProvider.clear(DataContext.Student);
+      this.emProvider.clear(DataContext.Faculty);
+      this.emProvider.clear(DataContext.LmsAdmin);
+    }
+    // this.emProvider.clear(DataContext.User);
+    // this.emProvider.clear(DataContext.Student);
+    // this.emProvider.clear(DataContext.Faculty);
+    
+    // this.emProvider.clearAll();
+
+    
+    this.global.user(null);
+    this.global.userDataContext(false);
     localStorage.removeItem('ecatAccessToken');
     localStorage.removeItem('ecatUserIdToken');
     this.router.navigate(['/login']);

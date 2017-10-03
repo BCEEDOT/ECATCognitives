@@ -1,5 +1,6 @@
 import { EntityBase } from '../EntityBase';
 import { CogInstrument } from './CogInstrument';
+import { CogResponse } from "./cogResponse";
 
 /// <code-import> Place custom imports between <code-import> tags
 
@@ -22,8 +23,14 @@ export class CogInventory extends EntityBase {
    instrument: CogInstrument;
 
    /// <code> Place custom code between <code> tags
-   
+   response: CogResponse;
+   isChanged: boolean = false;
    /// </code>
+    rejectChanges(): void {
+        this.response.entityAspect.rejectChanges();
+        this.isChanged = false;
+    }
+
 
 }
 

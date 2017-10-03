@@ -1,0 +1,31 @@
+<md-card-title>Move {{student.rankName}}</md-card-title>
+<md-list>
+  <md-list-item>
+    <md-icon md-list-avatar>description</md-icon>
+    <div class="pad-left-sm">
+      <p *ngIf="!fromUnassigned">From: Flight {{fromNum}}</p>
+      <p *ngIf="fromUnassigned">From: Unassigned</p>
+    </div>
+  </md-list-item>
+  <md-list-item>
+    <md-icon md-list-avatar>description</md-icon>
+    <div class="pad-left-sm">
+      <md-select placeholder="To Flight:" [disabled]="unassign === true" [(ngModel)]="selFlight">
+        <md-option *ngFor="let flight of flightNums" [value]="flight">{{ flight }}</md-option>
+      </md-select>
+    </div>
+  </md-list-item>
+  <md-list-item>
+    <div class="pad-left-md">
+      <button md-raised-button (click)="unassign = !unassign" [ngClass]="{'btn-selected': unassign===true}" [disabled]="fromUnassigned"> 
+        Set Unassigned
+      </button>
+    </div>
+  </md-list-item>
+</md-list>
+<md-card-actions class="pad-top-sm pad-bottom-none pull-bottom-none">
+  <div class="pad-left-md" fxLayout="row" fxLayoutAlign="start center">
+    <button md-raised-button color="primary" type="button" (click)="ok()" class="text-upper" [disabled]="selFlight === '' && unassign === false">Ok</button>
+    <button md-raised-button color="primary" type="button" class="text-upper" (click)="close();">Cancel</button>
+  </div>
+</md-card-actions>

@@ -1,0 +1,23 @@
+<td-layout-nav logo="" toolbarTitle="ECAT - WorkGroup Center">
+    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+        <span fxFlex></span>
+        <a md-icon-button mdTooltip="Profile" routerLink="/profile">
+            <md-icon>account_circle</md-icon>
+        </a>
+    </div>
+  <div class="width">
+    <div align="end" class="pad-right-md pad-top-sm" *ngIf="onListView">
+      <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
+       {{activeCourse?.displayName}}
+      <md-icon class="md-24">expand_more</md-icon>
+    </button>
+      <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+        <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course, false)">
+          {{course.displayName}}
+        </button>
+      </md-menu>
+      <button md-icon-button (click)="refreshData()"><md-icon class="md-24">autorenew</md-icon></button>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</td-layout-nav>

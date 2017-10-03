@@ -18,7 +18,7 @@ export class ProfileStudent extends EntityBase {
    person: Person;
 
    /// <code> Place custom code between <code> tags
-   
+   static initializer(entity: ProfileStudent) { }
    /// </code>
 
 }

@@ -1,16 +1,20 @@
-<td-layout-nav logo="assets:covalent">
-    <div td-toolbar-content layout="row" layout-align="center center" flex>
-        <span flex></span>
-        <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
-            <md-icon>chrome_reader_mode</md-icon>
-        </a>
-        <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
-            <md-icon svgIcon="assets:github"></md-icon>
+<td-layout-nav logo="" toolbarTitle="ECAT - Dashboard">
+    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+        <span fxFlex></span>
+        <a md-icon-button mdTooltip="Profile" routerLink="/profile">
+            <md-icon>account_circle</md-icon>
         </a>
     </div>
-    <td-layout-card-over cardTitle="Attention" cardSubtitle="Welcome to the ECAT" cardWidth="75">
+    <td-layout-card-over cardTitle="Welcome"  cardWidth="75">
+        <md-card-content>
+            <h3 class="tc-red-800">Notice - Message From Admin</h3>
+            <p>ECAT is designed to work with the latest browser technology. 
+                There will be compatibility issues with older versions of Internet Explorer. 
+                If you are having issues using ECAT please upgrade your browser to Chrome, Firefox, or Microsoft Edge 
+                (formerly IE) or ask your Instructor for assistance.</p>
+        </md-card-content>
     </td-layout-card-over>
     <td-layout-footer>
-        Optional footer
+        Barnes Center for Enlisted Education
     </td-layout-footer>
 </td-layout-nav>

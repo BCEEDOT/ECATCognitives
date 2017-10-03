@@ -6,15 +6,15 @@ import { EmProviderService } from '../../core/services/em-provider.service';
 import { DataContext } from '../../app-constants';
 
 
-@Injectable()
+//@Injectable()
 export class BaseDataContext {
 
-    private static shelveSets = {};
+    static shelveSets = {};
     //private static savedOrRejectedSubject = new Subject<SavedOrRejectedArgs>();
 
-    private _manager: EntityManager;
+    _manager: EntityManager;
 
-    private entityChangedSubject: Subject<EntityChangedEventArgs>;
+    entityChangedSubject: Subject<EntityChangedEventArgs>;
 
     constructor(private dataContext: DataContext, private _emProvider: EmProviderService) {
         this.entityChangedSubject = new Subject<EntityChangedEventArgs>();
@@ -39,6 +39,11 @@ export class BaseDataContext {
         return this.entityChangedSubject.asObservable();
     }
 
+    protected queryFailed(error: any) {
+        const msg = `Error querying data: ${error ? (error.message || error.status) : 'Unknown Reason'}`;
+        return Promise.reject(msg);
+    }
+
     static get savedOrRejected() {
         //return UnitOfWork.savedOrRejectedSubject.asObservable();
         return null;
@@ -48,6 +53,10 @@ export class BaseDataContext {
     hasChanges(): boolean {
         return this.manager.hasChanges();
     }
+
+    // clear(): void {
+    //     this.manager.clear();
+    // }
 
     // hasChangesChanged(): Observable<any> {
     //     return this.manager.hasChangesChanged.subscribe(eventArgs => {
@@ -59,11 +68,26 @@ export class BaseDataContext {
         return this.manager.getChanges();
     }
 
+    namedCommit(selectedEntities: Entity[]) {
+        return <any>this.manager.saveChanges(selectedEntities)
+            .then((saveResult) => {
+                return saveResult.entities;
+            }).catch((errors) => {
+                console.log("errors from the commit");
+                console.log(errors);
+                if (errors.status == 401) {
+                    console.log('You have been logged out due to time. Please go in again');
+                }
+                throw errors;
+            });
+    }
+
     //This is save changes
     commit(): Promise<any> {
-        let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
-
-        return <any>this.manager.saveChanges(null, saveOptions)
+        //let saveOptions = new SaveOptions({ resourceName: 'savechanges' });
+        //console.log(this.getChanges());
+        //return <any>this.manager.saveChanges(null, saveOptions)
+        return <any>this.manager.saveChanges()
             .then((saveResult) => {
                 // UnitOfWork.savedOrRejectedSubject.next({
                 //     entities: saveResult.entities,
@@ -71,6 +95,13 @@ export class BaseDataContext {
                 // });
 
                 return saveResult.entities;
+            }).catch((errors) => {
+                console.log("errors from the commit");
+                console.log(errors);
+                if (errors.status == 401) {
+                    console.log('You have been logged out due to time. Please go in again');
+                }
+                throw errors;
             });
     }
 
@@ -83,9 +114,9 @@ export class BaseDataContext {
         // });
     }
 
-    // clear(): void {
-    //     this._emProvider.reset(this.manager);
-    // }
+    clear(): void {
+        this._emProvider.clear(this.dataContext);
+    }
 
     // shelve(key: string, clear: boolean = false): void {
     //     let data = this.manager.exportEntities(null, { asString: false, includeMetadata: false });

@@ -1,105 +1,230 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { MpSpStatus } from '../core/common/mapStrings';
+import { Component, AfterViewInit, OnInit, Inject, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MdSnackBar } from '@angular/material';
 import { TdLoadingService, TdDialogService, TdMediaService } from '@covalent/core';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/pluck';
+import { MdDialog, MdDialogRef, MdDialogConfig, MD_DIALOG_DATA } from '@angular/material';
+import { DOCUMENT } from '@angular/platform-browser';
 
-import { Course } from "../core/entities/student";
-import { GlobalService } from "../core/services/global.service";
-import { StudentDataContext } from "./services/student-data-context.service";
+import { Course, WorkGroup } from '../core/entities/student';
+import { WorkGroupService } from './services/workgroup.service';
+import { StudentDataContext } from './services/student-data-context.service';
+import { AssessCompareDialog } from './shared/assess-compare/assess-compare.dialog';
+
 
 @Component({
-  //Selector only needed if another template is going to refernece
+  // Selector only needed if another template is going to refernece
   selector: 'ecat-student',
   templateUrl: './student.component.html',
   styleUrls: ['./student.component.scss']
-  //Limits only to current view and not children
-  //viewProviders: [ UsersService ],
+  // Limits only to current view and not children
+  // viewProviders: [ UsersService ],
 })
-export class StudentComponent implements OnInit {
+export class StudentComponent implements OnInit, OnDestroy {
 
-  courses: Course[] = [];
+  activeCourseId: number;
+  activeWorkGroupId: number;
+  courses$: Observable<Course[]>;
+  courses: Course[];
+  workGroups: WorkGroup[];
+  activeCourse: Course;
+  activeWorkGroup: WorkGroup;
+  grpDisplayName: string = 'Not Set';
+  assessIsLoaded: string = 'assessIsLoaded';
+  dialogRef: MdDialogRef<AssessCompareDialog>;
+  onListView: boolean = true;
+  viewSub: Subscription;
 
   constructor(private titleService: Title,
     private router: Router,
+    private route: ActivatedRoute,
     private loadingService: TdLoadingService,
     private dialogService: TdDialogService,
     private snackBarService: MdSnackBar,
-    private studentDataContext: StudentDataContext,
     public media: TdMediaService,
-    private global: GlobalService) { }
+    private workGroupService: WorkGroupService,
+    private studentDataContext: StudentDataContext,
+    public dialog: MdDialog, @Inject(DOCUMENT) doc: any) {
+
+    this.courses$ = route.data.pluck('assess');
+
+  }
 
   goBack(route: string): void {
     this.router.navigate(['/']);
   }
 
-  ngOnInit(): void {
-    // broadcast to all listener observables when loading the page
-    this.media.broadcast();
-    this.titleService.setTitle('ECAT Users');
-    this.initCourses();
-  }
+  refreshFromServer(): void {
 
-  initCourses(): void {
-    //maps to ng-template tag
-    this.loadingService.register('course.list');
-    this.studentDataContext.initCourses()
-        .then((courses) => {
+    this.workGroupService.isLoading(true);
+    if (this.activeCourse) {
+      this.workGroupService.isLoading(false);
+      this.setActiveCourse(this.activeCourse);
+    } else {
+      this.studentDataContext.initCourses().then((courses: Course[]) => {
+        if (courses.length > 0) {
+          if (courses[0].workGroups.length > 0) {
+            this.studentDataContext.fetchActiveWorkGroup(courses[0].workGroups[0].workGroupId, true).then((workgroup: WorkGroup) => {
+              this.workGroupService.isLoading(false);
+              this.courses = courses;
+              this.activate(false);
+            }).catch((error: Event) => {
+              this.workGroupService.isLoading(false);
+              this.dialogService.openAlert({ message: 'There was a problem loading your work group, please try again.', title: 'Load Error' });
+              this.workGroupService.isLoading(false);
+            });
+          } else {
+            this.workGroupService.isLoading(false);
+            this.courses = courses;
+            this.activate(false);
+          }
+        } else {
+          this.workGroupService.isLoading(false);
           this.courses = courses;
-          this.loadingService.resolve('course.list');
-          console.log(this.courses);
-        })
-        .catch(e => {
-          this.loadingService.resolve('course.list');
-          console.log('error getting users');
-          console.log(e);
-        })
+        }
+      }).catch((error: Event) => {
+        this.workGroupService.isLoading(false);
+        this.dialogService.openAlert({ message: 'There was a problem loading your course, please try again.', title: 'Load Error' });
+        this.workGroupService.isLoading(false);
+      });
+    }
 
   }
 
+  ngOnDestroy(): void {
+    this.workGroupService.workGroup(undefined);
+    this.viewSub.unsubscribe();
+  }
 
-  // loadUsers(): void {
-  //   this._loadingService.register('users.list');
-  //   this._usersService.query().subscribe((users: IUser[]) => {
-  //     this.users = users;
-  //     this.filteredUsers = users;
-  //     this._loadingService.resolve('users.list');
-  //   }, (error: Error) => {
-  //     this._usersService.staticQuery().subscribe((users: IUser[]) => {
-  //       this.users = users;
-  //       this.filteredUsers = users;
-  //       this._loadingService.resolve('users.list');
-  //     });
-  //   });
-  // }
+  ngOnInit(): void {
 
-  // filterUsers(displayName: string = ''): void {
-  //   this.filteredUsers = this.users.filter((user: IUser) => {
-  //     return user.displayName.toLowerCase().indexOf(displayName.toLowerCase()) > -1;
-  //   });
-  // }
+    this.titleService.setTitle('Assessment Center');
+    this.courses$.subscribe((courses: Course[]) => {
+      this.courses = courses;
+      if (courses.length > 0) {
 
-  // deleteUser(id: string): void {
-  //   this._dialogService
-  //     .openConfirm({message: 'Are you sure you want to delete this user?'})
-  //     .afterClosed().subscribe((confirm: boolean) => {
-  //       if (confirm) {
-  //         this._loadingService.register('users.list');
-  //         this._usersService.delete(id).subscribe(() => {
-  //           this.users = this.users.filter((user: IUser) => {
-  //             return user.id !== id;
-  //           });
-  //           this.filteredUsers = this.filteredUsers.filter((user: IUser) => {
-  //             return user.id !== id;
-  //           });
-  //           this._loadingService.resolve('users.list');
-  //           this._snackBarService.open('User deleted', 'Ok');
-  //         }, (error: Error) => {
-  //           this._dialogService.openAlert({message: 'There was an error'});
-  //           this._loadingService.resolve('users.list');
-  //         });
-  //       }
-  //     });
-  // }
+        this.activate(false);
+      }
+    });
+
+    this.viewSub = this.workGroupService.onListView$.subscribe((value: boolean) => {
+      this.onListView = value;
+    });
+
+  }
+
+  activate(force?: boolean): void {
+    this.courses.sort((crseA: Course, crseB: Course) => {
+      if (crseA.startDate < crseB.startDate) { return 1; }
+      if (crseA.startDate > crseB.startDate) { return -1; }
+      return 0;
+    });
+
+    this.courses.forEach((course: Course) => {
+      course.displayName = course.classNumber + ': ' + course.name;
+    });
+
+    this.activeCourse = this.courses[0];
+    this.activeCourseId = this.activeCourse.id;
+
+    if (this.activeCourse.workGroups.length > 0) {
+
+      this.initWorkGroups(this.activeCourse.workGroups);
+    }
+
+  }
+
+  initWorkGroups(workGroups: WorkGroup[]): void {
+
+    this.workGroups = workGroups;
+    this.workGroups.sort((wgA: WorkGroup, wgB: WorkGroup) => {
+      if (wgA.mpCategory < wgB.mpCategory) { return 1; }
+      if (wgA.mpCategory > wgB.mpCategory) { return -1; }
+      return 0;
+    });
+    this.workGroups.forEach((wg: WorkGroup) => { wg.displayName = `${wg.mpCategory}: ${wg.customName || wg.defaultName}`; });
+    this.initActiveWorkGroup(this.workGroups[0]);
+  }
+
+  initActiveWorkGroup(workGroup: WorkGroup): void {
+    this.activeWorkGroup = workGroup;
+    this.activeWorkGroupId = this.activeWorkGroup.workGroupId;
+    this.grpDisplayName = `${this.activeWorkGroup.mpCategory}: ${this.activeWorkGroup.customName || this.activeWorkGroup.defaultName}`;
+
+    if (this.activeWorkGroup.groupMembers.length < 1) {
+      this.setActiveWorkGroup(workGroup);
+    } else {
+      this.workGroupService.workGroup(this.activeWorkGroup);
+      this.nav(this.activeWorkGroup);
+    }
+
+  }
+
+  assessCompare(): void {
+
+    this.dialogRef = this.dialog.open(AssessCompareDialog, {
+      disableClose: false,
+      hasBackdrop: true,
+      backdropClass: '',
+      width: '950px',
+      height: '',
+      position: {
+        top: '',
+        bottom: '',
+        left: '',
+        right: '',
+      },
+      data: {
+        workGroup: this.activeWorkGroup,
+      },
+    });
+
+  }
+
+  setActiveCourse(course: Course): void {
+
+    this.workGroupService.isLoading(true);
+
+    this.studentDataContext.fetchActiveCourse(course.id, true)
+      .then((courseValue: Course) => {
+        this.activeCourse = courseValue;
+        this.activeCourseId = this.activeCourse.id;
+
+        if (this.activeCourse.workGroups.length > 0) {
+          this.initWorkGroups(this.activeCourse.workGroups);
+        }
+        this.workGroupService.isLoading(false);
+      }).catch((error: Event) => {
+        this.dialogService.openAlert({ message: 'There was a problem loading your course, please try again.', title: 'Load Error' });
+        this.workGroupService.isLoading(false);
+
+      });
+  }
+
+  nav(workGroup: WorkGroup): void {
+    const resultsPublished: boolean = this.activeWorkGroup.mpSpStatus === MpSpStatus.published;
+
+    resultsPublished ? this.router.navigate(['results', this.activeCourseId, this.activeWorkGroupId], { relativeTo: this.route })
+                     : this.router.navigate(['list', this.activeCourseId, this.activeWorkGroupId], { relativeTo: this.route });
+
+  }
+
+  setActiveWorkGroup(workGroup: WorkGroup): void {
+
+    this.workGroupService.isLoading(true);
+
+    this.studentDataContext.fetchActiveWorkGroup(workGroup.workGroupId, true).then((workGroupValue: WorkGroup) => {
+      this.initActiveWorkGroup(workGroupValue);
+      this.workGroupService.isLoading(false);
+    }).catch((error: Event) => {
+      this.dialogService.openAlert({ message: 'There was a problem loading your Work Group, please try again.', title: 'Load Error' });
+      this.workGroupService.isLoading(false);
+    });
+
+  }
 
 }

@@ -1,4 +1,4 @@
-@import '~@angular/material/core/theming/all-theme';
+@import '~@angular/material/theming';
 @import '~@covalent/core/theming/all-theme';
 @import '~@covalent/markdown/markdown-theme';
 @import '~@covalent/highlight/highlight-theme';
@@ -79,7 +79,7 @@ $ecat-accent: (
 );
 
 $primary: mat-palette($ecat-primary, 500, 700);
-$accent:  mat-palette($ecat-accent, A200, 700, A400);
+$accent:  mat-palette($ecat-accent, 100, 700, 50);
 
 // The warn palette is optional (defaults to red).
 $warn:    mat-palette($mat-red, 600);
@@ -94,6 +94,10 @@ $theme: mat-light-theme($primary, $accent, $warn);
 @include covalent-theme($theme);
 @include covalent-markdown-theme($theme);
 @include covalent-highlight-theme();
+
+//date picker
+ //@include calendar-theme($theme);
+
 
 // Active icon color in list nav
 md-nav-list {

@@ -1,0 +1,37 @@
+<!--<div fxLayout="row" fxLayoutAlign="end start">
+  <button md-icon-button (click)="dialogRef.close()"><md-icon>clear</md-icon></button>
+</div>-->
+
+<div fxLayout="row" class="pad-bottom-xl">
+    <td-chips [chipAddition]="chipAddition" [items]="items" [(ngModel)]="itemsRequireMatch" placeholder="Click to add" [readOnly]="readOnly"
+      (add)="add($event)" (remove)="remove($event)" requireMatch>
+    </td-chips>
+  </div>
+
+<div *ngIf="multi?.length === 0" fxLayout="row" class="pad-xl" fxLayoutAlign="center center">
+  <h3>No Data</h3>
+</div>
+
+<div *ngIf="multi?.length > 0">
+
+  <ngx-charts-line-chart [view]="view" [scheme]="blueOrangeScheme" [results]="multi" [gradient]="gradient" [xAxis]="showXAxis"
+    [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel" [yAxisTickFormatting]="ratings" [activeEntries]="single">
+    <!-- [autoScale]="autoScale" -->
+    <!-- (select)="onSelect($event)" -->
+    <ng-template #tooltipTemplate let-model="model">
+      <p>{{model.name}} : {{ratings(model.value)}}</p>
+      <!-- <h2>{{model.name}}: {{model.value}}</h2> -->
+    </ng-template>
+
+    <ng-template #seriesTooltipTemplate let-models="model">
+      <!-- {{models | json}}  -->
+      <h4>{{models[0].name}}</h4>
+      <p *ngFor="let model of models">
+        {{model.series}} : {{ratings(model.value)}}
+      </p>
+      <!-- <p>{{model.name}} : {{ratings(model.value)}}</p> -->
+      <!-- <h2>{{model.name}}: {{model.value}}</h2> -->
+    </ng-template>
+  </ngx-charts-line-chart>
+</div>

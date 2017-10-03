@@ -1,51 +1,44 @@
-<td-layout-nav logo="assets:covalent">
-  <div td-toolbar-content layout="row" layout-align="center center" flex>
-    <span flex></span>
-    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
-      <md-icon>chrome_reader_mode</md-icon>
-    </a>
-    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
-      <md-icon svgIcon="assets:github"></md-icon>
+<td-layout-nav logo="" toolbarTitle="ECAT - Assessment Center">
+  <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
+    <span fxFlex></span>
+    <a md-icon-button mdTooltip="Profile" routerLink="/profile">
+      <md-icon>account_circle</md-icon>
     </a>
   </div>
-    <md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
-      <md-toolbar td-sidenav-content>
-        <span>Users</span>
-        <span flex></span>
-        <button md-icon-button><md-icon class="md-24">view_module</md-icon></button>
-        <button md-icon-button><md-icon class="md-24">sort</md-icon></button>
-        <button md-icon-button><md-icon class="md-24">settings</md-icon></button>
-        <button md-icon-button><md-icon class="md-24">more_vert</md-icon></button>
-      </md-toolbar>
-      <ng-template tdLoading="person.list">
-        <md-list class="will-load">
-          <div class="md-padding" *ngIf="!people || people.length === 0" layout="row" layout-align="center center">
-            <h3>No users to display.</h3>
-          </div>
-          <ng-template let-person let-last="last" ngFor [ngForOf]="people">
-            <md-list-item>
-              <md-icon md-list-avatar>person</md-icon>
-              <h3 md-line> {{person.firstName}} </h3>
-              <p md-line> {{person.lastName}} </p>
-              <p md-line hide-gt-md class="md-caption"> last login: {{ person.mpPaygrade }} </p>
-              <span flex></span>
-              <span hide-xs hide-sm hide-md flex-gt-xs="60" flex-xs="40" layout-gt-xs="row">
-                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ person.mpComponent }} </div>
-                  <div class="md-caption tc-grey-500" flex-gt-xs="50"> {{ person.mpPaygrade }} </div>
-              </span>
-              <span>
-                  <button md-icon-button [md-menu-trigger-for]="menu">
-                  <md-icon>more_vert</md-icon>
-                  </button>
-                  <md-menu x-position="before" #menu="mdMenu">
-                      <a [routerLink]="[person.personId + '/edit']" md-menu-item>Edit</a>
-                      <button md-menu-item>Delete</button>
-                  </md-menu>
-              </span>
-            </md-list-item>
-            <md-divider *ngIf="!last" md-inset></md-divider>
-          </ng-template>
-        </md-list>
-      </ng-template>
-    </md-card>
+  <div class="width">
+    <div fxLayout="row" fxLayoutAlign="end" class="pad-top-sm" *ngIf="onListView">
+      <div fxFlex></div>
+      <div *ngIf="activeWorkGroup" class="pad-top-sm">
+        <button md-button [mdMenuTriggerFor]="posXMenu" class="md-subhead">
+      {{activeWorkGroup?.displayName}}
+      <md-icon class="md-24">expand_more</md-icon>
+    </button>
+        <md-menu x-position="before" #posXMenu="mdMenu" class="before">
+          <button *ngFor="let workGroup of workGroups" md-menu-item (click)="setActiveWorkGroup(workGroup)">
+          {{workGroup.displayName}}
+          </button>
+        </md-menu>
+      </div>
+      <div *ngIf="activeCourse">
+
+        <button md-icon-button [mdMenuTriggerFor]="menu" class="md-subhead">
+        <md-icon>menu</md-icon>
+      </button>
+        <md-menu #menu="mdMenu" x-position="before" class="before">
+          <button *ngFor="let course of courses" md-menu-item (click)="setActiveCourse(course)">
+          {{course.displayName}}
+          </button>
+        </md-menu>
+      </div>
+      <button md-icon-button (click)="refreshFromServer()"><md-icon class="md-24">autorenew</md-icon></button>
+    </div>
+  </div>
+  <router-outlet>
+
+  </router-outlet>
 </td-layout-nav>
+<div *ngIf="activeWorkGroup && onListView">
+  <a style="z-index: 9999;" md-fab color="primary" class="mat-fab-bottom-right" (click)="assessCompare()" mdTooltip="Compare" mdTooltipPosition="left">
+    <md-icon>show_chart</md-icon>
+  </a>
+</div>

@@ -20,7 +20,8 @@ export class UserRegistrationHelper implements IRegistrationHelper {
         metadataStore.registerEntityTypeCtor('CogEcmspeResult', CogEcmspeResult);
 metadataStore.registerEntityTypeCtor('CogInstrument', CogInstrument);
 metadataStore.registerEntityTypeCtor('CogInventory', CogInventory);
-metadataStore.registerEntityTypeCtor('Person', Person);
+metadataStore.registerEntityTypeCtor('Person', Person, Person.initializer);
+//metadataStore.setEntityTypeForResourceName('getusers', 'Person')
 metadataStore.registerEntityTypeCtor('ProfileFaculty', ProfileFaculty);
 metadataStore.registerEntityTypeCtor('RoadRunner', RoadRunner);
 metadataStore.registerEntityTypeCtor('Security', Security);

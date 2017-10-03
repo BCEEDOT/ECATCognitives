@@ -8,7 +8,7 @@ import { SanitizedSpComment } from './SanitizedSpComment';
 import { SanitizedSpResponse } from './SanitizedSpResponse';
 
 /// <code-import> Place custom imports between <code-import> tags
-
+import { FacSpResponse } from '../faculty/facSpResponse'
 /// </code-import>
 
 export class SpResult extends EntityBase {
@@ -28,7 +28,7 @@ export class SpResult extends EntityBase {
    workGroup: WorkGroup;
 
    /// <code> Place custom code between <code> tags
-   
+   facultyResponses: FacSpResponse[]
    /// </code>
 
 }

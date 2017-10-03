@@ -23,7 +23,7 @@ export class WorkGroupModel extends EntityBase {
    workGroups: WorkGroup[];
 
    /// <code> Place custom code between <code> tags
-   
+   status: string;
    /// </code>
 
 }

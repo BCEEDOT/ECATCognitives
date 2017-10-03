@@ -1,0 +1,23 @@
+.selected {
+    background-color: #3e6d92; 
+    color: white; 
+}
+
+.appr {
+    background-color: #388e3c; 
+    color: white; 
+}
+.inappr {
+    background-color: #d32f2f; 
+    color: white; 
+}
+
+@mixin md-icon-size($size: 18px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
+.material-icons.mat-icon {
+  @include md-icon-size(18px);
+}

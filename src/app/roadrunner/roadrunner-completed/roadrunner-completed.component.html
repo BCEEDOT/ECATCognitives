@@ -1,0 +1,70 @@
+<md-card tdMediaToggle="gt-xs" [mediaClasses]="['push']">
+
+  <md-toolbar td-sidenav-content>
+    <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+
+      <span class="md-title">Completed</span>
+
+    </div>
+  </md-toolbar>
+
+  <md-list class="will-load">
+    <div *ngIf="roadRunnerInfos">
+      <div *ngIf="roadRunnerInfos?.length === 0 || count === 0">
+
+        <span class="md-title">You have not signed in from any locations</span>
+      </div>
+    </div>
+    <div *ngIf="roadRunnerInfos">
+      <div *ngIf="roadRunnerInfos?.length > 0">
+
+        <ng-template let-rData let-last="last" ngFor [ngForOf]="roadRunnerInfos">
+
+
+          <div *ngIf="rData?.prevSignOut" fxShow fxHide.xs="true" #row fxLayout="row" fxLayoutGap="20px">
+            <md-list-item fxFlex="100%">
+
+              <h4 md-line *ngIf="rData.splitLocation.length > 1"> {{rData?.splitLocation[0]}} </h4>
+              <p md-line *ngIf="rData.splitLocation.length > 1">{{rData?.splitLocation[1]}}</p>
+              <h4 md-line *ngIf="rData.splitLocation.length === 1"> {{rData?.splitLocation[0]}}</h4>
+              <p md-line></p>
+
+              <span flex></span>
+
+              <span fxFlex="50">
+          <div class="md-caption tc-grey-500">
+                    Start Date: 
+                    <span [innerHtml]="rData?.leaveDate | date:'dd MMM yyyy'">{{ rData?.leaveDate }}</span>
+          </div>
+          </span>
+          <span>
+            <button md-raised-button color="primary" [routerLink]="[rData.id]">Clone</button>
+      </span>
+          </md-list-item>
+      </div>
+
+      <!--show this div if screensize is small-->
+      <div *ngIf="rData?.prevSignOut" fxHide fxHide.xs="false" #row fxLayout="row" fxLayoutGap="20px">
+        <md-list-item fxFlex="100%">
+          <h4 md-line *ngIf="rData.splitLocation.length > 1"> {{rData?.splitLocation[0]}} </h4>
+          <p md-line *ngIf="rData.splitLocation.length > 1">{{rData?.splitLocation[1]}}</p>
+          <h4 md-line *ngIf="rData.splitLocation.length === 1"> {{rData?.splitLocation[0]}}</h4>
+          <p md-line></p>
+          <p md-line class="md-caption" [innerHtml]="rData?.leaveDate | date:'dd MMM yyyy'">{{ rData?.leaveDate }} </p>
+          <span md-line>
+                <a md-icon-button  color="primary" [routerLink]="[rData.id]">
+                  <md-icon >content_copy</md-icon>
+                </a>
+          </span>
+        </md-list-item>
+
+      </div>
+      <div *ngIf="rData?.prevSignOut">
+        <md-divider *ngIf="!last" md-inset></md-divider>
+      </div>
+
+      </ng-template>
+    </div>
+    </div>
+  </md-list>
+</md-card>

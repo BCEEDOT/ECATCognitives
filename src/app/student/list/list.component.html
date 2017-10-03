@@ -1,0 +1,44 @@
+<div class="width pad-bottom-xxl">
+  <ng-template tdLoading [tdLoadingUntil]="!isLoading" tdLoadingStrategy="overlay">
+    <md-card *ngIf="!user?.hasAcknowledged">
+      <md-card-title>Instructions</md-card-title>
+      <md-divider></md-divider>
+      <md-card-content>
+        <div [innerHTML]="instructions"></div>
+      </md-card-content>
+      <md-divider></md-divider>
+      <md-card-actions>
+        <button md-button color="primary" class="text-upper" (click)="user.hasAcknowledged=true;">I AGREE</button>
+      </md-card-actions>
+    </md-card>
+
+    <md-card *ngIf="user?.hasAcknowledged">
+      <td-message *ngIf="readOnly" label="This Group is currently Under Review" class="bgc-green-200" icon="error">
+      </td-message>
+      <md-tab-group [(selectedIndex)]="activeTab" class="tab-group" dynamicHeight>
+        <md-tab>
+
+          <ng-template md-tab-label>
+            <md-icon class="tab-icon">assessment</md-icon>
+            ASSESS
+            <md-icon *ngIf=assessComplete mdTooltip="Complete" class="small-tab-icon tc-green-700">check_circle</md-icon>
+            <md-icon *ngIf=!assessComplete mdTooltip="Incomplete" class="small-tab-icon tc-red-700">error_outline</md-icon>
+          </ng-template>
+
+          <assess [change]="change" [workGroup]="activeWorkGroup"></assess>
+        </md-tab>
+        <md-tab [disabled]="readOnly">
+          <ng-template md-tab-label>
+            <md-icon class="tab-icon">format_list_numbered</md-icon>
+            STRAT
+            <md-icon *ngIf=stratComplete mdTooltip="Complete" class="small-tab-icon tc-green-700">check_circle</md-icon>
+            <md-icon *ngIf=!stratComplete mdTooltip="Incomplete" class="small-tab-icon tc-red-700">error_outline</md-icon>
+          </ng-template>
+
+          <strat [workGroup]="activeWorkGroup"></strat>
+        </md-tab>
+      </md-tab-group>
+
+    </md-card>
+  </ng-template>
+</div>

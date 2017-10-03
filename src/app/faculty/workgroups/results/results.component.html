@@ -1,0 +1,42 @@
+<div class="width" *ngIf="isLoading">
+  <md-card>
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <img class="pad-top-md" src="../../../../assets/resultsloading.png" height="150" width="150">
+    </div>  
+     <h4 class="text-center pad-bottom-md">Results loading... please wait. </h4> 
+    <md-card-footer>
+      <md-progress-bar color="accent" mode="indeterminate"></md-progress-bar>
+    </md-card-footer>
+  </md-card>
+</div>
+
+<div class="width" *ngIf="!isLoading">
+  <md-card>
+    <md-card-title>
+      <div fxFlex>
+        <button md-raised-button color="primary" [routerLink]="['../..']">Back</button>
+      </div>
+      <div fxFlex="100" class="text-center">
+        {{workGroupName}} - Results
+      </div>
+      <span fxFlex></span>
+      <button md-icon-button (click)="this.refreshData()"><md-icon>autorenew</md-icon></button>
+    </md-card-title>
+    <md-tab-group>
+      <md-tab>
+        <ng-template md-tab-label>
+          <md-icon class="tab-icon">assessment</md-icon>
+          Assessment Overview
+        </ng-template>
+        <assess-overview [membersResults]="membersResults"></assess-overview>
+      </md-tab>
+      <md-tab>
+        <ng-template md-tab-label>
+          <md-icon class="tab-icon">format_list_numbered</md-icon>
+          Strat Overview
+        </ng-template>
+        <strat-overview [membersResults]="membersResults"></strat-overview>
+      </md-tab>
+    </md-tab-group>
+  </md-card>
+</div>
