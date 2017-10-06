@@ -2,8 +2,6 @@ import * as mp from "./mapStrings"
 import * as mpe from "./mapEnum"
 import * as cm from "../entities/client-models"
 import * as user from "../entities/user";
-import * as student from "./../entities/student";
-import * as faculty from "./../entities/faculty";
 
 export class EcLocalDataService {
     static serviceId = 'data.static';
@@ -266,23 +264,6 @@ export class EcLocalDataService {
         }
     }
 
-    static avgScore(myResponses: Array<student.SpResponse>): string {
-        let sumOfReponses = 0;
-
-        myResponses.forEach(response => {
-            sumOfReponses += response.itemModelScore;
-        });
-
-        const score = sumOfReponses / myResponses.length;
-
-        if (score <= 0) return mp.MpSpResult.ie;
-        if (score < 1) return mp.MpSpResult.bae;
-        if (score < 2) return mp.MpSpResult.e;
-        if (score < 3) return mp.MpSpResult.aae;
-        if (score < 4) return mp.MpSpResult.he;
-        return 'Out of range';
-    }
-
     static breakDownCalculation(boItem: any): string {
         let totalBo = 0;
         let totalCount = 0;
@@ -347,55 +328,6 @@ export class EcLocalDataService {
         return (itemResponse) ? EcLocalDataService.prettifyItemResponse(itemResponse) : 'Out of Range';
     }
 
-
-    static rationaleScore(myResponses: Array<student.SpResponse>): string {
-        const totalCount = myResponses.length;
-        const breakdown = {
-            iea: 0,
-            ieu: 0,
-            ea: 0,
-            eu: 0,
-            hea: 0,
-            heu: 0,
-            nd: 0
-        }
-        myResponses.forEach(response => {
-            switch (response.itemModelScore) {
-                case mpe.CompositeModelScore.iea:
-                    breakdown.iea += 1;
-                    break;
-                case mpe.CompositeModelScore.ieu:
-                    breakdown.ieu += 1;
-                    break;
-                case mpe.CompositeModelScore.eu:
-                    breakdown.eu += 1;
-                    break;
-                case mpe.CompositeModelScore.ea:
-                    breakdown.ea += 1;
-                    break;
-                case mpe.CompositeModelScore.heu:
-                    breakdown.heu += 1;
-                    break;
-                case mpe.CompositeModelScore.hea:
-                    breakdown.hea += 1;
-                    break;
-            }
-        });
-        let precentHighEff = (breakdown.hea + breakdown.heu) / totalCount;
-        let precentAboveAvgEff = (breakdown.heu + breakdown.ea) / totalCount;
-        let precentIneff = (breakdown.iea + breakdown.ieu + breakdown.nd) / totalCount;
-        let precentBelowEff = (breakdown.nd + breakdown.eu) / totalCount;
-        precentHighEff = Math.round(precentHighEff);
-        precentAboveAvgEff = Math.round(precentAboveAvgEff);
-        precentIneff = Math.round(precentIneff);
-        precentBelowEff = Math.round(precentBelowEff);
-
-        if (precentHighEff > 90) return mp.MpSpResult.he;
-        if (precentAboveAvgEff > 75) return mp.MpSpResult.aae;
-        if (precentIneff > 80) return mp.MpSpResult.ie;
-        if (precentBelowEff > 70) return mp.MpSpResult.bae;
-        return mp.MpSpResult.e;
-    }
 
     milPaygradeGraft: cm.IMilPayGrade;
 

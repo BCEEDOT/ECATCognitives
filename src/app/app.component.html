@@ -1,31 +1,3 @@
-<div #tokenref></div>
-<td-layout #layout>
-  <td-navigation-drawer name={{cleanName}}
-    email={{persona?.person?.email}}>
-    <md-nav-list>
-      <a md-list-item routerLink="/dashboard" (click)="layout.close()">
-        <md-icon>dashboard</md-icon>Dashboard</a>
-      <a *ngIf="isStudent" md-list-item routerLink="/student/assessment" (click)="layout.close()">
-        <md-icon>assessment</md-icon>Assessment Center</a>
-      <a *ngIf="isFaculty" md-list-item routerLink="/faculty/workgroups" (click)="layout.close()">
-        <md-icon>people</md-icon>Workgroup Center</a>
-      <a *ngIf="isLmsAdmin" md-list-item routerLink="/lmsadmin/courses" (click)="layout.close()">
-        <md-icon>security</md-icon>Instructional System Admin</a>
-      <md-divider></md-divider>
-      <a md-list-item routerLink="/cognitives" (click)="layout.close()">
-        <md-icon>trending_up</md-icon>Cognitives</a>
-      <a *ngIf="isStudent" md-list-item routerLink="/roadrunner/student" (click)="layout.close()">
-        <md-icon>android</md-icon>Road Runner</a>
-      <a *ngIf="isFaculty" md-list-item routerLink="/roadrunner/faculty" (click)="layout.close()">
-        <md-icon>android</md-icon>Road Runner</a>
-      <md-divider></md-divider>
-    </md-nav-list>
-    <md-nav-list td-navigation-drawer-menu>
-      <!--<a md-list-item routerLink="/profile" (click)="layout.close()">
-        <md-icon>account_circle</md-icon>Profile</a>-->
-      <a md-list-item (click)="logout(); layout.close();">
-        <md-icon>exit_to_app</md-icon>Sign out</a>
-    </md-nav-list>
-  </td-navigation-drawer>
+<td-layout-nav class="color" toolbarTitle="ECAT - Cognitive Assessment Center">
   <router-outlet></router-outlet>
-</td-layout>
+</td-layout-nav>

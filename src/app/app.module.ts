@@ -8,16 +8,16 @@ import { BreezeBridgeAngularModule } from 'breeze-bridge-angular';
 
 import { SharedModule } from "./shared/shared.module";
 import { CoreModule } from "./core/core.module";
-import { StudentModule } from "./student/student.module";
-import { FacultyModule } from "./faculty/faculty.module";
-import { DashboardModule } from "./dashboard/dashboard.module";
-import { ProfileModule } from "./profile/profile.module";
-import { RoadrunnerModule } from "./roadrunner/roadrunner.module";
+// import { StudentModule } from "./student/student.module";
+// import { FacultyModule } from "./faculty/faculty.module";
+// import { DashboardModule } from "./dashboard/dashboard.module";
+// import { ProfileModule } from "./profile/profile.module";
+// import { RoadrunnerModule } from "./roadrunner/roadrunner.module";
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
 import { CognitivesModule } from "./cognitives/cognitives.module";
-import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
+// import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -39,13 +39,13 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     BrowserAnimationsModule,
     SharedModule,
     CoreModule,
-    FacultyModule,
-    LmsadminModule,
-    StudentModule,
-    ProfileModule,
-    DashboardModule,
+    //FacultyModule,
+    //LmsadminModule,
+    //StudentModule,
+    //ProfileModule,
+    //DashboardModule,
     AppRoutingModule,
-    RoadrunnerModule, //Add feature modules/routes before main routing module
+    //RoadrunnerModule, //Add feature modules/routes before main routing module
     CognitivesModule, //Add feature modules/routes before main routing module
   ], // modules needed to run this module
   providers: [

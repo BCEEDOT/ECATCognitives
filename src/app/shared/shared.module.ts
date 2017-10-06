@@ -12,7 +12,7 @@ import {
     MdButtonModule, MdListModule, MdIconModule, MdCardModule, MdMenuModule, MdInputModule, MdButtonToggleModule,
     MdProgressSpinnerModule, MdSelectModule, MdSlideToggleModule, MdDialogModule, MdSnackBarModule, MdToolbarModule,
     MdTabsModule, MdSidenavModule, MdTooltipModule, MdCheckboxModule, MdRadioModule,
-    MdProgressBarModule, MdSliderModule, MdChipsModule, MdRippleModule
+    MdProgressBarModule, MdSliderModule, MdChipsModule, MdRippleModule, MdGridListModule
 } from '@angular/material';
 import { BarChartModule, LineChartComponent, PieChartModule } from '@swimlane/ngx-charts';
 import { DragulaModule } from "ng2-dragula";
@@ -48,7 +48,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
         MdProgressBarModule,
         MdSliderModule,
         MdChipsModule,
-        //MdGridListModule,
+        MdGridListModule,
         MdRippleModule,
         CovalentCommonModule, 
         CovalentLayoutModule,
@@ -102,7 +102,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
         MdProgressBarModule, 
         MdSliderModule, 
         MdChipsModule, 
-        //MdGridListModule, 
+        MdGridListModule, 
         MdRippleModule,
         CovalentCommonModule, 
         CovalentLayoutModule, 

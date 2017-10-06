@@ -29,28 +29,37 @@ export class AuthService implements IHttpInterceptor {
   constructor(private http: Http, private router: Router, private global: GlobalService,
     private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
 
-  login(username: string, password: string): Observable<boolean> {
+  login(password: string): Observable<boolean> {
 
-    //let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    //let options = new RequestOptions({ headers: headers });
-    let data = new URLSearchParams();
-    data.append('grant_type', 'password');
-    data.append('username', username);
-    data.append('password', password);
+    // //let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    // //let options = new RequestOptions({ headers: headers });
+    // let data = new URLSearchParams();
+    // data.append('grant_type', 'password');
+    // data.append('username', username);
+    // data.append('password', password);
 
-    return this.http.post('http://localhost:62187/connect/token',
-      data).map((response: Response) => {
-        let accessToken = response.json().access_token;
-        let idToken = response.json().id_token;
-        if (accessToken && idToken) {
-          localStorage.setItem('ecatAccessToken', accessToken);
-          localStorage.setItem('ecatUserIdToken', idToken);
-          return true;
-        } else {
+    if (password === '123456') {
+      let token = "." + btoa(JSON.stringify('You are logged in')) + ".";
+      localStorage.setItem('ecatCogAccessToken', token );
+      return Observable.of(true);
+    } else {
+      return Observable.of(false);
+    }
 
-          return false;
-        }
-      }).catch(this.handleError)
+
+    // return this.http.post('http://localhost:62187/connect/token',
+    //   data).map((response: Response) => {
+    //     let accessToken = response.json().access_token;
+    //     let idToken = response.json().id_token;
+    //     if (accessToken && idToken) {
+    //       localStorage.setItem('ecatAccessToken', accessToken);
+    //       localStorage.setItem('ecatUserIdToken', idToken);
+    //       return true;
+    //     } else {
+
+    //       return false;
+    //     }
+    //   }).catch(this.handleError)
   }
 
   private handleError(error: Response | any) {

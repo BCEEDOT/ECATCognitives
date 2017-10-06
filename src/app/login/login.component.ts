@@ -5,7 +5,7 @@ import { TdLoadingService } from '@covalent/core';
 
 import { AuthService } from "../core/services/auth.service";
 import { AuthUtilityService } from "../core/services/auth-utility.service";
-import { tokenNotExpired } from "angular2-jwt";
+import { tokenNotExpired, } from "angular2-jwt";
 
 @Component({
   selector: 'qs-login',
@@ -19,15 +19,16 @@ export class LoginComponent implements OnInit {
   password: string;
 
   constructor(private router: Router,
-              private loadingService: TdLoadingService, 
-              private authService: AuthService, 
-              private snackBar: MdSnackBar, 
-              private authUtility: AuthUtilityService) { }
+    private loadingService: TdLoadingService,
+    private authService: AuthService,
+    private snackBar: MdSnackBar,
+    private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
 
-    //check if user has a stored token and it is still valid
-    if (tokenNotExpired('ecatAccessToken')) {
+    let token = localStorage.getItem('ecatCogAccessToken');
+    // check if user has a stored token and it is still valid
+    if (token) {
       this.router.navigate(['/dashboard']);
     }
 
@@ -36,19 +37,20 @@ export class LoginComponent implements OnInit {
   login(): void {
 
     this.loadingService.register();
-    this.authService.login(this.username, this.password).subscribe(result => {
+
+
+    this.authService.login(this.password).subscribe(result => {
       if (result === true) {
         this.loadingService.resolve();
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/cognitives']);
       } else {
-        //replace with correct message box
-        alert('Login failed');
+        // TODO: Replace with correct error dialog box
+        alert('Access Code Invalid');
         this.loadingService.resolve();
       }
     }, (error: any) => {
       this.loadingService.resolve();
       this.snackBar.open(error, 'Close', { duration: 2000 });
-      console.log(error);
     });
   }
 }

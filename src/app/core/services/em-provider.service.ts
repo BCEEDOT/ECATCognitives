@@ -16,6 +16,7 @@ import 'breeze-client/breeze.uriBuilder.odata';
 
 import { EntityTypeAnnotation } from './../entities/entity-type-annotation';
 import { IRegistrationHelper } from './../entities/IRegistrationHelper';
+import { Metadata } from "./../entities/user/metadata";
 import { DEV_API } from './../../../config/api.config';
 import { DataContext, ResourceEndPoint } from '../../app-constants';
 
@@ -38,37 +39,38 @@ export class EmProviderService {
   }
 
   //Need to account for client entity extensions.
-  prepare(dataContext: DataContext, regHelper: IRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<any> {
-    
-      NamingConvention.camelCase.setAsDefault();
-      //new ValidationOptions({ validateOnAttach: false }).setAsDefault();
-     
-      //configure breeze to use authHTTP instead of default angular http class. Used to add access token to header
-      config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
-      config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
+  prepare(dataContext: DataContext, regHelper: IRegistrationHelper, resourceEndPoint: ResourceEndPoint): Promise<boolean> {
 
-      config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'json' });
+    NamingConvention.camelCase.setAsDefault();
+    // new ValidationOptions({ validateOnAttach: false }).setAsDefault();
 
-      let emStatus = EmProviderService.masterManagers[dataContext];
+    // configure breeze to use authHTTP instead of default angular http class. Used to add access token to header
+    config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
+    config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
 
-      if (!emStatus) {
-        emStatus = EmProviderService.masterManagers[dataContext] = {
-          dataContext: dataContext,
-          manager: null,
-          promise: null,
-        };
-      }
+    config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'json' });
+
+    let emStatus = EmProviderService.masterManagers[dataContext];
+
+    if (!emStatus) {
+      emStatus = EmProviderService.masterManagers[dataContext] = {
+        dataContext: dataContext,
+        manager: null,
+        promise: null,
+      };
+    }
 
     if (!emStatus.promise) {
 
-      
+
       let serviceEndPoint = DEV_API + resourceEndPoint;
 
       console.log(serviceEndPoint);
 
 
       let dsconfig: DataServiceOptions = {
-        serviceName: serviceEndPoint
+        serviceName: serviceEndPoint,
+        hasServerMetadata: false
       };
 
       let dataService = new DataService(dsconfig);
@@ -79,26 +81,39 @@ export class EmProviderService {
 
       // let validationOptions = new ValidationOptions(validationConfig);
 
+
+
+
       let currentManager = emStatus.manager = new
         EntityManager({
           dataService: dataService,
         });
 
-      return emStatus.promise =
-        emStatus.manager.fetchMetadata()
-          .then(() => {
-            regHelper.register(emStatus.manager.metadataStore);
-            this.registerAnnotations(emStatus.manager.metadataStore);
-          })
-          .catch(e => {
-            //If there is an error reset
-            emStatus.promise = null;
-            console.log("Error retrieving metadata");
-            console.log(`error from prepare em----- ${e}`)
-            throw e;
 
-          });
+
+      emStatus.manager.metadataStore.importMetadata(JSON.stringify(Metadata.value));
+      regHelper.register(emStatus.manager.metadataStore);
+      this.registerAnnotations(emStatus.manager.metadataStore);
+
+      emStatus.promise = Promise.resolve(true);
+
+      return emStatus.promise;
+
+       //emStatus.manager.fetchMetadata()
+      //   .then(() => {
+      //     regHelper.register(emStatus.manager.metadataStore);
+      //     this.registerAnnotations(emStatus.manager.metadataStore);
+      //   })
+      //   .catch(e => {
+      //     //If there is an error reset
+      //     emStatus.promise = null;
+      //     console.log("Error retrieving metadata");
+      //     console.log(`error from prepare em----- ${e}`)
+      //     throw e;
+
+      //   });
     }
+
     return emStatus.promise;
   }
 

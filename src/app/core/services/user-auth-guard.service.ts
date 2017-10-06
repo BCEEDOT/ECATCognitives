@@ -1,3 +1,4 @@
+import { TokenStatus } from '../common/mapEnum';
 import { Injectable } from '@angular/core';
 import {
   CanActivate, Router,
@@ -30,8 +31,10 @@ export class UserAuthGuard implements CanActivate {
 
     let url: string = state.url;
 
+    let token = localStorage.getItem('ecatCogAccessToken');
+
     //First check if a user has a token and if it is expired
-    if (tokenNotExpired('ecatAccessToken') && this.global.userDataContextActivated.value) {
+    if (token && this.global.userDataContextActivated.value) {
 
       return true;
 
@@ -45,16 +48,18 @@ export class UserAuthGuard implements CanActivate {
   activate(url: string): boolean {
     //TODO: Rewrite this to handle errors better
     //check if user has a stored token
-    if (tokenNotExpired('ecatAccessToken')) {
+    let token = localStorage.getItem('ecatCogAccessToken');
+
+    if (token) {
       return <any>this.emProvider.prepare(DataContext.User, this.regHelper, ResourceEndPoint.User)
         .then(() => {
           console.log('User Context Activated');
           this.global.userDataContext(true);
-          this.authService.activateUser();
-          if (!this.global.persona.value.person.registrationComplete) {
-            this.router.navigate(['/profile']);
-            return false;
-          }
+          //this.authService.activateUser();
+          // if (!this.global.persona.value.person.registrationComplete) {
+          //   this.router.navigate(['/profile']);
+          //   return false;
+          // }
 
           return true;
         })
@@ -69,6 +74,7 @@ export class UserAuthGuard implements CanActivate {
     }
 
     this.router.navigate(['/login']);
+    console.log('You did not have a tokens');
     return false;
   }
 

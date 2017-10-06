@@ -1,6 +1,4 @@
 import * as user from "./user";
-import * as student from "./student";
-import * as faculty from "./faculty";
 import { EntityBase } from "./EntityBase";
 
 export interface IApiResource {
@@ -80,26 +78,6 @@ export interface IMilRank {
 export interface IMilServiceRank {
     rankShortName: string;
     rankLongName: string;
-}
-
-export interface IStudSpInventory extends EntityBase, student.SpInventory {
-   id: number;
-   instrumentId: number;
-   displayOrder: number;
-   isDisplayed: boolean;
-   behavior: string;
-   //instrument: SpInstrument;
-   //itemResponses: student.SpResponse[];
-}
-
-export interface IFacSpInventory extends EntityBase, faculty.SpInventory {
-   id: number;
-   instrumentId: number;
-   displayOrder: number;
-   isDisplayed: boolean;
-   behavior: string;
-   //instrument: SpInstrument;
-   //itemResponses: faculty.FacSpResponse[];
 }
 
 //this is on the server... should really do this differently

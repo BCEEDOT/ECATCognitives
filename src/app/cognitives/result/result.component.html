@@ -1,23 +1,13 @@
-<td-layout-nav logo="" toolbarTitle="ECAT - Cognitive Results">
-    <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
-        <span fxFlex></span>
-        <a md-icon-button mdTooltip="Profile" routerLink="/profile">
-            <md-icon>account_circle</md-icon>
-        </a>
-    </div>
-
-    <md-card [ngSwitch]="cogResultId" tdMediaToggle="gt-xs" class="pad-sm">
-        <md-card-title>
-            <div>
-                <button md-raised-button color="primary" (click)="goBack()">
+<md-card [ngSwitch]="cogResultId" tdMediaToggle="gt-xs" class="pad-sm">
+    <md-card-title>
+        <div>
+            <button md-raised-button color="primary" (click)="goBack()">
               <md-icon class="tc-white-700">arrow_back</md-icon>Back to Cognitives
           </button>
-            </div>
-        </md-card-title>
-        <ecpe-result *ngSwitchCase="1"> </ecpe-result>
-        <esalb-result *ngSwitchCase="2"> </esalb-result>
-        <ecmspe-result *ngSwitchCase="3"> </ecmspe-result>
-        <etmpre-result *ngSwitchCase="4"> </etmpre-result>
-    </md-card>
-
-</td-layout-nav>
+        </div>
+    </md-card-title>
+    <ecpe-result *ngSwitchCase="1"> </ecpe-result>
+    <esalb-result *ngSwitchCase="2"> </esalb-result>
+    <ecmspe-result *ngSwitchCase="3"> </ecmspe-result>
+    <etmpre-result *ngSwitchCase="4"> </etmpre-result>
+</md-card>

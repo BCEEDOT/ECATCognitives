@@ -1,4 +1,10 @@
 // Custom style for loading elements without height
+:host {
+body {
+    background-color: red;
+}
+}
+
 .will-load {
     min-height: 80px;
 }

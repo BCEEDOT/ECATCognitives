@@ -35,7 +35,8 @@ export class AssessComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.cogAssessId = params['cogId'];
         });
-        this.cogInventories$ = route.data.pluck('assess')
+        this.cogInventories$ = route.data.pluck('assess');
+        console.log(route.data);
     }
 
     ngOnDestroy() {

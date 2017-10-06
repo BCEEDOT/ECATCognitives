@@ -19,7 +19,7 @@ export class CogAssessService {
     readyToSave$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
     constructor(private userDataContext: UserDataContext, private snackBarService: MdSnackBar,
-        private dialogService: TdDialogService, private loadingService: TdLoadingService, 
+        private dialogService: TdDialogService, private loadingService: TdLoadingService,
         private router: Router, private cogResultsService: CogResultsService) { }
 
     cogInventories(cogInventories: CogInventory[]) {
@@ -101,21 +101,10 @@ export class CogAssessService {
                 this.cogResultsService.cogEcmspeResult(result);
                 break;
         }
-        this.userDataContext.commit()
-            .then(result => {
-                this.loadingService.resolve();
-                this.snackBarService.open("Success, Cognitive Asessment Saved!", 'Dismiss', { duration: 2000 })
-            })
-            .catch(result => {
-                this.loadingService.resolve();
-                this.dialogService.openAlert({
-                    message: 'Your changes were not saved, please try again.',
-                    title: 'Save Error',
-                });
-                return Observable.throw(result);
-            })
-
-           return Observable.of('Success');
+       
+        this.loadingService.resolve();
+        this.snackBarService.open("Success, Cognitive Asessment Results Calculated!", 'Dismiss', { duration: 2000 });
+        return Observable.of('Success');
 
     } //END SAVE ASSESS
 

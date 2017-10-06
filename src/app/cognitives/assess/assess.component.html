@@ -1,52 +1,36 @@
-<td-layout-nav logo="" toolbarTitle="ECAT - Cognitive Assessment">
+<div class="width">
 
-  <div td-toolbar-content fxLayout="row" fxLayoutAlign="center center" fxFlex>
-    <span fxFlex></span>
-    <a md-icon-button mdTooltip="Docs" href="https://teradata.github.io/covalent/" target="_blank">
-      <md-icon>chrome_reader_mode</md-icon>
-    </a>
-    <a md-icon-button mdTooltip="Github" href="https://github.com/teradata/covalent" target="_blank">
-      <md-icon svgIcon="assets:github"></md-icon>
-    </a>
-  </div>
+  <md-card>
 
-  <div class="width">
+    <md-card-title fxLayoutAlign="center center">{{cogName}}</md-card-title>
 
-    <md-card>
+    <md-divider></md-divider>
 
-      <md-card-title fxLayoutAlign="center center">{{cogName}}</md-card-title>
+    <md-card-content *ngIf="showInstructions">
+      <div [innerHTML]="cogInventories[0].instrument.cogInstructions"></div>
+    </md-card-content>
 
-      <md-divider></md-divider>
+    <md-card-content *ngIf="!showInstructions">
+      <div [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
+        <!--matches component variable -->
+        <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
+        <esalb-assess *ngSwitchCase="2"> </esalb-assess>
+        <ecmspe-assess *ngSwitchCase="3"> </ecmspe-assess>
+        <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
+      </div>
+    </md-card-content>
 
-      <md-card-content *ngIf="showInstructions">
-        <div [innerHTML]="cogInventories[0].instrument.cogInstructions"></div>
-      </md-card-content>
+    <md-divider></md-divider>
 
-      <md-card-content *ngIf="!showInstructions">
-        <div [ngSwitch]="cogAssessId" tdMediaToggle="gt-xs" class="pad-sm">
-          <!--matches component variable -->
-          <ecpe-assess *ngSwitchCase="1"> </ecpe-assess>
-          <esalb-assess *ngSwitchCase="2"> </esalb-assess>
-          <ecmspe-assess *ngSwitchCase="3"> </ecmspe-assess>
-          <etmpre-assess *ngSwitchCase="4"> </etmpre-assess>
-        </div>
-      </md-card-content>
+    <md-card-actions *ngIf="showInstructions">
+      <button md-button color="primary" (click)="showInstructions = false">Continue Assessment</button>
+    </md-card-actions>
 
-      <md-divider></md-divider>
+    <md-card-actions fxLayout="row" *ngIf="!showInstructions">
+      <button md-button color="primary" (click)="showInstructions = true">Show Instructions</button>
+      <div fxFlex></div>
+      <button md-button color="primary" (click)="cancelAssess();">Cancel</button>
+      <button md-button color="primary" [disabled]="!readyToSave" (click)="saveAssess();">Complete Assessment</button>
+    </md-card-actions>
 
-      <md-card-actions *ngIf="showInstructions">
-        <button md-button color="primary" (click)="showInstructions = false">Continue Assessment</button>
-      </md-card-actions>
-
-      <md-card-actions fxLayout="row" *ngIf="!showInstructions">
-        <button md-button color="primary" (click)="showInstructions = true">Show Instructions</button>
-        <div fxFlex></div>
-        <button md-button color="primary" (click)="cancelAssess();">Cancel</button>
-        <button md-button color="primary" [disabled]="!readyToSave" (click)="saveAssess();">Complete Assessment</button>
-      </md-card-actions>
-
-    </md-card>
-
-  </div>
-
-</td-layout-nav>
+  </md-card>

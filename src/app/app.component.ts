@@ -93,28 +93,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // there has to be a better way to do this
-    // TODO: Implement error handling
-    if (this.tokenRef.nativeElement.ownerDocument.body.children[0].tagName === 'ECAT-APP') {
-      // if we aren't coming through LTI the first child seems to be the ECAT-APP element that contains the angular version
-      return;
-    }
 
-    let viewBag: string = this.tokenRef.nativeElement.ownerDocument.body.children[0].attributes[1].value;
-
-    if (viewBag !== '') {
-      let vBData = JSON.parse(viewBag);
-      localStorage.setItem('ecatAccessToken', vBData.access_token);
-      localStorage.setItem('ecatUserIdToken', vBData.id_token);
-    } else {
-      // if the first attribute is empty it means we had an error, which will be in the second
-      viewBag = this.tokenRef.nativeElement.ownerDocument.body.children[0].attributes[2].value;
-      this.dialogService.openAlert({
-        message: 'There was an error logging you in. ' + viewBag,
-        title: 'Please try again',
-        // closeButton: 'Dismiss'
-      });
-    }
 
   }
 
