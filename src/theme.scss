@@ -1,12 +1,26 @@
 @import '~@angular/material/theming';
 @import '~@covalent/core/theming/all-theme';
-@import '~@covalent/markdown/markdown-theme';
-@import '~@covalent/highlight/highlight-theme';
+// @import '~@covalent/markdown/markdown-theme';
+// @import '~@covalent/highlight/highlight-theme';
 // Plus imports for other components in your app.
 
 // Include the base styles for Angular Material core. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
-@include mat-core();
+// @include mat-core();
+
+$custom-typography: mat-typography-config(
+    $button: mat-typography-level(14px, 14px, 400)
+  );
+  $custom-toolbar-typography: mat-typography-config(
+    $title: mat-typography-level(20px, 32px, 400)
+  );
+  
+  // Include the base styles for Angular Material core. We include this here so that you only
+  // have to load a single css file for Angular Material in your app.
+  @include mat-core($custom-typography);
+  
+  // Setting the toolbar to the proper spec weight
+  @include mat-toolbar-typography($custom-toolbar-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -92,21 +106,21 @@ $theme: mat-light-theme($primary, $accent, $warn);
 // that you are using.
 @include angular-material-theme($theme);
 @include covalent-theme($theme);
-@include covalent-markdown-theme($theme);
-@include covalent-highlight-theme();
+// @include covalent-markdown-theme($theme);
+// @include covalent-highlight-theme();
 
 //date picker
  //@include calendar-theme($theme);
 
 
 // Active icon color in list nav
-md-nav-list {
-    [md-list-item].active {
-        md-icon[md-list-avatar] {
+mat-nav-list {
+    [mat-list-item].active {
+        mat-icon[mat-list-avatar] {
             background-color: mat-color($accent);
             color: mat-color($accent, default-contrast)
         }
-        md-icon[md-list-icon] {
+        mat-icon[mat-list-icon] {
             color: mat-color($accent);
         }
     }

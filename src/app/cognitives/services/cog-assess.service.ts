@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Router } from "@angular/router";
 import { TdLoadingService, TdDialogService } from '@covalent/core';
-import { MdSnackBar } from '@angular/material';
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/observable/of';
 
+import { GlobalService } from "../../core/services/global.service";
 import { CogResultsService } from "./cog-results.service";
 import { CogInstrument, CogInventory, CogEcpeResult, CogEcmspeResult, CogEsalbResult, CogEtmpreResult } from "../../core/entities/user";
 import { MpCogInstrumentType, MpCogETMPREInvType, MpCogESALBInvType, MpCogECMSPEInvType } from "../../core/common/mapStrings";
@@ -18,7 +19,7 @@ export class CogAssessService {
     cogActiveInventory$: BehaviorSubject<CogInventory> = new BehaviorSubject({} as CogInventory);
     readyToSave$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    constructor(private userDataContext: UserDataContext, private snackBarService: MdSnackBar,
+    constructor(private userDataContext: UserDataContext, private global: GlobalService,
         private dialogService: TdDialogService, private loadingService: TdLoadingService,
         private router: Router, private cogResultsService: CogResultsService) { }
 
@@ -67,7 +68,7 @@ export class CogAssessService {
             }).afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
                     this.cogInventories$.value.forEach(inventory => inventory.rejectChanges());
-                    this.snackBarService.open('Changes Discarded', 'Dismiss', { duration: 2000 })
+                    this.global.showSnackBar('Changes Discarded');
                     this.router.navigate(['/cognitives']);
                 }
             });
@@ -103,7 +104,7 @@ export class CogAssessService {
         }
        
         this.loadingService.resolve();
-        this.snackBarService.open("Success, Cognitive Asessment Results Calculated!", 'Dismiss', { duration: 2000 });
+        this.global.showSnackBar('Success, Cognitive Asessment Results Calculated!');
         return Observable.of('Success');
 
     } //END SAVE ASSESS

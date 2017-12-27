@@ -1,6 +1,6 @@
-import { EntityBase } from '../EntityBase';
-import { CogInstrument } from './CogInstrument';
-import { Person } from './Person';
+import { EntityBase } from '../entitybase';
+import { CogInstrument } from './cogInstrument';
+import { Person } from './person';
 
 /// <code-import> Place custom imports between <code-import> tags
 

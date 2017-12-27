@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response, RequestOptions, URLSearchParams } from '@angular/http';
-import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
+// import { Http, Headers, Response, RequestOptions, URLSearchParams } from '@angular/http';
+// import { CovalentHttpModule, IHttpInterceptor } from '@covalent/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { JwtHelper } from "angular2-jwt";
+// import { JwtHelper } from "angular2-jwt";
+// import { JwtHelperService } from '@auth0/angular-jwt';
+
 import { EntityState } from 'breeze-client';
 
 import 'rxjs/add/operator/map'
@@ -21,13 +23,12 @@ import { DataContext } from "../../app-constants";
 import { MpEntityType, MpInstituteRole } from "../common/mapStrings";
 
 @Injectable()
-export class AuthService implements IHttpInterceptor {
+export class AuthService {
   // store the URL so we can redirect after logging in
   redirectUrl: string;
   //public token: string;
 
-  constructor(private http: Http, private router: Router, private global: GlobalService,
-    private jwtHelper: JwtHelper, private emProvider: EmProviderService) { }
+  constructor(private router: Router, private global: GlobalService, private emProvider: EmProviderService) { }
 
   login(password: string): Observable<boolean> {
 
@@ -62,90 +63,96 @@ export class AuthService implements IHttpInterceptor {
     //   }).catch(this.handleError)
   }
 
-  private handleError(error: Response | any) {
+  // private handleError(error: Response | any) {
 
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      if (err === 'invalid_grant') {
-        return Observable.throw('Invalid username and password');
-      }
-      //errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-      errMsg = 'An error occured. Please try again';
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
+  //   let errMsg: string;
+  //   if (error instanceof Response) {
+  //     const body = error.json() || '';
+  //     const err = body.error || JSON.stringify(body);
+  //     if (err === 'invalid_grant') {
+  //       return Observable.throw('Invalid username and password');
+  //     }
+  //     //errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+  //     errMsg = 'An error occured. Please try again';
+  //   } else {
+  //     errMsg = error.message ? error.message : error.toString();
+  //   }
 
-    return Observable.throw(errMsg);
-  }
+  //   return Observable.throw(errMsg);
+  // }
 
-  public activateUser() {
+  // public activateUser() {
 
-    let accessTokenSigned = localStorage.getItem('ecatAccessToken');
-    let idTokenSigned = localStorage.getItem('ecatUserIdToken');
-    let accessToken = this.jwtHelper.decodeToken(accessTokenSigned);
-    let idToken = this.jwtHelper.decodeToken(idTokenSigned);
-    var user: ILoggedInUser = <ILoggedInUser>{};
+  //   let accessTokenSigned = localStorage.getItem('ecatAccessToken');
+  //   let idTokenSigned = localStorage.getItem('ecatUserIdToken');
+  //   let accessToken = this.jwt.decodeToken(accessTokenSigned);
+  //   let idToken = this.jwt.decodeToken(idTokenSigned);
+  //   var user: ILoggedInUser = <ILoggedInUser>{};
 
-    var loggedInUser = {
-      personId: accessToken.sub,
-      lastName: idToken.lastName,
-      firstName: idToken.firstName,
-      isActive: true,
-      mpGender: idToken.mpGender,
-      mpAffiliation: idToken.mpAffiliation,
-      mpPaygrade: idToken.mpPaygrade,
-      mpComponent: idToken.mpComponent,
-      email: idToken.email,
-      registrationComplete: idToken.registrationComplete,
-      mpInstituteRole: idToken.mpInstituteRole
-    } as Person;
+  //   var loggedInUser = {
+  //     personId: accessToken.sub,
+  //     lastName: idToken.lastName,
+  //     firstName: idToken.firstName,
+  //     isActive: true,
+  //     mpGender: idToken.mpGender,
+  //     mpAffiliation: idToken.mpAffiliation,
+  //     mpPaygrade: idToken.mpPaygrade,
+  //     mpComponent: idToken.mpComponent,
+  //     email: idToken.email,
+  //     registrationComplete: idToken.registrationComplete,
+  //     mpInstituteRole: idToken.mpInstituteRole
+  //   } as Person;
 
-    let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
-    user.person = entityUser as Person;
+  //   let entityUser = this.emProvider.getManager(DataContext.User).createEntity(MpEntityType.person, loggedInUser, EntityState.Unchanged);
+  //   user.person = entityUser as Person;
 
-    if (loggedInUser.mpInstituteRole === MpInstituteRole.student) {
-      user.isFaculty = false;
-      user.isStudent = true;
-      user.isLmsAdmin = false;
-    }
+  //   if (loggedInUser.mpInstituteRole === MpInstituteRole.student) {
+  //     user.isFaculty = false;
+  //     user.isStudent = true;
+  //     user.isLmsAdmin = false;
+  //   }
 
-    if (loggedInUser.mpInstituteRole === MpInstituteRole.faculty) {
-      user.isFaculty = true;
-      user.isStudent = false;
-      user.isLmsAdmin = accessToken.role.some(role => role === 'ISA');
-    }
+  //   if (loggedInUser.mpInstituteRole === MpInstituteRole.faculty) {
+  //     user.isFaculty = true;
+  //     user.isStudent = false;
+  //     user.isLmsAdmin = accessToken.role.some(role => role === 'ISA');
+  //   }
 
-    this.global.user(user);
-    console.log(user);
+  //   this.global.user(user);
+  //   console.log(user);
 
-    //set a timer for warning the user when they are 5 minutes from token expiring
-    //token.exp is in seconds, Date.now in milliseconds, and tokenTimer wants milliseconds
-    let tokenWarn = ((accessToken.exp - (Date.now() / 1000)) - 300) * 1000;
-    this.global.startTokenTimer(tokenWarn);
-  }
+  //   //set a timer for warning the user when they are 5 minutes from token expiring
+  //   //token.exp is in seconds, Date.now in milliseconds, and tokenTimer wants milliseconds
+  //   let tokenWarn = ((accessToken.exp - (Date.now() / 1000)) - 300) * 1000;
+  //   this.global.startTokenTimer(tokenWarn);
+  // }
 
-  logout() {
+  // logout() {
 
-    if(this.emProvider) {
-      this.emProvider.clear(DataContext.User);
-      this.emProvider.clear(DataContext.Student);
-      this.emProvider.clear(DataContext.Faculty);
-      this.emProvider.clear(DataContext.LmsAdmin);
-    }
-    // this.emProvider.clear(DataContext.User);
-    // this.emProvider.clear(DataContext.Student);
-    // this.emProvider.clear(DataContext.Faculty);
+  //   if(this.emProvider) {
+  //     this.emProvider.clear(DataContext.User);
+  //     this.emProvider.clear(DataContext.Student);
+  //     this.emProvider.clear(DataContext.Faculty);
+  //     this.emProvider.clear(DataContext.LmsAdmin);
+  //   }
+  //   // this.emProvider.clear(DataContext.User);
+  //   // this.emProvider.clear(DataContext.Student);
+  //   // this.emProvider.clear(DataContext.Faculty);
     
-    // this.emProvider.clearAll();
+  //   // this.emProvider.clearAll();
 
     
-    this.global.user(null);
-    this.global.userDataContext(false);
-    localStorage.removeItem('ecatAccessToken');
-    localStorage.removeItem('ecatUserIdToken');
-    this.router.navigate(['/login']);
-  }
+  //   this.global.user(null);
+  //   this.global.userDataContext(false);
+  //   localStorage.removeItem('ecatAccessToken');
+  //   localStorage.removeItem('ecatUserIdToken');
+  //   this.router.navigate(['/login']);
+  // }
+
+  // tokenNotExpired(): boolean {
+  //   const token = this.jwt.tokenGetter();
+
+  //   return token !== null && !this.jwt.isTokenExpired(token);
+  // }
 }
 

@@ -5,21 +5,21 @@
         <div fxLayout="column">
 
             <div *ngIf="!activeInventory.isReversed">
-                <div fxFlex="40" class="md-caption">
+                <div fxFlex="40" class="mat-subheading-1">
                     {{activeInventory.adaptiveDescription}}
                 </div>
                 <div fxFlex="20"></div>
-                <div fxFlex="40" class="md-caption text-right">
+                <div fxFlex="40" class="mat-subheading-1 text-right">
                     {{activeInventory.innovativeDescription}}
                 </div>
             </div>
 
             <div *ngIf="activeInventory.isReversed">
-                <div fxFlex="40" class="md-caption">
+                <div fxFlex="40" class="mat-subheading-1">
                     {{activeInventory.innovativeDescription}}
                 </div>
                 <div fxFlex="20"></div>
-                <div fxFlex="40" class="md-caption text-right">
+                <div fxFlex="40" class="mat-subheading-1 text-right">
                     {{activeInventory.adaptiveDescription}}
                 </div>
             </div>
@@ -33,16 +33,16 @@
             </svg>
         </div>
 
-        <md-slider color="primary" (input)="slide($event.value)" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000"
+        <mat-slider color="primary" (input)="slide($event.value)" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000"
             tickInterval="1">
-        </md-slider>
+        </mat-slider>
 
     </div>
 
     <div fxLayout="row" fxLayoutAlign="center center">
-        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
+        <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
         <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
-        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
+        <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
             (click)="nextInventory();">Next</button>
     </div>
 

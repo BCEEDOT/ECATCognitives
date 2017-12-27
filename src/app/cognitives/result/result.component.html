@@ -1,13 +1,13 @@
-<md-card [ngSwitch]="cogResultId" tdMediaToggle="gt-xs" class="pad-sm">
-    <md-card-title>
+<mat-card [ngSwitch]="cogResultId" tdMediaToggle="gt-xs" class="pad-sm">
+    <mat-card-title>
         <div>
-            <button md-raised-button color="primary" (click)="goBack()">
-              <md-icon class="tc-white-700">arrow_back</md-icon>Back to Cognitives
+            <button mat-raised-button color="primary" (click)="goBack()">
+              <mat-icon class="tc-white-700">arrow_back</mat-icon>Back to Cognitives
           </button>
         </div>
-    </md-card-title>
+    </mat-card-title>
     <ecpe-result *ngSwitchCase="1"> </ecpe-result>
     <esalb-result *ngSwitchCase="2"> </esalb-result>
     <ecmspe-result *ngSwitchCase="3"> </ecmspe-result>
     <etmpre-result *ngSwitchCase="4"> </etmpre-result>
-</md-card>
+</mat-card>

@@ -1,5 +1,5 @@
-import { EntityBase } from '../EntityBase';
-import { Person } from './Person';
+import { EntityBase } from '../entitybase';
+import { Person } from './person';
 
 /// <code-import> Place custom imports between <code-import> tags
 

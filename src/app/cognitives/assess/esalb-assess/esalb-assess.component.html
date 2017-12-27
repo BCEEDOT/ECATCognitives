@@ -7,27 +7,27 @@
     </div>
 
     <div>
-        <md-grid-list rowHeight="50px" cols="5">
-            <md-grid-tile>Never</md-grid-tile>
-            <md-grid-tile>Seldom</md-grid-tile>
-            <md-grid-tile>Usually</md-grid-tile>
-            <md-grid-tile>Mostly</md-grid-tile>
-            <md-grid-tile>Always</md-grid-tile>
-        </md-grid-list>
+        <mat-grid-list rowHeight="50px" cols="5">
+            <mat-grid-tile>Never</mat-grid-tile>
+            <mat-grid-tile>Seldom</mat-grid-tile>
+            <mat-grid-tile>Usually</mat-grid-tile>
+            <mat-grid-tile>Mostly</mat-grid-tile>
+            <mat-grid-tile>Always</mat-grid-tile>
+        </mat-grid-list>
 
         <div>
             <div>
-                <md-slider color="primary" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000" tickInterval="1">
-                </md-slider>
+                <mat-slider color="primary" [(ngModel)]="activeInventory.response.itemScore" min="1" max="1000" tickInterval="1">
+                </mat-slider>
             </div>
         </div>
 
     </div>
 
     <div fxLayout="row" fxLayoutAlign="center center">
-        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
+        <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
         <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
-        <button md-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
+        <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
             (click)="nextInventory();">Next</button>
     </div>
 

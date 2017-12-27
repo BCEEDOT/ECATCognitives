@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdSnackBar } from "@angular/material";
 import { TdLoadingService } from '@covalent/core';
 
+import { GlobalService } from "../core/services/global.service";
 import { AuthService } from "../core/services/auth.service";
 import { AuthUtilityService } from "../core/services/auth-utility.service";
-import { tokenNotExpired, } from "angular2-jwt";
+// import { tokenNotExpired, } from "angular2-jwt";
 
 @Component({
   selector: 'qs-login',
@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router,
     private loadingService: TdLoadingService,
     private authService: AuthService,
-    private snackBar: MdSnackBar,
+    private global: GlobalService,
     private authUtility: AuthUtilityService) { }
 
   ngOnInit() {
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
       }
     }, (error: any) => {
       this.loadingService.resolve();
-      this.snackBar.open(error, 'Close', { duration: 2000 });
+      this.global.showSnackBar(error);
     });
   }
 }

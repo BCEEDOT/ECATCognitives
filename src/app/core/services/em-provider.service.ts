@@ -4,8 +4,8 @@ import {
   EntityType, NavigationProperty, DataProperty, EntityQuery, DataServiceOptions, config, promises, ValidationOptionsConfiguration, ValidationOptions
 } from 'breeze-client';
 import { includes, remove } from "lodash";
-import { AuthHttp } from 'angular2-jwt';
-import { AjaxAngularAdapter } from "breeze-bridge-angular";
+// import { AuthHttp } from 'angular2-jwt';
+// import { AjaxAngularAdapter } from "breeze-bridge-angular";
 
 // Import required breeze adapters. Rollup.js requires the use of breeze.base.debug.js, which doesn't include
 // the breeze adapters. 
@@ -34,7 +34,7 @@ export class EmProviderService {
   private static masterManagers: Array<IManager> = [];
   private static preparePromise: Promise<any>;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor() {
 
   }
 
@@ -45,10 +45,10 @@ export class EmProviderService {
     // new ValidationOptions({ validateOnAttach: false }).setAsDefault();
 
     // configure breeze to use authHTTP instead of default angular http class. Used to add access token to header
-    config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
-    config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
+    // config.registerAdapter('ajax', () => new AjaxAngularAdapter(<any>this.authHttp));
+    // config.initializeAdapterInstance('ajax', AjaxAngularAdapter.adapterName, true);
 
-    config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'json' });
+    // config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'json' });
 
     let emStatus = EmProviderService.masterManagers[dataContext];
 

@@ -1,5 +1,5 @@
-import { EntityBase } from '../EntityBase';
-import { CogInventory } from './CogInventory';
+import { EntityBase } from '../entitybase';
+import { CogInventory } from './cogInventory';
 
 /// <code-import> Place custom imports between <code-import> tags
 

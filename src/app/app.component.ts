@@ -1,7 +1,7 @@
 import { Subscriber, Subscription } from 'rxjs/Rx';
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MdIconRegistry } from '@angular/material';
+// import { MdIconRegistry } from '@angular/material';
 import {
   RouterModule, Routes, Router,
   ActivatedRouteSnapshot, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, Event,
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   cleanName: string;
   @ViewChild('tokenref') tokenRef: ElementRef;
 
-  constructor(private _iconRegistry: MdIconRegistry,
+  constructor(
     private router: Router,
     private loadingService: TdLoadingService,
     private _domSanitizer: DomSanitizer,
@@ -97,8 +97,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   }
 
-  logout(): void {
-    this.authService.logout();
-  }
+  // logout(): void {
+  //   this.authService.logout();
+  // }
 
 }

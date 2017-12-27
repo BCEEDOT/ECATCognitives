@@ -1,14 +1,12 @@
 <div class="width">
 
-    <md-card tdMediaToggle="gt-xs">
+    <mat-card tdMediaToggle="gt-xs">
 
         <!-- e-CPE -->
         <div fxLayout="row" fxLayoutMargin fxLayoutAlign="center center" class="pad-sm">
 
             <div fxFlex="25">
-                <a href="#" class="thumbnail">
-                        <img src="assets/images/AI.png" height="100" width="200">
-                    </a>
+                <img src="assets/images/AI.png" height="100" width="200">
             </div>
 
             <div fxFlex="60">
@@ -19,11 +17,11 @@
             </div>
 
             <div fxFlex="15" *ngIf="!ecpeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 1]">
-                <button md-raised-button color="primary"> Start </button>
+                <button mat-raised-button color="primary"> Start </button>
             </div>
 
             <div fxFlex="15" *ngIf="ecpeResult" class="pad-left-md">
-                <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 1]"> Results </button>
+                <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 1]"> Results </button>
             </div>
 
         </div>
@@ -32,9 +30,7 @@
         <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
 
             <div fxFlex="25">
-                <a href="#" class="thumbnail">
-                        <img src="assets/images/Compass.png" height="100" width="200">
-                    </a>
+                <img src="assets/images/Compass.png" height="100" width="200">
             </div>
 
             <div fxFlex="60">
@@ -46,11 +42,11 @@
             </div>
 
             <div fxFlex="15" *ngIf="!esalbResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 2]">
-                <button md-raised-button color="primary"> Start </button>
+                <button mat-raised-button color="primary"> Start </button>
             </div>
 
             <div fxFlex="15" *ngIf="esalbResult" class="pad-left-md">
-                <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 2]"> Results </button>
+                <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 2]"> Results </button>
             </div>
 
         </div>
@@ -59,9 +55,7 @@
         <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
 
             <div fxFlex="25">
-                <a href="#" class="thumbnail">
-                        <img src="assets/images/Scale.png" height="100" width="200">
-                    </a>
+                <img src="assets/images/Scale.png" height="100" width="200">
             </div>
 
             <div fxFlex="60">
@@ -72,11 +66,11 @@
             </div>
 
             <div fxFlex="15" *ngIf="!ecmspeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 3]">
-                <button md-raised-button color="primary"> Start </button>
+                <button mat-raised-button color="primary"> Start </button>
             </div>
 
             <div fxFlex="15" *ngIf="ecmspeResult" class="pad-left-md">
-                <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 3]">  Results </button>
+                <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 3]"> Results </button>
             </div>
 
         </div>
@@ -85,9 +79,7 @@
         <div fxLayout="row" fxLayoutAlign="center center" class="pad-sm">
 
             <div fxFlex="25">
-                <a href="#" class="thumbnail">
-                        <img src="assets/images/Team.png" height="100" width="200">
-                    </a>
+                <img src="assets/images/Team.png" height="100" width="200">
             </div>
 
             <div fxFlex="60">
@@ -99,13 +91,13 @@
             </div>
 
             <div fxFlex="15" *ngIf="!etmpreResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 4]">
-                <button md-raised-button color="primary"> Start </button>
+                <button mat-raised-button color="primary"> Start </button>
             </div>
 
             <div fxFlex="15" *ngIf="etmpreResult" class="pad-left-md">
-                <button md-raised-button color="primary" [routerLink]="['/cognitives/result/' + 4]"> Results </button>
+                <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 4]"> Results </button>
             </div>
 
         </div>
 
-    </md-card>
+    </mat-card>

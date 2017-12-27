@@ -8,7 +8,7 @@ import {
   NavigationExtras,
   CanLoad, Route
 } from '@angular/router';
-import { tokenNotExpired } from "angular2-jwt";
+// import { tokenNotExpired } from "angular2-jwt";
 import { EntityState } from 'breeze-client';
 
 import { AuthService } from './auth.service';

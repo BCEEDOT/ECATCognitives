@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { JwtHelper } from "angular2-jwt";
+// import { JwtHelper } from "angular2-jwt";
 import { Entity, EntityQuery, EntityManager, Predicate, FilterQueryOp, EntityState, MergeStrategy } from "breeze-client";
 import { Router, Route } from '@angular/router';
 
@@ -15,6 +15,6 @@ export class AuthUtilityService {
     ecatAccessToken: any;
     em: EntityManager;
 
-    constructor(private jwtHelper: JwtHelper,  private global: GlobalService, private emProviderService: EmProviderService, private router: Router) { }
+    constructor(private global: GlobalService, private emProviderService: EmProviderService, private router: Router) { }
 
 }
