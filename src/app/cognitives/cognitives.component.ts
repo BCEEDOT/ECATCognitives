@@ -91,6 +91,10 @@ export class CognitivesComponent implements OnInit {
         }
     }//end activate
 
+    clear(): void {
+        this.userDataContext.clear();
+    }
+
 }//end CognitivesComponent
 
 const enum CogViews {

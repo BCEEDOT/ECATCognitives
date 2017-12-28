@@ -36,15 +36,17 @@ export class AssessComponent implements OnInit {
             this.cogAssessId = params['cogId'];
         });
         this.cogInventories$ = route.data.pluck('assess');
-        console.log(route.data);
     }
 
     ngOnDestroy() {
+        this.readyToSave = false;
+        this.cogAssessService.readyToSave(null);
         this.cogAssessService.cogActiveInventory(null);
         this.cogAssessService.cogInventories(null);
     };
 
     ngOnInit() {
+
         this.cogInventories$.subscribe((cogInventories: CogInventory[]) => {
             this.cogAssessService.cogInventories(cogInventories);
             this.cogInventories = cogInventories;

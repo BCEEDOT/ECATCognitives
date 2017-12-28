@@ -128,11 +128,16 @@ export class UserDataContext extends BaseDataContext {
     }
 
     getNewCogResult(type: string, instId: number, prevAttempt: number): any {
+
         const personId = 1;
         const key = { personId: personId, instrumentId: instId, attempt: (prevAttempt + 1) };
-
+    
         switch (type) {
             case MpCogInstrumentType.ecpe:
+                let entity = this.manager.getEntityByKey(MpEntityType.cogEcpeResult, key);
+
+                console.log(entity);
+
                 return this.manager.createEntity(MpEntityType.cogEcpeResult, key) as CogEcpeResult;
             case MpCogInstrumentType.etmpre:
                 return this.manager.createEntity(MpEntityType.cogEtmpreResult, key) as CogEtmpreResult;

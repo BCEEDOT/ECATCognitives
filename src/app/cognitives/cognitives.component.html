@@ -17,12 +17,12 @@
             </div>
 
             <div fxFlex="15" *ngIf="!ecpeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 1]">
-                <button mat-raised-button color="primary"> Start </button>
+                <button mat-raised-button (click)="clear()" color="primary"> Start </button>
             </div>
-
+<!-- 
             <div fxFlex="15" *ngIf="ecpeResult" class="pad-left-md">
                 <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 1]"> Results </button>
-            </div>
+            </div> -->
 
         </div>
 
@@ -42,12 +42,12 @@
             </div>
 
             <div fxFlex="15" *ngIf="!esalbResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 2]">
-                <button mat-raised-button color="primary"> Start </button>
+                <button mat-raised-button (click)="clear()" color="primary"> Start </button>
             </div>
 
-            <div fxFlex="15" *ngIf="esalbResult" class="pad-left-md">
-                <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 2]"> Results </button>
-            </div>
+            <!-- <div fxFlex="15" *ngIf="esalbResult" class="pad-left-md">
+                <button mat-raised-button (click)="clear()" color="primary" [routerLink]="['/cognitives/result/' + 2]"> Results </button>
+            </div> -->
 
         </div>
 
@@ -66,12 +66,12 @@
             </div>
 
             <div fxFlex="15" *ngIf="!ecmspeResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 3]">
-                <button mat-raised-button color="primary"> Start </button>
+                <button mat-raised-button (click)="clear()" color="primary"> Start </button>
             </div>
 
-            <div fxFlex="15" *ngIf="ecmspeResult" class="pad-left-md">
+            <!-- <div fxFlex="15" *ngIf="ecmspeResult" class="pad-left-md">
                 <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 3]"> Results </button>
-            </div>
+            </div> -->
 
         </div>
 
@@ -91,12 +91,12 @@
             </div>
 
             <div fxFlex="15" *ngIf="!etmpreResult" class="pad-left-md" [routerLink]="['/cognitives/assess/' + 4]">
-                <button mat-raised-button color="primary"> Start </button>
+                <button mat-raised-button (click)="clear()" color="primary"> Start </button>
             </div>
 
-            <div fxFlex="15" *ngIf="etmpreResult" class="pad-left-md">
+            <!-- <div fxFlex="15" *ngIf="etmpreResult" class="pad-left-md">
                 <button mat-raised-button color="primary" [routerLink]="['/cognitives/result/' + 4]"> Results </button>
-            </div>
+            </div> -->
 
         </div>
 
