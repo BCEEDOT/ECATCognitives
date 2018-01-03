@@ -1,3 +1,10 @@
 <td-layout-nav class="color" toolbarTitle="ECAT - Cognitive Assessment Center">
   <router-outlet></router-outlet>
+
+  <td-layout-footer>
+      <div fxLayout="row" fxLayoutGap="20px">
+        <div></div>
+        <a class="no-underline" [routerLink]="['/agreement/']">DOD USER AGREEMENT</a>
+      </div>
+    </td-layout-footer>
 </td-layout-nav>

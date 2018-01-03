@@ -20,6 +20,8 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from "./app-routing.module";
 import { CognitivesModule } from "./cognitives/cognitives.module";
+import { HelpComponent } from './help/help.component';
+import { AgreementComponent } from './agreement/agreement.component';
 // import { LmsadminModule } from "./lmsadmin/lmsadmin.module";
 
 // export function authHttpServiceFactory(http: Http, options: RequestOptions) {
@@ -38,6 +40,8 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     LoginComponent,
+    HelpComponent,
+    AgreementComponent,
   ], // directives, components, and pipes owned by this NgModule
   imports: [
     // BreezeBridgeAngularModule,
