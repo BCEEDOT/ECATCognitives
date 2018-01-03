@@ -32,6 +32,7 @@ export class EcpeResultComponent implements OnInit, OnDestroy {
             this.router.navigate(['/cognitives']);
         }
 
+        console.log(this.ecpeResult);
         this.calcEcpeResult(this.ecpeResult);
     }
 

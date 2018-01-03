@@ -15,7 +15,6 @@ import { AuthUtilityService } from "../core/services/auth-utility.service";
 })
 export class LoginComponent implements OnInit {
 
-  username: string;
   password: string;
 
   constructor(private router: Router,
@@ -35,6 +34,8 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+
+    console.log(this.password);
 
     this.loadingService.register();
 

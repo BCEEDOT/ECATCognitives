@@ -39,7 +39,7 @@ export class AuthService {
     // data.append('username', username);
     // data.append('password', password);
 
-    if (password === '123456') {
+    if (password === 'ALS2018') {
       let token = "." + btoa(JSON.stringify('You are logged in')) + ".";
       localStorage.setItem('ecatCogAccessToken', token );
       return Observable.of(true);

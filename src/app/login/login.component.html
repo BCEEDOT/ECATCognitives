@@ -7,7 +7,8 @@
             <form #loginForm="ngForm" (keyup.enter)="login()">
               <div layout="row">
                 <mat-form-field flex>
-                  <input matInput #passElement #passControl="ngModel" placeholder="Access Code" type="password" name="password" [(ngModel)]="password"
+                  <input matInput #passElement #passControl="ngModel" placeholder="Access Code" type="password" name="password" 
+                  [(ngModel)]="password"
                     required>
                   <span matPrefix>
                     <mat-icon>lock</mat-icon>
@@ -22,7 +23,7 @@
           <mat-divider></mat-divider>
           <mat-card-actions fxLayout="row">
             <div fxFlex></div>
-            <button mat-raised-button color="primary" [disabled]="!loginForm.form.valid" (click)="login()">Login</button>
+            <button mat-raised-button color="primary" (click)="login()">Login</button>
           </mat-card-actions>
         </mat-card>
       </div>

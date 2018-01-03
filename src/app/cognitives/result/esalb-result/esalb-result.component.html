@@ -2,41 +2,43 @@
 
     <div fxLayout="column" fxLayoutAlign="center center">
         <div fxFlex="100">
-            <h3>Electronic Self Assessment of Leadership Behavior (e-SALB) Results</h3>
+            <h1 class="mat-h1">Electronic Self Assessment of Leadership Behavior (e-SALB) Results</h1>
         </div>
     </div>
 
     <!--Introduction-->
-    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <b>Introduction</b>
+            <h3 class="mat-h3">Introduction</h3>
         </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            This report displays your ratings for each category. This information will help you identify your leadership strengths and
-            areas for improvement. Gaining an understanding of both can help you become an even more effective leader by
-            capitalizing on your strengths and by focusing on development needs, experiences, assignments and training and
-            educational opportunities to help overcome weaknesses.
+            <p>
+                This report displays your ratings for each category. This information will help you identify your leadership strengths and
+                areas for improvement. Gaining an understanding of both can help you become an even more effective leader
+                by capitalizing on your strengths and by focusing on development needs, experiences, assignments and training
+                and educational opportunities to help overcome weaknesses.
+            </p>
         </div>
     </div>
 
     <!--Summary of Results-->
-    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <b>Summary of Results</b>
+            <h3 class="mat-h3">Summary of Results</h3>
         </div>
     </div>
     <hr>
 
     <!--Absence of Leadership-->
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <strong>Absence of Leadership</strong>
+            <h4 class="mat-h4">Absence of Leadership</h4>
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="20">
             Laissez Faire:
         </div>
@@ -47,22 +49,26 @@
     <hr>
 
     <!--Transactional Leadership-->
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <strong>Transactional Leadership</strong>
+            <h4 class="mat-h4">Transactional Leadership</h4>
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
+
             Management:
+
         </div>
         <div fxFlex="20">
+
             {{esalbResult.management}}
+
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
             Contingent:
         </div>
@@ -75,11 +81,11 @@
     <!--Transformational Leadership-->
     <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
         <div fxFlex="100">
-            <strong>Transformational Leadership</strong>
+            <h4 class="mat-h4">Transformational Leadership</h4>
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
             Idealized:
         </div>
@@ -88,7 +94,7 @@
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
             Inspirational:
         </div>
@@ -97,7 +103,7 @@
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
             Intellectual Stimulation:
         </div>
@@ -106,7 +112,7 @@
         </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-left-md pad-bottom-sm" fxLayoutMargin>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutMargin fxLayoutGap="5px">
         <div fxFlex="20">
             Individual:
         </div>
@@ -121,34 +127,36 @@
         <div fxFlex="100">
             <sup>1</sup> High scores indicate strengths, except for Laissez Faire, where low scores are desired
             <br/>
-            <sup>2</sup> Class Average is the average of all students in your class only who have taken the e-SALB as of
-            the date of this report.
+            <sup>2</sup> Class Average is the average of all students in your class only who have taken the e-SALB as of the date
+            of this report.
             <br/>
-            <sup>3</sup> Composite Average, based on 100% scale, is the average of all students who have taken the e-SALB
-            as of the date of this report.
+            <sup>3</sup> Composite Average, based on 100% scale, is the average of all students who have taken the e-SALB as of
+            the date of this report.
         </div>
     </div>
     <hr>
 
     <!--How to Read Your Report-->
-    <div fxLayout="row" fxLayoutAlign="start start" class="pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            <b>How to Read Your Report</b>
+            <h3 class="mat-h3">How to Read Your Report</h3>
         </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="start start" class="text-md pad-sm">
+    <div fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="100">
-            This report provides scores based on your answers for each of the four dimensions of Transformational Leadership, the two
-            dimensions of Transactional Leadership, and the Absence of Leadership. This report also provides composite scores
-            for each of the dimensions so that you may compare your scores to others who have taken the e-SALB.
-            <br /> The self-response and class average scores derive from a 5-point Likert scale and the percentile rank
-            compares you to your peers in the current class. The composite average and composite percentile allow you to
-            see how you compare to the general population of people who have taken the e-SALB as of the date of this report.
-            In general, higher scores equal greater effectiveness in that area, except for Laissez Faire, where low scores
-            are desirable.
-            <br/> This report includes an explanation of each leadership style, along with a short explanation of how you
-            might enhance your ability to be more effective across the range of FRLD areas. This information is especially
-            important for individuals who wish to create a personal leadership development plan (PLDP).
+            <p>
+                This report provides scores based on your answers for each of the four dimensions of Transformational Leadership, the two
+                dimensions of Transactional Leadership, and the Absence of Leadership. This report also provides composite
+                scores for each of the dimensions so that you may compare your scores to others who have taken the e-SALB.
+                <br /> The self-response and class average scores derive from a 5-point Likert scale and the percentile rank compares
+                you to your peers in the current class. The composite average and composite percentile allow you to see how
+                you compare to the general population of people who have taken the e-SALB as of the date of this report.
+                In general, higher scores equal greater effectiveness in that area, except for Laissez Faire, where low scores
+                are desirable.
+                <br/> This report includes an explanation of each leadership style, along with a short explanation of how you
+                might enhance your ability to be more effective across the range of FRLD areas. This information is especially
+                important for individuals who wish to create a personal leadership development plan (PLDP).
+            </p>
         </div>
     </div>
 
@@ -199,12 +207,13 @@
             Air Force Institute of Technology (AFIT) delivered and validated the original version (called LPM-360) of this instrument.
             They subjected the instrument to more than four years of rigorous scientific study and benchmarked it against
             other leading leadership development instruments. They found the LPM-360 to be superior in almost every way.
-            <br /><br /> However, because AFIT designed the original instrument for military officers, it contained a great
-            deal of officer-centric language. With this in mind, we developed the e-SALBI with language to encompass all
-            members of society.
-            <br /><br />
-            <strong>CAUTION</strong>: Regardless of its design and validity, no instrument can possibly measure every dimension
-            associated with something as broad and as complex as leadership. In addition, psychometric assessments are ‘self-assessments’,
+            <br />
+            <br /> However, because AFIT designed the original instrument for military officers, it contained a great deal of officer-centric
+            language. With this in mind, we developed the e-SALBI with language to encompass all members of society.
+            <br />
+            <br />
+            <strong>CAUTION</strong>: Regardless of its design and validity, no instrument can possibly measure every dimension associated
+            with something as broad and as complex as leadership. In addition, psychometric assessments are ‘self-assessments’,
             therefore, results are only as accurate as the honesty of the individual completing the instrument. Keep this
             in mind as you interpret your results. Just because your e-SALBI results are lower (or higher) than expected,
             that does not necessarily mean you are an ineffective (or a very effective) leader. First, ask yourself whether
@@ -223,14 +232,17 @@
         <div fxFlex="100">
             Leadership is the process of influencing others to achieve specific goals. Although there are myriad of leadership theories,
             the Full Range Leadership theory encompasses both the transformational and transformational leadership concepts.
-            <br /><br /> Described as charismatic or visionary leadership, transformational leaders maintain a strong personal
-            connection with followers. They consistently practice Idealized Influence (II), Inspirational Motivation (IM),
-            Intellectual Stimulation (IS), and Individual Consideration (IE).
-            <br /><br /> Describes as reward and mistake oriented, transactional leaders view their relationship with subordinates
-            as a contract void of emotion. This leader sets performance expectations, monitors progress, and then rewards
-            those who achieve the agreed upon outcome(s).
-            <br /><br /> Finally, leaders should avoid (in most circumstances) Laissez-Faire leadership, which is described
-            as the absence of leadership.
+            <br />
+            <br /> Described as charismatic or visionary leadership, transformational leaders maintain a strong personal connection
+            with followers. They consistently practice Idealized Influence (II), Inspirational Motivation (IM), Intellectual
+            Stimulation (IS), and Individual Consideration (IE).
+            <br />
+            <br /> Describes as reward and mistake oriented, transactional leaders view their relationship with subordinates as
+            a contract void of emotion. This leader sets performance expectations, monitors progress, and then rewards those
+            who achieve the agreed upon outcome(s).
+            <br />
+            <br /> Finally, leaders should avoid (in most circumstances) Laissez-Faire leadership, which is described as the absence
+            of leadership.
         </div>
     </div>
 
