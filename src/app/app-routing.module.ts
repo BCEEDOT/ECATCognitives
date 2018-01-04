@@ -10,10 +10,8 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'agreement', component: AgreementComponent },
   { path: 'help', component: HelpComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '', redirectTo: '/cognitives', pathMatch: 'full' },
   { path: 'cognitives', loadChildren: './cognitives/cognitives.module#CognitivesModule'},
-
+  { path: '', redirectTo: '/cognitives', pathMatch: 'full' },
   { path: '**', component: PagenotfoundComponent }
 ];
 
