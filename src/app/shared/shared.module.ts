@@ -17,12 +17,14 @@ import {
 // import { BarChartModule, LineChartComponent, PieChartModule } from '@swimlane/ngx-charts';
 // import { DragulaModule } from "ng2-dragula";
 
+import { RouterModule } from "@angular/router";
 import { LoggerService } from "./services/logger.service";
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 
 @NgModule({
     imports: [
         FlexLayoutModule,
+        RouterModule,
         CommonModule,
         // FormsModule,
         MatButtonModule,
@@ -77,6 +79,7 @@ import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
     PagenotfoundComponent],
     exports: [
         FlexLayoutModule,
+        RouterModule,
         CommonModule,
         // FormsModule,
         MatButtonModule, 

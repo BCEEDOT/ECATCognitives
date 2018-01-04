@@ -78,17 +78,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    this.global.persona.subscribe((user: ILoggedInUser) => {
-      this.persona = user;
-      if (this.persona) {
-        if (this.persona.person) {
-          this.cleanName = `${this.persona.person.lastName}, ${this.persona.person.firstName}`;
-          this.isStudent = this.persona.isStudent;
-          this.isFaculty = this.persona.isFaculty;
-          this.isLmsAdmin = this.persona.isLmsAdmin;
-        }
-      }
-    });
+    // this.global.persona.subscribe((user: ILoggedInUser) => {
+    //   this.persona = user;
+    //   if (this.persona) {
+    //     if (this.persona.person) {
+    //       this.cleanName = `${this.persona.person.lastName}, ${this.persona.person.firstName}`;
+    //       this.isStudent = this.persona.isStudent;
+    //       this.isFaculty = this.persona.isFaculty;
+    //       this.isLmsAdmin = this.persona.isLmsAdmin;
+    //     }
+    //   }
+    // });
 
   }
 
