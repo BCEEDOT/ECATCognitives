@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/cognitives']);
       } else {
         // TODO: Replace with correct error dialog box
-        alert('Access Code Invalid');
+        this.global.showSnackBar('Access Code Invalid');
         this.loadingService.resolve();
       }
     }, (error: any) => {

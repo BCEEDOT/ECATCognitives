@@ -52,6 +52,15 @@ export class ResultComponent implements OnInit {
            h1, h2, h3, h4, h5 {
              font-weight: 500;
            }
+
+           .pad-sm {
+             padding: 5px;
+           }
+
+           .bold {
+            font-weight: 500;
+        }
+
            .rectangle {
             
             border: 12px solid #365F7F;

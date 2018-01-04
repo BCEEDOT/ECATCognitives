@@ -20,7 +20,7 @@
 
     <div fxLayout="row" fxLayoutAlign="center center">
         <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[0].displayOrder" (click)="previousInventory();">Previous</button>
-        <p class="pad-left-sm pad-right-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
+        <p class="pad-left-sm pad-right-sm pad-top-sm">Item {{activeInventory.displayOrder}} of {{inventories.length}} </p>
         <button mat-raised-button color="primary" [disabled]="activeInventory.displayOrder===inventories[inventories.length - 1].displayOrder"
             (click)="nextInventory();">Next</button>
     </div>

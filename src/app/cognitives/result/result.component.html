@@ -9,14 +9,17 @@
             <div fxFlex></div>
             <div>
                 <button mat-raised-button color="primary" (click)="save()">
-                    <mat-icon class="tc-white-700">picture_as_pdf</mat-icon> <span class="pad-left-sm">Save</span>
+                    <mat-icon class="tc-white-700">picture_as_pdf</mat-icon>
+                    <span class="pad-left-sm">Save</span>
                 </button>
             </div>
         </div>
 
     </mat-card-title>
-    <ecpe-result id="print-section" *ngSwitchCase="1"> </ecpe-result>
-    <esalb-result id="print-section" *ngSwitchCase="2"> </esalb-result>
-    <ecmspe-result id="print-section" *ngSwitchCase="3"> </ecmspe-result>
-    <etmpre-result id="print-section" *ngSwitchCase="4"> </etmpre-result>
+    <div>
+        <ecpe-result  id="print-section" *ngSwitchCase="1"> </ecpe-result>
+        <esalb-result id="print-section" *ngSwitchCase="2"> </esalb-result>
+        <ecmspe-result id="print-section" *ngSwitchCase="3"> </ecmspe-result>
+        <etmpre-result id="print-section" *ngSwitchCase="4"> </etmpre-result>
+    </div>
 </mat-card>
