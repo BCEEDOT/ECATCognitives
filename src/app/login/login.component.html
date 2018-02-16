@@ -1,33 +1,25 @@
-<div layout="column" layout-fill>
-  <div class="mat-content" layout-padding flex>
-    <div layout-gt-xs="row" layout-align-gt-xs="center start" class="margin">
-      <div flex-gt-xs="50">
-        <mat-card tdMediaToggle="gt-xs">
-          <mat-card-content>
-            <form #loginForm="ngForm" (keyup.enter)="login()">
-              <div layout="row">
-                <mat-form-field flex>
-                  <input matInput #passElement #passControl="ngModel" placeholder="Access Code" type="password" name="password" 
-                  [(ngModel)]="password"
-                    required>
-                  <span matPrefix>
-                    <mat-icon>lock</mat-icon>
-                  </span>
-                  <mat-hint align="start">
-                    <span [hidden]="!passControl.errors?.required || passControl.pristine" class="tc-red-600">Required</span>
-                  </mat-hint>
-                </mat-form-field>
-              </div>
-            </form>
-          </mat-card-content>
-          <mat-divider></mat-divider>
-          <mat-card-actions fxLayout="row">
-            <div fxFlex></div>
-            <button mat-raised-button color="primary" (click)="login()">Login</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </div>
-  </div>
+<div class="width">
+  <mat-card>
+    <mat-card-content>
+      <form #loginForm="ngForm" (keyup.enter)="login()">
+        <div layout="row">
+          <mat-form-field flex>
+            <input matInput #passElement #passControl="ngModel" placeholder="Access Code" type="password" name="password" [(ngModel)]="password"
+              required>
+            <span matPrefix>
+              <mat-icon>lock</mat-icon>
+            </span>
+            <mat-hint align="start">
+              <span [hidden]="!passControl.errors?.required || passControl.pristine" class="tc-red-600">Required</span>
+            </mat-hint>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions fxLayout="row">
+      <div fxFlex></div>
+      <button mat-raised-button color="primary" (click)="login()">Login</button>
+    </mat-card-actions>
+  </mat-card>
 </div>
-
