@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common'
 
 import { LoginComponent } from './login/login.component';
 import { AgreementComponent } from "./agreement/agreement.component";
@@ -10,7 +11,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'agreement', component: AgreementComponent },
   { path: 'help', component: HelpComponent },
-  { path: 'cognitives', loadChildren: './cognitives/cognitives.module#CognitivesModule'},
+  { path: 'cognitives', loadChildren: './cognitives/cognitives.module#CognitivesModule' },
   { path: '', redirectTo: '/cognitives', pathMatch: 'full' },
   { path: '**', component: PagenotfoundComponent }
 ];
@@ -18,14 +19,17 @@ const appRoutes: Routes = [
 @NgModule({
   imports: [
     // Uses old style routing for older browsers eg... http://localhost/#/Home
-    // RouterModule.forRoot(appRoutes, { useHash: true });
+    //RouterModule.forRoot(appRoutes, { useHash: true })
+
     // TODO: Disable tracing for production
-    // RouterModule.forRoot(appRoutes, {enableTracing: true})
+    //RouterModule.forRoot(appRoutes, {enableTracing: true})
     RouterModule.forRoot(appRoutes)
   ],
   exports: [
     RouterModule,
   ],
-  providers: [],
+  providers: [
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
+  ],
 })
 export class AppRoutingModule { }
